@@ -1,0 +1,36 @@
+/* XPM */
+const char *def_biff[] = {
+/* width height num_colors chars_per_pixel */
+"    24    19       10            1",
+/* colors */
+". c None",
+"# c #181818",
+"a c #8c94bd",
+"b c #c61010",
+"c c #c6cef7",
+"d c #f77b9c",
+"e c #ff4242",
+"f c #ffb5c6",
+"g c #ffdee7",
+"h c #ffffff",
+/* pixels */
+"...ggggggggggggggg......",
+".ggfffffffffffffffff....",
+".gaahhhhhhhhhhhhhaaf#...",
+"gfacahhhhhhhhhhhacafd...",
+"gfacahhhhhhhhhhhacafd#..",
+"gfahcahhhhhhhhhaccafd#..",
+"gfahcahhhhhhhhhaccafd#..",
+"gfahhcahheeehhachcafd#..",
+"gfahhccaaaebaachhcafd#..",
+"gfahhhacccbcccahhcafd#..",
+"gfahhahhhhhhhhhahcafd#..",
+"gfahahhhhhhhhhhhacafd#..",
+"gfaacccccccccccccaafd#..",
+".faaaaaaaaaaaaaaaaad##..",
+".ddffffffffffffffffd#...",
+"..#dddddddddddddffffd...",
+"....############dddffd..",
+".................##dddd.",
+"....................####"
+};

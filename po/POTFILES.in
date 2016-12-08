@@ -1,0 +1,16 @@
+src/main.c
+src/callbacks.c
+src/gui.c
+src/pixmap.c
+src/balloon.c
+src/configfile.c
+src/utils.c
+src/nokkari.c
+src/bmp.c
+src/bmpwrite.c
+src/mail.c
+src/pop.c
+src/ssl.c
+src/sslmanager.c
+src/dnd.c
+src/main.h

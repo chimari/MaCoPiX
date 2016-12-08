@@ -1,0 +1,248 @@
+.TH MACOPIX 1 "Feb 21 ,2005" "" "MaCoPiX - Users Manual"
+.SH "NAME"
+MaCoPiX \- Mascot Constructive Pilot for X
+.SH "SYNOPSIS"
+.B macopix
+[
+.B options ...
+]
+[
+.I mascot-file
+]
+.br
+.B macopix
+[
+.B options ...
+]
+--menu 
+.I menu-file
+.SH "DESCRIPTION"
+.B MaCoPiX
+is a desktop mascot program running under UNIX / X window
+systems.
+This program could be an evolved one from
+.B "ActX"
+(Activate X window system).
+.br
+Currently, you can make following types of mascots using MaCoPiX.
+.TP 3
+         - Focus follower (Window sitters : likely ActX)
+.TP 3
+         - Fixed style      (Desktop wappen?)
+.TP 0
+Furthermore, you can select with or without a digital clock for each types of mascots. So, MaCoPiX can be used as a sort of desktop clock applications. (But the clock function is still poor.)
+The biff function is also avairable for POP/APOP/UNIX local spool environments.
+The all configuration of MaCoPiX, even including the creation and edit
+of mascots, is aveirable via GUI menu.
+.br
+And, please pay attention that mascot files of
+.B MaCoPiX
+has no compatibility with those of
+.B ActX.
+
+.SH "ENVIRONMENT"
+.B MaCoPiX
+is running on
+.I X Window System
+(over 16bit colors are recommended.)
+of any UNIX operating systems.
+But, you needs
+.TP 3
+     - Gtk+       > ver2.2.0   (or Gtk+ > ver1.2.0 / gdk-pixbuf > ver0.7.0 / libpng)
+.TP 3
+     - gettext    > ver0.10
+.TP 0
+to run this program.
+.B MaCoPiX
+can be used on any Window Managers without any problems.
+
+.SH "BASIC OPERATION"
+- The right click for popup menu.
+In this poppup menu, you can change the current mascot and all
+configuration of MaCoPiX.
+Furthermore, you can create new mascot from this menu.
+If you want to save your changes, you should execute "Save"
+command in this popup menu.
+
+.br
+- The left drag for mascot's horizontal position change
+on title bar, if the mascot is in the window-sitter mode.
+In the case of fix position mascots, the left drag should 
+be the change of fixed position of the mascot.
+
+.br
+- "Click Animation", "Sound Playback" & "Balloon Talk" can be shown
+ with the left click on the mascot.
+
+.br
+- If you started it with the biff-mode,
+the biff bitmap appears in the case that you have new (or unread) mails.
+The left click on this biff bitmap enables you to check From: & Subject:
+of unread mails.
+
+.br
+- If your mouse cursor entered the panel of digital clock (if you are
+using it), 
+the date description tip appears on it.
+
+.SH "OPTIONS"
+Usually, you can set a mascot file (.mcpx) to be loaded at the start time in your command line option.
+If no mascot files are appointed, one of mascots in the default menu
+file are selected randomely.
+.PP
+All command line options...
+.TP 15
+.B -h, --help
+Print help message.
+.TP 15
+.B -c, --common-dir
+Print COMMON Directory.
+.TP 15
+.B -b, --biff
+Turn on the biff function.
+.TP 15
+.B -s, --signal
+Turn on the time signal function.
+.TP 15
+.B -o, --offset
+[
+.I offset[%]
+]
+.br
+Set offset-value for Focus Following.
+.TP 15
+.B -r, --rcfile
+[
+.I rc-file
+]
+.br
+ Set the resource file.
+.TP 15
+.B -m, --menu
+[
+.I  menu-file
+]
+.br
+Appoint a menu file to be loaded.
+.TP 15
+.B -mg, --magnify
+[
+.I magnification rate (%)
+]
+.br
+Set magnification percentage of mascot.
+.TP 15
+.B -i, --ip-style
+[
+.I (0|1|2|3)
+]
+.br
+Set interpolation style for magnification.
+.TP 15
+.B -a, --auto-install
+Set mascot auto install ON.
+.TP 15
+.B -na, --no-auto-install
+Set mascot auto install OFF.
+.TP 15
+.B -O, --over-write
+Permit to overwrite files in user dir.
+.TP 15
+.B --install-user-mascot
+[
+.I mascot-file (.mcpx)
+]
+.br
+Install a mascot to your User Directory.
+.TP 15
+.B --install-common-mascot
+[
+.I mascot-file (.mcpx)
+]
+.br
+Install a mascot to Common Directory.
+.TP 15
+.B --install-user-menu
+[
+.I menu-file (.menu)
+]
+.br
+Install a menu and mascots in it to your User Directory.
+.TP 15
+.B --install-common-menu
+[
+.I mascot-file (.menu)
+]
+.br
+Install a menu and mascots in it to Common Directory.
+.TP 15
+.B --sockmsg
+.br
+Start as a socket message reciever.
+.TP 15
+.B --message
+[
+.I "message"
+]
+.br
+Send a message to the socket message reciever.
+.TP 15
+.B --message-expire
+[
+.I expire-time[msec]
+]
+.br
+The expire time for the socket message (use w/"-message" option).
+.TP 15
+.B -nc, --no-duet-click
+.br
+Forbid to use the duet animation for click action.
+.br
+Send a message to the socket message reciever.
+.TP 15
+.B -nr, --no-duet-random
+.br
+Forbid to use the duet animation for random action.
+
+
+.SH "Configuration for Biff"
+.B MaCoPiX
+has the biff function for UNIX mbox and qmil Maildir type local spool
+and POP3 (w/ or w/o APOP) access to the mail server.
+Froms and Subjects list of arrived mails can be avairable by click of
+small biff image with mascot.
+MIME-encoded mail subjects are automatically decoded by internal functions.
+.br
+In the
+.I Configulation Dialog,
+.br
+	- type of biff mode
+.br
+	- the spool file to be checked (for local spool only)
+.br
+	- update interval
+.br
+	- mail server & user name & password for POP3(APOP)
+.br
+	- command for the mailer
+.br
+
+should be set.
+.SH "FILES"
+.ta \w'*.com *.exe    'u
+.if n .ta 2.5i
+.if t .ta 1.8i
+HOME$/.macopix/	user directory
+.br
+HOME$/.macopix/*.mcpx 	mascot files
+.br
+HOME$/.macopix/pixmap/*	mascot image files
+.br
+HOME$/.macopix/sound/*	mascot sound files
+.br
+.SH "AUTHOR"
+.nf
+Kurumi Chimari	<chimari@rosegray.sakura.ne.jp>
+.br
+  URL:   http://rosegray.sakura.ne.jp/
+.fi

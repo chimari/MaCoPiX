@@ -1,0 +1,449 @@
+##################################################################
+        Desktop Mascot Program for UNIX                           
+      macopix : Mascot Constructive Pilot for X                   
+						     ver 1.7.4    
+                      Document in English : README                
+                                                                  
+                             2008.06.24  Kurumi Chimari           
+                             chimari@rosegray.sakura.ne.jp        
+                             http://rosegray.sakura.ne.jp/        
+##################################################################
+
+=============================================================
+                  -- Table of Contents --
+  - About this program
+  - Environment
+  - Install
+  - How to Start
+  - Creating files, necessary files
+  - Mascots
+  - Launcher Menu
+  - Biff function
+  - Time Signal
+  - Socket Message
+  - Duet Animation
+  - Nokkari-Chara Support
+  - SSL Support
+  - Tranlucent Windows
+  - To Do
+  - Copyright
+=============================================================
+
+
+**About this program
+  This is a desktop mascot program running under UNIX / X window
+  systems.
+
+  With ver1.6.0 or later, MaCoPiX can be avairable also on Microsoft 
+  Windows, using Gtk+/Win32 (all Gtk+ libraries are included in Win
+  binary version).
+  This Windows version is distributed as compiled (binary) package.
+  Most of the text in this document describes about MaCoPiX UNIX
+  version. So, fo windows, please see Readme-win32.jp (sorry, Japanese
+  only, yet).
+
+
+  This program could be an evolved one from "ActX" (Activate X
+  window system).
+
+  Currently, you can make following types of mascots using MaCoPiX.
+         - Focus follower (Window sitters : likely ActX)
+         - Fix style      (Desktop wappen?)
+  Furthermore, you can select with or without a digital clock for
+  each types of mascots. So, MaCoPiX can be used as a sort of desktop clock
+  applications. (But the clock function could be still poor.)
+  And, the biff function is also available for POP/APOP/UNIX local
+  spool/qmail Maildir environments.
+  At once, users can create mascots and change their settings from GUI
+  instead of editing mascot files directly.
+  
+  Please pay attention that the mascot file of MaCoPiX has no
+  compatibility with that of ActX.
+
+
+**Environment
+  Basically, MaCoPiX needs UNIX / X window system or Microsoft Windows.
+    [for UNIX]
+     - Gtk+        > ver1.2.0   (or Gtk+ > ver2.0.0)
+     - gdk-pixbuf  > ver0.7.0   (or Gtk+ > ver2.0.0)
+     - libpng .                 (or Gtk+ > ver2.0.0)
+     - gettext     > ver0.10   
+     are necessary.
+     MaCoPiX can be load all image types supported by gdk-pixbuf.
+     But, you need libraries to support each types of images
+     (ex. libtiff, libpng) in order to load each types of images. 
+     The official MaCoPiX mascots are served in PNG files now.
+
+   [for Microsoft Windows (binary package)]
+     - Windows2000,XP or later (Still unconfirmed on Vista)
+     - Including TAR32.DLL(GPL) in the binary distribution.
+        * You can dounload it (free-software, GPL) form the HP of
+          "Common Archiver Library Project".
+           URL  http://www.csdinc.co.jp/archiver/index-e.html
+     - All required libraries (Gtk+ etc.) are also included in the
+       binary package. 
+
+
+**Install (Unix from source)
+  1. extract source archive, change directory to the created one.
+  2. ./configure 
+       ##################################################################
+        ./configure options
+         [Gtk+] (default is for Gtk+2.x)
+           ./configure --with-gtk1      (use Gtk+1.2)
+         [Cairo]  (default is on)
+           ./configure --disable-cairo  (not use cairo)
+         [SSL] (default is OpenSSL)
+           ./configure --with-gnutls    (use GNUTLS instead of OpenSSL)
+           ./configure --disable-ssl    (none support for SSL)
+         [Win32]  (default is for UNIX)
+           ./configure --with-win32     (making for Win32)
+         [TAR32]  (default is off)
+           ./configure --with-tar32     (use TAR32.DLL)
+         [UNLHA32]   (default is  off)
+           ./configure --with-unlha32   (use UNLHA32.DLL)
+       ##################################################################
+  3. make
+  4. su
+  5. make install
+   (If you need to internationalize your menu message (using gettext),
+    you have to do "make install" as a root.)
+
+
+
+**How to start
+  In anyway, you have to download one mascot file at least (at present).
+  Without mascot files, you cannot do anything with MaCoPiX.
+  Please download or prepare more than one mascot archive (*.tar.gz) 
+  and start macopix.
+
+  With MaCoPiX ver1.6.4 or later, you can install downlocaded mascot
+  archives (*.tar.gz) with drag & drop on the running MaCoPiX mascot
+  (or on the 1st message window for environment with no installed mascots).
+
+  Just running MaCoPiX,
+         % macopix
+  After started up, please install mascots with drag & drop (or from GUI).
+
+  If you want to fix the mascot at your startup of MaCoPiX and have a
+  mascot file (mascot.mcpx), please run the following command. 
+         % macopix mascot.mcpx
+  After starting the application, you can change any settings from the
+  pop-up GUI.
+
+  And you can see the command line options, using -h (or --help) option.
+
+
+
+**Creating files, necessary files
+  MaCoPiX needs (and creates) the following files...
+    a. Mascot file (*.mcpx)
+            And a mascot includes images (and sound files, if necessary).
+    b. Resource file (* .rc)
+    c. Launcher Menu file (*.menu)
+
+  Basically, these files are copied or created in the "User Directory"
+  (HOME$/.macopix/ for each users).
+
+  About a., please see the following item as "Mascots".
+
+  b., the resource file is the file described the parameters kept all
+  times regardless of changing mascots.
+  If you do not appoint any files for the resource file (you can
+  appoint the resource file which you want to load with "-r" option),
+  the default one (HOME$/.macopix/macopix.rc) should be loaded.
+
+  c. is the Launcher menu in which your favorite mascots are registered.
+  Please see the following item "Launcher menu".
+           
+
+
+**Mascots
+  The mascot of MaCoPiX is made up with 
+     - a mascot file (*.mcpx)
+     - image files   (You can use any image types loaded by
+                      gdk-pixbuf)
+  likely in the case of ActX.
+  Of course, you can use shaped mascots, if you appoint the shaped
+  images with alpha values (ex. png, gif, xpm).
+
+  At the starting time of the application, the mascot file should be
+  appointed as "% mascot mascot.mcpx".
+  In such case, MaCoPiX automatically searches the mascot file
+  according to the following priority.
+      1. absolute path or relative path from the current directory
+      2. User Directory ($HOME/.macopixrc/)
+      3. Common Directory (/usr/share/macopix/ ?)
+  User directory(2) should be automatically created at the first time
+  for using MaCoPiX.
+  Distribution Directory(3) will be determined by the installer 
+  at the time of installation.
+
+  Image files should be appointed in the mascot file.
+  These files are also searched according to the following priority.
+      1. same directory where the mascot file exists
+      2. User Pixmap Directory ($HOME/.macopixrc/pixmap/)
+      3. Common Pixmap Directory (/usr/share/macopix/pixmap/ ?)
+
+  And, if you selected automatic install (option -a; saved in the
+  resource file), mascot files are automatically installed at the time
+  of loading.
+  Starting with the -O (--over-write) option, the priority of loading
+  will change to 1 > 3 > 2 in order to overwrite mascots in user 
+  directory with ones in the distribution directory installed by
+  RPM package etc.
+
+  You should take care of the locale of your system to use mascots.
+  Mascot files should be written in one of the locale (in Gtk+1.2).
+  If you use the mascot in the different locale environment, balloons
+  and menus could not be presented correctly.
+  The author of this application will release his mascots in "ja"
+  (Japanese-euc) locale. 
+  If you interested in them, please translate them for your environment.
+  Furthermore, if there is a gettext message file (in po/ directory of
+  the source tree) for your environment, you can change the dialog
+  messages of GUI into your language.
+  When you translated these files, please contact with the author.
+
+
+
+**Launcher menu
+  In the field "Mascot Launcher" of the po-pup menu, you can register
+  your favorite mascot for easy changing.
+  To use this function, you have to prepare the launcher menu file (*.menu).
+  You can load and create it from the pop-up menu in every time.
+  And you can also edit it in the configuration dialog.
+
+  It is difference from the ActX one that the menu file has two levels
+  as "Category" -> "Mascot".
+  All "Mascots" have to be included in "Categories".
+
+  Each resource file can appoint one menu file as its default menu file.
+  If no menu files are appointed at the starting, this default menu
+  should be loaded.
+  If no mascot files are appointed at that time, a mascot selected at
+  random from the menu file should be loaded.
+  Furthermore, if you don't the appointment of the default menu in your
+  resource file, the menu selection dialog will appear in startup.
+  
+
+  If you appoint a menu file at the starting time, please use "-m" (or
+  "--menu") option.
+ 
+
+**Biff function
+  MaCoPiX can be a mail checker for the following types of the mail 
+  environment.
+     1. local spool (UNIX mbox : /var/spool/mail/$USER etc)
+     2. POP3 (SSL/TLS)
+     3. POP3 (APOP auth) (SSL/TLS)
+     4. qmail (Maildir)
+     5. MH + Procmail
+  After preparing proper configuration, please start MaCoPiX with "-b"
+  (or "--biff") option, or please check "Biff Check" on the pop-up
+  menu.
+  If you use the biff checker in POP, your password are saved in the
+  resource file with plain text.
+  So, please be careful for the management of the resource files.
+  (Basically, the resource files can be seen only by yourself.)
+
+  - for POP3/APOP
+    In "Server information" of GUI, input "Address", "UserID", "Password",
+    "POP3 Port No."(You should not change it in usual cases.).
+    You don't need to edit "File" entry.
+    POP over SSL (SSL/TLS) has been supported from ver 1.6.2, 
+    experimentally.
+
+  - for qmail (Maildir)
+    In "File" entry of "Server information" of GUI, input the
+    Maildir directory in which newly arrived mails are stocked
+    ( $HOME/Maildir/new in the most of cases ).
+
+  - MH + Procmail
+    In "File" entry of "Server information" of GUI, input the
+    full-path of log file for procmail, "procmail.log". (In the most
+    of cases, this file are appointed in "LGFILE=" entry of
+    $HOME/.procmailrc )
+    The mail directory for MH is automatically searched as the
+    following order, (1) "MAILDIR" entry in $HOME/.procmailrc,
+    (2) $HOME/Mail .
+    If you want to poll to the mail server periodically via fetchmail
+    or something else, you should input command for polling into
+    "Polling" entry in "Operating Information of Biff GUI.
+
+
+
+**Time signal function
+  MaCoPix has a time signal function, which do some actions (external
+  command, mascot changing ... etc.) every hour  on the hour (00 minute).
+  After preparing proper configuration, please start MaCoPiX with "-s"
+  (or "--signal") option, or please check "Time Signal" on the pop-up
+  menu.
+  The configurations for this function are saved in the resource file.
+  "Mascot Random Change" cannot work, if you do not appoint any menu 
+  files.
+     
+
+**Socket Message
+  Now mascots can speak any messages appointed in command line externally.
+   1. Start MaCoPiX with --sockmsg option.
+      You can start only one mascot at the same time.
+
+   2. From terminal command line, type
+       macopix --message "Hello!"
+      You can see this message on your mascot balloon.
+      You should change character code of the message following your locale.
+
+   3. If you want to change the expiration time to display each socket 
+      messages, you can appoint it like this way.
+       macopix --message "Hello!" --message-expire 5000
+      Using this --message-expire option, you can set the expiration
+      time to display each messages (unit is msec).
+      Without this option, the default expiration time will be used.
+      It can be set on GUI.
+
+   4. In the socket message balloon, you can also use "Stepping mode".
+      This mode will set "%c" control character automcatically in your
+      sending message. 
+      This can be set in GUI and also in command line options to send
+      a message.
+
+**Duet Animation
+   Using socket communication, some animation can be connected between
+   two mascots.
+   If you start Sachiko-sama and Yumi at the same time, and click one
+   of them....
+    - Each mascots makes /tmp/macopix-(userID)/macopix-(mascot file) temporal
+      file. If MaCoPiX was stopped abnormally these files can remain,
+      but they will not affect the next time.
+    - If the two or more same mascot start, the later will use this
+      temporal pipe file.
+      But, if the former is stopped or changed, this pipe should be closed.
+
+
+
+**Nokkari-chara Support
+  Now data conversion from/to Nokkari-Chara (an Window sitter
+  application for MS Windows) is supported.
+  But it is very experimental one and maybe for mascots developers.
+  Please read NKR.README.jp in this archive (sorry, only in Japanese).
+
+
+
+**Difference between Gtk+2.x / Gtk+-1.2 version
+  Now, there are some difference points between Gtk+2.x and Gtk+1.2
+  version of MaCoPiX including anti-alias effects in their font display.
+    - Character Code
+       In Gtk+1.2, you should select same locale as the character code
+       in  mascots/menus files for your environment.
+       In the case of Gtk+2.x version, the character code of mascot
+       file should be understood, according to the following priority.
+          1. [General] code=xxxx  setting in .mcpx file
+          2. current locale environment
+          3. MaCoPiX default (EUC-JP)
+       If MaCoPiX cannot understand the character code, you should
+       find "Invalid Character Code" display in Gtk+2.x version.
+    - Font selection
+       Fonts to be selected is difference in each Gtk+ versions.
+       If you find any alert, you should select suitable fonts for
+       your systems, using the font selection dialog of MaCoPiX.
+  Of course, Gtk+2.x version requires much memory area. compared with
+  Gtk+1.2 version.
+
+
+**SSL Support
+  This program can compile with a link to OpenSSL or GNUTLS libraries 
+  (or without either) to support POP over SSL on its biff function.
+
+  Because OpenSSL is a non-GPL freeware. I have to add a special 
+  exception for GPL to link this program with OpenSSL.
+  If you feel uneasy about this license issue, please link with GNUTLS.
+
+  You can switch it with ./configure option before compiling.
+    - OpenSSL (default)
+    - GNUTLS  (./configure --with-gnutls)
+    - without SSL  (./configure --disable-ssl)
+  When your environment for gnutls development does not satisfy to make
+  this program, OpenSSL will be used instead of GNUTLS.
+  (I confirmed a build completion with gnutls-1.4.1, but I couldn't with
+   gnutls-1.0.2 .)
+
+  In actual operation, GNUTLS version has some different points, compared 
+  with OpenSSL ver.
+    - GNUTLS does not support SSL v2.
+    - GNUTLS ver. always skippes confirmation on SSL certification.
+  If you neglect the license matter, I recommend to use OpenSSL rather
+  than GNUTLS.
+
+
+**Tranlucent Windows
+  Translucent Panel Clock and Balloon can be used also on UNIX with
+  MaCoPiX ver1.7.0 or later.
+  To enable this function, you need to compile MaCoPiX with  
+    - Gtk+ 2.8 (or later; cairo library is required.) .
+  Furthermore, you also need to run MaCoPiX on
+   - appropriate Window Mangers supporting translucent window rendering
+       (Compiz, Beryl KWin etc.)
+           * You should turn ON "Desktop Effects", "Visual Effects" etc. 
+  to use this translucent function.
+  With Gtk+2.10 or later, MaCoPiX can ditermine your desktop support
+  for translucent windows automaticaly. But, with Gtk+2.8, you should
+  check "Forced translucent rendering" in the config window (Common->
+  Font/Color).
+
+  With non-translucent environment, panel clock and balloon rendered
+  by cairo also can be used. The opacities of each colors are
+  effective only with cairo rendering. With non-translucent
+  environment, cairo will render each parts of clock and balloon over
+  a white plane base with translucent colors.
+  If the colors of clock and balloon are  different from your
+  expectation, you should change opacities of each colors to 255 (100%).
+
+  Mascot and biff images also can be rendered translucently with Cairo
+  rendering. 
+  Required environment for this function should be same as above.
+  In this cairo rendering mode, scaled-down (up) mascots can have
+  anti-aliased outline with composited environment. 
+  Furthermore, Now "Drop shadow of mascot" option is avairable with
+  this mode.
+  This mode automatically turns off with non-composited environment
+  (Gtk+2.10 or later).
+
+  For Windows version of MaCoPiX, it already has translucent rendering 
+  function using Windows native API. So, you are never required any
+  special environments.
+  In Windows' cairo redndering, opacities of background colors will be
+  ignored and used ordinal Balloon/Panel clock opacities instead of it.
+
+
+**To Do
+  - Sockmsg mode for Windows?
+  - Enhancement of the clock & alarm  function
+         .............
+
+
+**Copyright
+   The code in this distribution is Copyright 2002-2008 by Kurumi Chimari.
+
+   This program is free software; you can redistribute it and/or modify
+   it under the terms of the GNU General Public License as published by
+   the Free Software Foundation; either version 2, or (at your option)
+   any later version.
+
+   This program is distributed in the hope that it will be useful,
+   but WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+   GNU General Public License for more details.
+
+   You should have received a copy of the GNU General Public License
+   along with this program; if not, write to the Free Software
+   Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+
+   In addition, as a special exception, K.Chimari gives permission to link 
+   this code of this program with the OpenSSL library (or with modified
+   versions of OpenSSL that use the same license as OpenSSL), and distribute
+   linked combinations including the two. You must obey the GNU General 
+   Public License in all respects for all of the code used other than OpenSSL.
+   If you modify this file, you may extend this exception to your version of 
+   the file, but you are not obligated to do so. If you do not wish to do so,
+   delete this exception statement from your version.

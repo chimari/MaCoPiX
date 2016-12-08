@@ -1,0 +1,293 @@
+2008.6.24   ver1.7.4  - Fixed a bug on compilation under Gtk+2.10 or earlier.
+
+2008.5.24   ver1.7.3  - "Drop Shadow of Mascot" is  now avairable also on
+	                Windows. But no anti-aliased for image and shadow
+	                outlines.
+
+2008.5.23   ver1.7.2  - Fixed a problem with clickable areas on mascot and
+	                biff images renderd by cairo (Gtk+2.10 or later).[UNIX]
+                      - Scaled image rendering routine is modified to use 
+	                GdkPixbuf instead of Cairo. [UNIX]
+                      - Added "Drop Shadow of Mascot" otion with Cairo 
+	                rendering mode. [UNIX]
+
+2008.05.21  ver1.7.1  - Added a new cairo rendering mode of mascot and biff 
+	                images. This supports anti-aliased mascot edge with
+	                scaled-down (up) mascots. But, the clickable area on
+	                a mascot image expands to a whole rectangle are of 
+	                mascot image, which includes transparent pixels. [UNIX]
+	              - Cairo and Magnification switch settings moved to a
+	                new "Rendering" page in the configuration window.
+                         
+2008.05.15  ver1.7.0  - Fixed a bug on animation loops on Gtk+2.12.
+                      - Fixed a bug of mis-reading long subject on th biff mode.
+                      - Replaced some Gtk+ deprecated code (GtkTooltips etc.).
+                      - To fix a problem to fail auto-title-bar-scaling
+	                with CompiZ, new focus follow mode for Compiz added [UNIX].
+                        With Compiz, please select 
+                             "Auto-Scaling (for Compiz)"
+	                in mascot config (common->move->title-bar size).
+	                Plain "Auto-Scaling" should be the ordinal style
+	                scaling for all other environment.
+                      - Added a mode to ignore title-bar-less windows [UNIX].
+                        With some rather older window managers (MWM etc.),
+	                this function could disturb focus following.
+                      - Added actions (ignore/vanish/home position) for
+	                title-bar-less windows. [UNIX/Windows]
+                      - Added a new rendering argorithm for Balloon/Panel
+	                Clock using Cairo (Gtk+2.8 or later, pangogairo 
+	                recommended). You can switch it with ordinal Gdk 
+	                rendering. [UNIX/Windows]
+                      - With cairo rendering, added new support for translucent 
+	                (alpha blending) balloon and panel clock with 
+	                compositing window managers (Compiz, KWin etc.). [UNIX]
+	                This function has been checked with
+                              Compiz[Fedora8,Fedora Core6,Ubuntu8.04]
+                              KWin[Fedora8] .
+                        With translucent KWin, you should turn OFF shadows 
+	                and check "Raise with Mascot shaping..." in the 
+	                config window of MaCoPiX (Common > Move >
+	                Foreground Mapping).
+	              - Added auto-detection for home position. [UNIX]
+	              - Upgraded Gtk+Win32 version to Gtk+2.12.9. [Windows]
+
+2007.05.29  ver1.6.4  - Drag & Drop Installation of mascot menu (*tar.gz).
+		      - Bug fix of gui.c on the compile with gtk+1.2
+                      - Improving Socket Message Mode. Added Stepping
+	                Balloon mode (Gtk+2 only).GUI and command line
+	                options are also changed for this update. 
+	              - Added the exception statement of GPL in README 
+	                to link with the OpenSSL.
+		      - Changes in SSL POP. Bug fix to skip confirmation 
+		        window with successful server certification.
+	                SSL certification verify results display on SSL 
+	                manager.
+                      - Reacessing with POP immediately after the SSL 
+	                certificate confirmation window closed.
+                      - Remapping of biff pix after mascot changing.
+                      - Added support of GNUTLS (from patches by Ying-Chun Liu).
+                        You can select OpenSSL(def.) or GNUTLS in configure 
+	                option.
+
+2007.05.14  ver1.6.3  - Replaced MD5 codes to GPLed ones.
+                        (patched by Ying-Chun Liu).
+                      - Replaced some Gtk+ deprecated functions
+		        (GtkCombo etc.)
+                      - Bug fix for abnormal termination in succesive 
+	                initialization of POP over SSL Biff.
+                      - version up of OpenSSL to 0.9.8e (Windows).
+
+2007.05.02  ver1.6.2  - Supporting POP3 over SSL (SSL/TLS), experimentally.
+                        (still not confirmed with TLS)
+                      - Bug fix for popup menu construction.
+                      - Balloon messages for file save.
+
+2007.04.16  ver1.6.1  - Added an option toremain characters opaque in 
+	                transparent balloon and panel clock.[Windows]
+                      - Timing adjustment for clock and bolloon drawings.
+                      - Added icons to menu and button items (Gtk+-2).
+
+2007.04.10  ver1.6.0  - Support Win2000/XP version.
+                      - Attached application icon (temporary?).
+                      - Supporting extrantion function with UNLHA32.DLL 
+	                and TAR32.DLL for macot installtion on Windows
+	                version. Binary version for Windows should be
+                        compiled only without UNLHA32.DLL(non-GPL)function,
+                        but distributed with TAR32.DLL(GPL).
+                      - Also in the UNIX version, the menu filescan be
+	                installed directly from *.tar.gz file, 
+	                using GNU tar commnad (with "z" option).
+                      - Using FileChooser instead of FileSelection with
+	                Gtk+2.4 or later.
+                      - Refine the progress-bar for Mascot-Installation.
+                      - Add tray icon function in the task bar (only 
+	                w/Gtk+2.10 or later).
+                      - Added BIFF function (POP3) for Windows version.
+		        [using winsock2].
+                        APOP should work also. But, not confirmed yet.
+                      - Added selection to save (or not to save) the password
+	                for POP/APOP in the resource file. 
+	                (for Windows security)
+	                In the case of no password, it can be inputed in the
+	                password dialog window at the biff-starting.
+                      - Bug fix for ON/OFF of SPAM detection.
+                      - Fixed some memory leaks in mascot changings, clock 
+	                and balloon.
+                      - Supporting transparent (alpha blending) windows
+	                (for Windows pnly).
+                      - MAX_PIXMAP / MAX_ANIME_FRAME are reset to 64.
+
+2006.10.11  ver1.4.1  - Bug fix for freeze up rarely happened on POP3 Biff.
+                      - Added ON/OFF for tooltips on biff pix.
+
+2006.09.07  ver1.4.0  - Trouble shooting with GCC4.x
+	                (Checked with gcc-4.1.1 on Fedora Core 5).
+                      - Trouble shooting on MIME decoding for long From/
+	                Subject lines (up to 10lines).
+                      - New tooltip on the biff image window.
+	                If you are using POP, you can also see the From/
+	                Subject for your latest mail.
+                      - Added new control character for the biff balloon 
+	                message. "%f"(From of the lastest mail),
+	                "%s"(Subject of the latest mail).
+                      - Improvement of the biff timing with POP.
+                      - The maximum POP scannig number of mails is now
+	                changable (default 40mails).
+                      - Added a "--message-expire" options for the socket 
+	                meeage mode. The expire time[msec] for each messages 
+	                can be determined with this option (default = 10sec).
+
+2005.09.15  ver1.3.2  - A bug on the common directory in ver 1.3.1 was fixed.
+
+2005.09.07  ver1.3.1  - Change default target for configure script to Gtk+2.
+                        If you want to make with an old Gtk+1.2 system, use
+	                "--with-gtk1" option in the script.
+                      - MIME decoding on mail header without nkf is now
+	                available.
+                      - MAX_PIXMAP is reset to 32pixes (for Hayate X Blade).
+                        The bug which the maximum number of pixmap is set
+	                as "MAX_PIXMAP-1" has been fixed.
+                      - Default Colors for Clock and Balloon is now editable
+                        and can be saved in the Resource file.
+	              - Bug fix for excluded SPAM count on biff function.
+	              - Instead of gettext, glib-gettext has been employed.
+	
+2004.11.29  ver1.2.2  - Installation of mascots and menus with GUI,
+	                using pop-up and startup menu.
+                      - Fix a compiling problem with FreeBSD and cygwin
+                      - Changed site URL and mail address, due to
+	                th change of main site.
+
+2004.09.29  ver1.2.1  - Character Code Support for non-Japanese locale
+	                environment, based on a patch described by
+	                Danny Milosavljevic.
+	                Character code of mascot file should be understood,
+	                according to the following priority.
+	                   1. [General] code=xxxx  setting in .mcpx file
+	                   2. current locale environment
+	                   3. MaCoPiX default (EUC-JP)
+	                This function should be worked only with Gtk+2.
+	              - Some bug fixes in menu configuration GUI.
+                      - Change the directory of pipe files in /tmp .
+	
+2004.08.14  ver1.2.0  - Socket Message Mode is newly added by Christoph 
+	                Hohmann.
+	              - Duet Animation function is newly added.
+	                This function realize the simple anime connection
+			between two mascots.
+	              - Comic Market 66 version.
+	
+2004.05.13  ver1.0.4  - New support of MH + Procmail type mail spool in
+	                biff function.
+	              - Bug fix for the clock drawing.
+	              - Bug fix for the positioning of the biff pixmap
+	                with magnified mascots.
+                      - Multiple files selection in the image/menu file
+	                selection dialog (only with Gtk+2).
+
+2004.04.11  ver1.0.3  - A bug in the color initialization for some PPC or
+	                Solaris systems is fixed.
+                      - Change mouse cursors.
+                      - SPAM exception in the arrived  mail list.
+
+2004.02.16  ver1.0.2  - "UTF-8" code conversion of mascots and menus in
+	                Gtk+2.x mode. Your mascot and menu files should
+			agree with your locale also in Gtk+2.x MaCoPiX.
+                        (So, the code specification in ver 1.0.1, which
+			required UTF-8 in those files, is expired now.)
+
+2004.02.14  ver1.0.1  - "UTF-8" coding appointment in Gtk+2.x
+                        Now japanized menus are available in all
+	                "ja"-locale environment.
+                      - gettext files updated to ver0.12.1 base
+
+2004.02.14  ver1.0.0  - Gtk+2.0 Supporting.
+                        You should use "./configure --with-gtk2" for
+			making with Gtk+2.0 (Default is still for Gtk+1.2)
+                      - Bug fix for segmentation fault in biff for local
+			spool or Maildir without reference mail file.
+                      - GUI configuration for Nokkari-Chara Code converter
+
+2004.02.08  ver0.9.0  - Start up Menu Selection dialog in the case of no
+                        appointment of (default)menu / mascot to start up.
+                      - This type of menu selection can be used also from
+	                the pop-up menu.
+	              - Load/Save for Nokkari-Chara data (one of Window Sitter
+	                applications for MS Windows) support.
+	                Please read NKR.README.jp (sorry in Japanese) for
+	                this function.
+                      - Add to read HOME$/.gtkrc in startup.
+	              - The size of the biff list window is now changeable.
+                      - New support of qmail (Maildir) type mailbox in biff 
+	                function.
+                      - Fixed abnormal program termination in start up
+	                w/Biff option and w/o network.
+	
+2003.09.27  ver0.8.6  - User file consistency check mode is added.
+	                It works, if the loaded masccot/menu file is older
+	                than the corresponding one in Common Dir.
+	              - Print out of installed menu list in the help
+                        message.
+                      - On-line Manual is added.
+                      - A control character "%m" (number of stored mails)
+  	                in balloon systems are added. (by Iwamoto-san)
+
+2003.05.23  ver0.8.5  - Bug fix in the drag motion at home position
+	              - Bug fix in the treatment for maximum of frames
+	              - Adding
+	                   --install-user-mascot
+	                   --install-user-menu
+	                   --install-common-mascot
+	                   --install-common-menu
+			options.
+	                These support to install mascot and menu files.
+
+2003.04.22  ver0.8.4  - Bug fix in the expiration of the biff balloon
+                      - Some adjustment on the image test-putting
+		      - Focus follow : Offset for shaped title bars
+		      - Focus follow : Selectable window corner as the
+	             	starting point for focus following.
+
+2003.04.18  ver0.8.3  - Side selection of the biff image position
+	              - Improvement of the configuration dialog
+	              - Bug fix (?) for the subject listing for 
+	                local spool (by Mamedore-san)  
+
+2003.04.16  ver0.8.2  - Improvement of the drawing routine.
+                        Even with quick changes of the window shape,
+			there are no flickering any more.
+
+2003.04.15  ver0.8.1  - Modification of the Home Position function.
+	                Separation of the routine for sticking out from
+			desktop area and non-existence of the focus window.
+
+2003.04.07  ver0.8.0  - First public release.
+
+2003.03.31  ver0.7.3  - Bug fix for the POP3 function (by Iwamoto-san)
+	              - Bug fix for home position function on KDE3.
+
+2003.03.16  ver0.7.2  - The problem of POP3 to access the mail server
+                        which has too many files was fixed (by Iwamoto-san).
+		      - Digit type selection for Clock
+		      - Time signal function
+
+2003.03.11  ver0.7.0  - Biff function(POP3/APOP/local spool)
+
+2003.03.05  ver0.6.5  - Adjustment of the installer
+                      - Bug fix for font-set
+
+2003.03.03  ver0.6.3  - Various bug fix
+                      - Animation test function in the anime configuration
+
+2003.02.21  ver0.6.0  - Launcher menu function
+	              - Sound function
+                      - Resource file is now selectable at the starting
+                      - Set the name of the application to MaCoPiX
+
+2002.12.24  ver0.5.1  - Revision concerned with default fonts
+
+2002.12.16  ver0.5.0  - Test release
+
+
+  
+  
