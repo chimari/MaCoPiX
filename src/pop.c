@@ -112,7 +112,6 @@ static int popApopGetKey(char *ptr, char *apop_key);
 static int popApop(char *user, char *passwd, char *apop_key, guint ssl_mode);
 
 extern  char * MD5Digest (unsigned char *s);
-extern void pop_debug_print (const gchar *format, ...) G_GNUC_PRINTF(1, 2);
 
 /*==========================================================================*/
 /* Global Variables                                                         */

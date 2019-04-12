@@ -56,21 +56,7 @@
 
 
 
-extern void AllRandomChangeMascotMenu();
-extern void create_config_dialog();
-extern void MenuSaveAll();
-extern void quit_all();
-extern void my_signal_connect();
-
-void trayicon_create();
 static void trayicon_popup_menu();
-void trayicon_show();
-void trayicon_hyde();
-void trayicon_destroy();
-void trayicon_set_tooltip();
-
-extern GtkWidget *win_main;
-// extern GtkWidget *PopupMenu;
 
 static GtkWidget *trayicon_menu=NULL;
 static gboolean on_notify=FALSE;
@@ -79,28 +65,22 @@ static gboolean default_tooltip=FALSE;
 void trayicon_create(typMascot *mascot){
   GdkPixbuf *icon;
   GtkWidget *popup_button, *bar;
-#ifdef __GTK_STOCK_H__
   GtkWidget *image;
-#endif
 
   icon = gdk_pixbuf_new_from_inline(sizeof(macopix_icon), macopix_icon, 
 				    FALSE, NULL);
   mascot->tray_icon = gtk_status_icon_new_from_pixbuf(icon);
 
   g_signal_connect(G_OBJECT(mascot->tray_icon), "popup-menu",
-  		   G_CALLBACK(trayicon_popup_menu), win_main);
+  		   G_CALLBACK(trayicon_popup_menu), mascot->win_main);
   
   if (!trayicon_menu) {
     trayicon_menu = gtk_menu_new();
     gtk_widget_show(trayicon_menu);
     
-#ifdef __GTK_STOCK_H__
     image=gtk_image_new_from_stock (GTK_STOCK_REFRESH, GTK_ICON_SIZE_MENU);
     popup_button =gtk_image_menu_item_new_with_label (_("Mascot Random Change"));
     gtk_image_menu_item_set_image(GTK_IMAGE_MENU_ITEM(popup_button),image);
-#else
-    popup_button =gtk_menu_item_new_with_label (_("Mascot Random Change"));
-#endif
     gtk_widget_show (popup_button);
     gtk_container_add (GTK_CONTAINER (trayicon_menu), popup_button);
     my_signal_connect (popup_button, "activate",
@@ -111,26 +91,18 @@ void trayicon_create(typMascot *mascot){
     gtk_widget_show (bar);
     gtk_container_add (GTK_CONTAINER (trayicon_menu), bar);
     
-#ifdef __GTK_STOCK_H__
     image=gtk_image_new_from_stock (GTK_STOCK_PROPERTIES, GTK_ICON_SIZE_MENU);
     popup_button =gtk_image_menu_item_new_with_label (_("Config"));
     gtk_image_menu_item_set_image(GTK_IMAGE_MENU_ITEM(popup_button),image);
-#else
-    popup_button =gtk_menu_item_new_with_label (_("Config"));
-#endif
     gtk_widget_show (popup_button);
     gtk_container_add (GTK_CONTAINER (trayicon_menu), popup_button);
     my_signal_connect (popup_button, "activate",
 		       create_config_dialog,
 		       NULL);
                         
-#ifdef __GTK_STOCK_H__
     image=gtk_image_new_from_stock (GTK_STOCK_SAVE, GTK_ICON_SIZE_MENU);
     popup_button =gtk_image_menu_item_new_with_label (_("Save All"));
     gtk_image_menu_item_set_image(GTK_IMAGE_MENU_ITEM(popup_button),image);
-#else
-    popup_button =gtk_menu_item_new_with_label (_("Save All"));
-#endif
     gtk_widget_show (popup_button);
     gtk_container_add (GTK_CONTAINER (trayicon_menu), popup_button);
     my_signal_connect (popup_button, "activate",
@@ -141,13 +113,9 @@ void trayicon_create(typMascot *mascot){
     gtk_widget_show (bar);
     gtk_container_add (GTK_CONTAINER (trayicon_menu), bar);
     
-#ifdef __GTK_STOCK_H__
     image=gtk_image_new_from_stock (GTK_STOCK_QUIT, GTK_ICON_SIZE_MENU);
     popup_button =gtk_image_menu_item_new_with_label (_("Exit"));
     gtk_image_menu_item_set_image(GTK_IMAGE_MENU_ITEM(popup_button),image);
-#else
-    popup_button =gtk_menu_item_new_with_label (_("Exit"));
-#endif
     gtk_widget_show (popup_button);
     gtk_container_add (GTK_CONTAINER (trayicon_menu), popup_button);
     my_signal_connect (popup_button, "activate",

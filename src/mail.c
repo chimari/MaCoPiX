@@ -50,13 +50,8 @@
 
 void biff_init();
 
-gint SetMailChecker();
 gint ResetMailChecker();
 gboolean MailChecker();
-
-void make_biff_pix();
-void display_biff_balloon();
-void remap_biff_pix();
 
 void mail_check();
 void mail_check_mbox();
@@ -80,53 +75,15 @@ char* strbuf();
 
 
 void make_fs_max();
-void create_biff_dialog();
 static void close_biff();
 static void mailer_start();
 
-gchar* set_mhdir();
-
-void mail_arg_init();
-
 void strip_last_ret();
 
-#ifndef USE_WIN32
-void kill_pop3();
-#endif
 
-
-extern void pop_debug_print (const gchar *format, ...) G_GNUC_PRINTF(1, 2);
-
-//
-extern void ext_play();
-extern void sound_play();
-
-extern GtkWidget *biff_pix;
 extern typMascot *Mascot;
 extern gboolean flag_balloon;
 
-
-extern gint dw_configure_biff_pix();
-extern gint dw_expose_biff_pix();
-extern void biff_drag_begin();
-extern void biff_drag_end();
-extern void biff_window_motion();
-
-extern void conv_unmime_header();
-extern void conv_unmime_header_overwrite();
-
-extern void create_pop_pass_dialog();
-
-#ifdef __GTK_STOCK_H__
-extern GtkWidget* gtkut_button_new_from_stock();
-#endif
-
-#ifdef USE_SSL
-extern gint ssl_manager_verify_cert();
-#endif
-
-extern void my_signal_connect();
-extern gboolean my_main_iteration();
 
 // global argument
 #ifndef USE_WIN32
@@ -161,12 +118,12 @@ void biff_init(typMascot *mascot)
 #ifdef __GTK_TOOLTIP_H__
   //gtk_widget_set_tooltip_text(mascot->mail.e_draw,
   //gtk_widget_set_tooltip_text(mascot->mail.e_draw,
-  gtk_widget_set_tooltip_text(biff_pix,
+  gtk_widget_set_tooltip_text(mascot->biff_pix,
 			      _("Initializing Biff..."));
 #else
   gtk_tooltips_set_tip(GTK_TOOLTIPS(mascot->mail.tooltips),
 		       //mascot->mail.e_draw,
-		       biff_pix,
+		       mascot->biff_pix,
 		       _("Initializing Biff..."),
 		       NULL);
 #endif
@@ -174,7 +131,7 @@ void biff_init(typMascot *mascot)
   if(mascot->mail.tooltips_fl){
 #ifdef __GTK_TOOLTIP_H__
     //gtk_widget_set_tooltip_text(mascot->mail.e_draw,NULL);
-    gtk_widget_set_tooltip_text(biff_pix,NULL);
+    gtk_widget_set_tooltip_text(mascot->biff_pix,NULL);
 #else
     gtk_tooltips_enable(mascot->mail.tooltips);
 #endif
@@ -182,7 +139,7 @@ void biff_init(typMascot *mascot)
   else{
 #ifdef __GTK_TOOLTIP_H__
     //gtk_widget_set_tooltip_text(mascot->mail.e_draw,NULL);
-    gtk_widget_set_tooltip_text(biff_pix,NULL);
+    gtk_widget_set_tooltip_text(mascot->biff_pix,NULL);
 #else
     gtk_tooltips_disable(mascot->mail.tooltips);
 #endif
@@ -219,7 +176,7 @@ gint SetMailChecker(gpointer gdata){
     fflush(stdin);
     fflush(stdout);
   }
-  gtk_widget_unmap(biff_pix);
+  gtk_widget_unmap(mascot->biff_pix);
 
   if(mascot->mail.flag){
     biff_init(mascot);
@@ -247,7 +204,7 @@ gint ResetMailChecker(gpointer gdata){
     fflush(stdin);
     fflush(stdout);
   }
-  gtk_widget_unmap(biff_pix);
+  gtk_widget_unmap(mascot->biff_pix);
 
   if(mascot->mail.flag){
     MailChecker(mascot);
@@ -287,41 +244,35 @@ gboolean MailChecker(gpointer gdata){
 
 void make_biff_pix(typMascot *mascot){
   
-  biff_pix = gtk_window_new(GTK_WINDOW_POPUP);
-#ifdef USE_GTK2
-  gtk_window_set_accept_focus(GTK_WINDOW(biff_pix),FALSE);
-#endif
-  gtk_widget_set_app_paintable(biff_pix, TRUE);
-  gtk_widget_set_events(GTK_WIDGET (biff_pix), 
+  mascot->biff_pix = gtk_window_new(GTK_WINDOW_POPUP);
+  gtk_window_set_accept_focus(GTK_WINDOW(mascot->biff_pix),FALSE);
+  gtk_widget_set_app_paintable(mascot->biff_pix, TRUE);
+  gtk_widget_set_events(GTK_WIDGET (mascot->biff_pix), 
 			GDK_FOCUS_CHANGE_MASK | 
 			GDK_BUTTON_MOTION_MASK | 
 			GDK_BUTTON_RELEASE_MASK | 
 			GDK_BUTTON_PRESS_MASK | 
 			GDK_EXPOSURE_MASK);
-  gtk_widget_realize(biff_pix);
-#ifdef USE_GTK2
-  gtk_window_set_resizable(GTK_WINDOW(biff_pix),TRUE);
-#endif
-  gdk_window_set_decorations(biff_pix->window, 0);
+  gtk_widget_realize(mascot->biff_pix);
+  gtk_window_set_resizable(GTK_WINDOW(mascot->biff_pix),TRUE);
+  gdk_window_set_decorations(gtk_widget_get_window(mascot->biff_pix), 0);
 #ifndef USE_WIN32
   /* gdk_window_set_override_redirect is not implemented (for warning) */
-  gdk_window_set_override_redirect(biff_pix->window,TRUE);
+  gdk_window_set_override_redirect(gtk_widget_get_window(mascot->biff_pix),TRUE);
 #endif
 
-  my_signal_connect(biff_pix, "configure_event",
-		    dw_configure_biff_pix, (gpointer)Mascot);
-  my_signal_connect(biff_pix, "expose_event",
-		    dw_expose_biff_pix, (gpointer)Mascot);
-  my_signal_connect(biff_pix, "button_press_event",
-		    biff_drag_begin, (gpointer)Mascot);
-  my_signal_connect(biff_pix, "button_release_event",
-		    biff_drag_end, (gpointer)Mascot);
-  my_signal_connect(biff_pix, "motion_notify_event",
-		    biff_window_motion, (gpointer)Mascot);
+  my_signal_connect(mascot->biff_pix, "configure_event",
+		    dw_configure_biff_pix, (gpointer)mascot);
+  my_signal_connect(mascot->biff_pix, "expose_event",
+		    dw_expose_biff_pix, (gpointer)mascot);
+  my_signal_connect(mascot->biff_pix, "button_press_event",
+		    biff_drag_begin, (gpointer)mascot);
+  my_signal_connect(mascot->biff_pix, "button_release_event",
+		    biff_drag_end, (gpointer)mascot);
+  my_signal_connect(mascot->biff_pix, "motion_notify_event",
+		    biff_window_motion, (gpointer)mascot);
 
-#ifdef USE_GTK2
-  gtk_window_resize (GTK_WINDOW(biff_pix), 1, 1);
-#endif
+  gtk_window_resize (GTK_WINDOW(mascot->biff_pix), 1, 1);
 }
 
 
@@ -347,12 +298,12 @@ void display_biff_balloon(typMascot *mascot)
 	}
 	if(text_tip){
 #ifdef __GTK_TOOLTIP_H__
-	  gtk_widget_set_tooltip_text(biff_pix,
+	  gtk_widget_set_tooltip_text(mascot->biff_pix,
 				      //gtk_widget_set_tooltip_text(mascot->mail.e_draw,
 				      text_tip);
 #else
 	  gtk_tooltips_set_tip(GTK_TOOLTIPS(mascot->mail.tooltips),
-			       biff_pix,
+			       mascot->biff_pix,
 			       //mascot->mail.e_draw,
 			       text_tip,NULL);
 #endif
@@ -363,12 +314,12 @@ void display_biff_balloon(typMascot *mascot)
 	text_tip=g_strdup_printf(_("You have %d mails."),mascot->mail.count);
 #ifdef __GTK_TOOLTIP_H__
 	//	gtk_widget_set_tooltip_text(mascot->mail.e_draw,
-	gtk_widget_set_tooltip_text(biff_pix,
+	gtk_widget_set_tooltip_text(mascot->biff_pix,
 				    text_tip);
 #else
 	gtk_tooltips_set_tip(GTK_TOOLTIPS(mascot->mail.tooltips),
 			     //mascot->mail.e_draw,
-			     biff_pix,
+			     mascot->biff_pix,
 			     text_tip,NULL);
 #endif
 	g_free(text_tip);
@@ -377,12 +328,12 @@ void display_biff_balloon(typMascot *mascot)
     else{
 #ifdef __GTK_TOOLTIP_H__
       //gtk_widget_set_tooltip_text(mascot->mail.e_draw,
-      gtk_widget_set_tooltip_text(biff_pix,
+      gtk_widget_set_tooltip_text(mascot->biff_pix,
 				  _("You have no mails."));
 #else
       gtk_tooltips_set_tip(GTK_TOOLTIPS(mascot->mail.tooltips),
 			   //mascot->mail.e_draw,
-			   biff_pix,
+			   mascot->biff_pix,
 			   _("You have no mails."),
 			   NULL);
 #endif
@@ -390,7 +341,7 @@ void display_biff_balloon(typMascot *mascot)
   }
 
   if(mascot->mail.status == POP3_ERROR){
-    gtk_widget_unmap(biff_pix);
+    gtk_widget_unmap(mascot->biff_pix);
 
     if(flag_balloon==FALSE){
       mascot->balseq=0;
@@ -401,7 +352,7 @@ void display_biff_balloon(typMascot *mascot)
     }
   }
   else if(mascot->mail.status == POP3_SSL_CERT){
-    gtk_widget_unmap(biff_pix);
+    gtk_widget_unmap(mascot->biff_pix);
     
 #ifdef USE_SSL
     mascot->mail.ssl_cert_res=ssl_manager_verify_cert(mascot);
@@ -411,10 +362,10 @@ void display_biff_balloon(typMascot *mascot)
   }
   else if(mascot->mail.status != NO_MAIL){
     MoveBiffPix(mascot,mascot->x,mascot->y);
-    gtk_widget_map(biff_pix);
+    gtk_widget_map(mascot->biff_pix);
   }
   else{
-    gtk_widget_unmap(biff_pix);
+    gtk_widget_unmap(mascot->biff_pix);
   }
   if(mascot->mail.status==NEW_MAIL){
     sound_play(mascot,mascot->mail.sound);
@@ -435,14 +386,14 @@ void display_biff_balloon(typMascot *mascot)
 void remap_biff_pix(typMascot *mascot){
   if(!mascot->mail.flag) return;
   if(mascot->mail.status == (POP3_ERROR|POP3_SSL_CERT)){
-    gtk_widget_unmap(biff_pix);
+    gtk_widget_unmap(mascot->biff_pix);
   }
   else if(mascot->mail.status != NO_MAIL){
     MoveBiffPix(mascot,mascot->x,mascot->y);
-    gtk_widget_map(biff_pix);
+    gtk_widget_map(mascot->biff_pix);
   }
   else{
-    gtk_widget_unmap(biff_pix);
+    gtk_widget_unmap(mascot->biff_pix);
   }
 }
 
@@ -898,29 +849,21 @@ unsigned __stdcall get_pop3(LPVOID lpvPipe)
 #endif
   else{
     if(mascot->mail.last_f!=NULL){
-#ifdef USE_GTK2
       if(g_utf8_validate(mascot->mail.last_f,-1,NULL)){
-#endif
 	strip_last_ret(mascot->mail.last_f);
-#ifdef USE_GTK2
       }
       else{
 	mascot->mail.last_f = g_strdup(_("(Decode Error)"));
       }
-#endif
     }
 
     if(mascot->mail.last_s!=NULL){
-#ifdef USE_GTK2
       if(g_utf8_validate(mascot->mail.last_s,-1,NULL)){
-#endif
 	strip_last_ret(mascot->mail.last_s);
-#ifdef USE_GTK2
       }
       else{
 	mascot->mail.last_s = g_strdup(_("(Decode Error)"));
       }
-#endif
     }
   }
 
@@ -1188,17 +1131,13 @@ void pop3_data_read(typMascot *mascot)
 	if(fgets( buf,BUFFSIZE-1,fp )==NULL) exit(1);  // Last From
 	if(mascot->mail.last_f) g_free(mascot->mail.last_f);  
 	if(strlen(buf)>=2){
-#ifdef USE_GTK2
 	  if(g_utf8_validate(buf,-1,NULL)){
-#endif
 	    mascot->mail.last_f = g_strdup(buf);
 	    strip_last_ret(mascot->mail.last_f);
-#ifdef USE_GTK2
 	  }
 	  else{
 	    mascot->mail.last_f = g_strdup(_("(Decode Error)"));
 	  }
-#endif
 	}
 	else{
 	  mascot->mail.last_f = NULL;
@@ -1206,17 +1145,13 @@ void pop3_data_read(typMascot *mascot)
 	if(fgets( buf,BUFFSIZE-1,fp )==NULL) exit(1);  // Last Sub
 	if(mascot->mail.last_s) g_free(mascot->mail.last_s);  
 	if(strlen(buf)>=2){
-#ifdef USE_GTK2
 	  if(g_utf8_validate(buf,-1,NULL)){
-#endif
 	    mascot->mail.last_s = g_strdup(buf);
 	    strip_last_ret(mascot->mail.last_s);
-#ifdef USE_GTK2
 	  }
 	  else{
 	    mascot->mail.last_s = g_strdup(_("(Decode Error)"));
 	  }
-#endif
 	}
 	else{
 	  mascot->mail.last_s = NULL;
@@ -1973,11 +1908,9 @@ void create_biff_dialog(typMascot *mascot)
   gchar *p;
   gchar *buf_unmime;
   gchar *err_msg;
-#ifdef USE_GTK2
   GtkTextBuffer *text_buffer;
   GtkTextIter start_iter, end_iter;
   GtkTextMark *end_mark;
-#endif
   
 
   // Win構築は重いので先にExposeイベント等をすべて処理してから
@@ -1986,12 +1919,8 @@ void create_biff_dialog(typMascot *mascot)
   mascot->flag_menu=TRUE;
 
   
-#ifdef USE_GTK2
   biff_main = gtk_window_new(GTK_WINDOW_TOPLEVEL);
   text_buffer = gtk_text_buffer_new(NULL);
-#else
-  biff_main = gtk_window_new(GTK_WINDOW_DIALOG);
-#endif
 
   gtk_widget_set_usize (biff_main, mascot->mail.win_width, 
   			mascot->mail.win_height);
@@ -2012,7 +1941,6 @@ void create_biff_dialog(typMascot *mascot)
   biff_tbl = gtk_table_new (6, 3, FALSE);
   gtk_container_add (GTK_CONTAINER (biff_main), biff_tbl);
 
-#ifdef USE_GTK2
   biff_scroll = gtk_scrolled_window_new(NULL, NULL);
   gtk_scrolled_window_set_policy(GTK_SCROLLED_WINDOW(biff_scroll),
                                  GTK_POLICY_AUTOMATIC, GTK_POLICY_AUTOMATIC);
@@ -2024,16 +1952,6 @@ void create_biff_dialog(typMascot *mascot)
   gtk_container_add(GTK_CONTAINER(biff_scroll), biff_text);
 
   gtk_table_attach_defaults (GTK_TABLE (biff_tbl), biff_scroll, 0, 5, 0, 1);
-#else
-  biff_text = gtk_text_new (NULL, NULL);
-  gtk_text_set_editable (GTK_TEXT (biff_text), FALSE);
-  gtk_table_attach_defaults (GTK_TABLE(biff_tbl), biff_text, 0, 5, 0, 1);
-
-  biff_scroll = gtk_vscrollbar_new (GTK_TEXT (biff_text)->vadj);
-  gtk_table_attach (GTK_TABLE (biff_tbl), biff_scroll, 5, 6, 0, 1,
-		    GTK_FILL, 
-		    GTK_EXPAND | GTK_SHRINK | GTK_FILL, 0, 0);
-#endif
 
 
   switch(mascot->mail.type){
@@ -2054,7 +1972,6 @@ void create_biff_dialog(typMascot *mascot)
   }
 
 
-#ifdef USE_GTK2
   gtk_text_buffer_create_tag (text_buffer, "underline",
 			      "underline", PANGO_UNDERLINE_SINGLE, NULL);
   gtk_text_buffer_create_tag (text_buffer, "big_gap_after_line",
@@ -2122,40 +2039,14 @@ void create_biff_dialog(typMascot *mascot)
   gtk_text_view_scroll_to_iter(GTK_TEXT_VIEW(biff_text),
 			       &end_iter,0.0, FALSE,0.0, 0.0); 
 
-#else
-  if((strlen(tmp_froms)<5)||(mascot->mail.status == NO_MAIL)){
-    gtk_text_insert (GTK_TEXT (biff_text), NULL, NULL, NULL,
-		     _("   === Failed to get From/Subject list of arrived mails. ==="),-1);
-  }
-  else{
-    p=(gchar *)strtok(tmp_froms,"\n");
-    do{
-      gtk_text_insert (GTK_TEXT (biff_text), NULL, NULL, NULL,
-		       p, -1);
-      gtk_text_insert (GTK_TEXT (biff_text), NULL, NULL, NULL,
-		       "\n", -1);
-    }while((p=(gchar *)strtok(NULL,"\n"))!=NULL);
-  }
-
-  gtk_adjustment_set_value(GTK_TEXT (biff_text)->vadj,
-    			   (gfloat)(GTK_TEXT(biff_text)->text_len));
-#endif
   
-#ifdef __GTK_STOCK_H__
   button=gtkut_button_new_from_stock(_("Start Mailer"),GTK_STOCK_EXECUTE);
-#else
-  button=gtk_button_new_with_label(_("Start Mailer"));
-#endif
   gtk_table_attach(GTK_TABLE(biff_tbl), button, 0, 1, 2, 3,
 		   GTK_FILL,GTK_SHRINK,0,0);
   my_signal_connect(button,"clicked",mailer_start, GTK_WIDGET(biff_main));
 
 
-#ifdef __GTK_STOCK_H__
   button=gtkut_button_new_from_stock(_("Close"),GTK_STOCK_CLOSE);
-#else
-  button=gtk_button_new_with_label(_("Close"));
-#endif
   gtk_table_attach(GTK_TABLE(biff_tbl), button, 4, 5, 2, 3,
 		   GTK_FILL,GTK_SHRINK,0,0);
   my_signal_connect(button,"clicked",close_biff, GTK_WIDGET(biff_main));

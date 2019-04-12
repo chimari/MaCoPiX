@@ -41,12 +41,6 @@
 
 extern typMascot *Mascot;
 
-extern GtkWidget* gtkut_button_new_from_stock();
-
-extern void my_signal_connect();
-extern gboolean my_main_iteration();
-
-
 static void cc_get_toggle();
 static void cc_true ();
 
@@ -127,11 +121,7 @@ gint ssl_manager_verify_cert	(typMascot *mascot)
   g_free(subject);
 
 
-#ifdef USE_GTK2  
   main = gtk_window_new(GTK_WINDOW_TOPLEVEL);
-#else
-  main = gtk_window_new(GTK_WINDOW_DIALOG);
-#endif
 
   gtk_window_set_position(GTK_WINDOW(main), GTK_WIN_POS_CENTER);
   gtk_window_set_modal(GTK_WINDOW(main), TRUE);
@@ -166,19 +156,11 @@ gint ssl_manager_verify_cert	(typMascot *mascot)
   label = gtk_label_new("");
   gtk_box_pack_start(GTK_BOX(hbox),label,TRUE,TRUE,0);
   
-#ifdef __GTK_STOCK_H__
   button=gtkut_button_new_from_stock(_("OK"),GTK_STOCK_OK);
-#else
-  button=gtk_button_new_with_label(_("OK"));
-#endif
   gtk_box_pack_start(GTK_BOX(hbox),button,FALSE,FALSE,0);
   my_signal_connect(button,"clicked",cc_true, &result);
 
-#ifdef __GTK_STOCK_H__
   button=gtkut_button_new_from_stock(_("Cancel"),GTK_STOCK_CANCEL);
-#else
-  button=gtk_button_new_with_label(_("Cancel"));
-#endif
   gtk_box_pack_start(GTK_BOX(hbox),button,FALSE,FALSE,0);
   my_signal_connect(button,"clicked",gtk_main_quit, NULL);
 

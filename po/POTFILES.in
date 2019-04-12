@@ -1,4 +1,5 @@
 src/main.c
+src/gtkut.c
 src/callbacks.c
 src/gui.c
 src/pixmap.c

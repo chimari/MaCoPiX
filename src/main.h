@@ -89,6 +89,7 @@
 #include<sys/stat.h>
 #include<sys/types.h>
 #include<string.h>
+#include<ctype.h>
 
 #include<gtk/gtk.h>
 #include<gdk-pixbuf/gdk-pixbuf.h>
@@ -108,6 +109,10 @@
 #include "configfile.h"
 #include "intl.h"
 #include "libpop.h"
+
+#include "sockmsg.h"
+#include "gtkut.h"
+
 
 // Homepage URL
 #define DEFAULT_URL "http://rosegray.sakura.ne.jp/"
@@ -189,22 +194,11 @@ enum{ FOLDER_DEFAULT,
 
 // フォント
 #ifdef USE_WIN32
-
 #define FONT_CLK "arial bold 9"
 #define FONT_BAL "ms pgothic 9"
-
 #else
-#ifdef USE_GTK2
-
 #define FONT_CLK "Sans 14"
 #define FONT_BAL "Sans 10"
-
-#else
-
-#define FONT_CLK "-alias-fixed-bold-r-normal-*-*-160-*-*-c-*-*"
-#define FONT_BAL "-alias-fixed-bold-r-normal-*-*-120-*-*-c-*-*"
-
-#endif
 #endif
 
 
@@ -690,6 +684,19 @@ struct _typMail{
 
 typedef struct _typMascot typMascot;
 struct _typMascot{
+  GtkWidget *win_main;
+  GtkWidget *balloon_main;
+  GtkWidget *clock_main;
+#ifdef USE_WIN32
+  GtkWidget *balloon_fg;
+  GtkWidget *clock_fg;
+  GtkWidget *win_sdw;
+#endif
+#ifdef USE_BIFF
+  GtkWidget *biff_pix;
+#endif
+  GtkWidget *PopupMenu; 
+  
   char *file;
   char *rcfile;
   gchar *inifile;
@@ -715,13 +722,8 @@ struct _typMascot{
   gboolean flag_ow_ini;
   gboolean drag;
   gboolean clk_drag;
-#ifdef USE_GTK2
   PangoFontDescription  *fontclk;
   PangoFontDescription  *fontbal;
-#else
-  GdkFont *fontclk;
-  GdkFont *fontbal;
-#endif
   gchar *fontname_bal;  
   gchar *fontname_clk;  
   gchar *deffontname_bal;  
@@ -921,3 +923,216 @@ struct _typMascot{
 };
 
 #endif
+
+
+///////////   Proto types   //////////
+// main.c
+gchar* FullPathMascotFile();
+gchar* FullPathPixmapFile();
+gchar *FullPathSoundFile();
+void ReadMenu();
+gchar* to_locale();
+gchar* to_utf8();
+gchar* all_random_menu_mascot_file();
+void SaveMenu();
+void SaveRC();
+void SaveDefMenu();
+void SaveMascot();
+void SetFontForReleaseData();
+void SetColorForReleaseData();
+void InitMascot();
+void ReadMascot();
+gchar* ReadMascotName();
+void ScanMenu();
+
+// alpha.c
+#ifdef USE_WIN32
+void GdkWinSetAlpha();
+#endif
+
+// balloon.c
+void DoBalloon();
+void DoSysBalloon();
+void make_balloon();
+#ifdef USE_WIN32
+void make_balloon_fg();
+#endif
+void balloon_arg_init();
+
+// bmpwrite.c
+int WriteBMP ();
+
+// callbacks.c
+void MoveMascot();
+int MoveToFocus();
+void MoveBalloon();
+void ResizeMoveBalloon();
+void drag_begin();
+void drag_end();
+void clk_drag_begin();
+void clk_drag_end();
+void clk_window_motion();
+gint dw_configure_main();
+gint dw_expose_main();
+void window_motion();
+#ifdef USE_WIN32
+gint dw_configure_sdw();
+gint dw_expose_sdw();
+#endif
+gint dw_configure_bal();
+gint dw_expose_bal();
+gint dw_configure_clk();
+gint dw_expose_clk();
+#ifdef USE_BIFF
+gint dw_configure_biff_pix();
+gint dw_expose_biff_pix();
+void biff_drag_begin();
+void biff_drag_end();
+void biff_window_motion();
+#endif
+void focus_in();
+void focus_out();
+gboolean time_update();
+void callbacks_arg_init();
+void clock_update();
+void ext_play();
+void sound_play();
+GdkGC *MPCreatePen();
+gint dw_init_main();
+void raise_all();
+
+
+// clock.c
+#ifdef USE_WIN32
+void make_clock_fg();
+#endif
+void make_clock();
+void DrawPanelClock0();
+
+// codeconv.c
+void conv_unmime_header();
+void conv_unmime_header_overwrite();
+#if HAVE_ICONV
+gchar *conv_iconv_strdup();
+#endif
+
+// dnd.c
+void signal_drag_data_received();
+void signal_drag_data_received_smenu();
+
+// gui.c
+void NkrChangeMascot();
+GtkWidget * make_popup_menu();
+void create_config_dialog();
+void create_cons_dialog();
+void create_smenu_dialog();
+void gui_arg_init();
+void popup_message(gint , ...);
+void popup_progress();
+void destroy_progress();
+void unlink_all();
+void AllRandomChangeMascotMenu();
+GtkWidget* make_popup_menu();
+void create_pop_pass_dialog();
+gchar* create_nkr_change_image_dialog();
+void MenuSaveAll();
+void quit_all();
+
+
+// mail.c
+#ifdef USE_BIFF
+gint SetMailChecker();
+void make_biff_pix();
+void mail_arg_init();
+void create_biff_dialog();
+void display_biff_balloon();
+void remap_biff_pix();
+#ifndef USE_WIN32
+void kill_pop3();
+#endif
+gchar* set_mhdir();
+#endif
+
+// nokkari.c
+void NkrSave();
+void NkrRead();
+
+// pixmap.c
+void screen_changed();
+void LoadPixmaps();
+void LoadBiffPixmap();
+void InitComposite();
+gint DrawMascot0();
+gint DrawMascot();
+gint DrawMascotWithDigit();
+void LoadPixmaps();
+void InitComposite();
+#ifdef USE_BIFF
+void LoadBiffPixmap();
+#endif
+gboolean TestLoadPixmaps();
+void ReInitGC();
+
+
+// sockmsg.c
+#ifdef USE_SOCKMSG
+SockMsgInitResult sockmsg_init(void);
+void sockmsg_send_msg(gchar *msg);
+void duet_sv_done(gchar *mascotname, gboolean flag_close);
+void sockmsg_set_mascot(typMascot *mascot);
+void sockmsg_done(void);
+#endif
+
+// ssl.c
+#ifdef USE_SSL
+void ssl_init(void);
+#endif
+
+// sslmanager.c
+gint ssl_manager_verify_cert();
+
+// trayicon.c
+#ifdef __GTK_STATUS_ICON_H__
+void trayicon_create();
+void trayicon_show();
+void trayicon_hide();
+void trayicon_destroy();
+void trayicon_set_tooltip();
+#endif
+
+// unlha.c
+#ifdef USE_LHA32
+gchar* unlha_menu();
+#endif
+
+// untar.c
+// TAR
+#if defined(USE_GTAR) || defined(USE_TAR32)
+gchar* untar_menu();
+#endif
+
+
+// utils.c
+void my_signal_connect();
+gboolean my_main_iteration();
+void copy_file();
+#ifdef USE_COMMON
+void check_common_dir();
+gboolean check_common_dir2();
+#endif
+#ifdef USE_WIN32
+gchar* get_win_home();
+#endif
+gchar* get_rc_dir();
+
+gchar* my_dirname();
+gchar* my_basename();
+gdouble GetCurrentResolution();
+#ifndef USE_WIN32
+gchar* GetCurrentWMName();
+#endif
+#ifdef USE_WIN32
+gchar* WindowsVersion();
+#endif
+void pop_debug_print (const gchar *format, ...) G_GNUC_PRINTF(1, 2);
+

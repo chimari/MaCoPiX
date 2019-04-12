@@ -1,0 +1,99 @@
+autoscan: warning: missing AC_CHECK_FUNCS([atexit]) wanted by: 
+	src/main.c:4815
+autoscan: warning: missing AC_CHECK_FUNCS([localeconv]) wanted by: 
+	intl/vasnprintf.c:288
+autoscan: warning: missing AC_CHECK_FUNCS([mblen]) wanted by: 
+	intl/vasnprintf.c:2504
+	intl/vasnprintf.c:2540
+autoscan: warning: missing AC_CHECK_FUNCS([mbrlen]) wanted by: 
+	intl/vasnprintf.c:2502
+	intl/vasnprintf.c:2538
+autoscan: warning: missing AC_CHECK_FUNCS([memchr]) wanted by: 
+	src/pop.c:345
+	src/pop.c:369
+	intl/vasnprintf.c:220
+autoscan: warning: missing AC_CHECK_FUNCS([rmdir]) wanted by: 
+	src/gui.c:13868
+autoscan: warning: missing AC_CHECK_FUNCS([select]) wanted by: 
+	src/pop.c:618
+	src/pop.c:621
+autoscan: warning: missing AC_CHECK_FUNCS([uname]) wanted by: 
+	src/gui.c:9982
+autoscan: warning: missing AC_CHECK_HEADERS([float.h]) wanted by: 
+	intl/vasnprintf.c:75
+autoscan: warning: missing AC_CHECK_HEADERS([wchar.h]) wanted by: 
+	intl/printf.c:292
+	intl/printf-args.h:41
+autoscan: warning: missing AC_CHECK_TYPES([ptrdiff_t]) wanted by: 
+	intl/printf-parse.c:392
+	intl/printf-parse.c:397
+autoscan: warning: missing AC_FUNC_MBRTOWC wanted by: 
+	intl/vasnprintf.c:2590
+	intl/vasnprintf.c:2615
+autoscan: warning: missing AC_PROG_CXX wanted by: 
+	makewin32.sh:4
+	ltmain.sh:2198
+	ltmain.sh:2657
+	ltmain.sh:2660
+	ltmain.sh:2665
+	ltmain.sh:2665
+	ltmain.sh:2675
+	ltmain.sh:2679
+	ltmain.sh:2682
+	ltmain.sh:2682
+	ltmain.sh:3759
+	ltmain.sh:8641
+	ltmain.sh:8653
+	ltmain.sh:8655
+	ltmain.sh:8893
+	intl/Makefile.in:87
+	intl/Makefile.in:227
+	intl/Makefile.in:255
+	intl/Makefile.in:257
+	intl/Makefile.in:259
+	intl/Makefile.in:261
+	intl/Makefile.in:263
+	intl/Makefile.in:265
+	intl/Makefile.in:267
+	intl/Makefile.in:269
+	intl/Makefile.in:271
+	intl/Makefile.in:273
+	intl/Makefile.in:275
+	intl/Makefile.in:277
+	intl/Makefile.in:279
+	intl/Makefile.in:281
+	intl/Makefile.in:283
+	intl/Makefile.in:285
+	intl/Makefile.in:292
+	intl/Makefile.in:294
+	intl/Makefile.in:296
+	intl/Makefile.in:298
+	intl/Makefile.in:300
+	intl/Makefile.in:302
+	intl/Makefile.in:304
+	intl/Makefile.in:306
+	intl/Makefile.in:308
+	intl/Makefile.in:310
+	intl/Makefile.in:312
+	intl/Makefile.in:314
+	intl/Makefile.in:316
+	intl/Makefile.in:318
+	intl/Makefile.in:320
+autoscan: warning: missing AC_TYPE_UINT16_T wanted by: 
+	intl/vasnprintf.c:2140
+	intl/vasnprintf.c:2141
+	intl/printf-args.h:130
+	intl/printf-args.c:158
+	intl/printf-args.c:164
+autoscan: warning: missing AC_TYPE_UINT32_T wanted by: 
+	intl/vasnprintf.c:2266
+	intl/vasnprintf.c:2267
+	intl/printf-args.h:131
+	intl/printf-args.c:170
+	intl/printf-args.c:176
+autoscan: warning: missing AC_TYPE_UINT8_T wanted by: 
+	intl/vasnprintf.c:2014
+	intl/vasnprintf.c:2015
+	intl/printf-args.h:129
+	intl/printf-args.c:146
+	intl/printf-args.c:152

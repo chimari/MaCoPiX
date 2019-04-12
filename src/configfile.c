@@ -62,9 +62,6 @@ static ConfigLine *xmms_cfg_create_string(ConfigSection * section, gchar * key, 
 static ConfigSection *xmms_cfg_find_section(ConfigFile * cfg, gchar * name);
 static ConfigLine *xmms_cfg_find_string(ConfigSection * section, gchar * key);
 
-extern gchar* to_utf8();
-extern gchar* to_locale();
-
 
 ConfigFile *xmms_cfg_new(void)
 {

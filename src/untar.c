@@ -39,14 +39,6 @@
 
 #define BUFFSIZE 2048
 
-extern GtkWidget *win_main;
-
-extern gchar* to_utf8();
-extern gchar* to_locale();
-
-extern gchar* my_dirname();
-extern gchar* my_basename();
-
 gchar* untar_menu();
 void untar_fail();
 void menu_fail();

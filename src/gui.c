@@ -54,51 +54,11 @@ typedef struct{
 //Callback受け渡し用抱き合わせ構造体 色変更用
 typedef struct{
   GdkColor *color;
-#ifdef USE_CAIRO
   guint16 alpha;
-#endif
   GtkColorSelectionDialog *csd;
   GtkWidget *button;
   gboolean update;
 }confColor;
-
-//Callback受け渡し用抱き合わせ構造体 Pixmap変更用
-#ifndef __GTK_FILE_CHOOSER_H__
-typedef struct{
-  GtkFileSelection *fs;
-  int i_pix;
-  gboolean update;
-}confChangePixmap;
-#endif
-
-//Callback受け渡し用抱き合わせ構造体 のっかりPixmap指定用
-#ifndef __GTK_FILE_CHOOSER_H__
-typedef struct{
-  GtkFileSelection *fs;
-  gchar *filename;
-  gboolean update;
-}confNkrChangePixmap;
-#endif
-
-#ifdef USE_BIFF
-//Callback受け渡し用抱き合わせ構造体 Pixmap変更用
-#ifndef __GTK_FILE_CHOOSER_H__
-typedef struct{
-  GtkFileSelection *fs;
-  gboolean update;
-}confChangeBiffPixmap;
-#endif
-#endif
-
-//Callback受け渡し用抱き合わせ構造体 Target変更用
-#ifndef __GTK_FILE_CHOOSER_H__
-typedef struct{
-  GtkFileSelection *fs;
-  int i_cat;
-  int i_tgt;
-  gboolean update;
-}confChangeTgt;
-#endif
 
 //Callback受け渡し用抱き合わせ構造体 Target削除用
 typedef struct{
@@ -113,29 +73,6 @@ typedef struct{
   gboolean update;
 }confCat;
 
-//Callback受け渡し用抱き合わせ構造体 Category吸収用
-#ifndef __GTK_FILE_CHOOSER_H__
-typedef struct{
-  GtkFileSelection *fs;
-  gboolean update;
-}confMergeCat;
-#endif
-
-//Callback受け渡し用抱き合わせ構造体 メニュー選択用
-#ifndef __GTK_FILE_CHOOSER_H__
-typedef struct{
-  GtkFileSelection *fs;
-  gint mode;
-}confSelectMenu;
-#endif
-
-//Callback受け渡し用抱き合わせ構造体 Pixmap追加用
-#ifndef __GTK_FILE_CHOOSER_H__
-typedef struct{
-  GtkFileSelection *fs;
-  gboolean update;
-}confAddPixmap;
-#endif
 
 //Callback受け渡し用抱き合わせ構造体 ファイル保存上書き確認用
 typedef struct{
@@ -206,58 +143,11 @@ typedef struct{
 //Callback受け渡し用抱き合わせ構造体 Mascot作成用
 typedef struct{
   GtkWidget *dialog;
-#ifndef __GTK_FILE_CHOOSER_H__
-  GtkFileSelection *fs;
-#endif
   gchar *mascot_file;
   gchar *image_file;
   gchar *copyright;
   gboolean update;
 }confNewMascot;
-
-//Callback受け渡し用抱き合わせ構造体 Click Sound変更用
-#ifndef __GTK_FILE_CHOOSER_H__
-typedef struct{
-  GtkFileSelection *fs;
-  gboolean update;
-  gint i_ptn;
-}confChangeClickSound;
-#endif
-
-//Callback受け渡し用抱き合わせ構造体 Duet アニメ変更用
-#ifndef __GTK_FILE_CHOOSER_H__
-typedef struct{
-  GtkFileSelection *fs;
-  gboolean update;
-  gint i_ptn;
-}confChangeDuetTgt;
-#endif
-
-#ifdef USE_BIFF
-//Callback受け渡し用抱き合わせ構造体 Biff Sound変更用
-#ifndef __GTK_FILE_CHOOSER_H__
-typedef struct{
-  GtkFileSelection *fs;
-  gboolean update;
-}confChangeBiffSound;
-#endif
-
-//Callback受け渡し用抱き合わせ構造体 Mail参照ファイル変更用
-#ifndef __GTK_FILE_CHOOSER_H__
-typedef struct{
-  GtkFileSelection *fs;
-  gboolean update;
-}confMailFile;
-#endif
-
-//Callback受け渡し用抱き合わせ構造体 Mailerコマンド変更用
-#ifndef __GTK_FILE_CHOOSER_H__
-typedef struct{
-  GtkFileSelection *fs;
-  gboolean update;
-}confMailer;
-#endif
-#endif  // USE_BIFF
 
 //Callback受け渡し用抱き合わせ構造体 
 typedef struct{
@@ -272,103 +162,9 @@ typedef struct{
 
 
 // *** GLOBAL ARGUMENT ***
-extern GtkWidget *win_main, *clock_main, *balloon_main, *PopupMenu;
-#ifdef USE_WIN32
-extern GtkWidget *win_sdw, *clock_fg, *balloon_fg;
-#endif
-#ifdef USE_BIFF
-extern GtkWidget *biff_pix;
-#endif
 extern gint window_x, window_y;
 extern typMascot *Mascot;
 extern gboolean flag_balloon;
-
-extern gchar* to_utf8();
-extern gchar* to_locale();
-extern gchar* all_random_menu_mascot_file();
-extern void ReadMenu();
-extern void SaveMenu();
-extern void SaveRC();
-extern void SaveDefMenu();
-extern void SaveMascot();
-extern void SetFontForReleaseData();
-extern void SetColorForReleaseData();
-extern void InitMascot();
-extern void ReadMascot();
-extern gchar* FullPathMascotFile();
-extern gchar* FullPathPixmapFile();
-extern gchar* FullPathSoundFile();
-extern gchar* ReadMascotName();
-extern void ScanMenu();
-
-extern void LoadPixmaps();
-extern void InitComposite();
-#ifdef USE_BIFF
-extern void LoadBiffPixmap();
-extern void remap_biff_pix();
-extern void kill_pop3();
-#endif
-extern void DrawMascot0();
-extern void DrawMascot();
-extern void DrawMascotWithDigit();
-extern gboolean TestLoadPixmaps();
-
-extern void MoveMascot();
-extern int MoveToFocus();
-extern void ReInitGC();
-extern void clock_update();
-
-extern void copy_file();
-#ifdef USE_COMMON
-extern gboolean check_common_dir2();
-#endif
-extern gchar* get_win_home();
-#ifdef USE_WIN32
-extern gchar* WindowsVersion();
-#endif
-extern gchar* my_dirname();
-extern gchar* my_basename();
-extern gboolean my_main_iteration();
-extern void my_signal_connect();
-
-extern void sound_play();
-
-#ifdef USE_BIFF
-extern gint SetMailChecker();
-extern gchar* set_mhdir();
-#endif  // USE_BIFF
-
-extern void NkrSave();
-extern void NkrRead();
-
-#ifdef USE_UNLHA32
-extern gchar* unlha_menu();
-#endif
-#if defined(USE_GTAR) || defined(USE_TAR32)
-extern gchar* untar_menu();
-#endif
-
-//#if GTK_CHECK_VERSION(2,10,0)
-#ifdef __GTK_STATUS_ICON_H__
-extern void trayicon_show();
-extern void trayicon_hide();
-extern void trayicon_destroy();
-#endif
-
-#ifdef __GTK_STOCK_H__
-extern GtkWidget* gtkut_button_new_from_stock();
-#endif
-
-extern void DoSysBalloon();
-
-// DnD
-extern void signal_drag_data_received_smenu();
-
-
-#if defined(USE_GTK2) && !defined(USE_WIN32)
-extern gchar* GetCurrentWMName();
-#endif
-
 
 // *** GLOBAL ARGUMENT ***
 #ifdef __GTK_TOOLTIP_H__
@@ -394,7 +190,6 @@ void MenuSaveRC();
 void MenuSaveMascot();
 void MenuSaveDefMenu();
 void MenuDelDefMenu();
-void MenuSaveAll();
 void MoveTmpDataRC();
 void MoveTmpDataMascot();
 void MoveTmpDataMenu();
@@ -438,9 +233,7 @@ static void cc_signal_type();
 static void cc_get_toggle();
 static void cc_get_toggle_nb();
 static void cc_get_toggle_home();
-#ifdef USE_CAIRO
 static void cc_get_toggle_sdw();
-#endif
 static void check_menu_get_toggle();
 static void check_menu_get_smenu();
 #ifdef USE_BIFF
@@ -495,7 +288,6 @@ void ChangeMenuFS();
 void MakeMenuFS();
 void ChangeMascotMenu();
 void CatRandomChangeMascotMenu();
-void AllRandomChangeMascotMenu();
 void ConfirmSaveOther();
 void ConfirmSaveRelease();
 void ConfirmUnlink();
@@ -539,7 +331,6 @@ gboolean close_popup();
 static void destroy_popup();
 static void close_conf();
 static void close_smenu();
-void quit_all();
 
 void TestPut();
 void TestPut2();
@@ -557,7 +348,6 @@ void ChangeBiffPixmap();
 void ChangeTgt();
 
 static void create_change_image_dialog();
-gchar* create_nkr_change_image_dialog();
 #ifdef USE_BIFF
 static void create_change_biff_image_dialog();
 #endif
@@ -590,8 +380,6 @@ static void create_new_mascot_file_selection_dialog();
 static void create_new_mascot_image_selection_dialog();
 static void create_new_mascot_dialog();
 
-void create_pop_pass_dialog();
-
 static void create_file_selection_dialog();
 static void create_menu_selection_dialog();
 static void create_smenu_dialog2();
@@ -608,7 +396,6 @@ static void create_font_selection_dialog();
 static void create_color_selection_dialog();
 #endif
 static void change_colbal_default();
-void create_config_dialog();
 GtkWidget * create_menu_page();
 GtkWidget * create_new_menu_page();
 
@@ -618,7 +405,6 @@ void make_cat_list();
 void make_frame_list();
 void make_tgt_list();
 
-GtkWidget * make_popup_menu();
 GtkWidget * make_open_menu();
 GtkWidget * make_save_menu();
 GtkWidget * make_new_menu();
@@ -631,14 +417,11 @@ GtkWidget * make_cat_menu();
 GtkWidget * make_tgt_menu();
 
 void ChangeMascot();
-void NkrChangeMascot();
 
 
 #ifdef USE_COMMON
-void create_cons_dialog();
 #endif
 
-void create_smenu_dialog();
 void make_smenu_list();
 GtkWidget* make_start_menubar();
 
@@ -652,15 +435,9 @@ void do_install_common_mascot();
 #endif
 void do_select_mascot();
 
-void popup_message(gint , ...);
-void popup_progress();
 
-void gui_arg_init();
 
 gint select_menu_from_ext();
-
-void unlink_all();
-
 
 ///// Widget as Global argument /////
 
@@ -669,10 +446,8 @@ GtkWidget *check_nb, *combo_nb, *spinner_manual;
 GtkWidget *spinner_home_x, *spinner_home_y, *check_vanish;
 
 
-#ifdef USE_CAIRO
 //Rendering
 GtkWidget *frame_sdw;
-#endif
 
 //Clock
 GtkWidget *entry_fontname_clk;
@@ -759,9 +534,9 @@ void MenuDelDefMenu(void){
     g_free(buf);
   }
 
-  gtk_widget_destroy(PopupMenu);
+  gtk_widget_destroy(Mascot->PopupMenu);
   ReadMenu(Mascot,0,NULL);
-  PopupMenu=make_popup_menu();
+  Mascot->PopupMenu=make_popup_menu();
 }
 
 
@@ -829,12 +604,10 @@ void MoveTmpDataRC(void){
   Mascot->home_auto_vanish=tmp_mascot.home_auto_vanish;
   Mascot->home_x=tmp_mascot.home_x;
   Mascot->home_y=tmp_mascot.home_y;
-#ifdef USE_CAIRO
   Mascot->sdw_flag=tmp_mascot.sdw_flag;
   Mascot->sdw_x=tmp_mascot.sdw_x;
   Mascot->sdw_y=tmp_mascot.sdw_y;
   Mascot->sdw_alpha=tmp_mascot.sdw_alpha;
-#endif
 #ifndef USE_WIN32
   Mascot->sound_command=tmp_mascot.sound_command;
 #endif
@@ -842,13 +615,11 @@ void MoveTmpDataRC(void){
   Mascot->tar_command=tmp_mascot.tar_command;
 #endif
 
-#if defined(USE_CAIRO) || defined(USE_WIN32)
   //Alpha Default
   Mascot->force_def_alpha=tmp_mascot.force_def_alpha;
   Mascot->def_alpha_main=tmp_mascot.def_alpha_main;
 #ifdef USE_BIFF
   Mascot->def_alpha_biff=tmp_mascot.def_alpha_biff;
-#endif
 #endif
 #ifdef USE_WIN32
   Mascot->def_alpha_bal=tmp_mascot.def_alpha_bal;
@@ -857,7 +628,6 @@ void MoveTmpDataRC(void){
   Mascot->def_flag_clkfg=tmp_mascot.def_flag_clkfg;
 #endif
 
-#ifdef USE_CAIRO
   Mascot->def_alpclk=tmp_mascot.def_alpclk;
   Mascot->def_alpclksd=tmp_mascot.def_alpclksd;
   Mascot->def_alpclkbg=tmp_mascot.def_alpclkbg;
@@ -866,8 +636,6 @@ void MoveTmpDataRC(void){
   Mascot->def_alpbal=tmp_mascot.def_alpbal;
   Mascot->def_alpbalbg=tmp_mascot.def_alpbalbg;
   Mascot->def_alpbalbd=tmp_mascot.def_alpbalbd;
-#endif
-
 
   //Misc
   Mascot->magnify=tmp_mascot.magnify;
@@ -878,12 +646,10 @@ void MoveTmpDataRC(void){
   Mascot->sockmsg_expire_def=tmp_mascot.sockmsg_expire_def;
   Mascot->ip_style=tmp_mascot.ip_style;
   Mascot->flag_install=tmp_mascot.flag_install;
-#ifdef USE_CAIRO
   Mascot->force_composite=tmp_mascot.force_composite;
   Mascot->flag_img_cairo=tmp_mascot.flag_img_cairo;
   Mascot->flag_clk_cairo=tmp_mascot.flag_clk_cairo;
   Mascot->flag_bal_cairo=tmp_mascot.flag_bal_cairo;
-#endif
   Mascot->cons_check_mode=tmp_mascot.cons_check_mode;
   Mascot->deffontname_clk=tmp_mascot.deffontname_clk;
   Mascot->deffontname_bal=tmp_mascot.deffontname_bal;
@@ -971,12 +737,10 @@ void MoveTmpDataMascot(void){
   gdk_color_free(Mascot->def_colclksd);
   Mascot->def_colclksd=gdk_color_copy(tmp_mascot.def_colclksd);
 
-#ifdef USE_CAIRO
   Mascot->alpclk=tmp_mascot.alpclk;
   Mascot->alpclksd=tmp_mascot.alpclksd;
   Mascot->alpclkbg=tmp_mascot.alpclkbg;
   Mascot->alpclkbd=tmp_mascot.alpclkbd;
-#endif
 
   //// Time Signal
   Mascot->signal.flag=tmp_mascot.signal.flag;
@@ -1023,11 +787,9 @@ void MoveTmpDataMascot(void){
   gdk_color_free(Mascot->def_colbalbd);
   Mascot->def_colbalbd=gdk_color_copy(tmp_mascot.def_colbalbd);
 
-#ifdef USE_CAIRO
   Mascot->alpbal=tmp_mascot.alpbal;
   Mascot->alpbalbg=tmp_mascot.alpbalbg;
   Mascot->alpbalbd=tmp_mascot.alpbalbd;
-#endif
   
 
 #ifdef USE_BIFF
@@ -1086,7 +848,6 @@ void MoveTmpDataMascot(void){
   Mascot->mail.pop_max_fs=tmp_mascot.mail.pop_max_fs;
 #endif
 
-#if defined(USE_CAIRO) || defined(USE_WIN32)
   //Alpha
   if(Mascot->force_def_alpha){
     Mascot->alpha_main=Mascot->def_alpha_main;
@@ -1112,7 +873,6 @@ void MoveTmpDataMascot(void){
     Mascot->flag_clkfg=tmp_mascot.flag_clkfg;
 #endif
   }
-#endif
 
 
   //// Pixmap
@@ -1251,15 +1011,15 @@ static void conf_change(GtkWidget *w, GtkWidget *dialog)
   while (my_main_iteration(FALSE));
 
   InitComposite(Mascot);
-  LoadPixmaps(win_main, Mascot, Mascot->sprites);
+  LoadPixmaps(Mascot->win_main, Mascot, Mascot->sprites);
   ReInitGC(Mascot);
 #ifdef USE_WIN32
-  gtk_widget_unmap(balloon_fg);
+  gtk_widget_unmap(Mascot->balloon_fg);
 #endif
-  gtk_widget_unmap(balloon_main);
+  gtk_widget_unmap(Mascot->balloon_main);
   flag_balloon=FALSE;
 #ifdef USE_BIFF
-  LoadBiffPixmap(biff_pix, Mascot);
+  LoadBiffPixmap(Mascot->biff_pix, Mascot);
 #endif
 
   if(Mascot->clkmode!=CLOCK_NO) clock_update(Mascot, TRUE);
@@ -1267,29 +1027,29 @@ static void conf_change(GtkWidget *w, GtkWidget *dialog)
   if(Mascot->clkmode==CLOCK_PANEL){
 #ifdef USE_WIN32
     if((Mascot->flag_clkfg)&&(Mascot->alpha_clk!=100)){
-      gtk_widget_map(clock_fg);
+      gtk_widget_map(Mascot->clock_fg);
     }
-    else gtk_widget_unmap(clock_fg);
+    else gtk_widget_unmap(Mascot->clock_fg);
 #endif
-    gtk_widget_map(clock_main);
+    gtk_widget_map(Mascot->clock_main);
   }
   else{
 #ifdef USE_WIN32
-    gtk_widget_unmap(clock_fg);
+    gtk_widget_unmap(Mascot->clock_fg);
 #endif
-    gtk_widget_unmap(clock_main);
+    gtk_widget_unmap(Mascot->clock_main);
   }
 
 #ifdef USE_WIN32
   if((Mascot->sdw_flag)&&(Mascot->sdw_height>0)){
-    gtk_widget_map(win_sdw);
+    gtk_widget_map(Mascot->win_sdw);
   }
   else{
-    gtk_widget_unmap(win_sdw);
+    gtk_widget_unmap(Mascot->win_sdw);
   }
 #endif
 
-  gtk_widget_map(win_main);
+  gtk_widget_map(Mascot->win_main);
 
   if(Mascot->clkmode!=CLOCK_NO)  clock_update(Mascot, TRUE);
 
@@ -1305,8 +1065,8 @@ static void conf_change(GtkWidget *w, GtkWidget *dialog)
  }
 
 
-  gtk_widget_destroy(PopupMenu);
-  PopupMenu=make_popup_menu();
+  gtk_widget_destroy(Mascot->PopupMenu);
+  Mascot->PopupMenu=make_popup_menu();
 
   flag_make_pixmap_list=FALSE;
   Mascot->flag_menu=FALSE;
@@ -1725,7 +1485,6 @@ static void cc_get_toggle_home (GtkWidget * widget, gboolean * gdata)
   }
 }
 
-#ifdef USE_CAIRO
 static void cc_get_toggle_sdw (GtkWidget * widget, gboolean * gdata)
 {
   *gdata=gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(widget));
@@ -1739,7 +1498,6 @@ static void cc_get_toggle_sdw (GtkWidget * widget, gboolean * gdata)
   }
 #endif
 }
-#endif
 
 static void check_menu_get_toggle (GtkWidget * widget, gboolean * gdata)
 {
@@ -1908,11 +1666,7 @@ static void mc_up_cat (GtkWidget *widget, gint gdata)
   make_cat_list(cat_note, i_cat-1);
   make_cat_list(cat_note, i_cat);
 
-#ifdef USE_GTK2
   gtk_notebook_set_current_page(GTK_NOTEBOOK(cat_note), (gint)(i_cat-1));
-#else
-  gtk_notebook_set_page(GTK_NOTEBOOK(cat_note), (gint)(i_cat-1));
-#endif
   gtk_widget_queue_draw(GTK_WIDGET(cat_note));
 
 }
@@ -1963,265 +1717,11 @@ static void mc_down_cat (GtkWidget *widget, gint gdata)
   make_cat_list(cat_note, i_cat);
   make_cat_list(cat_note, i_cat+1);
 
-#ifdef USE_GTK2
   gtk_notebook_set_current_page(GTK_NOTEBOOK(cat_note), (gint)(i_cat+1));
-#else
-  gtk_notebook_set_page(GTK_NOTEBOOK(cat_note), (gint)(i_cat+1));
-#endif
   gtk_widget_queue_draw(GTK_WIDGET(cat_note));
 
 }
 
-
-#ifndef __GTK_FILE_CHOOSER_H__
-static void fs_set_udir (GtkWidget *widget, gpointer gdata)
-{
-  GtkWidget *fdialog;
-  gchar *userdir;
-
-  fdialog=(GtkWidget *)gdata;
-#ifdef USE_WIN32
-  userdir = g_strconcat(get_win_home(),G_DIR_SEPARATOR_S,USER_DIR, NULL);
-#else
-  userdir = g_strconcat(g_get_home_dir(),G_DIR_SEPARATOR_S,USER_DIR, NULL);
-#endif
-  
-  gtk_file_selection_set_filename (GTK_FILE_SELECTION (fdialog), 
-  				   userdir);
-}
-#endif
-
-#ifdef USE_COMMON
-#ifndef __GTK_FILE_CHOOSER_H__
-static void fs_set_ddir (GtkWidget *widget, gpointer gdata)
-{
-  GtkWidget *fdialog;
-
-  fdialog=(GtkWidget *)gdata;
-  
-
-  gtk_file_selection_set_filename (GTK_FILE_SELECTION (fdialog), 
-  				   COMMON_DIR);
-}
-#endif
-#endif
-
-
-#ifndef __GTK_FILE_CHOOSER_H__
-static void fs_set_updir (GtkWidget *widget, gpointer gdata)
-{
-  GtkWidget *fdialog;
-  gchar *userdir;
-
-  fdialog=(GtkWidget *)gdata;
-#ifdef USE_WIN32
-  userdir = g_strconcat(get_win_home(),G_DIR_SEPARATOR_S,USER_DIR,PIXDIR, NULL);
-#else
-  userdir = g_strconcat(g_get_home_dir(),G_DIR_SEPARATOR_S,USER_DIR,PIXDIR, NULL);
-#endif
-  
-
-  gtk_file_selection_set_filename (GTK_FILE_SELECTION (fdialog), 
-  				   userdir);
-}
-#endif
-
-#ifdef USE_COMMON
-#ifndef __GTK_FILE_CHOOSER_H__
-static void fs_set_dpdir (GtkWidget *widget, gpointer gdata)
-{
-  GtkWidget *fdialog;
-  gchar *datadir;
-
-  fdialog=(GtkWidget *)gdata;
-  datadir = g_strconcat(COMMON_DIR,PIXDIR, NULL);
-
-
-  gtk_file_selection_set_filename (GTK_FILE_SELECTION (fdialog), 
-  				   datadir);
-}
-#endif
-#endif
-
-
-#ifndef __GTK_FILE_CHOOSER_H__
-static void fs_set_usdir (GtkWidget *widget, gpointer gdata)
-{
-  GtkWidget *fdialog;
-  gchar *userdir;
-
-  fdialog=(GtkWidget *)gdata;
-#ifdef USE_WIN32
-  userdir = g_strconcat(get_win_home(),G_DIR_SEPARATOR_S,USER_DIR,SOUNDDIR, NULL);
-#else
-  userdir = g_strconcat(g_get_home_dir(),G_DIR_SEPARATOR_S,USER_DIR,SOUNDDIR, NULL);
-#endif
-  
-
-  gtk_file_selection_set_filename (GTK_FILE_SELECTION (fdialog), 
-  				   userdir);
-}
-#endif
-
-#ifdef USE_COMMON
-#ifndef __GTK_FILE_CHOOSER_H__
-static void fs_set_dsdir (GtkWidget *widget, gpointer gdata)
-{
-  GtkWidget *fdialog;
-  gchar *datadir;
-
-  fdialog=(GtkWidget *)gdata;
-  datadir = g_strconcat(COMMON_DIR,SOUNDDIR, NULL);
-
-
-  gtk_file_selection_set_filename (GTK_FILE_SELECTION (fdialog), 
-  				   datadir);
-}
-#endif
-#endif
-
-
-#ifndef __GTK_FILE_CHOOSER_H__
-static void fs_set_mascotext (GtkWidget *widget, gpointer gdata)
-{
-  GtkWidget *fdialog;
-
-  fdialog=(GtkWidget *)gdata;
-  
-  gtk_file_selection_complete (GTK_FILE_SELECTION (fdialog), 
-				   MASCOT_EXTENSION);
-}
-#endif
-
-
-#ifndef __GTK_FILE_CHOOSER_H__
-static void fs_set_pngext (GtkWidget *widget, gpointer gdata)
-{
-  GtkWidget *fdialog;
-
-  fdialog=(GtkWidget *)gdata;
-
-  gtk_file_selection_complete (GTK_FILE_SELECTION (fdialog), 
-				   PNG_EXTENSION);
-}
-#endif
-
-#ifndef __GTK_FILE_CHOOSER_H__
-static void fs_set_gifext (GtkWidget *widget, gpointer gdata)
-{
-  GtkWidget *fdialog;
-
-  fdialog=(GtkWidget *)gdata;
-  
-  gtk_file_selection_complete (GTK_FILE_SELECTION (fdialog), 
-			       GIF_EXTENSION);
-}
-#endif
-
-#ifndef __GTK_FILE_CHOOSER_H__
-static void fs_set_xpmext (GtkWidget *widget, gpointer gdata)
-{
-  GtkWidget *fdialog;
-
-  fdialog=(GtkWidget *)gdata;
-
-  gtk_file_selection_complete (GTK_FILE_SELECTION (fdialog), 
-				   XPM_EXTENSION);
-}
-#endif
-
-
-#ifndef __GTK_FILE_CHOOSER_H__
-static void fs_set_menuext (GtkWidget *widget, gpointer gdata)
-{
-  GtkWidget *fdialog;
-
-  fdialog=(GtkWidget *)gdata;
-  
-  gtk_file_selection_complete (GTK_FILE_SELECTION (fdialog), 
-				   MENU_EXTENSION);
-}
-#endif
-
-
-#ifndef __GTK_FILE_CHOOSER_H__
-static void fs_set_lzhext (GtkWidget *widget, gpointer gdata)
-{
-  GtkWidget *fdialog;
-
-  fdialog=(GtkWidget *)gdata;
-
-  gtk_file_selection_complete (GTK_FILE_SELECTION (fdialog), 
-			       LZH_EXTENSION);
-}
-#endif
-
-
-#ifndef __GTK_FILE_CHOOSER_H__
-static void fs_set_tarext (GtkWidget *widget, gpointer gdata)
-{
-  GtkWidget *fdialog;
-
-  fdialog=(GtkWidget *)gdata;
-  
-  gtk_file_selection_complete (GTK_FILE_SELECTION (fdialog), 
-				   TAR_EXTENSION);
-}
-#endif
-
-
-#ifndef __GTK_FILE_CHOOSER_H__
-static void fs_set_rcext (GtkWidget *widget, gpointer gdata)
-{
-  GtkWidget *fdialog;
-
-  fdialog=(GtkWidget *)gdata;
-
-  gtk_file_selection_complete (GTK_FILE_SELECTION (fdialog), 
-			       RC_EXTENSION);
-}
-#endif
-
-#ifndef __GTK_FILE_CHOOSER_H__
-static void fs_set_nkrext (GtkWidget *widget, gpointer gdata)
-{
-  GtkWidget *fdialog;
-
-  fdialog=(GtkWidget *)gdata;
-  
-  gtk_file_selection_complete (GTK_FILE_SELECTION (fdialog), 
-			       NKR_EXTENSION);
-
-}
-#endif
-
-#ifndef __GTK_FILE_CHOOSER_H__
-static void fs_set_bmpext (GtkWidget *widget, gpointer gdata)
-{
-  GtkWidget *fdialog;
-
-  fdialog=(GtkWidget *)gdata;
-  
-  gtk_file_selection_complete (GTK_FILE_SELECTION (fdialog), 
-				   BMP_EXTENSION);
-}
-#endif
-
-
-#ifdef USE_WIN32
-static void uri_clicked(GtkButton *button, gpointer data)
-{
-  ShellExecute(NULL, 
-	       "open", 
-	       DEFAULT_URL,
-	       NULL, 
-	       NULL, 
-	       SW_SHOWNORMAL);
-}
-#endif
-
-
-#ifdef __GTK_FILE_CHOOSER_H__
 void my_file_chooser_add_filter (GtkWidget *dialog, 
 				 const gchar *name,
 				 const gchar *pattern)
@@ -2236,9 +1736,7 @@ void my_file_chooser_add_filter (GtkWidget *dialog,
   gtk_file_chooser_add_filter(GTK_FILE_CHOOSER(dialog),filter);
   g_free(name_tmp);
 }
-#endif
 
-#ifdef __GTK_FILE_CHOOSER_H__
 void my_file_chooser_add_shortcut_folder(GtkWidget *dialog, gint mode)
 {
   gchar *dir;
@@ -2307,10 +1805,7 @@ void my_file_chooser_add_shortcut_folder(GtkWidget *dialog, gint mode)
   g_free(dir);
 #endif
 }
-#endif
 
-
-#ifdef __GTK_FILE_CHOOSER_H__
 void my_file_chooser_set_current_folder(GtkWidget *dialog, gint mode)
 {
   gchar *dir;
@@ -2348,227 +1843,7 @@ void my_file_chooser_set_current_folder(GtkWidget *dialog, gint mode)
 				       to_utf8(dir));
   g_free(dir);
 }
-#endif
 
-
-// ファイル選択ダイアログからのマスコットの変更
-#ifndef __GTK_FILE_CHOOSER_H__
-void ChangeMascotFS(GtkWidget *w, gpointer gdata)
-{ 
-  confSelectMenu *cdata;
-  gboolean flag_install;
-
-  cdata=(confSelectMenu *)gdata;
-
-  flag_install=Mascot->flag_install;
-
-  if(access(gtk_file_selection_get_filename(cdata->fs),F_OK)==0){
-    Mascot->file=g_strdup(
-		     gtk_file_selection_get_filename(cdata->fs));
-      
-    switch(cdata->mode){
-    case MENU_INSTALL_USER:
-    case START_MENU_INSTALL_USER:
-      Mascot->flag_install=TRUE;
-      Mascot->flag_common=FALSE;
-      Mascot->flag_ow=TRUE;
-      Mascot->flag_ow_ini=TRUE;
-      break;
-    case MENU_INSTALL_COMMON:
-    case START_MENU_INSTALL_COMMON:
-      Mascot->flag_install=TRUE;
-      Mascot->flag_common=TRUE;
-      Mascot->flag_ow=TRUE;
-      Mascot->flag_ow_ini=TRUE;
-    }
-
-    switch(cdata->mode){
-    case MENU_SELECT:
-    case MENU_INSTALL_USER:
-    case MENU_INSTALL_COMMON:
-      ChangeMascot();
-    }
-  }
-  else{
-#ifdef GTK_MSG
-    popup_message(POPUP_TIMEOUT*2,
-		  _("Error: File cannot be opened."),
-		  " ",
-		  gtk_file_selection_get_filename (cdata->fs),
-		  NULL);
-#else
-    g_print (_("Cannot Open %s\n"),
-	     gtk_file_selection_get_filename (cdata->fs));
-#endif
-  }
-
-  gtk_main_quit();
-  gtk_widget_destroy(GTK_WIDGET(cdata->fs));
-  
-  Mascot->flag_menu=FALSE;
-
-  Mascot->flag_install=flag_install;
-  Mascot->flag_common=FALSE;
-  switch(cdata->mode){
-  case MENU_INSTALL_USER:
-  case MENU_INSTALL_COMMON:
-    Mascot->flag_ow=FALSE;
-    Mascot->flag_ow_ini=FALSE;
-  }
-}
-#endif
-
-
-// ファイル選択ダイアログからののっかりキャラの読み込み
-#ifndef __GTK_FILE_CHOOSER_H__
-void NkrChangeMascotFS(GtkWidget *w, 
-                       GtkFileSelection *fs)
-{ 
-  if(access(gtk_file_selection_get_filename(GTK_FILE_SELECTION(fs)),F_OK)==0){
-    Mascot->inifile=g_strdup(
-		     gtk_file_selection_get_filename(GTK_FILE_SELECTION(fs)));
-      
-    NkrChangeMascot();
-  }
-  else{
-#ifdef GTK_MSG
-    popup_message(POPUP_TIMEOUT*2,
-		  _("Error: File cannot be opened."),
-		  " ",
-		  gtk_file_selection_get_filename (GTK_FILE_SELECTION (fs)),
-		  NULL);
-#else
-    g_print (_("Cannot Open %s\n"),
-	     gtk_file_selection_get_filename (GTK_FILE_SELECTION (fs)));
-#endif
-  }
-
-  gtk_main_quit();
-  gtk_widget_destroy(GTK_WIDGET(fs));
-
-  create_save_mascot_dialog();
-}
-#endif
-
-
-// ファイル選択ダイアログからのメニューの変更
-#ifndef __GTK_FILE_CHOOSER_H__
-void ChangeMenuFS(GtkWidget *w, gpointer gdata)
-{ 
-  confSelectMenu *cdata;
-  gboolean flag_install;
-  gchar *dest_file;
-
-  cdata=(confSelectMenu *)gdata;
-
-  flag_install=Mascot->flag_install;
-
-  if(access(gtk_file_selection_get_filename(cdata->fs),F_OK)==0){
-    dest_file=g_strdup(gtk_file_selection_get_filename(cdata->fs));
-    switch(cdata->mode){
-    case MENU_INSTALL_USER:
-    case START_MENU_INSTALL_USER:
-      select_menu_from_ext(Mascot,dest_file);
-      Mascot->flag_install=TRUE;
-      Mascot->flag_common=FALSE;
-      Mascot->flag_ow=TRUE;
-      Mascot->flag_ow_ini=TRUE;
-      break;
-    case MENU_INSTALL_COMMON:
-    case START_MENU_INSTALL_COMMON:
-      select_menu_from_ext(Mascot,dest_file);
-      Mascot->flag_install=TRUE;
-      Mascot->flag_common=TRUE;
-      Mascot->flag_ow=TRUE;
-      Mascot->flag_ow_ini=TRUE;
-    }
-    gtk_widget_destroy(PopupMenu);
-    ReadMenu(Mascot,0,NULL);
-    PopupMenu=make_popup_menu();
-  }
-  else{
-#ifdef GTK_MSG
-    popup_message(POPUP_TIMEOUT*2,
-		  _("Error: File cannot be opened."),
-		  " ",
-		  gtk_file_selection_get_filename (cdata->fs),
-		  NULL);
-#else
-    g_print (_("Cannot Open %s\n"),
-	     gtk_file_selection_get_filename (cdata->fs));
-#endif
-  }
-
-  gtk_main_quit();
-  gtk_widget_destroy(GTK_WIDGET(cdata->fs));
-  
-  Mascot->flag_menu=FALSE;
-
-  Mascot->flag_install=flag_install;
-  Mascot->flag_common=FALSE;
-  switch(cdata->mode){
-  case MENU_INSTALL_USER:
-  case MENU_INSTALL_COMMON:
-    Mascot->flag_ow=FALSE;
-    Mascot->flag_ow_ini=FALSE;
-  }
-}
-#endif
-
-
-// 新規メニューの作成
-#ifndef __GTK_FILE_CHOOSER_H__
-void MakeMenuFS(GtkWidget *w, 
-                GtkFileSelection *fs)
-{ 
-  FILE *fp_test;
-
-  if((fp_test=fopen(gtk_file_selection_get_filename(fs),"w"))!=NULL){
-    fclose(fp_test);
-    Mascot->menu_file=g_strdup(gtk_file_selection_get_filename(fs));
-
-    Mascot->menu_cat[0]=g_strdup(TMP_CATEGORY_NAME);
-    Mascot->menu_tgt_max[0]=1;
-
-    Mascot->menu_tgt[0][0]
-      =g_strdup(my_basename(Mascot->file));
-    Mascot->menu_tgt_name[0][0]=ReadMascotName(Mascot, Mascot->file);
-
-    Mascot->menu_cat_max=1;
-    Mascot->menu_total=1;
-    
-    SaveMenu(Mascot);
-    {
-      gchar *buf;
-      buf=g_strdup_printf(_("Created Menu File ...%%n    \"%s\""),Mascot->menu_file);
-      DoSysBalloon(Mascot,buf);
-      g_free(buf);
-    }
-    gtk_widget_destroy(PopupMenu);
-    PopupMenu=make_popup_menu();
-
-  }
-  else{
-#ifdef GTK_MSG
-    popup_message(POPUP_TIMEOUT*2,
-		  _("Error: File cannot be opened."),
-		  " ",
-		  gtk_file_selection_get_filename (fs),
-		  NULL);
-#else
-    g_print (_("Cannot Open %s\n"),
-	     gtk_file_selection_get_filename (fs));
-#endif
-  }
-
-  gtk_main_quit();
-  gtk_widget_destroy(GTK_WIDGET(fs));
-  
-  
-  Mascot->flag_menu=FALSE;
- 
-}
-#endif
 
 
 // クイックメニューからのマスコットの変更
@@ -2644,185 +1919,6 @@ void ConfirmUnlink(GtkWidget *w, gpointer gdata)
 }
 
 
-// ファイル選択ダイアログからのマスコットの保存
-#ifndef __GTK_FILE_CHOOSER_H__
-void SaveMascotOther(GtkWidget *w, 
-                     GtkFileSelection *fs)
-{ 
-  GtkWidget *dialog;
-  GtkWidget *label;
-  GtkWidget *button;
-  confSaveOther *cdata;
-  gchar *dest_file;
-  gchar tmp_label[128];
-  
-  dest_file
-    =g_strdup(gtk_file_selection_get_filename(GTK_FILE_SELECTION(fs)));
-
-  gtk_widget_unmap(GTK_WIDGET(fs));
-  
-
-  if(access(dest_file,F_OK)==0){
-    cdata=g_malloc0(sizeof(confSaveOther));
-
-    dialog = gtk_dialog_new();
-
-    gtk_window_set_position(GTK_WINDOW(dialog), GTK_WIN_POS_CENTER);
-    gtk_container_set_border_width(GTK_CONTAINER(dialog),5);
-    gtk_window_set_title(GTK_WINDOW(dialog),
-			 _("File Save : Overwrite Confirmation"));
-    
-    sprintf(tmp_label,_("File %s already exists."),dest_file);
-    label=gtk_label_new(tmp_label);
-    gtk_box_pack_start(GTK_BOX(GTK_DIALOG(dialog)->vbox),
-		       label,TRUE,TRUE,0);
-    label=gtk_label_new(_("Overwrite?"));
-    gtk_box_pack_start(GTK_BOX(GTK_DIALOG(dialog)->vbox),
-		       label,TRUE,TRUE,0);
-    cdata->update=FALSE;
-    cdata->dialog=dialog;
-    
-#ifdef __GTK_STOCK_H__
-    button=gtkut_button_new_from_stock(_("Cancel"),GTK_STOCK_CANCEL);
-#else
-    button=gtk_button_new_with_label(_("Cancel"));
-#endif
-    gtk_box_pack_start(GTK_BOX(GTK_DIALOG(dialog)->action_area),
-		       button,TRUE,TRUE,0);
-    my_signal_connect(button,"clicked",
-		      close_child_dialog, 
-		      GTK_WIDGET(dialog));
-
-#ifdef __GTK_STOCK_H__
-    button=gtkut_button_new_from_stock(_("OK"),GTK_STOCK_OK);
-#else
-    button=gtk_button_new_with_label(_("OK"));
-#endif
-    gtk_box_pack_start(GTK_BOX(GTK_DIALOG(dialog)->action_area),
-		       button,TRUE,TRUE,0);
-    my_signal_connect(button,"clicked",
-		      ConfirmSaveOther, 
-		      (gpointer)cdata);
-
-
-    
-    gtk_widget_show_all(dialog);
-    gtk_main();
-    
-    if(cdata->update){
-      Mascot->file=dest_file;
-      SaveMascot(Mascot,FALSE);
-      {
-	gchar *buf;
-	buf=g_strdup_printf(_("Saved Mascot as ...%%n    \"%s\""),Mascot->file);
-	DoSysBalloon(Mascot,buf);
-	g_free(buf);
-      }
-    }
-
-    g_free(cdata);
-  }
-  else{
-    Mascot->file=dest_file;
-    SaveMascot(Mascot,FALSE);
-    {
-      gchar *buf;
-      buf=g_strdup_printf(_("Saved Mascot as ...%%n    \"%s\""),Mascot->file);
-      DoSysBalloon(Mascot,buf);
-      g_free(buf);
-    }
-  }
-
-  gtk_main_quit();
-  gtk_widget_destroy(GTK_WIDGET(fs));
-  Mascot->flag_menu=FALSE;
-}
-#endif
-
-// のっかりキャラファイルの変換および保存
-#ifndef __GTK_FILE_CHOOSER_H__
-void SaveNokkari(GtkWidget *w, 
-                 GtkFileSelection *fs)
-{ 
-  GtkWidget *dialog;
-  GtkWidget *label;
-  GtkWidget *button;
-  confSaveOther *cdata;
-  gchar *dest_file;
-  gchar tmp_label[128];
-  
-  dest_file
-    =g_strdup(gtk_file_selection_get_filename(GTK_FILE_SELECTION(fs)));
-
-  gtk_widget_unmap(GTK_WIDGET(fs));
-  
-
-  if(access(dest_file,F_OK)==0){
-    cdata=g_malloc0(sizeof(confSaveOther));
-
-    dialog = gtk_dialog_new();
-
-    gtk_window_set_position(GTK_WINDOW(dialog), GTK_WIN_POS_CENTER);
-    gtk_container_set_border_width(GTK_CONTAINER(dialog),5);
-    gtk_window_set_title(GTK_WINDOW(dialog),
-			 _("File Save : Overwrite Confirmation"));
-    
-    sprintf(tmp_label,_("File %s already exists."),dest_file);
-    label=gtk_label_new(tmp_label);
-    gtk_box_pack_start(GTK_BOX(GTK_DIALOG(dialog)->vbox),
-		       label,TRUE,TRUE,0);
-    label=gtk_label_new(_("Overwrite?"));
-    gtk_box_pack_start(GTK_BOX(GTK_DIALOG(dialog)->vbox),
-		       label,TRUE,TRUE,0);
-    cdata->update=FALSE;
-    cdata->dialog=dialog;
-    
-#ifdef __GTK_STOCK_H__
-    button=gtkut_button_new_from_stock(_("Cancel"),GTK_STOCK_CANCEL);
-#else
-    button=gtk_button_new_with_label(_("Cancel"));
-#endif
-    gtk_box_pack_start(GTK_BOX(GTK_DIALOG(dialog)->action_area),
-		       button,TRUE,TRUE,0);
-    my_signal_connect(button,"clicked",
-		      close_child_dialog, 
-		      GTK_WIDGET(dialog));
-
-#ifdef __GTK_STOCK_H__
-    button=gtkut_button_new_from_stock(_("OK"),GTK_STOCK_OK);
-#else
-    button=gtk_button_new_with_label(_("OK"));
-#endif
-    gtk_box_pack_start(GTK_BOX(GTK_DIALOG(dialog)->action_area),
-		       button,TRUE,TRUE,0);
-    my_signal_connect(button,"clicked",
-		      ConfirmSaveOther, 
-		      (gpointer)cdata);
-
-
-    
-    gtk_widget_show_all(dialog);
-    gtk_main();
-    
-    if(cdata->update){
-      Mascot->inifile=dest_file;
-      NkrSave(Mascot);
-    }
-
-    g_free(cdata);
-  }
-  else{
-    Mascot->inifile=dest_file;
-    NkrSave(Mascot);
-  }
-
-  gtk_main_quit();
-  gtk_widget_destroy(GTK_WIDGET(fs));
-  Mascot->flag_menu=FALSE;
-}
-#endif
-
-
 // ファイル選択ダイアログからのリリース用マスコットの保存
 void SaveReleaseMascot(GtkWidget *w, gpointer gdata)
 { 
@@ -2839,11 +1935,7 @@ void SaveReleaseMascot(GtkWidget *w, gpointer gdata)
   cdata=(confSaveReleaseMascot *)gdata;
 
   fname
-#ifdef __GTK_FILE_CHOOSER_H__
     =g_strdup(gtk_file_chooser_get_filename(GTK_FILE_CHOOSER(cdata->fdialog)));
-#else
-    =g_strdup(gtk_file_selection_get_filename(GTK_FILE_SELECTION(cdata->fdialog)));
-#endif
 
   gtk_widget_unmap(GTK_WIDGET(cdata->fdialog));
 
@@ -2868,20 +1960,12 @@ void SaveReleaseMascot(GtkWidget *w, gpointer gdata)
     cdata->update=FALSE;
     cdata->dialog=dialog;
     
-#ifdef __GTK_STOCK_H__
     button=gtkut_button_new_from_stock(_("Cancel"),GTK_STOCK_CANCEL);
-#else
-    button=gtk_button_new_with_label(_("Cancel"));
-#endif
     gtk_box_pack_start(GTK_BOX(GTK_DIALOG(dialog)->action_area),
 		       button,TRUE,TRUE,0);
     my_signal_connect(button,"clicked",close_child_dialog, GTK_WIDGET(dialog));
 
-#ifdef __GTK_STOCK_H__
     button=gtkut_button_new_from_stock(_("OK"),GTK_STOCK_OK);
-#else
-    button=gtk_button_new_with_label(_("OK"));
-#endif
     gtk_box_pack_start(GTK_BOX(GTK_DIALOG(dialog)->action_area),
 		       button,TRUE,TRUE,0);
     my_signal_connect(button,"clicked",ConfirmSaveRelease,(gpointer)cdata);
@@ -3112,187 +2196,7 @@ void GoRelease(GtkWidget *w, gpointer gdata)
 }
 
 
-// ファイル選択ダイアログからのメニューの保存
-#ifndef __GTK_FILE_CHOOSER_H__
-void SaveMenuOther(GtkWidget *w, 
-                   GtkFileSelection *fs)
-{ 
-  GtkWidget *dialog;
-  GtkWidget *label;
-  GtkWidget *button;
-  confSaveOther *cdata;
-  gchar *dest_file;
-  gchar tmp_label[128];
-  
-  dest_file
-    =g_strdup(gtk_file_selection_get_filename(GTK_FILE_SELECTION(fs)));
 
-  gtk_widget_unmap(GTK_WIDGET(fs));
-  
-
-  if(access(dest_file,F_OK)==0){
-    cdata=g_malloc0(sizeof(confSaveOther));
-
-    dialog = gtk_dialog_new();
-
-    gtk_window_set_position(GTK_WINDOW(dialog), GTK_WIN_POS_CENTER);
-    gtk_container_set_border_width(GTK_CONTAINER(dialog),5);
-    gtk_window_set_title(GTK_WINDOW(dialog),
-			 _("Menu Save : Overwrite Confirmation"));
-    
-    sprintf(tmp_label,_("Menu File %s already exists."),dest_file);
-    label=gtk_label_new(tmp_label);
-    gtk_box_pack_start(GTK_BOX(GTK_DIALOG(dialog)->vbox),
-		       label,TRUE,TRUE,0);
-    label=gtk_label_new(_("Overwrite?"));
-    gtk_box_pack_start(GTK_BOX(GTK_DIALOG(dialog)->vbox),
-		       label,TRUE,TRUE,0);
-    cdata->update=FALSE;
-    cdata->dialog=dialog;
-    
-#ifdef __GTK_STOCK_H__
-    button=gtkut_button_new_from_stock(_("Cancel"),GTK_STOCK_CANCEL);
-#else
-    button=gtk_button_new_with_label(_("Cancel"));
-#endif
-    gtk_box_pack_start(GTK_BOX(GTK_DIALOG(dialog)->action_area),
-		       button,TRUE,TRUE,0);
-    my_signal_connect(button,"clicked",close_child_dialog, GTK_WIDGET(dialog));
-
-#ifdef __GTK_STOCK_H__
-    button=gtkut_button_new_from_stock(_("OK"),GTK_STOCK_OK);
-#else
-    button=gtk_button_new_with_label(_("OK"));
-#endif
-    gtk_box_pack_start(GTK_BOX(GTK_DIALOG(dialog)->action_area),
-		       button,TRUE,TRUE,0);
-    my_signal_connect(button,"clicked",ConfirmSaveOther, (gpointer)cdata);
-
-    
-    gtk_widget_show_all(dialog);
-    gtk_main();
-    
-    if(cdata->update){
-      Mascot->menu_file=dest_file;
-      SaveMenu(Mascot);
-      {
-	gchar *buf;
-	buf=g_strdup_printf(_("Saved Menu as ...%%n    \"%s\""),Mascot->menu_file);
-	DoSysBalloon(Mascot,buf);
-	g_free(buf);
-      }
-    }
-
-    g_free(cdata);
-  }
-  else{
-    Mascot->menu_file=dest_file;
-    SaveMenu(Mascot);
-    {
-      gchar *buf;
-      buf=g_strdup_printf(_("Saved Menu as ...%%n    \"%s\""),Mascot->menu_file);
-      DoSysBalloon(Mascot,buf);
-      g_free(buf);
-    }
-  }
-
-  gtk_main_quit();
-  gtk_widget_destroy(GTK_WIDGET(fs));
-  Mascot->flag_menu=FALSE;
-}
-#endif
-
-
-
-// ファイル選択ダイアログからのリソースの保存
-#ifndef __GTK_FILE_CHOOSER_H__
-void SaveRCOther(GtkWidget *w,
-                 GtkFileSelection *fs)
-{ 
-  GtkWidget *dialog;
-  GtkWidget *label;
-  GtkWidget *button;
-  confSaveOther *cdata;
-  gchar *dest_file;
-  gchar tmp_label[128];
-  
-  dest_file=g_strdup(gtk_file_selection_get_filename(GTK_FILE_SELECTION(fs)));
-
-  gtk_widget_unmap(GTK_WIDGET(fs));
-  
-
-  if(access(dest_file,F_OK)==0){
-    cdata=g_malloc0(sizeof(confSaveOther));
-
-    dialog = gtk_dialog_new();
-
-    gtk_window_set_position(GTK_WINDOW(dialog), GTK_WIN_POS_CENTER);
-    gtk_container_set_border_width(GTK_CONTAINER(dialog),5);
-    gtk_window_set_title(GTK_WINDOW(dialog),
-			 _("Resource Save : Overwrite Confirmation"));
-    
-    sprintf(tmp_label,_("Resource File %s already exists."),dest_file);
-    label=gtk_label_new(tmp_label);
-    gtk_box_pack_start(GTK_BOX(GTK_DIALOG(dialog)->vbox),
-		       label,TRUE,TRUE,0);
-    label=gtk_label_new(_("Overwrite?"));
-    gtk_box_pack_start(GTK_BOX(GTK_DIALOG(dialog)->vbox),
-		       label,TRUE,TRUE,0);
-    cdata->update=FALSE;
-    cdata->dialog=dialog;
-    
-#ifdef __GTK_STOCK_H__
-    button=gtkut_button_new_from_stock(_("Cancel"),GTK_STOCK_CANCEL);
-#else
-    button=gtk_button_new_with_label(_("Cancel"));
-#endif
-    gtk_box_pack_start(GTK_BOX(GTK_DIALOG(dialog)->action_area),
-		       button,TRUE,TRUE,0);
-    my_signal_connect(button,"clicked",close_child_dialog, GTK_WIDGET(dialog));
-
-#ifdef __GTK_STOCK_H__
-    button=gtkut_button_new_from_stock(_("OK"),GTK_STOCK_OK);
-#else
-    button=gtk_button_new_with_label(_("OK"));
-#endif
-    gtk_box_pack_start(GTK_BOX(GTK_DIALOG(dialog)->action_area),
-		       button,TRUE,TRUE,0);
-    my_signal_connect(button,"clicked",ConfirmSaveOther,(gpointer)cdata);
-
-    
-    gtk_widget_show_all(dialog);
-    gtk_main();
-    
-    if(cdata->update){
-      Mascot->rcfile=dest_file;
-      SaveRC(Mascot,FALSE);
-      {
-	gchar *buf;
-	buf=g_strdup_printf(_("Saved Resource as ...%%n    \"%s\""),Mascot->rcfile);
-	DoSysBalloon(Mascot,buf);
-	g_free(buf);
-      }
-    }
-
-    g_free(cdata);
-  }
-  else{
-    Mascot->rcfile=dest_file;
-    SaveRC(Mascot,TRUE);
-    SaveRC(Mascot,FALSE);
-    {
-      gchar *buf;
-      buf=g_strdup_printf(_("Saved Resource as ...%%n    \"%s\""),Mascot->rcfile);
-      DoSysBalloon(Mascot,buf);
-      g_free(buf);
-    }
-  }
-
-  gtk_main_quit();
-  gtk_widget_destroy(GTK_WIDGET(fs));
-  Mascot->flag_menu=FALSE;
-}
-#endif
 
 
 // POPパスワードの変更 (Biff起動時 biff_init)
@@ -3412,7 +2316,6 @@ void ChangeColorButton(GtkWidget *w, gint gdata)
     break;
   }
 
-#ifdef USE_CAIRO
   switch(bal_clk){
   case CONF_COLOR_CLK:
     tmp_mascot.alpclk=gtk_color_button_get_alpha(GTK_COLOR_BUTTON(w));
@@ -3465,7 +2368,6 @@ void ChangeColorButton(GtkWidget *w, gint gdata)
     tmp_mascot.def_alpbalbd=gtk_color_button_get_alpha(GTK_COLOR_BUTTON(w));
     break;
   }
-#endif
 }
 
 #else
@@ -3485,11 +2387,9 @@ void ChangeColor(GtkWidget *w, gpointer gdata)
   gdk_color_alloc(gdk_colormap_get_system(),cdata->color);
   change_bgcolor(cdata->button,*cdata->color);
 
-#ifdef USE_CAIRO
   cdata->alpha=
     gtk_color_selection_get_current_alpha
     (GTK_COLOR_SELECTION(cdata->csd->colorsel));
-#endif
 
   cdata->update=TRUE;
 
@@ -3598,7 +2498,7 @@ static void close_conf(GtkWidget *w, GtkWidget *dialog)
     return;
   }
 
-  LoadPixmaps(win_main, Mascot, Mascot->sprites);
+  LoadPixmaps(Mascot->win_main, Mascot, Mascot->sprites);
   DrawMascot0(Mascot);
 
 // テスト表示でShapeが変わった場合のための対応
@@ -3741,150 +2641,10 @@ void TestAnime(GtkWidget *w, gint gdata)
 		  tmp_pixfile[tmp_mascot.frame_pix[0][0]],
 		  tmp_mascot.frame_pix[0][0]);
 
-
-  /*
-  tmp_mascot.anime_seq++;
-  if((seqend-tmp_mascot.anime_seq)<=0){
-    //フレームの終了
-    tmp_mascot.anime_seq=0;
-  
-    if(i_frm>=tmp_mascot.frame_num[i_ptn]){
-      //パターンの終了
-      if(i_ptn==0){
-	if(tmp_mascot.random_total==0){
-	  // ランダムアニメがない場合 ベースの先頭に戻る
-	  i_frm=0;
-	}
-	else{
-	  // ベースの終了 -> ランダムパターンへの移行
-	  i_ptn=weight_random(mascot);
-	  i_frm=0;
-	}
-      }
-      else{
-	// 初期状態へ戻る
-	i_ptn=0;
-	i_frm=0;
-	if(flag_balloon==TRUE){
-	  // バルーンがでている場合は閉じる
-	  // クリックアニメの終了
-	    gtk_widget_unmap(balloon_main);
-	    flag_balloon=FALSE;
-	}
-      }
-    }
-    else{
-    //次のフレームへ移行
-    }
-    seqend=
-    RANDOM(tmp_mascot.frame_max[i_ptn][i_frm]
-	     -tmp_mascot.frame_min[i_ptn][i_frm]+1)
-      +tmp_mascot.frame_min[i_ptn][i_frm];
-      }*/
-
   gtk_widget_set_sensitive(w, TRUE);
   flagChildDialog=FALSE;
 
 }
-
-// ファイル選択ダイアログからPixmapを追加
-#ifndef __GTK_FILE_CHOOSER_H__
-void AddPixmap(GtkWidget *w, gpointer gdata)
-{ 
-  confAddPixmap *cdata;
-#ifdef USE_GTK2
-  int i_pix;
-#endif
-
-  cdata=(confAddPixmap *)gdata;
-
-
-#ifdef USE_GTK2
-  i_pix=0;
-  while(gtk_file_selection_get_selections(cdata->fs)[i_pix]){
-    if(access(gtk_file_selection_get_selections(cdata->fs)[i_pix],F_OK)==0){
-      if(TestLoadPixmaps(&tmp_mascot,
-			 gtk_file_selection_get_selections(cdata->fs)[i_pix],
-			 tmp_mascot.nPixmap)){
-	tmp_pixfile[tmp_mascot.nPixmap]
-	  =g_strdup(gtk_file_selection_get_selections(cdata->fs)[i_pix]);
-	tmp_mascot.nPixmap++;
-    
-	cdata->update=TRUE;
-      }
-      else{
-#ifdef GTK_MSG
-    popup_message(POPUP_TIMEOUT*2,
-		  _("Error: File cannot be loaded."),
-		  " ",
-		  gtk_file_selection_get_selections(cdata->fs)[i_pix],
-		  NULL);
-#else
-	g_print (_("Cannot Load %s\n"),
-		 gtk_file_selection_get_selections(cdata->fs)[i_pix]);
-#endif
-      }
-    }
-    else{
-#ifdef GTK_MSG
-    popup_message(POPUP_TIMEOUT*2,
-		  _("Error: File cannot be opened."),
-		  " ",
-		  gtk_file_selection_get_selections(cdata->fs)[i_pix],
-		  NULL);
-#else
-      g_print (_("Cannot Open %s\n"),
-	       gtk_file_selection_get_selections(cdata->fs)[i_pix]);
-#endif
-    }
-
-    if(tmp_mascot.nPixmap>=MAX_PIXMAP) break;
-    i_pix++;
-  }
-#else
-  if(access(gtk_file_selection_get_filename(cdata->fs),F_OK)==0){
-    if(TestLoadPixmaps(&tmp_mascot,
-		       gtk_file_selection_get_filename(cdata->fs),
-		       tmp_mascot.nPixmap)){
-      tmp_pixfile[tmp_mascot.nPixmap]
-	=g_strdup(gtk_file_selection_get_filename(cdata->fs));
-      tmp_mascot.nPixmap++;
-    
-      cdata->update=TRUE;
-    }
-    else{
-#ifdef GTK_MSG
-    popup_message(POPUP_TIMEOUT*2,
-		  _("Error: File cannot be loaded."),
-		  " ",
-		  gtk_file_selection_get_filename (cdata->fs),
-		  NULL);
-#else
-      g_print (_("Cannot Load %s\n"),
-	       gtk_file_selection_get_filename (cdata->fs));
-#endif
-    }
-
-  }
-  else{
-#ifdef GTK_MSG
-    popup_message(POPUP_TIMEOUT*2,
-		  _("Error: File cannot be opened."),
-		  " ",
-		  gtk_file_selection_get_filename (cdata->fs),
-		  NULL);
-#else
-    g_print (_("Cannot Open %s\n"),
-	     gtk_file_selection_get_filename (cdata->fs));
-#endif
-  }
-#endif
-  
-  gtk_main_quit();
-  gtk_widget_destroy(GTK_WIDGET(cdata->fs));
-}
-#endif
-
 
 // ダイアログからPixmapを削除
 void DelPixmap(GtkWidget *w, gpointer gdata)
@@ -3955,235 +2715,6 @@ void AddDelFrame(GtkWidget *w, gpointer gdata)
 }
 
 
-// ファイル選択ダイアログからPixmapを変更
-#ifndef __GTK_FILE_CHOOSER_H__
-void ChangePixmap(GtkWidget *w, gpointer gdata)
-{ 
-  confChangePixmap *cdata;
-
-  cdata=(confChangePixmap *)gdata;
-
-  if(access(gtk_file_selection_get_filename(cdata->fs),F_OK)==0){
-    if(TestLoadPixmaps(&tmp_mascot,
-		       gtk_file_selection_get_filename(cdata->fs),
-		       cdata->i_pix)){
-      tmp_pixfile[cdata->i_pix]
-	=g_strdup(gtk_file_selection_get_filename(cdata->fs));
-    
-      cdata->update=TRUE;
-    }
-    else{
-#ifdef GTK_MSG
-    popup_message(POPUP_TIMEOUT*2,
-		  _("Error: File cannot be loaded."),
-		  " ",
-		  gtk_file_selection_get_filename (cdata->fs),
-		  NULL);
-#else
-      g_print (_("Cannot Load %s\n"),
-	       gtk_file_selection_get_filename (cdata->fs));
-#endif
-    }
-
-  }
-  else{
-#ifdef GTK_MSG
-    popup_message(POPUP_TIMEOUT*2,
-		  _("Error: File cannot be opened."),
-		  " ",
-		  gtk_file_selection_get_filename (cdata->fs),
-		  NULL);
-#else
-    g_print (_("Cannot Open %s\n"),
-	     gtk_file_selection_get_filename (cdata->fs));
-#endif
-  }
-  
-  gtk_main_quit();
-  gtk_widget_destroy(GTK_WIDGET(cdata->fs));
-}
-#endif
-
-
-// のっかりキャラ用 ファイル選択ダイアログからPixmapを指定
-#ifndef __GTK_FILE_CHOOSER_H__
-void NkrChangePixmap(GtkWidget *w, gpointer gdata)
-{ 
-  confNkrChangePixmap *cdata;
-
-  cdata=(confNkrChangePixmap  *)gdata;
-
-  if(access(gtk_file_selection_get_filename(cdata->fs),F_OK)==0){
-    cdata->filename
-      =g_strdup(gtk_file_selection_get_filename(cdata->fs));
-    
-    cdata->update=TRUE;
-  }
-  else{
-#ifdef GTK_MSG
-    popup_message(POPUP_TIMEOUT*2,
-		  _("Error: File cannot be opened."),
-		  " ",
-		  gtk_file_selection_get_filename (cdata->fs),
-		  NULL);
-#else
-    g_print (_("Cannot Open %s\n"),
-	     gtk_file_selection_get_filename (cdata->fs));
-#endif
-  }
-  
-  gtk_main_quit();
-  gtk_widget_destroy(GTK_WIDGET(cdata->fs));
-}
-#endif
-
-
-#ifdef USE_BIFF
-#ifndef __GTK_FILE_CHOOSER_H__
-// ファイル選択ダイアログからBiff用 Pixmapを変更
-void ChangeBiffPixmap(GtkWidget *w, gpointer gdata)
-{ 
-  confChangeBiffPixmap *cdata;
-
-  cdata=(confChangeBiffPixmap *)gdata;
-
-  if(access(gtk_file_selection_get_filename(cdata->fs),F_OK)==0){
-    tmp_mascot.mail.pix_file
-      =g_strdup(FullPathPixmapFile(&tmp_mascot,
-	   gtk_file_selection_get_filename(cdata->fs)));
-      cdata->update=TRUE;
-  }
-  else{
-#ifdef GTK_MSG
-    popup_message(POPUP_TIMEOUT*2,
-		  _("Error: File cannot be opened."),
-		  " ",
-		  gtk_file_selection_get_filename (cdata->fs),
-		  NULL);
-#else
-    g_print (_("Cannot Open %s\n"),
-	     gtk_file_selection_get_filename (cdata->fs));
-#endif
-  }
-  
-  gtk_main_quit();
-  gtk_widget_destroy(GTK_WIDGET(cdata->fs));
-}
-#endif
-#endif // USE_BIFF
-
-// ファイル選択ダイアログからTargetを変更
-#ifndef __GTK_FILE_CHOOSER_H__
-void ChangeTgt(GtkWidget *w, gpointer gdata)
-{ 
-  confChangeTgt *cdata;
-
-  cdata=(confChangeTgt *)gdata;
-
-  if(access(gtk_file_selection_get_filename(cdata->fs),F_OK)==0){
-    tmp_mascot.menu_tgt[cdata->i_cat][cdata->i_tgt]
-      =g_strdup(my_basename(gtk_file_selection_get_filename(cdata->fs)));
-    
-      cdata->update=TRUE;
-  }
-  else{
-#ifdef GTK_MSG
-    popup_message(POPUP_TIMEOUT*2,
-		  _("Error: File cannot be opened."),
-		  " ",
-		  gtk_file_selection_get_filename (cdata->fs),
-		  NULL);
-#else
-    g_print (_("Cannot Open %s\n"),
-	     gtk_file_selection_get_filename (cdata->fs));
-#endif
-  }
-  
-  gtk_main_quit();
-  gtk_widget_destroy(GTK_WIDGET(cdata->fs));
-}
-#endif
-
-// ファイル選択ダイアログからのメニューの吸収
-#ifndef __GTK_FILE_CHOOSER_H__
-void MergeCatFS(GtkWidget *w, gpointer gdata)
-{ 
-  confMergeCat *cdata;
-  gchar *merge_file;
-  gint menu_cat_max_old;
-
-#ifdef USE_GTK2
-  int i_menu;
-#endif
-
-  cdata=(confMergeCat *)gdata;
-
-#ifdef USE_GTK2
-  i_menu=0;
-  while(gtk_file_selection_get_selections(cdata->fs)[i_menu]){
-    if(access(gtk_file_selection_get_selections(GTK_FILE_SELECTION(cdata->fs))[i_menu],
-	    F_OK)==0){
-      merge_file=g_strdup(
-	gtk_file_selection_get_selections(GTK_FILE_SELECTION(cdata->fs))[i_menu]);
-      gtk_widget_destroy(PopupMenu);
-      menu_cat_max_old=tmp_mascot.menu_cat_max;
-      ReadMenu(&tmp_mascot,tmp_mascot.menu_cat_max,merge_file);
-      if(tmp_mascot.menu_cat_max>MAX_MENU_CATEGORY){
-        tmp_mascot.menu_cat_max=menu_cat_max_old;
-      }
-
-      cdata->update=TRUE;
-    }
-    else{
-#ifdef GTK_MSG
-    popup_message(POPUP_TIMEOUT*2,
-		  _("Error: File cannot be opened."),
-		  " ",
-		  gtk_file_selection_get_filename(GTK_FILE_SELECTION(cdata->fs))[i_menu],
-		  NULL);
-#else
-      g_print(_("Cannot Open %s\n"),
-	      gtk_file_selection_get_filename(GTK_FILE_SELECTION(cdata->fs))[i_menu]);
-#endif
-    }
-
-    if(tmp_mascot.menu_cat_max>=MAX_MENU_CATEGORY) break;
-    i_menu++;
-  }
-  if(cdata->update) PopupMenu=make_popup_menu();
-#else
-  if(access(gtk_file_selection_get_filename(GTK_FILE_SELECTION(cdata->fs)),
-	    F_OK)==0){
-    merge_file=g_strdup(
-	gtk_file_selection_get_filename(GTK_FILE_SELECTION(cdata->fs)));
-    gtk_widget_destroy(PopupMenu);
-    ReadMenu(&tmp_mascot,tmp_mascot.menu_cat_max,merge_file);
-    PopupMenu=make_popup_menu();
-
-    cdata->update=TRUE;
-  }
-  else{
-#ifdef GTK_MSG
-    popup_message(POPUP_TIMEOUT*2,
-		  _("Error: File cannot be opened."),
-		  " ",
-		  gtk_file_selection_get_filename (GTK_FILE_SELECTION (cdata->fs)),
-		  NULL);
-#else
-    g_print (_("Cannot Open %s\n"),
-	     gtk_file_selection_get_filename (GTK_FILE_SELECTION (cdata->fs)));
-#endif
-  }
-#endif
-
-  gtk_main_quit();
-  gtk_widget_destroy(GTK_WIDGET(cdata->fs));
-}
-#endif
-
-
-
-
 // ダイアログからTargetを削除
 void DelTgt(GtkWidget *w, gpointer gdata)
 { 
@@ -4212,173 +2743,11 @@ void AddDelCat(GtkWidget *w, gpointer gdata)
 }
 
 
-// ファイル選択ダイアログからClick Soundを変更
-#ifndef __GTK_FILE_CHOOSER_H__
-void ChangeDuetTgt(GtkWidget *w, gpointer gdata)
-{ 
-  confChangeDuetTgt *cdata;
-
-  cdata=(confChangeDuetTgt *)gdata;
-
-  if(access(gtk_file_selection_get_filename(cdata->fs),F_OK)==0){
-    tmp_mascot.duet_tgt[cdata->i_ptn]
-      =g_strdup(my_basename(FullPathMascotFile(&tmp_mascot,
-					     gtk_file_selection_get_filename(cdata->fs))));
-      cdata->update=TRUE;
-  }
-  else{
-#ifdef GTK_MSG
-    popup_message(POPUP_TIMEOUT*2,
-		  _("Error: File cannot be opened."),
-		  " ",
-		  gtk_file_selection_get_filename (cdata->fs),
-		  NULL);
-#else
-    g_print (_("Cannot Open %s\n"),
-	     gtk_file_selection_get_filename (cdata->fs));
-#endif
-  }
-  
-  gtk_main_quit();
-  gtk_widget_destroy(GTK_WIDGET(cdata->fs));
-}
-#endif
-
-
-#ifndef __GTK_FILE_CHOOSER_H__
-void ChangeClickSound(GtkWidget *w, gpointer gdata)
-{ 
-  confChangeClickSound *cdata;
-
-  cdata=(confChangeClickSound *)gdata;
-
-  if(access(gtk_file_selection_get_filename(cdata->fs),F_OK)==0){
-    tmp_mascot.click_sound[cdata->i_ptn]
-      =g_strdup(FullPathSoundFile(&tmp_mascot,
-					     gtk_file_selection_get_filename(cdata->fs),FALSE));
-      cdata->update=TRUE;
-  }
-  else{
-#ifdef GTK_MSG
-    popup_message(POPUP_TIMEOUT*2,
-		  _("Error: File cannot be opened."),
-		  " ",
-		  gtk_file_selection_get_filename (cdata->fs),
-		  NULL);
-#else
-    g_print (_("Cannot Open %s\n"),
-	     gtk_file_selection_get_filename (cdata->fs));
-#endif
-  }
-  
-  gtk_main_quit();
-  gtk_widget_destroy(GTK_WIDGET(cdata->fs));
-}
-#endif
-
-
-#ifdef USE_BIFF
-// ファイル選択ダイアログからBiff Soundを変更
-#ifndef __GTK_FILE_CHOOSER_H__
-void ChangeBiffSound(GtkWidget *w, gpointer gdata)
-{ 
-  confChangeBiffSound *cdata;
-
-  cdata=(confChangeBiffSound *)gdata;
-
-  if(access(gtk_file_selection_get_filename(cdata->fs),F_OK)==0){
-    tmp_mascot.mail.sound
-      =g_strdup(FullPathSoundFile(&tmp_mascot,
-				  gtk_file_selection_get_filename(cdata->fs),FALSE));
-      cdata->update=TRUE;
-  }
-  else{
-#ifdef GTK_MSG
-    popup_message(POPUP_TIMEOUT*2,
-		  _("Error: File cannot be opened."),
-		  " ",
-		  gtk_file_selection_get_filename (cdata->fs),
-		  NULL);
-#else
-    g_print (_("Cannot Open %s\n"),
-	     gtk_file_selection_get_filename (cdata->fs));
-#endif
-  }
-  
-  gtk_main_quit();
-  gtk_widget_destroy(GTK_WIDGET(cdata->fs));
-}
-#endif
-
-// ファイル選択ダイアログからMail参照ファイルを変更
-#ifndef __GTK_FILE_CHOOSER_H__
-void ChangeMailFile(GtkWidget *w, gpointer gdata)
-{ 
-  confMailFile *cdata;
-
-  cdata=(confMailFile *)gdata;
-
-  if(access(gtk_file_selection_get_filename(cdata->fs),F_OK)==0){
-    tmp_mascot.mail.file
-      =g_strdup(gtk_file_selection_get_filename(cdata->fs));
-    cdata->update=TRUE;
-  }
-  else{
-#ifdef GTK_MSG
-    popup_message(POPUP_TIMEOUT*2,
-		  _("Error: File cannot be opened."),
-		  " ",
-		  gtk_file_selection_get_filename (cdata->fs),
-		  NULL);
-#else
-    g_print (_("Cannot Open %s\n"),
-	     gtk_file_selection_get_filename (cdata->fs));
-#endif
-  }
-  
-  gtk_main_quit();
-  gtk_widget_destroy(GTK_WIDGET(cdata->fs));
-}
-#endif
-
-// ファイル選択ダイアログからMailer起動コマンドを変更
-#ifndef __GTK_FILE_CHOOSER_H__
-void ChangeMailer(GtkWidget *w, gpointer gdata)
-{ 
-  confMailer *cdata;
-
-  cdata=(confMailer *)gdata;
-
-  if(access(gtk_file_selection_get_filename(cdata->fs),F_OK)==0){
-    tmp_mascot.mail.mailer
-      =g_strdup(gtk_file_selection_get_filename(cdata->fs));
-    cdata->update=TRUE;
-  }
-  else{
-#ifdef GTK_MSG
-    popup_message(POPUP_TIMEOUT*2,
-		  _("Error: File cannot be opened."),
-		  " ",
-		  gtk_file_selection_get_filename (cdata->fs),
-		  NULL);
-#else
-    g_print (_("Cannot Open %s\n"),
-	     gtk_file_selection_get_filename (cdata->fs));
-#endif
-  }
-  
-  gtk_main_quit();
-  gtk_widget_destroy(GTK_WIDGET(cdata->fs));
-}
-#endif
-#endif  // USE_BIFF
-
 
 
 
 static void create_change_image_dialog(GtkWidget *w, gint gdata)
 {
-#ifdef __GTK_FILE_CHOOSER_H__
   GtkWidget *fdialog;
   char win_title[64];
   gint i_pix;
@@ -4425,7 +2794,7 @@ static void create_change_image_dialog(GtkWidget *w, gint gdata)
     
     fname = g_strdup(gtk_file_chooser_get_filename(GTK_FILE_CHOOSER(fdialog)));
     gtk_widget_destroy(fdialog);
-
+    
     dest_file=to_locale(fname);
 
     if(access(dest_file,F_OK)==0){
@@ -4449,9 +2818,9 @@ static void create_change_image_dialog(GtkWidget *w, gint gdata)
 #ifdef GTK_MSG
       popup_message(POPUP_TIMEOUT*2,
 		    _("Error: File cannot be opened."),
-		  " ",
-		  fname,
-		  NULL);
+		    " ",
+		    fname,
+		    NULL);
 #else
       g_print (_("Cannot Open %s\n"),
 	       fname);
@@ -4460,106 +2829,17 @@ static void create_change_image_dialog(GtkWidget *w, gint gdata)
   
     gtk_entry_set_text(GTK_ENTRY(pixmap_entry[i_pix]),my_basename(fname));
     g_free(fname);
-  } else {
+  }
+  else{
     gtk_widget_destroy(fdialog);
   }
 
   flagChildDialog=FALSE;
-
-#else
-  GtkWidget *fdialog;
-  GtkWidget *button;
-  GtkWidget *hbox;
-  confChangePixmap *cdata;
-  char win_title[64];
-  
-  if(flagChildDialog){
-    return;
-  }
-  else{
-    flagChildDialog=TRUE;
-  }
-
-
-  // Win構築は重いので先にExposeイベント等をすべて処理してから
-  while (my_main_iteration(FALSE));
-
-  sprintf(win_title,_("Select New Image for No.%02d"),
-	  cdata->i_pix);
-
-
-  fdialog = gtk_file_selection_new(_(win_title));
-
-  cdata->fs=GTK_FILE_SELECTION(fdialog);
-  cdata->update=FALSE;
-  
-  my_signal_connect(fdialog,"destroy",close_child_dialog, GTK_WIDGET(fdialog));
-  
-
-  hbox = gtk_hbox_new(FALSE,5);
-  gtk_container_set_border_width (GTK_CONTAINER (hbox), 5);
-  gtk_box_pack_start(GTK_BOX(GTK_FILE_SELECTION(fdialog)->action_area),
-		     hbox,FALSE,FALSE,0);
-
-  my_signal_connect(GTK_FILE_SELECTION(fdialog)->ok_button,
-		    "clicked", ChangePixmap, (gpointer)cdata);
-  my_signal_connect(GTK_FILE_SELECTION(fdialog)->cancel_button,
-		    "clicked", close_child_dialog, GTK_WIDGET(fdialog));
-  
-
-  gtk_file_selection_set_filename (GTK_FILE_SELECTION (fdialog), 
-  				   tmp_pixfile[cdata->i_pix]);
-  gtk_file_selection_hide_fileop_buttons (GTK_FILE_SELECTION (fdialog));
-
-  hbox = gtk_hbox_new(FALSE,5);
-  gtk_container_set_border_width (GTK_CONTAINER (hbox), 5);
-  gtk_box_pack_start(GTK_BOX(GTK_FILE_SELECTION(fdialog)->action_area),
-		     hbox,FALSE,FALSE,0);
-
-  button=gtk_button_new_with_label(_("User Pix Dir"));
-  gtk_box_pack_start(GTK_BOX(hbox),button,FALSE,FALSE,0);
-  my_signal_connect(button,"clicked", fs_set_updir, (gpointer)fdialog);
-
-#ifdef USE_COMMON
-  button=gtk_button_new_with_label(_("Common Pix Dir"));
-  gtk_box_pack_start(GTK_BOX(hbox),button,FALSE,FALSE,0);
-  my_signal_connect(button,"clicked", fs_set_dpdir, (gpointer)fdialog);
-#endif
-
-  button=gtk_button_new_with_label(PNG_EXTENSION);
-  gtk_box_pack_start(GTK_BOX(hbox),button,FALSE,FALSE,0);
-  my_signal_connect(button,"clicked", fs_set_pngext, (gpointer)fdialog);
-
-  button=gtk_button_new_with_label(GIF_EXTENSION);
-  gtk_box_pack_start(GTK_BOX(hbox),button,FALSE,FALSE,0);
-  my_signal_connect(button,"clicked", fs_set_gifext, (gpointer)fdialog);
-
-  button=gtk_button_new_with_label(XPM_EXTENSION);
-  gtk_box_pack_start(GTK_BOX(hbox),button,FALSE,FALSE,0);
-  my_signal_connect(button,"clicked", fs_set_xpmext, (gpointer)fdialog);
-
-  
-
-  gtk_widget_show_all(fdialog);
-  
-  gtk_main();
-
-  if(cdata->update){
-    gtk_entry_set_text(GTK_ENTRY(pixmap_entry[cdata->i_pix]),
-		       my_basename(tmp_pixfile[cdata->i_pix]));
-    
-  }
-
-  flagChildDialog=FALSE;
-  g_free(cdata);
-#endif
 }
 
 
-gchar* create_nkr_change_image_dialog
-(gchar *lost_filename, int i_pix)
+gchar* create_nkr_change_image_dialog (gchar *lost_filename, int i_pix)
 {
-#ifdef __GTK_FILE_CHOOSER_H__
   GtkWidget *fdialog;
   char win_title[64];
   gchar  *fname, *dir;
@@ -4636,99 +2916,12 @@ gchar* create_nkr_change_image_dialog
   flagChildDialog=FALSE;
 
   return(dest_file);
-#else
-  GtkWidget *fdialog;
-  GtkWidget *button;
-  GtkWidget *vbox;
-  GtkWidget *hbox;
-  GtkWidget *label;
-  confNkrChangePixmap *cdata;
-  char win_title[64];
-
-  if(flagChildDialog){
-    return;
-  }
-  else{
-    flagChildDialog=TRUE;
-  }
-
-  cdata=g_malloc0(sizeof(confNkrChangePixmap));
-
-  cdata->filename=NULL;
-
-  // Win構築は重いので先にExposeイベント等をすべて処理してから
-  while (my_main_iteration(FALSE));
-
-  sprintf(win_title,_("Select New Image for No.%02d"),i_pix);
-
-  fdialog = gtk_file_selection_new(_(win_title));
-  cdata->fs=GTK_FILE_SELECTION(fdialog);
-  cdata->update=FALSE;
-
-  my_signal_connect(fdialog,"destroy",
-		    close_child_dialog, 
-		    GTK_WIDGET(fdialog));
-  
-  my_signal_connect(GTK_FILE_SELECTION(fdialog)->ok_button,
-		   "clicked", 
-		    NkrChangePixmap, (gpointer)cdata);
-  
-  my_signal_connect(GTK_FILE_SELECTION(fdialog)->cancel_button,
-		    "clicked", 
-		    close_child_dialog, 
-		    GTK_WIDGET(fdialog));
-
-  gtk_file_selection_set_filename (GTK_FILE_SELECTION (fdialog), 
-  				   lost_filename);
-  gtk_file_selection_hide_fileop_buttons (GTK_FILE_SELECTION (fdialog));
-
-
-  vbox = gtk_vbox_new(FALSE,5);
-  gtk_container_set_border_width (GTK_CONTAINER (vbox), 5);
-  gtk_box_pack_start(GTK_BOX(GTK_FILE_SELECTION(fdialog)->action_area),
-		     vbox,FALSE,FALSE,0);
-
-  label=gtk_label_new(_("The image described in INI cannot be found."));
-  gtk_box_pack_start(GTK_BOX(vbox),label,FALSE,FALSE,0);
-
-  sprintf(win_title,_("Please select the image File for No.%d."),i_pix);
-  label=gtk_label_new(win_title);
-  gtk_box_pack_start(GTK_BOX(vbox),label,FALSE,FALSE,0);
-
-  hbox = gtk_hbox_new(FALSE,5);
-  gtk_container_set_border_width (GTK_CONTAINER (hbox), 5);
-  gtk_box_pack_start(GTK_BOX(vbox),hbox,FALSE,FALSE,0);
-
-  
-  button=gtk_button_new_with_label(_("User Pix Dir"));
-  gtk_box_pack_start(GTK_BOX(hbox),button,FALSE,FALSE,0);
-  my_signal_connect(button,"clicked", fs_set_updir, (gpointer)fdialog);
-
-#ifdef USE_COMMON
-  button=gtk_button_new_with_label(_("Common Pix Dir"));
-  gtk_box_pack_start(GTK_BOX(hbox),button,FALSE,FALSE,0);
-  my_signal_connect(button,"clicked", fs_set_dpdir, (gpointer)fdialog);
-#endif
-
-  button=gtk_button_new_with_label(BMP_EXTENSION);
-  gtk_box_pack_start(GTK_BOX(hbox),button,FALSE,FALSE,0);
-  my_signal_connect(button,"clicked", fs_set_bmpext, (gpointer)fdialog);
-
-  gtk_widget_show_all(fdialog);
-  
-  gtk_main();
-
-  flagChildDialog=FALSE;
-
-  return(cdata->filename);
-#endif
 }
 
 
 #ifdef USE_BIFF
 static void create_change_biff_image_dialog(GtkWidget *w, gpointer gdata)
 {
-#ifdef __GTK_FILE_CHOOSER_H__
   GtkWidget *fdialog;
   GtkWidget *button;
   GtkWidget *hbox;
@@ -4806,104 +2999,11 @@ static void create_change_biff_image_dialog(GtkWidget *w, gpointer gdata)
 
 
   flagChildDialog=FALSE;
-#else
-  GtkWidget *fdialog;
-  GtkWidget *button;
-  GtkWidget *hbox;
-  GtkWidget *pix_entry;
-  confChangeBiffPixmap *cdata;
-
-  if(flagChildDialog){
-    return;
-  }
-  else{
-    flagChildDialog=TRUE;
-  }
-
-  cdata=g_malloc0(sizeof(confChangeBiffPixmap));
-
-  pix_entry=(GtkWidget *)gdata;
-
-  // Win構築は重いので先にExposeイベント等をすべて処理してから
-  while (my_main_iteration(FALSE));
-
-  fdialog = gtk_file_selection_new(_("Select New Image for Biff"));
-
-  cdata->fs=GTK_FILE_SELECTION(fdialog);
-  cdata->update=FALSE;
-  
-  my_signal_connect(fdialog,"destroy",close_child_dialog, GTK_WIDGET(fdialog));
-
-  my_signal_connect(GTK_FILE_SELECTION(fdialog)->ok_button,
-		    "clicked", ChangeBiffPixmap, (gpointer)cdata);
-  
-  my_signal_connect(GTK_FILE_SELECTION(fdialog)->cancel_button,
-		    "clicked", close_child_dialog, GTK_WIDGET(fdialog));
-
-  if(tmp_mascot.mail.pix_file){
-    gtk_file_selection_set_filename (GTK_FILE_SELECTION (fdialog), 
-				     tmp_mascot.mail.pix_file);
-  }
-  else{
-    gtk_file_selection_set_filename (GTK_FILE_SELECTION (fdialog), 
-#ifdef USE_WIN32
-				     g_strconcat(get_win_home(),G_DIR_SEPARATOR_S,
-#else
-				     g_strconcat(g_get_home_dir(),G_DIR_SEPARATOR_S,
-#endif
-						 USER_DIR,PIXDIR, NULL));
-    gtk_file_selection_complete (GTK_FILE_SELECTION (fdialog), 
-				 "*");
-  }
-  gtk_file_selection_hide_fileop_buttons (GTK_FILE_SELECTION (fdialog));
-
-
-  hbox = gtk_hbox_new(FALSE,5);
-  gtk_container_set_border_width (GTK_CONTAINER (hbox), 5);
-  gtk_box_pack_start(GTK_BOX(GTK_FILE_SELECTION(fdialog)->action_area),
-		     hbox,FALSE,FALSE,0);
-  
-  button=gtk_button_new_with_label(_("User Pix Dir"));
-  gtk_box_pack_start(GTK_BOX(hbox),button,FALSE,FALSE,0);
-  my_signal_connect(button,"clicked", fs_set_updir, (gpointer)fdialog);
-
-#ifdef USE_COMMON
-  button=gtk_button_new_with_label(_("Common Pix Dir"));
-  gtk_box_pack_start(GTK_BOX(hbox),button,FALSE,FALSE,0);
-  my_signal_connect(button,"clicked", fs_set_dpdir, (gpointer)fdialog);
-#endif
-
-  button=gtk_button_new_with_label(PNG_EXTENSION);
-  gtk_box_pack_start(GTK_BOX(hbox),button,FALSE,FALSE,0);
-  my_signal_connect(button,"clicked", fs_set_pngext, (gpointer)fdialog);
-
-  button=gtk_button_new_with_label(GIF_EXTENSION);
-  gtk_box_pack_start(GTK_BOX(hbox),button,FALSE,FALSE,0);
-  my_signal_connect(button,"clicked", fs_set_gifext, (gpointer)fdialog);
-
-  button=gtk_button_new_with_label(XPM_EXTENSION);
-  gtk_box_pack_start(GTK_BOX(hbox),button,FALSE,FALSE,0);
-  my_signal_connect(button,"clicked", fs_set_xpmext, (gpointer)fdialog);
-
-  gtk_widget_show_all(fdialog);
-  
-  gtk_main();
-
-  if(cdata->update){
-    gtk_entry_set_text(GTK_ENTRY(pix_entry),
-		       my_basename(tmp_mascot.mail.pix_file));
-    
-  }
-
-  flagChildDialog=FALSE;
-  g_free(cdata);
-#endif
 }
 #endif  // USE_BIFF
 
 static void create_add_image_dialog(GtkWidget *w, gpointer gdata)
 {
-#ifdef __GTK_FILE_CHOOSER_H__
   GtkWidget *scrwin;
   GtkWidget *fdialog;
   char win_title[64];
@@ -4941,9 +3041,7 @@ static void create_add_image_dialog(GtkWidget *w, gpointer gdata)
 					NULL);				
 
 
-#ifdef USE_GTK2
   gtk_file_chooser_set_select_multiple(GTK_FILE_CHOOSER(fdialog),TRUE);
-#endif
 
   if(tmp_pixfile[tmp_mascot.nPixmap-1][0]=='/'){
     gtk_file_chooser_set_filename (GTK_FILE_CHOOSER (fdialog), 
@@ -5018,104 +3116,6 @@ static void create_add_image_dialog(GtkWidget *w, gpointer gdata)
 
 
   flagChildDialog=FALSE;
-#else
-  GtkWidget *scrwin;
-  GtkWidget *fdialog;
-  GtkWidget *button;
-  GtkWidget *hbox;
-  confAddPixmap *cdata;
-  char win_title[64];
-
-  if(flagChildDialog){
-    return;
-  }
-  else{
-    flagChildDialog=TRUE;
-  }
-
-  if(tmp_mascot.nPixmap>=MAX_PIXMAP){
-    popup_message(POPUP_TIMEOUT,
-		  _("Error: Append Image."),
-		  " ",
-		  _("The number of images maxes out."),
-		  NULL);
-    return;
-  }
-  
-
-  scrwin=(GtkWidget *)gdata;
-
-  cdata=g_malloc0(sizeof(confAddPixmap));
-
-  // Win構築は重いので先にExposeイベント等をすべて処理してから
-  while (my_main_iteration(FALSE));
-
-  sprintf(win_title,_("Select New Image for No.%02d"),
-			       tmp_mascot.nPixmap);
-
-
-  fdialog = gtk_file_selection_new(_(win_title));
-
-#ifdef USE_GTK2
-  gtk_file_selection_set_select_multiple(GTK_FILE_SELECTION(fdialog),TRUE);
-#endif
-
-  cdata->fs=GTK_FILE_SELECTION(fdialog);
-  cdata->update=FALSE;
-
-  my_signal_connect(fdialog,"destroy",close_child_dialog, GTK_WIDGET(fdialog));
-  
-  my_signal_connect(GTK_FILE_SELECTION(fdialog)->ok_button,
-		   "clicked", AddPixmap, (gpointer)cdata);
-
-  my_signal_connect(GTK_FILE_SELECTION(fdialog)->cancel_button,
-		    "clicked", close_child_dialog, GTK_WIDGET(fdialog));
-
-  gtk_file_selection_set_filename (GTK_FILE_SELECTION (fdialog), 
-  				   tmp_pixfile[tmp_mascot.nPixmap-1]);
-  //gtk_file_selection_complete (GTK_FILE_SELECTION (fdialog), 
-  //				   MASCOT_EXTENSION);
-  gtk_file_selection_hide_fileop_buttons (GTK_FILE_SELECTION (fdialog));
-
-
-  hbox = gtk_hbox_new(FALSE,5);
-  gtk_container_set_border_width (GTK_CONTAINER (hbox), 5);
-  gtk_box_pack_start(GTK_BOX(GTK_FILE_SELECTION(fdialog)->action_area),
-		     hbox,FALSE,FALSE,0);
-  
-  button=gtk_button_new_with_label(_("User Pix Dir"));
-  gtk_box_pack_start(GTK_BOX(hbox),button,FALSE,FALSE,0);
-  my_signal_connect(button,"clicked", fs_set_updir, (gpointer)fdialog);
-
-#ifdef USE_COMMON
-  button=gtk_button_new_with_label(_("Common Pix Dir"));
-  gtk_box_pack_start(GTK_BOX(hbox),button,FALSE,FALSE,0);
-  my_signal_connect(button,"clicked", fs_set_dpdir, (gpointer)fdialog);
-#endif
-
-  button=gtk_button_new_with_label(PNG_EXTENSION);
-  gtk_box_pack_start(GTK_BOX(hbox),button,FALSE,FALSE,0);
-  my_signal_connect(button,"clicked", fs_set_pngext, (gpointer)fdialog);
-  
-  button=gtk_button_new_with_label(GIF_EXTENSION);
-  gtk_box_pack_start(GTK_BOX(hbox),button,FALSE,FALSE,0);
-  my_signal_connect(button,"clicked", fs_set_gifext, (gpointer)fdialog);
-
-  button=gtk_button_new_with_label(XPM_EXTENSION);
-  gtk_box_pack_start(GTK_BOX(hbox),button,FALSE,FALSE,0);
-  my_signal_connect(button,"clicked", fs_set_xpmext, (gpointer)fdialog);
-  
-  gtk_widget_show_all(fdialog);
-  
-  gtk_main();
-
-  if(cdata->update){
-    make_pixmap_list(scrwin);
-  }
-
-  flagChildDialog=FALSE;
-  g_free(cdata);
-#endif
 }
 
 
@@ -5175,20 +3175,12 @@ static void create_del_image_dialog(GtkWidget *w, gpointer gdata)
 			 FALSE);
   
 
-#ifdef __GTK_STOCK_H__
   button=gtkut_button_new_from_stock(_("Cancel"),GTK_STOCK_CANCEL);
-#else
-  button=gtk_button_new_with_label(_("Cancel"));
-#endif
   gtk_box_pack_start(GTK_BOX(GTK_DIALOG(deldialog)->action_area),
 		     button,TRUE,TRUE,0);
   my_signal_connect(button,"clicked",close_child_dialog,GTK_WIDGET(deldialog));
 
-#ifdef __GTK_STOCK_H__
   button=gtkut_button_new_from_stock(_("OK"),GTK_STOCK_OK);
-#else
-  button=gtk_button_new_with_label(_("OK"));
-#endif
   gtk_box_pack_start(GTK_BOX(GTK_DIALOG(deldialog)->action_area),
 		     button,TRUE,TRUE,0);
   my_signal_connect(button,"clicked",DelPixmap, (gpointer)cdata);
@@ -5231,11 +3223,7 @@ static void create_del_image_dialog(GtkWidget *w, gpointer gdata)
     gtk_box_pack_start(GTK_BOX(GTK_DIALOG(deldialog)->vbox),
 		       label,TRUE,TRUE,0);
 
-#ifdef __GTK_STOCK_H__
     button=gtkut_button_new_from_stock(_("OK"),GTK_STOCK_OK);
-#else
-    button=gtk_button_new_with_label(_("OK"));
-#endif
     gtk_box_pack_start(GTK_BOX(GTK_DIALOG(deldialog)->action_area),
 		       button,TRUE,TRUE,0);
     my_signal_connect(button,"clicked",close_child_dialog,
@@ -5314,20 +3302,12 @@ static void create_add_pattern_dialog(GtkWidget *w, gpointer gdata)
 			 FALSE);
   
 
-#ifdef __GTK_STOCK_H__
   button=gtkut_button_new_from_stock(_("Cancel"),GTK_STOCK_CANCEL);
-#else
-  button=gtk_button_new_with_label(_("Cancel"));
-#endif
   gtk_box_pack_start(GTK_BOX(GTK_DIALOG(dialog)->action_area),
 		     button,TRUE,TRUE,0);
   my_signal_connect(button,"clicked",close_child_dialog, GTK_WIDGET(dialog));
 
-#ifdef __GTK_STOCK_H__
   button=gtkut_button_new_from_stock(_("OK"),GTK_STOCK_OK);
-#else
-  button=gtk_button_new_with_label(_("OK"));
-#endif
   gtk_box_pack_start(GTK_BOX(GTK_DIALOG(dialog)->action_area),
 		     button,TRUE,TRUE,0);
   my_signal_connect(button,"clicked",AddDelPattern, (gpointer)cdata);
@@ -5405,11 +3385,7 @@ static void create_add_pattern_dialog(GtkWidget *w, gpointer gdata)
     for(i_ptn=cdata->dest_ptn;i_ptn<pattern_num;i_ptn++){
       make_pattern_list(ptn_note, i_ptn);
     }
-#ifdef USE_GTK2
     gtk_notebook_set_current_page(GTK_NOTEBOOK(ptn_note), cdata->dest_ptn);
-#else
-    gtk_notebook_set_page(GTK_NOTEBOOK(ptn_note), cdata->dest_ptn);
-#endif
     gtk_widget_queue_draw(GTK_WIDGET(ptn_note));
   }
 
@@ -5479,20 +3455,12 @@ static void create_del_pattern_dialog(GtkWidget *w, gpointer gdata)
   
 
   
-#ifdef __GTK_STOCK_H__
   button=gtkut_button_new_from_stock(_("Cancel"),GTK_STOCK_CANCEL);
-#else
-  button=gtk_button_new_with_label(_("Cancel"));
-#endif
   gtk_box_pack_start(GTK_BOX(GTK_DIALOG(dialog)->action_area),
 		     button,TRUE,TRUE,0);
   my_signal_connect(button,"clicked",close_child_dialog, GTK_WIDGET(dialog));
 
-#ifdef __GTK_STOCK_H__
   button=gtkut_button_new_from_stock(_("OK"),GTK_STOCK_OK);
-#else
-  button=gtk_button_new_with_label(_("OK"));
-#endif
   gtk_box_pack_start(GTK_BOX(GTK_DIALOG(dialog)->action_area),
 		     button,TRUE,TRUE,0);
   my_signal_connect(button,"clicked",AddDelPattern, (gpointer)cdata);
@@ -5570,18 +3538,10 @@ static void create_del_pattern_dialog(GtkWidget *w, gpointer gdata)
     }
 
     if(cdata->dest_ptn<=pattern_num){
-#ifdef USE_GTK2
       gtk_notebook_set_current_page(GTK_NOTEBOOK(ptn_note), cdata->dest_ptn-1);
-#else
-      gtk_notebook_set_page(GTK_NOTEBOOK(ptn_note), cdata->dest_ptn-1);
-#endif
     }
     else{
-#ifdef USE_GTK2
       gtk_notebook_set_current_page(GTK_NOTEBOOK(ptn_note), cdata->dest_ptn);
-#else
-      gtk_notebook_set_page(GTK_NOTEBOOK(ptn_note), cdata->dest_ptn);
-#endif
     }
     gtk_widget_queue_draw(GTK_WIDGET(ptn_note));
 
@@ -5669,21 +3629,13 @@ static void create_copy_pattern_dialog(GtkWidget *w, gpointer gdata)
 
 
   
-#ifdef __GTK_STOCK_H__
   button=gtkut_button_new_from_stock(_("Cancel"),GTK_STOCK_CANCEL);
-#else
-  button=gtk_button_new_with_label(_("Cancel"));
-#endif
   gtk_box_pack_start(GTK_BOX(GTK_DIALOG(dialog)->action_area),
 		     button,TRUE,TRUE,0);
   my_signal_connect(button,"clicked",close_child_dialog, GTK_WIDGET(dialog));
 
 
-#ifdef __GTK_STOCK_H__
   button=gtkut_button_new_from_stock(_("OK"),GTK_STOCK_OK);
-#else
-  button=gtk_button_new_with_label(_("OK"));
-#endif
   gtk_box_pack_start(GTK_BOX(GTK_DIALOG(dialog)->action_area),
 		     button,TRUE,TRUE,0);
   my_signal_connect(button,"clicked",CopyPattern, (gpointer)cdata);
@@ -5744,11 +3696,7 @@ static void create_copy_pattern_dialog(GtkWidget *w, gpointer gdata)
       make_pattern_list(ptn_note, i_ptn);
     }
 
-#ifdef USE_GTK2
     gtk_notebook_set_current_page(GTK_NOTEBOOK(ptn_note), cdata->dest_ptn);
-#else
-    gtk_notebook_set_page(GTK_NOTEBOOK(ptn_note), cdata->dest_ptn);
-#endif
     gtk_widget_queue_draw(GTK_WIDGET(ptn_note));
   }
 
@@ -5817,20 +3765,12 @@ static void create_add_frame_dialog(GtkWidget *w, gint gdata)
 			 FALSE);
   
 
-#ifdef __GTK_STOCK_H__
   button=gtkut_button_new_from_stock(_("Cancel"),GTK_STOCK_CANCEL);
-#else
-  button=gtk_button_new_with_label(_("Cancel"));
-#endif
   gtk_box_pack_start(GTK_BOX(GTK_DIALOG(dialog)->action_area),
 		     button,TRUE,TRUE,0);
   my_signal_connect(button,"clicked",close_child_dialog, GTK_WIDGET(dialog));
 
-#ifdef __GTK_STOCK_H__
   button=gtkut_button_new_from_stock(_("OK"),GTK_STOCK_OK);
-#else
-  button=gtk_button_new_with_label(_("OK"));
-#endif
   gtk_box_pack_start(GTK_BOX(GTK_DIALOG(dialog)->action_area),
 		     button,TRUE,TRUE,0);
   my_signal_connect(button,"clicked",AddDelFrame, (gpointer)cdata);
@@ -5931,20 +3871,12 @@ static void create_del_frame_dialog(GtkWidget *w, gint gdata)
   
 
   
-#ifdef __GTK_STOCK_H__
   button=gtkut_button_new_from_stock(_("Cancel"),GTK_STOCK_CANCEL);
-#else
-  button=gtk_button_new_with_label(_("Cancel"));
-#endif
   gtk_box_pack_start(GTK_BOX(GTK_DIALOG(dialog)->action_area),
 		     button,TRUE,TRUE,0);
   my_signal_connect(button,"clicked",close_child_dialog, GTK_WIDGET(dialog));
 
-#ifdef __GTK_STOCK_H__
   button=gtkut_button_new_from_stock(_("OK"),GTK_STOCK_OK);
-#else
-  button=gtk_button_new_with_label(_("OK"));
-#endif
   gtk_box_pack_start(GTK_BOX(GTK_DIALOG(dialog)->action_area),
 		     button,TRUE,TRUE,0);
   my_signal_connect(button,"clicked",AddDelFrame, (gpointer)cdata);
@@ -5985,7 +3917,6 @@ static void create_del_frame_dialog(GtkWidget *w, gint gdata)
 
 static void create_change_tgt_dialog(GtkWidget *w, gint gdata)
 {
-#ifdef __GTK_FILE_CHOOSER_H__
   int i_tmp, i_cat, i_tgt;
   GtkWidget *fdialog;
 
@@ -6059,91 +3990,11 @@ static void create_change_tgt_dialog(GtkWidget *w, gint gdata)
   }
 
   flagChildDialog=FALSE;
-#else
-  int i_tmp, i_cat, i_tgt;
-  GtkWidget *fdialog;
-  GtkWidget *button;
-  GtkWidget *hbox;
-  confChangeTgt *cdata;
-
-  if(flagChildDialog){
-    return;
-  }
-  else{
-    flagChildDialog=TRUE;
-  }
-
-  i_tmp=(int)gdata;
-  
-  i_cat=i_tmp / MAX_MENU_TARGET;
-  i_tgt=i_tmp % MAX_MENU_TARGET; 
-
-  cdata=g_malloc0(sizeof(confChangeTgt));
-
-  cdata->i_cat=i_cat;
-  cdata->i_tgt=i_tgt;
-
-  // Win構築は重いので先にExposeイベント等をすべて処理してから
-  while (my_main_iteration(FALSE));
-
-
-  fdialog = gtk_file_selection_new(_("Select Mascot File"));
-
-  cdata->fs=GTK_FILE_SELECTION(fdialog);
-  cdata->update=FALSE;
-  
-  my_signal_connect(fdialog,"destroy",close_child_dialog, GTK_WIDGET(fdialog));
-  
-  my_signal_connect(GTK_FILE_SELECTION(fdialog)->ok_button,
-		    "clicked", ChangeTgt, (gpointer)cdata);
-  
-  my_signal_connect(GTK_FILE_SELECTION(fdialog)->cancel_button,
-		    "clicked", close_child_dialog, GTK_WIDGET(fdialog));
-
-  gtk_file_selection_set_filename (GTK_FILE_SELECTION (fdialog), 
-	       FullPathMascotFile(&tmp_mascot, tmp_mascot.menu_tgt[i_cat][i_tgt]));
-  gtk_file_selection_hide_fileop_buttons (GTK_FILE_SELECTION (fdialog));
-
-
-  hbox = gtk_hbox_new(FALSE,5);
-  gtk_container_set_border_width (GTK_CONTAINER (hbox), 5);
-  gtk_box_pack_start(GTK_BOX(GTK_FILE_SELECTION(fdialog)->action_area),
-		     hbox,FALSE,FALSE,0);
-  
-  button=gtk_button_new_with_label(_("User Dir"));
-  gtk_box_pack_start(GTK_BOX(hbox),button,FALSE,FALSE,0);
-  my_signal_connect(button,"clicked", fs_set_udir, (gpointer)fdialog);
-
-#ifdef USE_COMMON
-  button=gtk_button_new_with_label(_("Common Dir"));
-  gtk_box_pack_start(GTK_BOX(hbox),button,FALSE,FALSE,0);
-  my_signal_connect(button,"clicked", fs_set_ddir, (gpointer)fdialog);
-#endif
-
-  button=gtk_button_new_with_label(MASCOT_EXTENSION);
-  gtk_box_pack_start(GTK_BOX(hbox),button,FALSE,FALSE,0);
-  my_signal_connect(button,"clicked", fs_set_mascotext, (gpointer)fdialog);
-
-  gtk_widget_show_all(fdialog);
-  
-  gtk_main();
-
-  if(cdata->update){
-    tmp_mascot.menu_tgt_name[i_cat][i_tgt]
-      =ReadMascotName(&tmp_mascot, tmp_mascot.menu_tgt[i_cat][i_tgt]);
-    make_tgt_list(i_cat);
-    
-  }
-
-  flagChildDialog=FALSE;
-  g_free(cdata);
-#endif
 }
 
 
 static void create_add_tgt_dialog(GtkWidget *w, gint gdata)
 {
-#ifdef __GTK_FILE_CHOOSER_H__
   int i_cat, i_tgt;
   GtkWidget *fdialog;
 
@@ -6231,92 +4082,6 @@ static void create_add_tgt_dialog(GtkWidget *w, gint gdata)
   }
 
   flagChildDialog=FALSE;
-#else
-  int i_cat, i_tgt;
-  GtkWidget *fdialog;
-  GtkWidget *button;
-  GtkWidget *hbox;
-  confChangeTgt *cdata;
-
-  i_cat=(int)gdata;
-
-  if(flagChildDialog){
-    return;
-  }
-  else{
-    flagChildDialog=TRUE;
-  }
-
-  if(tmp_mascot.menu_tgt_max[i_cat]>=MAX_MENU_TARGET){
-    popup_message(POPUP_TIMEOUT,
-		  _("Error: Append Mascot."),
-		  " ",
-		  _("The number of mascots maxes out."),
-		  NULL);
-    return;
-  }
-
-  cdata=g_malloc0(sizeof(confChangeTgt));
-
-  // Win構築は重いので先にExposeイベント等をすべて処理してから
-  while (my_main_iteration(FALSE));
-
-  fdialog = gtk_file_selection_new(_("Select New Mascot File"));
-
-  cdata->fs=GTK_FILE_SELECTION(fdialog);
-  cdata->update=FALSE;
-  cdata->i_cat=i_cat;
-  i_tgt=tmp_mascot.menu_tgt_max[i_cat];
-  cdata->i_tgt=i_tgt;
-
-  my_signal_connect(fdialog,"destroy",close_child_dialog, GTK_WIDGET(fdialog));
-  my_signal_connect(GTK_FILE_SELECTION(fdialog)->ok_button,
-		    "clicked",ChangeTgt, (gpointer)cdata);
-  my_signal_connect(GTK_FILE_SELECTION(fdialog)->cancel_button,
-		    "clicked", close_child_dialog, GTK_WIDGET(fdialog));
-
-  gtk_file_selection_set_filename (GTK_FILE_SELECTION (fdialog), 
- 	  FullPathMascotFile(&tmp_mascot, 
-			     tmp_mascot.menu_tgt[i_cat][i_tgt-1]));
-  gtk_file_selection_complete (GTK_FILE_SELECTION (fdialog), 
-  				   MASCOT_EXTENSION);
-  gtk_file_selection_hide_fileop_buttons (GTK_FILE_SELECTION (fdialog));
-
-
-  hbox = gtk_hbox_new(FALSE,5);
-  gtk_container_set_border_width (GTK_CONTAINER (hbox), 5);
-  gtk_box_pack_start(GTK_BOX(GTK_FILE_SELECTION(fdialog)->action_area),
-		     hbox,FALSE,FALSE,0);
-  
-  button=gtk_button_new_with_label(_("User Dir"));
-  gtk_box_pack_start(GTK_BOX(hbox),button,FALSE,FALSE,0);
-  my_signal_connect(button,"clicked", fs_set_udir, (gpointer)fdialog);
-
-#ifdef USE_COMMON
-  button=gtk_button_new_with_label(_("Common Dir"));
-  gtk_box_pack_start(GTK_BOX(hbox),button,FALSE,FALSE,0);
-  my_signal_connect(button,"clicked", fs_set_ddir, (gpointer)fdialog);
-#endif
-
-  button=gtk_button_new_with_label(MASCOT_EXTENSION);
-  gtk_box_pack_start(GTK_BOX(hbox),button,FALSE,FALSE,0);
-  my_signal_connect(button,"clicked", fs_set_mascotext, (gpointer)fdialog);
-
-  gtk_widget_show_all(fdialog);
-  
-  gtk_main();
-
-  if(cdata->update){
-    tmp_mascot.menu_tgt_max[i_cat]++;
-    tmp_mascot.menu_total++;
-    tmp_mascot.menu_tgt_name[i_cat][i_tgt]
-      =ReadMascotName(&tmp_mascot, tmp_mascot.menu_tgt[i_cat][i_tgt]);
-    make_tgt_list(i_cat);
-  }
-
-  flagChildDialog=FALSE;
-  g_free(cdata);
-#endif
 }
 
 
@@ -6381,21 +4146,13 @@ static void create_del_tgt_dialog(GtkWidget *w, gint gdata)
 			 FALSE);
   
 
-#ifdef __GTK_STOCK_H__
   button=gtkut_button_new_from_stock(_("Cancel"),GTK_STOCK_CANCEL);
-#else
-  button=gtk_button_new_with_label(_("Cancel"));
-#endif
   gtk_box_pack_start(GTK_BOX(GTK_DIALOG(deldialog)->action_area),
 		     button,TRUE,TRUE,0);
   my_signal_connect(button,"clicked",close_child_dialog, 
 		    GTK_WIDGET(deldialog));
 
-#ifdef __GTK_STOCK_H__
   button=gtkut_button_new_from_stock(_("OK"),GTK_STOCK_OK);
-#else
-  button=gtk_button_new_with_label(_("OK"));
-#endif
   gtk_box_pack_start(GTK_BOX(GTK_DIALOG(deldialog)->action_area),
 		     button,TRUE,TRUE,0);
   my_signal_connect(button,"clicked",DelTgt, (gpointer)cdata);
@@ -6480,20 +4237,12 @@ static void create_add_cat_dialog(GtkWidget *w)
 			 FALSE);
   
 
-#ifdef __GTK_STOCK_H__
   button=gtkut_button_new_from_stock(_("Cancel"),GTK_STOCK_CANCEL);
-#else
-  button=gtk_button_new_with_label(_("Cancel"));
-#endif
   gtk_box_pack_start(GTK_BOX(GTK_DIALOG(dialog)->action_area),
 		     button,TRUE,TRUE,0);
   my_signal_connect(button,"clicked",close_child_dialog, GTK_WIDGET(dialog));
 
-#ifdef __GTK_STOCK_H__
   button=gtkut_button_new_from_stock(_("OK"),GTK_STOCK_OK);
-#else
-  button=gtk_button_new_with_label(_("OK"));
-#endif
   gtk_box_pack_start(GTK_BOX(GTK_DIALOG(dialog)->action_area),
 		     button,TRUE,TRUE,0);
   my_signal_connect(button,"clicked",AddDelCat, (gpointer)cdata);
@@ -6538,11 +4287,7 @@ static void create_add_cat_dialog(GtkWidget *w)
     for(i_cat=cdata->dest_cat;i_cat<tmp_mascot.menu_cat_max;i_cat++){
       make_cat_list(cat_note, i_cat);
     }
-#ifdef USE_GTK2
     gtk_notebook_set_current_page(GTK_NOTEBOOK(cat_note), cdata->dest_cat);
-#else
-    gtk_notebook_set_page(GTK_NOTEBOOK(cat_note), cdata->dest_cat);
-#endif
     gtk_widget_queue_draw(GTK_WIDGET(cat_note));
   
   }
@@ -6613,20 +4358,12 @@ static void create_del_cat_dialog(GtkWidget *w)
 			 FALSE);
   
 
-#ifdef __GTK_STOCK_H__
   button=gtkut_button_new_from_stock(_("Cancel"),GTK_STOCK_CANCEL);
-#else
-  button=gtk_button_new_with_label(_("Cancel"));
-#endif
   gtk_box_pack_start(GTK_BOX(GTK_DIALOG(dialog)->action_area),
 		     button,TRUE,TRUE,0);
   my_signal_connect(button,"clicked",close_child_dialog, GTK_WIDGET(dialog));
 
-#ifdef __GTK_STOCK_H__
   button=gtkut_button_new_from_stock(_("OK"),GTK_STOCK_OK);
-#else
-  button=gtk_button_new_with_label(_("OK"));
-#endif
   gtk_box_pack_start(GTK_BOX(GTK_DIALOG(dialog)->action_area),
 		     button,TRUE,TRUE,0);
   my_signal_connect(button,"clicked",AddDelCat, (gpointer)cdata);
@@ -6668,18 +4405,10 @@ static void create_del_cat_dialog(GtkWidget *w)
     }
 
     if(cdata->dest_cat<tmp_mascot.menu_cat_max){
-#ifdef USE_GTK2
       gtk_notebook_set_current_page(GTK_NOTEBOOK(cat_note), cdata->dest_cat);
-#else
-      gtk_notebook_set_page(GTK_NOTEBOOK(cat_note), cdata->dest_cat);
-#endif
     }
     else{
-#ifdef USE_GTK2
       gtk_notebook_set_current_page(GTK_NOTEBOOK(cat_note), tmp_mascot.menu_cat_max-1);
-#else
-      gtk_notebook_set_page(GTK_NOTEBOOK(cat_note), tmp_mascot.menu_cat_max-1);
-#endif
     }
     gtk_widget_queue_draw(GTK_WIDGET(cat_note));
   }
@@ -6692,7 +4421,6 @@ static void create_del_cat_dialog(GtkWidget *w)
 
 static void create_merge_cat_dialog(GtkWidget *w)
 {
-#ifdef __GTK_FILE_CHOOSER_H__
   int i_cat, old_cat_max;
   GtkWidget *fdialog;
 
@@ -6724,9 +4452,7 @@ static void create_merge_cat_dialog(GtkWidget *w)
 					GTK_STOCK_OPEN, GTK_RESPONSE_ACCEPT,
 					NULL);				
 
-#ifdef USE_GTK2
   gtk_file_chooser_set_select_multiple(GTK_FILE_CHOOSER(fdialog),TRUE);
-#endif
   
   gtk_file_chooser_set_filename (GTK_FILE_CHOOSER (fdialog), 
 	       to_utf8(FullPathMascotFile(&tmp_mascot, tmp_mascot.menu_file)));
@@ -6759,7 +4485,7 @@ static void create_merge_cat_dialog(GtkWidget *w)
       if(access(dest_file,F_OK)==0){
 	merge_file=g_strdup(dest_file);
 	
-	gtk_widget_destroy(PopupMenu);
+	gtk_widget_destroy(Mascot->PopupMenu);
 	menu_cat_max_old=tmp_mascot.menu_cat_max;
 	ReadMenu(&tmp_mascot,tmp_mascot.menu_cat_max,merge_file);
 	if(tmp_mascot.menu_cat_max>MAX_MENU_CATEGORY){
@@ -6785,16 +4511,12 @@ static void create_merge_cat_dialog(GtkWidget *w)
       i_menu++;
     }
     if(update){
-      PopupMenu=make_popup_menu();
+      Mascot->PopupMenu=make_popup_menu();
 
       for(i_cat=old_cat_max-1;i_cat<tmp_mascot.menu_cat_max;i_cat++){
 	make_cat_list(cat_note,i_cat);
       }
-#ifdef USE_GTK2
       gtk_notebook_set_current_page(GTK_NOTEBOOK(cat_note),tmp_mascot.menu_cat_max-1);
-#else
-      gtk_notebook_set_page(GTK_NOTEBOOK(cat_note),tmp_mascot.menu_cat_max-1);
-#endif
       gtk_widget_queue_draw(GTK_WIDGET(cat_note));
     }
     
@@ -6805,100 +4527,6 @@ static void create_merge_cat_dialog(GtkWidget *w)
   }
 
   flagChildDialog=FALSE;
-#else
-  int i_cat, old_cat_max;
-  GtkWidget *fdialog;
-  GtkWidget *button;
-  GtkWidget *hbox;
-  confMergeCat *cdata;
-
-  if(flagChildDialog){
-    return;
-  }
-  else{
-    flagChildDialog=TRUE;
-  }
-
-  if(tmp_mascot.menu_cat_max>=MAX_MENU_CATEGORY){
-    popup_message(POPUP_TIMEOUT,
-		  _("Error: Merge Menu."),
-		  " ",
-		  _("The number of categories maxes out."),
-		  NULL);
-    return;
-  }
-
-  old_cat_max=tmp_mascot.menu_cat_max;
-
-  cdata=g_malloc0(sizeof(confMergeCat));
-
-
-  // Win構築は重いので先にExposeイベント等をすべて処理してから
-  while (my_main_iteration(FALSE));
-
-
-
-  fdialog = gtk_file_selection_new(_("Select Menu File to Merge"));
-#ifdef USE_GTK2
-  gtk_file_selection_set_select_multiple(GTK_FILE_SELECTION(fdialog),TRUE);
-#endif
-  
-  cdata->fs=GTK_FILE_SELECTION(fdialog);
-  cdata->update=FALSE;
-  
-  my_signal_connect(fdialog,"destroy",close_child_dialog, GTK_WIDGET(fdialog));
-  
-  my_signal_connect(GTK_FILE_SELECTION(fdialog)->ok_button,
-		    "clicked", MergeCatFS, (gpointer)cdata);
-  
-  my_signal_connect(GTK_FILE_SELECTION(fdialog)->cancel_button,
-		    "clicked", close_child_dialog, GTK_WIDGET(fdialog));
-
-  gtk_file_selection_set_filename (GTK_FILE_SELECTION (fdialog), 
-	       FullPathMascotFile(&tmp_mascot, tmp_mascot.menu_file));
-  gtk_file_selection_complete (GTK_FILE_SELECTION (fdialog), 
-  				   MENU_EXTENSION);
-  gtk_file_selection_hide_fileop_buttons (GTK_FILE_SELECTION (fdialog));
-
-
-  hbox = gtk_hbox_new(FALSE,5);
-  gtk_container_set_border_width (GTK_CONTAINER (hbox), 5);
-  gtk_box_pack_start(GTK_BOX(GTK_FILE_SELECTION(fdialog)->action_area),
-		     hbox,FALSE,FALSE,0);
-  
-  button=gtk_button_new_with_label(_("User Dir"));
-  gtk_box_pack_start(GTK_BOX(hbox),button,FALSE,FALSE,0);
-  my_signal_connect(button,"clicked", fs_set_udir, (gpointer)fdialog);
-
-#ifdef USE_COMMON
-  button=gtk_button_new_with_label(_("Common Dir"));
-  gtk_box_pack_start(GTK_BOX(hbox),button,FALSE,FALSE,0);
-  my_signal_connect(button,"clicked", fs_set_ddir, (gpointer)fdialog);
-#endif
-
-  button=gtk_button_new_with_label(MENU_EXTENSION);
-  gtk_box_pack_start(GTK_BOX(hbox),button,FALSE,FALSE,0);
-  my_signal_connect(button,"clicked", fs_set_menuext, (gpointer)fdialog);
-
-  gtk_widget_show_all(fdialog);
-  
-  gtk_main();
-
-  if(cdata->update){
-    for(i_cat=old_cat_max-1;i_cat<tmp_mascot.menu_cat_max;i_cat++){
-      make_cat_list(cat_note,i_cat);
-    }
-#ifdef USE_GTK2
-    gtk_notebook_set_current_page(GTK_NOTEBOOK(cat_note),tmp_mascot.menu_cat_max-1);
-#else
-    gtk_notebook_set_page(GTK_NOTEBOOK(cat_note),tmp_mascot.menu_cat_max-1);
-#endif
-    gtk_widget_queue_draw(GTK_WIDGET(cat_note));
-  }
-
-  flagChildDialog=FALSE;
-  g_free(cdata);
-#endif
 }
 
 
@@ -6906,7 +4534,6 @@ static void create_merge_cat_dialog(GtkWidget *w)
 
 static void create_change_duet_tgt_dialog(GtkWidget *w, gint gdata)
 {
-#ifdef __GTK_FILE_CHOOSER_H__
   int i_ptn;
   GtkWidget *fdialog;
 
@@ -6983,97 +4610,11 @@ static void create_change_duet_tgt_dialog(GtkWidget *w, gint gdata)
   }
 
   flagChildDialog=FALSE;
-#else
-  int i_ptn;
-  GtkWidget *fdialog;
-  GtkWidget *button;
-  GtkWidget *hbox;
-  confChangeDuetTgt *cdata;
-  gchar *userdir=NULL;
-
-  if(flagChildDialog){
-    return;
-  }
-  else{
-    flagChildDialog=TRUE;
-  }
-
-  i_ptn=(int)gdata;
-  
-  cdata=g_malloc0(sizeof(confChangeDuetTgt));
-
-
-  // Win構築は重いので先にExposeイベント等をすべて処理してから
-  while (my_main_iteration(FALSE));
-
-  fdialog = gtk_file_selection_new(_("Select Mascot File"));
-  
-  cdata->fs=GTK_FILE_SELECTION(fdialog);
-  cdata->update=FALSE;
-  cdata->i_ptn=i_ptn;
-  
-  my_signal_connect(fdialog,"destroy",close_child_dialog, GTK_WIDGET(fdialog));
-  
-  my_signal_connect(GTK_FILE_SELECTION(fdialog)->ok_button,
-		    "clicked", ChangeDuetTgt, (gpointer)cdata);
-  
-  my_signal_connect(GTK_FILE_SELECTION(fdialog)->cancel_button,
-		    "clicked", close_child_dialog, GTK_WIDGET(fdialog));
-
-#ifdef USE_WIN32
-  userdir = g_strconcat(get_win_home(),G_DIR_SEPARATOR_S,USER_DIR, NULL);
-#else
-  userdir = g_strconcat(g_get_home_dir(),G_DIR_SEPARATOR_S,USER_DIR, NULL);
-#endif
-  gtk_file_selection_set_filename (GTK_FILE_SELECTION (fdialog), 
-  				   userdir);
-  g_free(userdir);
-
-  if(tmp_mascot.duet_tgt[i_ptn]){
-    gtk_file_selection_set_filename (GTK_FILE_SELECTION (fdialog), 
-				     FullPathMascotFile(&tmp_mascot,
-  				     tmp_mascot.duet_tgt[i_ptn]));
-  }
-  gtk_file_selection_hide_fileop_buttons (GTK_FILE_SELECTION (fdialog));
-
-
-  hbox = gtk_hbox_new(FALSE,5);
-  gtk_container_set_border_width (GTK_CONTAINER (hbox), 5);
-  gtk_box_pack_start(GTK_BOX(GTK_FILE_SELECTION(fdialog)->action_area),
-		     hbox,FALSE,FALSE,0);
-  
-  button=gtk_button_new_with_label(_("User Dir"));
-  gtk_box_pack_start(GTK_BOX(hbox),button,FALSE,FALSE,0);
-  my_signal_connect(button,"clicked", fs_set_udir, (gpointer)fdialog);
-  
-#ifdef USE_COMMON
-  button=gtk_button_new_with_label(_("Common Dir"));
-  gtk_box_pack_start(GTK_BOX(hbox),button,FALSE,FALSE,0);
-  my_signal_connect(button,"clicked", fs_set_ddir, (gpointer)fdialog);
-#endif
-
-  button=gtk_button_new_with_label(MASCOT_EXTENSION);
-  gtk_box_pack_start(GTK_BOX(hbox),button,FALSE,FALSE,0);
-  my_signal_connect(button,"clicked", fs_set_mascotext, (gpointer)fdialog);
-
-  gtk_widget_show_all(fdialog);
-  
-  gtk_main();
-
-  if(cdata->update){
-    gtk_entry_set_text(GTK_ENTRY(duet_tgt_entry[i_ptn]),
-		       tmp_mascot.duet_tgt[i_ptn]);
-  }
-
-  flagChildDialog=FALSE;
-  g_free(cdata);
-#endif
 }
 
 
 static void create_change_click_sound_dialog(GtkWidget *w, gint gdata)
 {
-#ifdef __GTK_FILE_CHOOSER_H__
   int i_ptn;
   GtkWidget *fdialog;
 
@@ -7150,95 +4691,12 @@ static void create_change_click_sound_dialog(GtkWidget *w, gint gdata)
   }
 
   flagChildDialog=FALSE;
-#else
-  int i_ptn;
-  GtkWidget *fdialog;
-  GtkWidget *button;
-  GtkWidget *hbox;
-  confChangeClickSound *cdata;
-
-  if(flagChildDialog){
-    return;
-  }
-  else{
-    flagChildDialog=TRUE;
-  }
-
-  i_ptn=(int)gdata;
-  
-  cdata=g_malloc0(sizeof(confChangeClickSound));
-
-
-  // Win構築は重いので先にExposeイベント等をすべて処理してから
-  while (my_main_iteration(FALSE));
-
-  fdialog = gtk_file_selection_new(_("Select Sound File"));
-  
-  cdata->fs=GTK_FILE_SELECTION(fdialog);
-  cdata->update=FALSE;
-  cdata->i_ptn=i_ptn;
-  
-  my_signal_connect(fdialog,"destroy",close_child_dialog, GTK_WIDGET(fdialog));
-  
-  my_signal_connect(GTK_FILE_SELECTION(fdialog)->ok_button,
-		    "clicked", ChangeClickSound, (gpointer)cdata);
-  
-  my_signal_connect(GTK_FILE_SELECTION(fdialog)->cancel_button,
-		    "clicked", close_child_dialog, GTK_WIDGET(fdialog));
-
-  if(tmp_mascot.click_sound[i_ptn]){
-    gtk_file_selection_set_filename (GTK_FILE_SELECTION (fdialog), 
-	     FullPathSoundFile(&tmp_mascot,
-			       tmp_mascot.click_sound[i_ptn],FALSE));
-  }
-  else{
-    gtk_file_selection_set_filename (GTK_FILE_SELECTION (fdialog), 
-#ifdef USE_WIN32
-				     g_strconcat(get_win_home(),G_DIR_SEPARATOR_S,
-#else
-				     g_strconcat(g_get_home_dir(),G_DIR_SEPARATOR_S,
-#endif
-						 USER_DIR,SOUNDDIR, NULL));
-    gtk_file_selection_complete (GTK_FILE_SELECTION (fdialog), 
-				 "*");
-  }
-  gtk_file_selection_hide_fileop_buttons (GTK_FILE_SELECTION (fdialog));
-
-
-  hbox = gtk_hbox_new(FALSE,5);
-  gtk_container_set_border_width (GTK_CONTAINER (hbox), 5);
-  gtk_box_pack_start(GTK_BOX(GTK_FILE_SELECTION(fdialog)->action_area),
-		     hbox,FALSE,FALSE,0);
-  
-  button=gtk_button_new_with_label(_("User Sound Dir"));
-  gtk_box_pack_start(GTK_BOX(hbox),button,FALSE,FALSE,0);
-  my_signal_connect(button,"clicked", fs_set_usdir, (gpointer)fdialog);
-
-#ifdef USE_COMMON
-  button=gtk_button_new_with_label(_("Common Sound Dir"));
-  gtk_box_pack_start(GTK_BOX(hbox),button,FALSE,FALSE,0);
-  my_signal_connect(button,"clicked", fs_set_dsdir, (gpointer)fdialog);
-#endif
-
-  gtk_widget_show_all(fdialog);
-  
-  gtk_main();
-
-  if(cdata->update){
-    gtk_entry_set_text(GTK_ENTRY(click_sound_entry[i_ptn]),
-		       my_basename(tmp_mascot.click_sound[i_ptn]));
-  }
-
-  flagChildDialog=FALSE;
-  g_free(cdata);
-#endif
 }
 
 
 #ifdef USE_BIFF
 static void create_change_biff_sound_dialog(GtkWidget *w, gpointer gdata)
 {
-#ifdef __GTK_FILE_CHOOSER_H__
   GtkWidget *fdialog;
   GtkWidget *snd_entry;
 
@@ -7313,92 +4771,10 @@ static void create_change_biff_sound_dialog(GtkWidget *w, gpointer gdata)
   }
 
   flagChildDialog=FALSE;
-#else
-  GtkWidget *fdialog;
-  GtkWidget *button;
-  GtkWidget *hbox;
-  GtkWidget *snd_entry;
-  confChangeBiffSound *cdata;
-
-  if(flagChildDialog){
-    return;
-  }
-  else{
-    flagChildDialog=TRUE;
-  }
-
-  snd_entry=(GtkWidget *)gdata;
-  
-  cdata=g_malloc0(sizeof(confChangeBiffSound));
-
-
-  // Win構築は重いので先にExposeイベント等をすべて処理してから
-  while (my_main_iteration(FALSE));
-
-  fdialog = gtk_file_selection_new(_("Select Sound File"));
-  
-  cdata->fs=GTK_FILE_SELECTION(fdialog);
-  cdata->update=FALSE;
-  
-  my_signal_connect(fdialog,"destroy",close_child_dialog, GTK_WIDGET(fdialog));
-  
-  my_signal_connect(GTK_FILE_SELECTION(fdialog)->ok_button,
-		    "clicked", ChangeBiffSound, (gpointer)cdata);
-  
-  my_signal_connect(GTK_FILE_SELECTION(fdialog)->cancel_button,
-		    "clicked", close_child_dialog, GTK_WIDGET(fdialog));
-
-  if(tmp_mascot.mail.sound){
-    gtk_file_selection_set_filename (GTK_FILE_SELECTION (fdialog), 
-				     FullPathSoundFile(&tmp_mascot,
-						       tmp_mascot.mail.sound,FALSE));
-  }
-  else{
-    gtk_file_selection_set_filename (GTK_FILE_SELECTION (fdialog), 
-#ifdef USE_WIN32
-				     g_strconcat(get_win_home(),G_DIR_SEPARATOR_S,
-#else
-				     g_strconcat(g_get_home_dir(),G_DIR_SEPARATOR_S,
-#endif
-						 USER_DIR,SOUNDDIR, NULL));
-    gtk_file_selection_complete (GTK_FILE_SELECTION (fdialog), 
-				 "*");
-  }
-  gtk_file_selection_hide_fileop_buttons (GTK_FILE_SELECTION (fdialog));
-
-
-  hbox = gtk_hbox_new(FALSE,5);
-  gtk_container_set_border_width (GTK_CONTAINER (hbox), 5);
-  gtk_box_pack_start(GTK_BOX(GTK_FILE_SELECTION(fdialog)->action_area),
-		     hbox,FALSE,FALSE,0);
-  
-  button=gtk_button_new_with_label(_("User Sound Dir"));
-  gtk_box_pack_start(GTK_BOX(hbox),button,FALSE,FALSE,0);
-  my_signal_connect(button,"clicked", fs_set_usdir, (gpointer)fdialog);
-
-#ifdef USE_COMMON
-  button=gtk_button_new_with_label(_("Common Sound Dir"));
-  gtk_box_pack_start(GTK_BOX(hbox),button,FALSE,FALSE,0);
-  my_signal_connect(button,"clicked", fs_set_dsdir, (gpointer)fdialog);
-#endif
-
-  gtk_widget_show_all(fdialog);
-  
-  gtk_main();
-
-  if(cdata->update){
-    gtk_entry_set_text(GTK_ENTRY(snd_entry),
-		       my_basename(tmp_mascot.mail.sound));
-  }
-  
-  flagChildDialog=FALSE;
-  g_free(cdata);
-#endif
 }
 
 static void create_mail_file_dialog(GtkWidget *w, gpointer gdata)
 {
-#ifdef __GTK_FILE_CHOOSER_H__
   GtkWidget *fdialog;
   GtkWidget *file_entry;
   gchar *dir;
@@ -7510,97 +4886,10 @@ static void create_mail_file_dialog(GtkWidget *w, gpointer gdata)
   }
 
   flagChildDialog=FALSE;
-#else
-  GtkWidget *fdialog;
-  GtkWidget *button;
-  GtkWidget *hbox;
-  GtkWidget *file_entry;
-  confMailFile *cdata;
-
-  if(flagChildDialog){
-    return;
-  }
-  else{
-    switch(tmp_mascot.mail.type){
-    case MAIL_POP3:
-    case MAIL_APOP:
-      return;
-      break;
-    }
-    flagChildDialog=TRUE;
-  }
-
-
-  file_entry=(GtkWidget *)gdata;
-  
-  cdata=g_malloc0(sizeof(confMailFile));
-
-
-  // Win構築は重いので先にExposeイベント等をすべて処理してから
-  while (my_main_iteration(FALSE));
-
-  fdialog = gtk_file_selection_new(_("Select the file refered for the mail checking"));
-
-  cdata->fs=GTK_FILE_SELECTION(fdialog);
-  cdata->update=FALSE;
-  
-  my_signal_connect(fdialog,"destroy",close_child_dialog, GTK_WIDGET(fdialog));
-  
-  my_signal_connect(GTK_FILE_SELECTION(fdialog)->ok_button,
-		    "clicked", ChangeMailFile, (gpointer)cdata);
-  
-  my_signal_connect(GTK_FILE_SELECTION(fdialog)->cancel_button,
-		    "clicked", close_child_dialog, GTK_WIDGET(fdialog));
-
-  if(tmp_mascot.mail.file){
-    gtk_file_selection_set_filename (GTK_FILE_SELECTION (fdialog), 
-				     tmp_mascot.mail.file);
-  }
-  else{
-    switch(tmp_mascot.mail.type){
-    case MAIL_LOCAL:
-      gtk_file_selection_set_filename (GTK_FILE_SELECTION (fdialog), 
-				       g_getenv("MAIL"));
-      break;
-    case MAIL_QMAIL:
-      gtk_file_selection_set_filename (GTK_FILE_SELECTION (fdialog), 
-#ifdef USE_WIN32
-				       g_strconcat(get_win_home(),
-#else
-				       g_strconcat(g_get_home_dir(),
-#endif
-						   G_DIR_SEPARATOR_S, 
-						   "Maildir", 
-						   G_DIR_SEPARATOR_S, 
-						   "new",
-						   G_DIR_SEPARATOR_S, 
-						   NULL));
-      break;
-    case MAIL_PROCMAIL:
-      gtk_file_selection_set_filename (GTK_FILE_SELECTION (fdialog), 
-				       g_strconcat(set_mhdir(),PROCMAIL_LOG,NULL));
-      break;
-    }
-  }
-  gtk_file_selection_hide_fileop_buttons (GTK_FILE_SELECTION (fdialog));
-
-  gtk_widget_show_all(fdialog);
-  
-  gtk_main();
-
-  if(cdata->update){
-    gtk_entry_set_text(GTK_ENTRY(file_entry),
-		       tmp_mascot.mail.file);
-  }
-  
-  flagChildDialog=FALSE;
-  g_free(cdata);
-#endif
 }
 
 static void create_mailer_dialog(GtkWidget *w, gpointer gdata)
 {
-#ifdef __GTK_FILE_CHOOSER_H__
   GtkWidget *fdialog;
   GtkWidget *file_entry;
   gchar *dir;
@@ -7673,130 +4962,12 @@ static void create_mailer_dialog(GtkWidget *w, gpointer gdata)
   }
 
   flagChildDialog=FALSE;
-#else
-  GtkWidget *fdialog;
-  GtkWidget *button;
-  GtkWidget *hbox;
-  GtkWidget *file_entry;
-  confMailFile *cdata;
-
-  if(flagChildDialog){
-    return;
-  }
-  else{
-    flagChildDialog=TRUE;
-  }
-
-
-  file_entry=(GtkWidget *)gdata;
-  
-  cdata=g_malloc0(sizeof(confMailFile));
-
-
-  // Win構築は重いので先にExposeイベント等をすべて処理してから
-  while (my_main_iteration(FALSE));
-
-  fdialog = gtk_file_selection_new(_("Select mailer command"));
-
-  cdata->fs=GTK_FILE_SELECTION(fdialog);
-  cdata->update=FALSE;
-  
-  my_signal_connect(fdialog,"destroy",close_child_dialog, 
-		    GTK_WIDGET(fdialog));
-  
-  my_signal_connect(GTK_FILE_SELECTION(fdialog)->ok_button,
-		    "clicked", ChangeMailer, (gpointer)cdata);
-  
-  my_signal_connect(GTK_FILE_SELECTION(fdialog)->cancel_button,
-		    "clicked", close_child_dialog, GTK_WIDGET(fdialog));
-
-  if(tmp_mascot.mail.mailer){
-    gtk_file_selection_set_filename (GTK_FILE_SELECTION (fdialog), 
-				     tmp_mascot.mail.mailer);
-  }
-  gtk_file_selection_hide_fileop_buttons (GTK_FILE_SELECTION (fdialog));
-
-  gtk_widget_show_all(fdialog);
-  
-  gtk_main();
-
-  if(cdata->update){
-    gtk_entry_set_text(GTK_ENTRY(file_entry),
-		       tmp_mascot.mail.mailer);
-  }
-  
-  flagChildDialog=FALSE;
-  g_free(cdata);
-#endif
 }
 
 #endif  // USE_BIFF
 
 
 
-
-#ifndef __GTK_FILE_CHOOSER_H__
-static void NewMascotSelectMascot(GtkWidget *w, gpointer gdata)
-{
-  confNewMascot *cdata;
-
-  cdata=(confNewMascot *)gdata;
-  
-  if(access(my_dirname(gtk_file_selection_get_filename(cdata->fs)),W_OK)==0){
-    cdata->mascot_file
-      =g_strdup(gtk_file_selection_get_filename(cdata->fs));
-    cdata->update=TRUE;
-  }
-  else{
-#ifdef GTK_MSG
-    popup_message(POPUP_TIMEOUT*2,
-		  _("Error: File cannot be opened."),
-		  " ",
-		  gtk_file_selection_get_filename (cdata->fs),
-		  NULL);
-#else
-    g_print (_("Cannot Open %s\n"),
-	     gtk_file_selection_get_filename (cdata->fs));
-#endif
-  }
-  
-  gtk_main_quit();
-  gtk_widget_destroy(GTK_WIDGET(cdata->fs));
-
-}
-#endif
-
-
-#ifndef __GTK_FILE_CHOOSER_H__
-static void NewMascotSelectImage(GtkWidget *w, gpointer gdata)
-{
-  confNewMascot *cdata;
-
-  cdata=(confNewMascot *)gdata;
-  
-  if(access(gtk_file_selection_get_filename(cdata->fs),F_OK)==0){
-    cdata->image_file
-      =g_strdup(gtk_file_selection_get_filename(cdata->fs));
-    cdata->update=TRUE;
-  }
-  else{
-#ifdef GTK_MSG
-    popup_message(POPUP_TIMEOUT*2,
-		  _("Error: File cannot be opened."),
-		  " ",
-		  gtk_file_selection_get_filename (cdata->fs),
-		  NULL);
-#else
-    g_print (_("Cannot Open %s\n"),
-	     gtk_file_selection_get_filename (cdata->fs));
-#endif
-  }
-  
-  gtk_main_quit();
-  gtk_widget_destroy(GTK_WIDGET(cdata->fs));
-
-}
-#endif
 
 
 static void MakeNewMascot(GtkWidget *w, gpointer gdata)
@@ -7898,11 +5069,9 @@ static void MakeNewMascot(GtkWidget *w, gpointer gdata)
   Mascot->mail.sound=NULL;
 #endif  // USE_BIFF
 
-#if defined(USE_CAIRO) || defined(USE_WIN32)
   Mascot->alpha_main=100;
 #ifdef USE_BIFF
   Mascot->alpha_biff=100;
-#endif
 #endif
 #ifdef USE_WIN32
   Mascot->alpha_bal=100;
@@ -7925,15 +5094,15 @@ static void MakeNewMascot(GtkWidget *w, gpointer gdata)
   Mascot->flag_install=FALSE;
   ReadMascot(Mascot,FALSE);
   InitComposite(Mascot);
-  LoadPixmaps(win_main, Mascot, Mascot->sprites);
+  LoadPixmaps(Mascot->win_main, Mascot, Mascot->sprites);
   ReInitGC(Mascot);
 #ifdef USE_WIN32
-  gtk_widget_unmap(balloon_fg);
+  gtk_widget_unmap(Mascot->balloon_fg);
 #endif
-  gtk_widget_unmap(balloon_main);
+  gtk_widget_unmap(Mascot->balloon_main);
   flag_balloon=FALSE;
 #ifdef USE_BIFF
-  LoadBiffPixmap(biff_pix, Mascot);
+  LoadBiffPixmap(Mascot->biff_pix, Mascot);
 #endif  // USE_BIFF
 
  
@@ -7942,28 +5111,28 @@ static void MakeNewMascot(GtkWidget *w, gpointer gdata)
   if(Mascot->clkmode==CLOCK_PANEL){
 #ifdef USE_WIN32
     if((Mascot->flag_clkfg)&&(Mascot->alpha_clk!=100)){
-      gtk_widget_map(clock_fg);
+      gtk_widget_map(Mascot->clock_fg);
     }
-    else gtk_widget_unmap(clock_fg);
+    else gtk_widget_unmap(Mascot->clock_fg);
 #endif
-    gtk_widget_map(clock_main);
+    gtk_widget_map(Mascot->clock_main);
   }
   else{
 #ifdef USE_WIN32
-    gtk_widget_unmap(clock_fg);
+    gtk_widget_unmap(Mascot->clock_fg);
 #endif
-    gtk_widget_unmap(clock_main);
+    gtk_widget_unmap(Mascot->clock_main);
   }
 
 #ifdef USE_WIN32
   if((Mascot->sdw_flag)&&(Mascot->sdw_height>0)){
-    gtk_widget_map(win_sdw);
+    gtk_widget_map(Mascot->win_sdw);
   }
   else{
-    gtk_widget_unmap(win_sdw);
+    gtk_widget_unmap(Mascot->win_sdw);
   }
 #endif
-  gtk_widget_map(win_main);
+  gtk_widget_map(Mascot->win_main);
 
   if(Mascot->clkmode!=CLOCK_NO) clock_update(Mascot, TRUE);
 
@@ -7991,7 +5160,6 @@ static void MakeNewMascot(GtkWidget *w, gpointer gdata)
 static void create_new_mascot_file_selection_dialog
 (GtkWidget *w, gpointer gdata)
 {
-#ifdef __GTK_FILE_CHOOSER_H__
   GtkWidget *fdialog;
   confNewMascot *cdata;
 
@@ -8061,80 +5229,12 @@ static void create_new_mascot_file_selection_dialog
   flagChildDialog=FALSE;
   gtk_main_quit();
   while (my_main_iteration(FALSE));
-#else
-  GtkWidget *fdialog;
-  GtkWidget *button;
-  GtkWidget *hbox;
-  confNewMascot *cdata;
-
-  if(flagChildDialog){
-    return;
-  }
-  else{
-    flagChildDialog=TRUE;
-  }
-
-
-  cdata=(confNewMascot *)gdata;
-
-  gtk_widget_unmap(cdata->dialog);
-
-  // Win構築は重いので先にExposeイベント等をすべて処理してから
-  while (my_main_iteration(FALSE));
-
-  fdialog = gtk_file_selection_new(_("Select New Mascot File"));
-
-  cdata->fs=GTK_FILE_SELECTION(fdialog);
-    
-  my_signal_connect(fdialog,"destroy",close_child_dialog, GTK_WIDGET(fdialog));
-  
-  my_signal_connect(GTK_FILE_SELECTION(fdialog)->ok_button,
-		   "clicked", NewMascotSelectMascot, (gpointer)cdata);
-  
-  my_signal_connect(GTK_FILE_SELECTION(fdialog)->cancel_button,
-		    "clicked", close_child_dialog, GTK_WIDGET(fdialog));
-
-  gtk_file_selection_complete (GTK_FILE_SELECTION (fdialog), 
-  				   MASCOT_EXTENSION);
-
-
-  hbox = gtk_hbox_new(FALSE,5);
-  gtk_container_set_border_width (GTK_CONTAINER (hbox), 5);
-  gtk_box_pack_start(GTK_BOX(GTK_FILE_SELECTION(fdialog)->action_area),
-		     hbox,FALSE,FALSE,0);
-  
-  button=gtk_button_new_with_label(_("User Dir"));
-  gtk_box_pack_start(GTK_BOX(hbox),button,FALSE,FALSE,0);
-  my_signal_connect(button,"clicked", fs_set_udir, (gpointer)fdialog);
-
-#ifdef USE_COMMON
-  button=gtk_button_new_with_label(_("Common Dir"));
-  gtk_box_pack_start(GTK_BOX(hbox),button,FALSE,FALSE,0);
-  my_signal_connect(button,"clicked", fs_set_ddir, (gpointer)fdialog);
-#endif
-
-  button=gtk_button_new_with_label(MASCOT_EXTENSION);
-  gtk_box_pack_start(GTK_BOX(hbox),button,FALSE,FALSE,0);
-  my_signal_connect(button,"clicked", fs_set_mascotext, (gpointer)fdialog);
-
-  gtk_widget_show_all(fdialog);
-  
-  gtk_main();
-
-  if(cdata->update){
-  }
-
-  flagChildDialog=FALSE;
-  gtk_main_quit();
-  while (my_main_iteration(FALSE));
-#endif
 }
 
 
 static void create_new_mascot_image_selection_dialog
 (GtkWidget *w, gpointer gdata)
 {
-#ifdef __GTK_FILE_CHOOSER_H__
   GtkWidget *fdialog;
   confNewMascot *cdata;
 
@@ -8213,82 +5313,6 @@ static void create_new_mascot_image_selection_dialog
   flagChildDialog=FALSE;
   gtk_main_quit();
   while (my_main_iteration(FALSE));
-#else
-  GtkWidget *fdialog;
-  GtkWidget *button;
-  GtkWidget *hbox;
-  confNewMascot *cdata;
-
-  if(flagChildDialog){
-    return;
-  }
-  else{
-    flagChildDialog=TRUE;
-  }
-
-
-  cdata=(confNewMascot *)gdata;
-
-  gtk_widget_unmap(cdata->dialog);
-
-  // Win構築は重いので先にExposeイベント等をすべて処理してから
-  while (my_main_iteration(FALSE));
-
-  fdialog = gtk_file_selection_new(_("Select Image for New Mascot"));
-
-  cdata->fs=GTK_FILE_SELECTION(fdialog);
-    
-  my_signal_connect(fdialog,"destroy",close_child_dialog, GTK_WIDGET(fdialog));
-  
-  my_signal_connect(GTK_FILE_SELECTION(fdialog)->ok_button,
-		    "clicked", NewMascotSelectImage, (gpointer)cdata);
-  
-  my_signal_connect(GTK_FILE_SELECTION(fdialog)->cancel_button,
-		    "clicked", close_child_dialog, GTK_WIDGET(fdialog));
-
-  hbox = gtk_hbox_new(FALSE,5);
-  gtk_container_set_border_width (GTK_CONTAINER (hbox), 5);
-  gtk_box_pack_start(GTK_BOX(GTK_FILE_SELECTION(fdialog)->action_area),
-		     hbox,FALSE,FALSE,0);
-
-  button=gtk_button_new_with_label(_("User Pix Dir"));
-  gtk_box_pack_start(GTK_BOX(hbox),button,FALSE,FALSE,0);
-  my_signal_connect(button,"clicked", fs_set_updir, (gpointer)fdialog);
-
-#ifdef USE_COMMON
-  button=gtk_button_new_with_label(_("Common Pix Dir"));
-  gtk_box_pack_start(GTK_BOX(hbox),button,FALSE,FALSE,0);
-  my_signal_connect(button,"clicked", fs_set_dpdir, (gpointer)fdialog);
-#endif
-
-  button=gtk_button_new_with_label(PNG_EXTENSION);
-  gtk_box_pack_start(GTK_BOX(hbox),button,FALSE,FALSE,0);
-  my_signal_connect(button,"clicked", fs_set_pngext, (gpointer)fdialog);
-
-  button=gtk_button_new_with_label(GIF_EXTENSION);
-  gtk_box_pack_start(GTK_BOX(hbox),button,FALSE,FALSE,0);
-  my_signal_connect(button,"clicked", fs_set_gifext, (gpointer)fdialog);
-
-  button=gtk_button_new_with_label(XPM_EXTENSION);
-  gtk_box_pack_start(GTK_BOX(hbox),button,FALSE,FALSE,0);
-  my_signal_connect(button,"clicked", fs_set_xpmext, (gpointer)fdialog);
-
-  gtk_file_selection_set_filename (GTK_FILE_SELECTION (fdialog), 
-  				   cdata->mascot_file);
-  gtk_file_selection_complete (GTK_FILE_SELECTION (fdialog), 
-			       "");
-
-  gtk_widget_show_all(fdialog);
-  
-  gtk_main();
-
-  if(cdata->update){
-  }
-
-  flagChildDialog=FALSE;
-  gtk_main_quit();
-  while (my_main_iteration(FALSE));
-#endif
 }
 
 
@@ -8335,10 +5359,8 @@ static void create_new_mascot_dialog(GtkWidget *w, gpointer gdata)
 		     label,TRUE,TRUE,0);
 
   hbox=gtk_hbox_new(FALSE,0);
-#ifdef USE_GTK2
   g_object_ref(hbox);
   gtk_object_sink(GTK_OBJECT(hbox));
-#endif
   gtk_box_pack_start(GTK_BOX(GTK_DIALOG(dialog)->vbox),
 		     hbox,TRUE,TRUE,0);
   label=gtk_label_new(_("1. Please select Mascot File Name to be created"));
@@ -8346,29 +5368,17 @@ static void create_new_mascot_dialog(GtkWidget *w, gpointer gdata)
   gtk_box_pack_start(GTK_BOX(hbox),label,TRUE,TRUE,0);
   
 
-#ifdef __GTK_STOCK_H__
   button_cancel=gtkut_button_new_from_stock(_("Cancel"),GTK_STOCK_CANCEL);
-#else
-  button_cancel=gtk_button_new_with_label(_("Cancel"));
-#endif
-#ifdef USE_GTK2
   g_object_ref(button_cancel);
   gtk_object_sink(GTK_OBJECT(button_cancel));
-#endif
   gtk_box_pack_start(GTK_BOX(GTK_DIALOG(dialog)->action_area),
 		     button_cancel,TRUE,TRUE,0);
   my_signal_connect(button_cancel,"clicked",close_new_mascot_dialog, 
 		    GTK_WIDGET(dialog));
 
-#ifdef __GTK_STOCK_H__
   button_ok=gtkut_button_new_from_stock(_("OK"),GTK_STOCK_OK);
-#else
-  button_ok=gtk_button_new_with_label(_("OK"));
-#endif
-#ifdef USE_GTK2
   g_object_ref(button_ok);
   gtk_object_sink(GTK_OBJECT(button_ok));
-#endif
   gtk_box_pack_start(GTK_BOX(GTK_DIALOG(dialog)->action_area),
 		     button_ok,TRUE,TRUE,0);
   my_signal_connect(button_ok,"clicked",
@@ -8391,46 +5401,30 @@ static void create_new_mascot_dialog(GtkWidget *w, gpointer gdata)
   gtk_widget_destroy(hbox);
   gtk_widget_destroy(button_ok);
   gtk_widget_destroy(button_cancel);
-#ifdef USE_GTK2
   g_object_unref(hbox);
   g_object_unref(button_ok);
   g_object_unref(button_cancel);
-#endif
 
   hbox=gtk_hbox_new(FALSE,0);
-#ifdef USE_GTK2
   g_object_ref(hbox);
   gtk_object_sink(GTK_OBJECT(hbox));
-#endif
   gtk_box_pack_start(GTK_BOX(GTK_DIALOG(dialog)->vbox),
 		     hbox,TRUE,TRUE,0);
   label=gtk_label_new(_("2. Please select an Image File Name to be used in Mascot"));
   gtk_misc_set_alignment (GTK_MISC (label), 0.5, 0.5);
   gtk_box_pack_start(GTK_BOX(hbox),label,TRUE,TRUE,0);
 
-#ifdef __GTK_STOCK_H__
   button_cancel=gtkut_button_new_from_stock(_("Cancel"),GTK_STOCK_CANCEL);
-#else
-  button_cancel=gtk_button_new_with_label(_("Cancel"));
-#endif
-#ifdef USE_GTK2
   g_object_ref(button_cancel);
   gtk_object_sink(GTK_OBJECT(button_cancel));
-#endif
   gtk_box_pack_start(GTK_BOX(GTK_DIALOG(dialog)->action_area),
 		     button_cancel,TRUE,TRUE,0);
   my_signal_connect(button_cancel,"clicked",
 		    close_new_mascot_dialog, GTK_WIDGET(dialog));
 
-#ifdef __GTK_STOCK_H__
   button_ok=gtkut_button_new_from_stock(_("OK"),GTK_STOCK_OK);
-#else
-  button_ok=gtk_button_new_with_label(_("OK"));
-#endif
-#ifdef USE_GTK2
   g_object_ref(button_ok);
   gtk_object_sink(GTK_OBJECT(button_ok));
-#endif
   gtk_box_pack_start(GTK_BOX(GTK_DIALOG(dialog)->action_area),
 		     button_ok,TRUE,TRUE,0);
   my_signal_connect(button_ok,"clicked",
@@ -8456,11 +5450,9 @@ static void create_new_mascot_dialog(GtkWidget *w, gpointer gdata)
   gtk_widget_destroy(hbox);
   gtk_widget_destroy(button_ok);
   gtk_widget_destroy(button_cancel);
-#ifdef USE_GTK2
   g_object_unref(hbox);
   g_object_unref(button_ok);
   g_object_unref(button_cancel);
-#endif
 
   table=gtk_table_new(2,6,FALSE);
   gtk_box_pack_start(GTK_BOX(GTK_DIALOG(dialog)->vbox),
@@ -8492,21 +5484,13 @@ static void create_new_mascot_dialog(GtkWidget *w, gpointer gdata)
   gtk_table_attach_defaults (GTK_TABLE(table), entry, 0, 2, 4, 5);
   my_signal_connect (entry,"changed",cc_get_entry,&cdata->copyright);
 
-#ifdef __GTK_STOCK_H__
   button_cancel=gtkut_button_new_from_stock(_("Cancel"),GTK_STOCK_CANCEL);
-#else
-  button_cancel=gtk_button_new_with_label(_("Cancel"));
-#endif
   gtk_box_pack_start(GTK_BOX(GTK_DIALOG(dialog)->action_area),
 		     button_cancel,TRUE,TRUE,0);
   my_signal_connect(button_cancel,"clicked",close_new_mascot_dialog, 
 		    GTK_WIDGET(dialog));
 
-#ifdef __GTK_STOCK_H__
   button_ok=gtkut_button_new_from_stock(_("OK"),GTK_STOCK_OK);
-#else
-  button_ok=gtk_button_new_with_label(_("OK"));
-#endif
   gtk_box_pack_start(GTK_BOX(GTK_DIALOG(dialog)->action_area),
 		     button_ok,TRUE,TRUE,0);
   my_signal_connect(button_ok,"clicked",MakeNewMascot, (gpointer)cdata);
@@ -8590,21 +5574,13 @@ void create_pop_pass_dialog(void)
   cdata->entry=entry;
 
 
-#ifdef __GTK_STOCK_H__
   button_cancel=gtkut_button_new_from_stock(_("Cancel"),GTK_STOCK_CANCEL);
-#else
-  button_cancel=gtk_button_new_with_label(_("Cancel"));
-#endif
   gtk_box_pack_start(GTK_BOX(GTK_DIALOG(dialog)->action_area),
 		     button_cancel,TRUE,TRUE,0);
   my_signal_connect(button_cancel,"clicked",close_child_dialog, 
 		    GTK_WIDGET(dialog));
 
-#ifdef __GTK_STOCK_H__
   button_ok=gtkut_button_new_from_stock(_("OK"),GTK_STOCK_OK);
-#else
-  button_ok=gtk_button_new_with_label(_("OK"));
-#endif
   gtk_box_pack_start(GTK_BOX(GTK_DIALOG(dialog)->action_area),
 		     button_ok,TRUE,TRUE,0);
   my_signal_connect(button_ok,"clicked",ChangePopPass, (gpointer)cdata);
@@ -8620,7 +5596,6 @@ void create_pop_pass_dialog(void)
 
 static void create_file_selection_dialog(GtkWidget *widget, gint gdata)
 {
-#ifdef __GTK_FILE_CHOOSER_H__
   GtkWidget *fdialog;
   gint  mode;
   
@@ -8770,122 +5745,11 @@ static void create_file_selection_dialog(GtkWidget *widget, gint gdata)
     gtk_widget_destroy(fdialog);
     Mascot->flag_menu=FALSE;
   }
-#else
-  GtkWidget *fdialog;
-  GtkWidget *button;
-  GtkWidget *hbox;
-  confSelectMenu *cdata;
-  gint  mode;
-  
-  mode=(gint) gdata;
-
-  // Win構築は重いので先にExposeイベント等をすべて処理してから
-  while (my_main_iteration(FALSE));
-
-  cdata=g_malloc0(sizeof(confSelectMenu));
-
-  Mascot->flag_menu=TRUE;
-  
-
-  switch(mode){
-  case MENU_SELECT:
-  case START_MENU_SELECT:
-    fdialog = gtk_file_selection_new(_("Open Mascot"));
-    break;
-  case MENU_INSTALL_USER:
-  case START_MENU_INSTALL_USER:
-#ifdef GTK_MSG
-    popup_message(POPUP_TIMEOUT*3,
-		  _("Caution : You're going to install a new mascot into your user's direcroty.\n"),
-		  _("    If you already have the file with the same filename,"),
-		  _("    it will be overwritten."),
-		  _("\n    If you want to install more than one mascot with a launcher menu,"),
-		  _("    please install using \"Install Launcher Menu\"."),
-		  NULL);
-#endif
-    fdialog = gtk_file_selection_new(_("Install New Mascot to User's Directory"));
-    break;
-#ifdef USE_COMMON
-  case MENU_INSTALL_COMMON:
-  case START_MENU_INSTALL_COMMON:
-#ifdef GTK_MSG
-    popup_message(POPUP_TIMEOUT*3,
-		  _("Caution : You're going to install a new mascot into the MaCoPiX common direcroty.\n"),
-		  _("    If you already have the file with the same filename,"),
-		  _("    it will be overwritten."),
-		  _("\n    If you want to install more than one mascot with a launcher menu,"),
-		  _("    please install using \"Install Launcher Menu\"."),
-		  NULL);
-#endif
-    fdialog = gtk_file_selection_new(_("Install New Mascot to the Common Directory"));
-#endif
-  }
-
-  cdata->fs=GTK_FILE_SELECTION(fdialog);
-  cdata->mode=mode;
-
-  my_signal_connect(fdialog,"destroy",close_dialog, GTK_WIDGET(fdialog));
-  switch(mode){
-  case MENU_SELECT:
-  case MENU_INSTALL_USER:
-#ifdef USE_COMMON
-  case MENU_INSTALL_COMMON:
-#endif
-    my_signal_connect(GTK_FILE_SELECTION(fdialog)->cancel_button,
-		      "clicked",close_dialog,GTK_WIDGET(fdialog));
-    break;
-  case START_MENU_SELECT:
-  case START_MENU_INSTALL_USER:
-#ifdef USE_COMMON
-  case START_MENU_INSTALL_COMMON:
-#endif
-    my_signal_connect(GTK_FILE_SELECTION(fdialog)->cancel_button,
-		      "clicked", exit, NULL);
-  }
-  
-  my_signal_connect(GTK_FILE_SELECTION(fdialog)->ok_button,
-		    "clicked", ChangeMascotFS,  (gpointer)cdata);
-
-  if(mode==MENU_SELECT){
-    if(Mascot->file){
-      gtk_file_selection_set_filename (GTK_FILE_SELECTION (fdialog), 
-				       Mascot->file);
-    }
-  }
-  gtk_file_selection_complete (GTK_FILE_SELECTION (fdialog), 
-				   MASCOT_EXTENSION);
-  gtk_file_selection_hide_fileop_buttons (GTK_FILE_SELECTION (fdialog));
-
-
-  hbox = gtk_hbox_new(FALSE,5);
-  gtk_container_set_border_width (GTK_CONTAINER (hbox), 5);
-  gtk_box_pack_start(GTK_BOX(GTK_FILE_SELECTION(fdialog)->action_area),
-		     hbox,FALSE,FALSE,0);
-  
-  button=gtk_button_new_with_label(_("User Dir"));
-  gtk_box_pack_start(GTK_BOX(hbox),button,FALSE,FALSE,0);
-  my_signal_connect(button,"clicked", fs_set_udir, (gpointer)fdialog);
-
-#ifdef USE_COMMON
-  button=gtk_button_new_with_label(_("Common Dir"));
-  gtk_box_pack_start(GTK_BOX(hbox),button,FALSE,FALSE,0);
-  my_signal_connect(button,"clicked", fs_set_ddir, (gpointer)fdialog);
-#endif
-
-  button=gtk_button_new_with_label(MASCOT_EXTENSION);
-  gtk_box_pack_start(GTK_BOX(hbox),button,FALSE,FALSE,0);
-  my_signal_connect(button,"clicked", fs_set_mascotext, (gpointer)fdialog);
-
-  gtk_widget_show_all(fdialog);
-
-  gtk_main();
-#endif
 }
 
   
 static void create_menu_selection_dialog(GtkWidget *widget, gint gdata)
 {
-#ifdef __GTK_FILE_CHOOSER_H__
   GtkWidget *fdialog;
   gchar *filepath;
   gint  mode;
@@ -9004,9 +5868,9 @@ static void create_menu_selection_dialog(GtkWidget *widget, gint gdata)
       default:
 	Mascot->menu_file=dest_file;
       }
-      gtk_widget_destroy(PopupMenu);
+      gtk_widget_destroy(Mascot->PopupMenu);
       ReadMenu(Mascot,0,NULL);
-      PopupMenu=make_popup_menu();
+      Mascot->PopupMenu=make_popup_menu();
     }
     else{
 #ifdef GTK_MSG
@@ -9038,150 +5902,6 @@ static void create_menu_selection_dialog(GtkWidget *widget, gint gdata)
     gtk_widget_destroy(fdialog);
     Mascot->flag_menu=FALSE;
   }
-#else
-  GtkWidget *fdialog;
-  GtkWidget *button;
-  GtkWidget *hbox;
-  gchar *filepath;
-  confSelectMenu *cdata;
-  gint  mode;
-  
-  mode=(gint) gdata;
-
-  // Win構築は重いので先にExposeイベント等をすべて処理してから
-  while (my_main_iteration(FALSE));
-
-  cdata=g_malloc0(sizeof(confSelectMenu));
-  
-  Mascot->flag_menu=TRUE;
-  
-  switch(mode){
-  case MENU_SELECT:
-  case START_MENU_SELECT:
-    fdialog = gtk_file_selection_new(_("Open Launcher Menu"));
-    break;
-  case MENU_INSTALL_USER:
-  case START_MENU_INSTALL_USER:
-#ifdef GTK_MSG
-    popup_message(POPUP_TIMEOUT*3,
-		  _("Caution : You're going to install a new launcher menu with its mascots into your user's direcroty.\n"),
-		  _("    If you already have the file with the same filename,"),
-		  _("    it will be overwritten."),
-		  NULL);
-#endif
-    fdialog = gtk_file_selection_new(_("Install New Launcher Menu to User's Directory"));
-    break;
-#ifdef USE_COMMON
-  case MENU_INSTALL_COMMON:
-  case START_MENU_INSTALL_COMMON:
-#ifdef GTK_MSG
-    popup_message(POPUP_TIMEOUT*3,
-		  _("Caution : You're going to install a new launcher menu with mascots into the MaCoPiX common direcroty.\n"),
-		  _("    If you already have the file with the same filename,"),
-		  _("    it will be overwritten."),
-		  NULL);
-#endif
-    fdialog = gtk_file_selection_new(_("Install New Launcher Menu to the Common Directory"));
-#endif
-  }
-
-  cdata->fs=GTK_FILE_SELECTION(fdialog);
-  cdata->mode=mode;
-
-  my_signal_connect(fdialog,"destroy",close_dialog, GTK_WIDGET(fdialog));
-  my_signal_connect(GTK_FILE_SELECTION(fdialog)->ok_button,
-		    "clicked", ChangeMenuFS, (gpointer)cdata);
-  
-
-  switch(mode){
-  case MENU_SELECT:
-  case MENU_INSTALL_USER:
-#ifdef USE_COMMON
-  case MENU_INSTALL_COMMON:
-#endif
-    my_signal_connect(GTK_FILE_SELECTION(fdialog)->cancel_button,
-		      "clicked", close_dialog, GTK_WIDGET(fdialog));
-    break;
-  case START_MENU_SELECT:
-  case START_MENU_INSTALL_USER:
-#ifdef USE_COMMON
-  case START_MENU_INSTALL_COMMON:
-#endif
-    my_signal_connect(GTK_FILE_SELECTION(fdialog)->cancel_button,
-		      "clicked", exit, NULL);
-  }
-
-  if(mode==MENU_SELECT){
-    if(Mascot->menu_file){
-      gtk_file_selection_set_filename (GTK_FILE_SELECTION (fdialog), 
-				       Mascot->menu_file);
-    }
-    else{
-#ifdef USE_WIN32
-      filepath=g_strconcat(get_win_home(), G_DIR_SEPARATOR_S,USER_DIR, NULL);
-#else
-      filepath=g_strconcat(g_get_home_dir(), G_DIR_SEPARATOR_S,USER_DIR, NULL);
-#endif
-      gtk_file_selection_set_filename (GTK_FILE_SELECTION (fdialog),filepath);
-    }
-  }
-
-#ifdef USE_LHA32
-  gtk_file_selection_complete (GTK_FILE_SELECTION (fdialog), 
-			       LZH_EXTENSION);
-#else
-#if defined(USE_GTAR) || defined(USE_TAR32)
-  gtk_file_selection_complete (GTK_FILE_SELECTION (fdialog), 
-			       TAR_EXTENSION);
-#else
-  gtk_file_selection_complete (GTK_FILE_SELECTION (fdialog), 
-			       MENU_EXTENSION);
-#endif
-#endif
-
-  gtk_file_selection_hide_fileop_buttons (GTK_FILE_SELECTION (fdialog));
-
-
-  hbox = gtk_hbox_new(FALSE,5);
-  gtk_container_set_border_width (GTK_CONTAINER (hbox), 5);
-  gtk_box_pack_start(GTK_BOX(GTK_FILE_SELECTION(fdialog)->action_area),
-		     hbox,FALSE,FALSE,0);
-  
-
-  button=gtk_button_new_with_label(_("User Dir"));
-  gtk_box_pack_start(GTK_BOX(hbox),button,FALSE,FALSE,0);
-  my_signal_connect(button,"clicked", fs_set_udir, (gpointer)fdialog);
-
-#ifdef USE_COMMON
-  button=gtk_button_new_with_label(_("Common Dir"));
-  gtk_box_pack_start(GTK_BOX(hbox),button,FALSE,FALSE,0);
-  my_signal_connect(button,"clicked", fs_set_ddir, (gpointer)fdialog);
-#endif
-
-#ifdef USE_LHA32
-  button=gtk_button_new_with_label(LZH_EXTENSION);
-  my_signal_connect(button,"clicked", fs_set_lzhext, (gpointer)fdialog);
-  gtk_box_pack_start(GTK_BOX(hbox),button,FALSE,FALSE,0);
-#endif
-
-#if defined(USE_GTAR) || defined(USE_TAR32)
-  button=gtk_button_new_with_label(TAR_EXTENSION);
-  my_signal_connect(button,"clicked", fs_set_tarext, (gpointer)fdialog);
-  gtk_box_pack_start(GTK_BOX(hbox),button,FALSE,FALSE,0);
-#endif
-
-  button=gtk_button_new_with_label(MENU_EXTENSION);
-  my_signal_connect(button,"clicked", fs_set_menuext, (gpointer)fdialog);
-
-  gtk_box_pack_start(GTK_BOX(hbox),button,FALSE,FALSE,0);
-
-
-  gtk_widget_show_all(fdialog);
-
-  gtk_main();
-
-  g_free(cdata);
-#endif
 }
 
 
@@ -9201,7 +5921,6 @@ static void create_smenu_dialog2(void)
 
 static void create_nkr_selection_dialog(void)
 {
-#ifdef __GTK_FILE_CHOOSER_H__
   GtkWidget *fdialog;
 
   // Win構築は重いので先にExposeイベント等をすべて処理してから
@@ -9256,59 +5975,11 @@ static void create_nkr_selection_dialog(void)
     gtk_widget_destroy(fdialog);
     Mascot->flag_menu=FALSE;
   }
-#else
-  GtkWidget *fdialog;
-  GtkWidget *button;
-  GtkWidget *hbox;
-
-  // Win構築は重いので先にExposeイベント等をすべて処理してから
-  while (my_main_iteration(FALSE));
-
-
-  fdialog = gtk_file_selection_new(_("Convert from Nokkari-Chara"));
-
-  my_signal_connect(fdialog,"destroy",close_dialog, GTK_WIDGET(fdialog));
-
-  my_signal_connect(GTK_FILE_SELECTION(fdialog)->ok_button,
-		    "clicked", NkrChangeMascotFS, fdialog);
-
-  my_signal_connect(GTK_FILE_SELECTION(fdialog)->cancel_button,
-		    "clicked", close_dialog, GTK_WIDGET(fdialog));
-
-  gtk_file_selection_complete (GTK_FILE_SELECTION (fdialog), 
-				   NKR_EXTENSION);
-  gtk_file_selection_hide_fileop_buttons (GTK_FILE_SELECTION (fdialog));
-
-
-  hbox = gtk_hbox_new(FALSE,5);
-  gtk_container_set_border_width (GTK_CONTAINER (hbox), 5);
-  gtk_box_pack_start(GTK_BOX(GTK_FILE_SELECTION(fdialog)->action_area),
-		     hbox,FALSE,FALSE,0);
-  
-  button=gtk_button_new_with_label(_("User Dir"));
-  gtk_box_pack_start(GTK_BOX(hbox),button,FALSE,FALSE,0);
-  my_signal_connect(button,"clicked", fs_set_udir, (gpointer)fdialog);
-
-#ifdef USE_COMMON
-  button=gtk_button_new_with_label(_("Common Dir"));
-  gtk_box_pack_start(GTK_BOX(hbox),button,FALSE,FALSE,0);
-  my_signal_connect(button,"clicked", fs_set_ddir, (gpointer)fdialog);
-#endif
-
-  button=gtk_button_new_with_label(NKR_EXTENSION);
-  gtk_box_pack_start(GTK_BOX(hbox),button,FALSE,FALSE,0);
-  my_signal_connect(button,"clicked", fs_set_nkrext, (gpointer)fdialog);
-
-  gtk_widget_show_all(fdialog);
-
-  gtk_main();
-#endif
 }
 
   
 static void create_new_menu_selection_dialog(void)
 {
-#ifdef __GTK_FILE_CHOOSER_H__
   GtkWidget *fdialog;
 
   // Win構築は重いので先にExposeイベント等をすべて処理してから
@@ -9363,8 +6034,8 @@ static void create_new_menu_selection_dialog(void)
 	DoSysBalloon(Mascot,buf);
 	g_free(buf);
       }
-      gtk_widget_destroy(PopupMenu);
-      PopupMenu=make_popup_menu();
+      gtk_widget_destroy(Mascot->PopupMenu);
+      Mascot->PopupMenu=make_popup_menu();
 
     }
     else{
@@ -9387,68 +6058,11 @@ static void create_new_menu_selection_dialog(void)
     gtk_widget_destroy(fdialog);
     Mascot->flag_menu=FALSE;
   }
-#else
-  GtkWidget *fdialog;
-  GtkWidget *button;
-  GtkWidget *hbox;
-  gchar *filepath;
-
-  // Win構築は重いので先にExposeイベント等をすべて処理してから
-  while (my_main_iteration(FALSE));
-
-
-  Mascot->flag_menu=TRUE;
-  
-  fdialog = gtk_file_selection_new(_("Select New Launcher Menu File to Create"));
-
-  my_signal_connect(fdialog,"destroy",close_dialog, GTK_WIDGET(fdialog));
-  
-  my_signal_connect(GTK_FILE_SELECTION(fdialog)->ok_button,
-		    "clicked", MakeMenuFS, GTK_FILE_SELECTION(fdialog));
-
-  my_signal_connect(GTK_FILE_SELECTION(fdialog)->cancel_button,
-		    "clicked", close_dialog, GTK_WIDGET(fdialog));
-
-#ifdef USE_WIN32
-  filepath=g_strconcat(get_win_home(), G_DIR_SEPARATOR_S,USER_DIR, NULL);
-#else
-  filepath=g_strconcat(g_get_home_dir(), G_DIR_SEPARATOR_S,USER_DIR, NULL);
-#endif
-  gtk_file_selection_set_filename (GTK_FILE_SELECTION (fdialog),filepath);
-  gtk_file_selection_complete (GTK_FILE_SELECTION (fdialog), 
-			       MENU_EXTENSION);
-  gtk_file_selection_hide_fileop_buttons (GTK_FILE_SELECTION (fdialog));
-
-
-  hbox = gtk_hbox_new(FALSE,5);
-  gtk_container_set_border_width (GTK_CONTAINER (hbox), 5);
-  gtk_box_pack_start(GTK_BOX(GTK_FILE_SELECTION(fdialog)->action_area),
-		     hbox,FALSE,FALSE,0);
-  
-  button=gtk_button_new_with_label(_("User Dir"));
-  gtk_box_pack_start(GTK_BOX(hbox),button,FALSE,FALSE,0);
-  my_signal_connect(button,"clicked", fs_set_udir, (gpointer)fdialog);
-
-#ifdef USE_COMMON
-  button=gtk_button_new_with_label(_("Common Dir"));
-  gtk_box_pack_start(GTK_BOX(hbox),button,FALSE,FALSE,0);
-  my_signal_connect(button,"clicked", fs_set_ddir, (gpointer)fdialog);
-#endif
-
-  button=gtk_button_new_with_label(MENU_EXTENSION);
-  gtk_box_pack_start(GTK_BOX(hbox),button,FALSE,FALSE,0);
-  my_signal_connect(button,"clicked", fs_set_menuext, (gpointer)fdialog);
-
-  gtk_widget_show_all(fdialog);
-
-  gtk_main();
-#endif
 }
 
   
 static void create_save_mascot_dialog(void)
 {
-#ifdef __GTK_FILE_CHOOSER_H__
   GtkWidget *fdialog;
 
   // Win構築は重いので先にExposeイベント等をすべて処理してから
@@ -9512,21 +6126,13 @@ static void create_save_mascot_dialog(void)
       cdata->update=FALSE;
       cdata->dialog=dialog;
       
-#ifdef __GTK_STOCK_H__
       button=gtkut_button_new_from_stock(_("Cancel"),GTK_STOCK_CANCEL);
-#else
-      button=gtk_button_new_with_label(_("Cancel"));
-#endif
       gtk_box_pack_start(GTK_BOX(GTK_DIALOG(dialog)->action_area),
 			 button,TRUE,TRUE,0);
       my_signal_connect(button,"clicked",close_child_dialog, 
 			GTK_WIDGET(dialog));
 
-#ifdef __GTK_STOCK_H__
       button=gtkut_button_new_from_stock(_("OK"),GTK_STOCK_OK);
-#else
-      button=gtk_button_new_with_label(_("OK"));
-#endif
       gtk_box_pack_start(GTK_BOX(GTK_DIALOG(dialog)->action_area),
 			 button,TRUE,TRUE,0);
       my_signal_connect(button,"clicked",ConfirmSaveOther, (gpointer)cdata);
@@ -9566,64 +6172,11 @@ static void create_save_mascot_dialog(void)
     gtk_widget_destroy(fdialog);
     Mascot->flag_menu=FALSE;
   }
-#else
-  GtkWidget *fdialog;
-  GtkWidget *hbox;
-  GtkWidget *button;
-
-  // Win構築は重いので先にExposeイベント等をすべて処理してから
-  while (my_main_iteration(FALSE));
-
-
-  Mascot->flag_menu=TRUE;
-  
-  fdialog = gtk_file_selection_new(_("Save Mascot to Other File"));
-
-  my_signal_connect(fdialog,"destroy",close_dialog, GTK_WIDGET(fdialog));
-  
-  my_signal_connect(GTK_FILE_SELECTION(fdialog)->ok_button,
-		    "clicked", SaveMascotOther, fdialog);
-
-  my_signal_connect(GTK_FILE_SELECTION(fdialog)->cancel_button,
-		    "clicked", close_dialog, GTK_WIDGET(fdialog));
-
-  gtk_file_selection_set_filename (GTK_FILE_SELECTION (fdialog), 
-				   Mascot->file);
-  gtk_file_selection_complete (GTK_FILE_SELECTION (fdialog), 
-				   MASCOT_EXTENSION);
-  //gtk_file_selection_hide_fileop_buttons (GTK_FILE_SELECTION (fdialog));
-
-
-  hbox = gtk_hbox_new(FALSE,5);
-  gtk_container_set_border_width (GTK_CONTAINER (hbox), 5);
-  gtk_box_pack_start(GTK_BOX(GTK_FILE_SELECTION(fdialog)->action_area),
-		     hbox,FALSE,FALSE,0);
-  
-  button=gtk_button_new_with_label(_("User Dir"));
-  gtk_box_pack_start(GTK_BOX(hbox),button,FALSE,FALSE,0);
-  my_signal_connect(button,"clicked", fs_set_udir, (gpointer)fdialog);
-
-#ifdef USE_COMMON
-  button=gtk_button_new_with_label(_("Common Dir"));
-  gtk_box_pack_start(GTK_BOX(hbox),button,FALSE,FALSE,0);
-  my_signal_connect(button,"clicked", fs_set_ddir, (gpointer)fdialog);
-#endif
-
-  button=gtk_button_new_with_label(MASCOT_EXTENSION);
-  gtk_box_pack_start(GTK_BOX(hbox),button,FALSE,FALSE,0);
-  my_signal_connect(button,"clicked", fs_set_mascotext, (gpointer)fdialog);
-
-  gtk_widget_show_all(fdialog);
-
-
-  gtk_main();
-#endif
 }
 
 
 static void create_save_nokkari_dialog(void)
 {
-#ifdef __GTK_FILE_CHOOSER_H__
   GtkWidget *fdialog;
 
   // Win構築は重いので先にExposeイベント等をすべて処理してから
@@ -9680,21 +6233,13 @@ static void create_save_nokkari_dialog(void)
       cdata->update=FALSE;
       cdata->dialog=dialog;
       
-#ifdef __GTK_STOCK_H__
       button=gtkut_button_new_from_stock(_("Cancel"),GTK_STOCK_CANCEL);
-#else
-      button=gtk_button_new_with_label(_("Cancel"));
-#endif
       gtk_box_pack_start(GTK_BOX(GTK_DIALOG(dialog)->action_area),
 			 button,TRUE,TRUE,0);
       my_signal_connect(button,"clicked",close_child_dialog, 
 			GTK_WIDGET(dialog));
 
-#ifdef __GTK_STOCK_H__
       button=gtkut_button_new_from_stock(_("OK"),GTK_STOCK_OK);
-#else
-      button=gtk_button_new_with_label(_("OK"));
-#endif
       gtk_box_pack_start(GTK_BOX(GTK_DIALOG(dialog)->action_area),
 			 button,TRUE,TRUE,0);
       my_signal_connect(button,"clicked",ConfirmSaveOther, (gpointer)cdata);
@@ -9723,56 +6268,6 @@ static void create_save_nokkari_dialog(void)
     gtk_widget_destroy(fdialog);
     Mascot->flag_menu=FALSE;
   }
-#else
-  GtkWidget *fdialog;
-  GtkWidget *hbox;
-  GtkWidget *button;
-
-  // Win構築は重いので先にExposeイベント等をすべて処理してから
-  while (my_main_iteration(FALSE));
-
-
-  Mascot->flag_menu=TRUE;
-  
-  fdialog = gtk_file_selection_new(_("Convert Mascot to Nokkari-Chara"));
-
-  my_signal_connect(fdialog,"destroy",close_dialog, GTK_WIDGET(fdialog));
-  
-  my_signal_connect(GTK_FILE_SELECTION(fdialog)->ok_button,
-		    "clicked", SaveNokkari, fdialog);
-
-  my_signal_connect(GTK_FILE_SELECTION(fdialog)->cancel_button,
-		    "clicked", close_dialog, GTK_WIDGET(fdialog));
-
-  gtk_file_selection_complete (GTK_FILE_SELECTION (fdialog), 
-				   NKR_EXTENSION);
-  //gtk_file_selection_hide_fileop_buttons (GTK_FILE_SELECTION (fdialog));
-
-
-  hbox = gtk_hbox_new(FALSE,5);
-  gtk_container_set_border_width (GTK_CONTAINER (hbox), 5);
-  gtk_box_pack_start(GTK_BOX(GTK_FILE_SELECTION(fdialog)->action_area),
-		     hbox,FALSE,FALSE,0);
-  
-  button=gtk_button_new_with_label(_("User Dir"));
-  gtk_box_pack_start(GTK_BOX(hbox),button,FALSE,FALSE,0);
-  my_signal_connect(button,"clicked", fs_set_udir, (gpointer)fdialog);
-
-#ifdef USE_COMMON
-  button=gtk_button_new_with_label(_("Common Dir"));
-  gtk_box_pack_start(GTK_BOX(hbox),button,FALSE,FALSE,0);
-  my_signal_connect(button,"clicked", fs_set_ddir, (gpointer)fdialog);
-#endif
-
-  button=gtk_button_new_with_label(NKR_EXTENSION);
-  gtk_box_pack_start(GTK_BOX(hbox),button,FALSE,FALSE,0);
-  my_signal_connect(button,"clicked", fs_set_nkrext, (gpointer)fdialog);
-
-  gtk_widget_show_all(fdialog);
-
-
-  gtk_main();
-#endif
 }
 
 static void create_save_release_mascot_dialog(void)
@@ -9891,20 +6386,12 @@ static void create_save_release_mascot_dialog(void)
 		   GTK_FILL,GTK_SHRINK,0,0);
   cdata->bal_color_check=check3;
   
-#ifdef __GTK_STOCK_H__
   button=gtkut_button_new_from_stock(_("Cancel"),GTK_STOCK_CANCEL);
-#else
-  button=gtk_button_new_with_label(_("Cancel"));
-#endif
   gtk_box_pack_start(GTK_BOX(GTK_DIALOG(dialog)->action_area),
 		     button,TRUE,TRUE,0);
   my_signal_connect(button,"clicked",close_child_dialog, GTK_WIDGET(dialog));
 
-#ifdef __GTK_STOCK_H__
   button=gtkut_button_new_from_stock(_("OK"),GTK_STOCK_OK);
-#else
-  button=gtk_button_new_with_label(_("OK"));
-#endif
   gtk_box_pack_start(GTK_BOX(GTK_DIALOG(dialog)->action_area),
 		     button,TRUE,TRUE,0);
   my_signal_connect(button,"clicked",GoRelease, (gpointer)cdata);
@@ -9926,7 +6413,6 @@ static void create_save_release_mascot_dialog(void)
   while (my_main_iteration(FALSE));
 
   
-#ifdef __GTK_FILE_CHOOSER_H__
   fdialog = gtk_file_chooser_dialog_new(_("Save Mascot for Release"),
 					NULL,
 					GTK_FILE_CHOOSER_ACTION_SAVE,
@@ -9980,21 +6466,13 @@ static void create_save_release_mascot_dialog(void)
       cdata->update=FALSE;
       cdata->dialog=dialog;
       
-#ifdef __GTK_STOCK_H__
       button=gtkut_button_new_from_stock(_("Cancel"),GTK_STOCK_CANCEL);
-#else
-      button=gtk_button_new_with_label(_("Cancel"));
-#endif
       gtk_box_pack_start(GTK_BOX(GTK_DIALOG(dialog)->action_area),
 			 button,TRUE,TRUE,0);
       my_signal_connect(button,"clicked",close_child_dialog,
 			GTK_WIDGET(dialog));
 
-#ifdef __GTK_STOCK_H__
       button=gtkut_button_new_from_stock(_("OK"),GTK_STOCK_OK);
-#else
-      button=gtk_button_new_with_label(_("OK"));
-#endif
       gtk_box_pack_start(GTK_BOX(GTK_DIALOG(dialog)->action_area),
 			 button,TRUE,TRUE,0);
       my_signal_connect(button,"clicked",ConfirmSaveRelease, (gpointer)cdata);
@@ -10201,58 +6679,11 @@ static void create_save_release_mascot_dialog(void)
 
 
   g_free(cdata);
-#else
-  fdialog = gtk_file_selection_new(_("Save Mascot for Release"));
-
-  cdata->fdialog=fdialog;
-  cdata->update=FALSE;
-
-  my_signal_connect(fdialog,"destroy",close_dialog, 
-		    GTK_WIDGET(fdialog));
-  
-  my_signal_connect(GTK_FILE_SELECTION(fdialog)->ok_button,
-		    "clicked", SaveReleaseMascot, (gpointer)cdata);
-
-  my_signal_connect(GTK_FILE_SELECTION(fdialog)->cancel_button,
-		    "clicked", close_dialog, GTK_WIDGET(fdialog));
-
-  gtk_file_selection_complete (GTK_FILE_SELECTION (fdialog), 
-			       MASCOT_EXTENSION);
-  gtk_file_selection_set_filename (GTK_FILE_SELECTION (fdialog), 
-				   my_basename(Mascot->file));
-  //gtk_file_selection_hide_fileop_buttons (GTK_FILE_SELECTION (fdialog));
-
-  hbox = gtk_hbox_new(FALSE,5);
-  gtk_container_set_border_width (GTK_CONTAINER (hbox), 5);
-  gtk_box_pack_start(GTK_BOX(GTK_FILE_SELECTION(fdialog)->action_area),
-		     hbox,FALSE,FALSE,0);
-  
-  button=gtk_button_new_with_label(_("User Dir"));
-  gtk_box_pack_start(GTK_BOX(hbox),button,FALSE,FALSE,0);
-  my_signal_connect(button,"clicked", fs_set_udir, (gpointer)fdialog);
-
-#ifdef USE_COMMON
-  button=gtk_button_new_with_label(_("Common Dir"));
-  gtk_box_pack_start(GTK_BOX(hbox),button,FALSE,FALSE,0);
-  my_signal_connect(button,"clicked", fs_set_ddir, (gpointer)fdialog);
-#endif
-
-  button=gtk_button_new_with_label(MASCOT_EXTENSION);
-  gtk_box_pack_start(GTK_BOX(hbox),button,FALSE,FALSE,0);
-  my_signal_connect(button,"clicked", fs_set_mascotext, (gpointer)fdialog);
-
-  gtk_widget_show_all(fdialog);
-
-  gtk_main();
-
-  g_free(cdata);
-#endif
 }
 
 
 static void create_save_menu_dialog(void)
 {
-#ifdef __GTK_FILE_CHOOSER_H__
   GtkWidget *fdialog;
 
   // Win構築は重いので先にExposeイベント等をすべて処理してから
@@ -10316,21 +6747,13 @@ static void create_save_menu_dialog(void)
       cdata->update=FALSE;
       cdata->dialog=dialog;
       
-#ifdef __GTK_STOCK_H__
       button=gtkut_button_new_from_stock(_("Cancel"),GTK_STOCK_CANCEL);
-#else
-      button=gtk_button_new_with_label(_("Cancel"));
-#endif
       gtk_box_pack_start(GTK_BOX(GTK_DIALOG(dialog)->action_area),
 			 button,TRUE,TRUE,0);
       my_signal_connect(button,"clicked",close_child_dialog, 
 			GTK_WIDGET(dialog));
 
-#ifdef __GTK_STOCK_H__
       button=gtkut_button_new_from_stock(_("OK"),GTK_STOCK_OK);
-#else
-      button=gtk_button_new_with_label(_("OK"));
-#endif
       gtk_box_pack_start(GTK_BOX(GTK_DIALOG(dialog)->action_area),
 			 button,TRUE,TRUE,0);
       my_signal_connect(button,"clicked",ConfirmSaveOther, (gpointer)cdata);
@@ -10371,63 +6794,10 @@ static void create_save_menu_dialog(void)
     gtk_widget_destroy(fdialog);
     Mascot->flag_menu=FALSE;
   }
-#else
-  GtkWidget *fdialog;
-  GtkWidget *button;
-  GtkWidget *hbox;
-
-  // Win構築は重いので先にExposeイベント等をすべて処理してから
-  while (my_main_iteration(FALSE));
-
-
-  Mascot->flag_menu=TRUE;
-  
-  fdialog = gtk_file_selection_new(_("Save Menu to File"));
-
-  my_signal_connect(fdialog,"destroy",close_dialog, GTK_WIDGET(fdialog));
-  
-  my_signal_connect(GTK_FILE_SELECTION(fdialog)->ok_button,
-		    "clicked", SaveMenuOther, fdialog);
-
-  my_signal_connect(GTK_FILE_SELECTION(fdialog)->cancel_button,
-		    "clicked", close_dialog, GTK_WIDGET(fdialog));
-
-  gtk_file_selection_complete (GTK_FILE_SELECTION (fdialog), 
-				   MENU_EXTENSION);
-  if(Mascot->menu_file){
-    gtk_file_selection_set_filename (GTK_FILE_SELECTION (fdialog), 
-				     Mascot->menu_file);
-  }
-  //gtk_file_selection_hide_fileop_buttons (GTK_FILE_SELECTION (fdialog));
-
-  hbox = gtk_hbox_new(FALSE,5);
-  gtk_container_set_border_width (GTK_CONTAINER (hbox), 5);
-  gtk_box_pack_start(GTK_BOX(GTK_FILE_SELECTION(fdialog)->action_area),
-		     hbox,FALSE,FALSE,0);
-  
-  button=gtk_button_new_with_label(_("User Dir"));
-  gtk_box_pack_start(GTK_BOX(hbox),button,FALSE,FALSE,0);
-  my_signal_connect(button,"clicked", fs_set_udir, (gpointer)fdialog);
-
-#ifdef USE_COMMON
-  button=gtk_button_new_with_label(_("Common Dir"));
-  gtk_box_pack_start(GTK_BOX(hbox),button,FALSE,FALSE,0);
-  my_signal_connect(button,"clicked", fs_set_ddir, (gpointer)fdialog);
-#endif
-
-  button=gtk_button_new_with_label(MENU_EXTENSION);
-  gtk_box_pack_start(GTK_BOX(hbox),button,FALSE,FALSE,0);
-  my_signal_connect(button,"clicked", fs_set_menuext, (gpointer)fdialog);
-
-  gtk_widget_show_all(fdialog);
-
-  gtk_main();
-#endif
 }
 
 static void create_save_rc_dialog(void)
 {
-#ifdef __GTK_FILE_CHOOSER_H__
   GtkWidget *fdialog;
 
   // Win構築は重いので先にExposeイベント等をすべて処理してから
@@ -10489,21 +6859,13 @@ static void create_save_rc_dialog(void)
       cdata->update=FALSE;
       cdata->dialog=dialog;
       
-#ifdef __GTK_STOCK_H__
       button=gtkut_button_new_from_stock(_("Cancel"),GTK_STOCK_CANCEL);
-#else
-      button=gtk_button_new_with_label(_("Cancel"));
-#endif
       gtk_box_pack_start(GTK_BOX(GTK_DIALOG(dialog)->action_area),
 			 button,TRUE,TRUE,0);
       my_signal_connect(button,"clicked",close_child_dialog,
 			GTK_WIDGET(dialog));
       
-#ifdef __GTK_STOCK_H__
       button=gtkut_button_new_from_stock(_("OK"),GTK_STOCK_OK);
-#else
-      button=gtk_button_new_with_label(_("OK"));
-#endif
       gtk_box_pack_start(GTK_BOX(GTK_DIALOG(dialog)->action_area),
 			 button,TRUE,TRUE,0);
       my_signal_connect(button,"clicked",ConfirmSaveOther, (gpointer)cdata);
@@ -10546,59 +6908,6 @@ static void create_save_rc_dialog(void)
     gtk_widget_destroy(fdialog);
     Mascot->flag_menu=FALSE;
   }
-#else
-  GtkWidget *fdialog;
-  GtkWidget *button;
-  GtkWidget *hbox;
-
-  // Win構築は重いので先にExposeイベント等をすべて処理してから
-  while (my_main_iteration(FALSE));
-
-
-  Mascot->flag_menu=TRUE;
-  
-  fdialog = gtk_file_selection_new(_("Save Resource to File"));
-
-  my_signal_connect(fdialog,"destroy",close_dialog, GTK_WIDGET(fdialog));
-  
-  my_signal_connect(GTK_FILE_SELECTION(fdialog)->ok_button,
-		    "clicked", SaveRCOther, fdialog);
-
-  my_signal_connect(GTK_FILE_SELECTION(fdialog)->cancel_button,
-		    "clicked", close_dialog, GTK_WIDGET(fdialog));
-
-  gtk_file_selection_complete (GTK_FILE_SELECTION (fdialog), 
-				   RC_EXTENSION);
-  if(Mascot->rcfile){
-    gtk_file_selection_set_filename (GTK_FILE_SELECTION (fdialog), 
-				     to_utf8(Mascot->rcfile));
-  }
-  //gtk_file_selection_hide_fileop_buttons (GTK_FILE_SELECTION (fdialog));
-
-
-  hbox = gtk_hbox_new(FALSE,5);
-  gtk_container_set_border_width (GTK_CONTAINER (hbox), 5);
-  gtk_box_pack_start(GTK_BOX(GTK_FILE_SELECTION(fdialog)->action_area),
-		     hbox,FALSE,FALSE,0);
-  
-  button=gtk_button_new_with_label(_("User Dir"));
-  gtk_box_pack_start(GTK_BOX(hbox),button,FALSE,FALSE,0);
-  my_signal_connect(button,"clicked", fs_set_udir, (gpointer)fdialog);
-
-#ifdef USE_COMMON
-  button=gtk_button_new_with_label(_("Common Dir"));
-  gtk_box_pack_start(GTK_BOX(hbox),button,FALSE,FALSE,0);
-  my_signal_connect(button,"clicked", fs_set_ddir, (gpointer)fdialog);
-#endif
-
-  button=gtk_button_new_with_label(RC_EXTENSION);
-  gtk_box_pack_start(GTK_BOX(hbox),button,FALSE,FALSE,0);
-  my_signal_connect(button,"clicked", fs_set_rcext, (gpointer)fdialog);
-
-  gtk_widget_show_all(fdialog);
-
-  gtk_main();
-#endif
 }
 
 
@@ -10695,9 +7004,7 @@ static void create_color_selection_dialog(GtkWidget *w, gpointer gdata)
   int bal_clk;
   confColor *cdata=NULL;
   gdouble selcolor[4];
-#ifdef USE_CAIRO
   guint16 selalpha;
-#endif
 
   if(flagChildDialog){
     return;
@@ -10721,10 +7028,8 @@ static void create_color_selection_dialog(GtkWidget *w, gpointer gdata)
     (GTK_COLOR_SELECTION (GTK_COLOR_SELECTION_DIALOG (fdialog)->colorsel),
      GTK_UPDATE_CONTINUOUS);
 
-#ifdef USE_CAIRO
     gtk_color_selection_set_has_opacity_control(GTK_COLOR_SELECTION (GTK_COLOR_SELECTION_DIALOG (fdialog)->colorsel),
 						TRUE);
-#endif
 
   cdata->csd=GTK_COLOR_SELECTION_DIALOG(fdialog);
   //cdata->color=&init_col;
@@ -10811,7 +7116,6 @@ static void create_color_selection_dialog(GtkWidget *w, gpointer gdata)
       GTK_COLOR_SELECTION (GTK_COLOR_SELECTION_DIALOG (fdialog)->colorsel),
       selcolor);
 
-#ifdef USE_CAIRO
   switch(bal_clk){
   case CONF_COLOR_CLK:
     selalpha=tmp_mascot.alpclk;
@@ -10859,7 +7163,6 @@ static void create_color_selection_dialog(GtkWidget *w, gpointer gdata)
 
   gtk_color_selection_set_current_alpha
     (GTK_COLOR_SELECTION(cdata->csd->colorsel),selalpha);
-#endif
 
 
   my_signal_connect(GTK_COLOR_SELECTION_DIALOG(fdialog)->ok_button,
@@ -10920,7 +7223,6 @@ static void create_color_selection_dialog(GtkWidget *w, gpointer gdata)
       break;
     }
 
-#ifdef USE_CAIRO
     switch(bal_clk){
     case CONF_COLOR_CLK:
       tmp_mascot.alpclk=cdata->alpha;
@@ -10965,7 +7267,6 @@ static void create_color_selection_dialog(GtkWidget *w, gpointer gdata)
       tmp_mascot.def_alpbalbd=cdata->alpha;
       break;
     }
-#endif
   }
 
   g_free(cdata);
@@ -10987,12 +7288,9 @@ static void change_colbal_default(GtkWidget *w, gpointer gdata)
   tmp_mascot.colbalbd->green=tmp_mascot.def_colbalbd->green;
   tmp_mascot.colbalbd->blue =tmp_mascot.def_colbalbd->blue;
 
-#ifdef USE_CAIRO
   tmp_mascot.alpbal =tmp_mascot.def_alpbal;
   tmp_mascot.alpbalbg =tmp_mascot.def_alpbalbg;
   tmp_mascot.alpbalbd =tmp_mascot.def_alpbalbd;
-#endif
-
 }
   
 
@@ -11014,12 +7312,10 @@ static void change_colclk_default(GtkWidget *w, gpointer gdata)
   tmp_mascot.colclksd->green=tmp_mascot.def_colclksd->green;
   tmp_mascot.colclksd->blue =tmp_mascot.def_colclksd->blue;
 
-#ifdef USE_CAIRO
   tmp_mascot.alpclk =tmp_mascot.def_alpclk;
   tmp_mascot.alpclksd =tmp_mascot.def_alpclksd;
   tmp_mascot.alpclkbg =tmp_mascot.def_alpclkbg;
   tmp_mascot.alpclkbd =tmp_mascot.def_alpclkbd;
-#endif
 }
   
 
@@ -11045,11 +7341,7 @@ void create_config_dialog(void)
     tmp_pixfile[i_pix]=Mascot->sprites[i_pix].filename;
   }
 
-#ifdef USE_GTK2  
   conf_main = gtk_window_new(GTK_WINDOW_TOPLEVEL);
-#else
-  conf_main = gtk_window_new(GTK_WINDOW_DIALOG);
-#endif
 
   gtk_window_set_title(GTK_WINDOW(conf_main), 
 		       _("Config for MaCoPiX"));
@@ -11080,20 +7372,12 @@ void create_config_dialog(void)
   gtk_notebook_set_scrollable (GTK_NOTEBOOK (conf_note), TRUE);
 
 
-#ifdef __GTK_STOCK_H__
       button=gtkut_button_new_from_stock(_("Cancel"),GTK_STOCK_CANCEL);
-#else
-      button=gtk_button_new_with_label(_("Cancel"));
-#endif
   gtk_table_attach(GTK_TABLE(conf_tbl), button, 4, 5, 1, 2,
 		   GTK_FILL,GTK_FILL,0,0);
   my_signal_connect(button,"clicked",close_conf, GTK_WIDGET(conf_main));
 
-#ifdef __GTK_STOCK_H__
   button=gtkut_button_new_from_stock(_("OK"),GTK_STOCK_OK);
-#else
-  button=gtk_button_new_with_label(_("OK"));
-#endif
   gtk_table_attach(GTK_TABLE(conf_tbl), button, 5, 6, 1, 2,
 		   GTK_FILL,GTK_FILL,0,0);
   my_signal_connect(button,"clicked",conf_change, GTK_WIDGET(conf_main));
@@ -11221,11 +7505,7 @@ void create_config_dialog(void)
       {
 	GSList *group=NULL;
 	check = gtk_radio_button_new(group);
-#ifdef USE_GTK2
 	group=gtk_radio_button_get_group(GTK_RADIO_BUTTON(check));
-#else
-	group=gtk_radio_button_group(GTK_RADIO_BUTTON(check));
-#endif
 	gtk_table_attach(GTK_TABLE(table3), check, 0, 1, 0, 1,
 			 GTK_SHRINK,GTK_SHRINK,0,0);
 	my_signal_connect (check, "toggled",cc_flag_xp,
@@ -11238,11 +7518,7 @@ void create_config_dialog(void)
 	}
 	
 	check = gtk_radio_button_new(group);
-#ifdef USE_GTK2
 	group=gtk_radio_button_get_group(GTK_RADIO_BUTTON(check));
-#else
-	group=gtk_radio_button_group(GTK_RADIO_BUTTON(check));
-#endif
 	gtk_table_attach(GTK_TABLE(table3), check, 0, 1, 1, 2,
 		       GTK_SHRINK,GTK_SHRINK,0,0);
 	my_signal_connect (check, "toggled",cc_flag_xp,
@@ -11373,7 +7649,7 @@ void create_config_dialog(void)
       gtk_widget_set_sensitive(combo,FALSE);
 #endif
 
-#if defined(USE_GTK2) && !defined(USE_WIN32)
+#ifndef USE_WIN32
       label = gtk_label_new (_("Window Manager [start-up]"));
       gtk_misc_set_alignment (GTK_MISC (label), 0, 0.5);
       gtk_table_attach_defaults (GTK_TABLE(table2), label, 0, 1, 1, 2);
@@ -12385,11 +8661,7 @@ void create_config_dialog(void)
 	  my_signal_connect (entry,"changed",cc_get_entry,
 			     &tmp_mascot.mail.file);
 
-#ifdef __GTK_STOCK_H__
 	  button=gtkut_button_new_from_stock(NULL,GTK_STOCK_OPEN);
-#else
-	  button = gtk_button_new_with_label("...");
-#endif
 	  gtk_box_pack_start(GTK_BOX(hbox2), button,FALSE, FALSE, 0);
 	  my_signal_connect (button,"clicked",create_mail_file_dialog,
 			     (gpointer)entry);
@@ -12445,11 +8717,7 @@ void create_config_dialog(void)
 	    gtk_entry_set_text(GTK_ENTRY(entry), Mascot->mail.mailer);
 	  }
 	  gtk_entry_set_editable(GTK_ENTRY(entry),TRUE);
-#ifdef __GTK_STOCK_H__
 	  button=gtkut_button_new_from_stock(NULL,GTK_STOCK_OPEN);
-#else
-	  button = gtk_button_new_with_label("...");
-#endif
 	  gtk_box_pack_start(GTK_BOX(hbox2), button,FALSE, FALSE, 0);
 	  my_signal_connect (button,"clicked",create_mailer_dialog,
 			     (gpointer)entry);
@@ -12769,7 +9037,6 @@ void create_config_dialog(void)
 #endif
 
 
-#ifdef USE_CAIRO
       frame = gtk_frame_new (_("Graphic lib. for Image Rendering (Cairo enables trancelucency w/composited desktop)"));
       gtk_container_set_border_width (GTK_CONTAINER (frame), 5);
       gtk_table_attach(GTK_TABLE(table), frame, 0, 1, 1, 2,
@@ -12946,15 +9213,8 @@ void create_config_dialog(void)
       my_signal_connect (check, "toggled",cc_get_toggle,
 			 &tmp_mascot.flag_bal_cairo);
     
-#endif
-
       table1=gtk_table_new(1,1,FALSE);
-#ifdef USE_CAIRO
       gtk_table_attach_defaults(GTK_TABLE(table), table1, 0, 1, 2, 3);
-#else
-      gtk_table_attach_defaults(GTK_TABLE(table), table1, 0, 1, 1, 3);
-#endif
-
 
       label = gtk_label_new (_("Rendering"));
 
@@ -13002,11 +9262,7 @@ void create_config_dialog(void)
 			 Mascot->deffontname_clk);
       gtk_entry_set_editable(GTK_ENTRY(entry_deffontname_clk),FALSE);
 
-#ifdef __GTK_STOCK_H__
       button=gtkut_button_new_from_stock(NULL,GTK_STOCK_SELECT_FONT);
-#else
-      button = gtk_button_new_with_label("...");
-#endif
       gtk_box_pack_start(GTK_BOX(hbox), button,FALSE, FALSE, 0);
       my_signal_connect(button,"clicked",create_font_selection_dialog, 
 			(gpointer *)CONF_DEF_FONT_CLK);
@@ -13020,11 +9276,9 @@ void create_config_dialog(void)
 #ifdef __GTK_COLOR_BUTTON_H__
       button = gtk_color_button_new_with_color(Mascot->def_colclk);
       gtk_box_pack_start(GTK_BOX(hbox), button,FALSE, FALSE, 0);
-#ifdef USE_CAIRO
       gtk_color_button_set_use_alpha(GTK_COLOR_BUTTON(button),TRUE);
       gtk_color_button_set_alpha(GTK_COLOR_BUTTON(button),
 				 Mascot->def_alpclk);
-#endif
       my_signal_connect(button,"color-set",ChangeColorButton, 
       			(gpointer *)CONF_DEF_COLOR_CLK);
 #else
@@ -13045,7 +9299,7 @@ void create_config_dialog(void)
 #ifdef __GTK_COLOR_BUTTON_H__
       button = gtk_color_button_new_with_color(Mascot->def_colclkbg);
       gtk_box_pack_start(GTK_BOX(hbox), button,FALSE, FALSE, 0);
-#if defined(USE_CAIRO) && !defined(USE_WIN32)
+#ifndef USE_WIN32
       gtk_color_button_set_use_alpha(GTK_COLOR_BUTTON(button),TRUE);
       gtk_color_button_set_alpha(GTK_COLOR_BUTTON(button),
 				 Mascot->def_alpclkbg);
@@ -13070,11 +9324,9 @@ void create_config_dialog(void)
 #ifdef __GTK_COLOR_BUTTON_H__
       button = gtk_color_button_new_with_color(Mascot->def_colclkbd);
       gtk_box_pack_start(GTK_BOX(hbox), button,FALSE, FALSE, 0);
-#ifdef USE_CAIRO
       gtk_color_button_set_use_alpha(GTK_COLOR_BUTTON(button),TRUE);
       gtk_color_button_set_alpha(GTK_COLOR_BUTTON(button),
 				 Mascot->def_alpclkbd);
-#endif
       my_signal_connect(button,"color-set",ChangeColorButton, 
       			(gpointer *)CONF_DEF_COLOR_CLKBD);
 #else
@@ -13095,11 +9347,9 @@ void create_config_dialog(void)
 #ifdef __GTK_COLOR_BUTTON_H__
       button = gtk_color_button_new_with_color(Mascot->def_colclksd);
       gtk_box_pack_start(GTK_BOX(hbox), button,FALSE, FALSE, 0);
-#ifdef USE_CAIRO
       gtk_color_button_set_use_alpha(GTK_COLOR_BUTTON(button),TRUE);
       gtk_color_button_set_alpha(GTK_COLOR_BUTTON(button),
 				 Mascot->def_alpclksd);
-#endif
       my_signal_connect(button,"color-set",ChangeColorButton, 
       			(gpointer *)CONF_DEF_COLOR_CLKSD);
 #else
@@ -13144,11 +9394,7 @@ void create_config_dialog(void)
 			 Mascot->deffontname_bal);
       gtk_entry_set_editable(GTK_ENTRY(entry_deffontname_bal),FALSE);
 
-#ifdef __GTK_STOCK_H__
       button=gtkut_button_new_from_stock(NULL,GTK_STOCK_SELECT_FONT);
-#else
-      button = gtk_button_new_with_label("...");
-#endif
       gtk_box_pack_start(GTK_BOX(hbox), button,FALSE, FALSE, 0);
       my_signal_connect(button,"clicked",create_font_selection_dialog, 
 			(gpointer *)CONF_DEF_FONT_BAL);
@@ -13162,11 +9408,9 @@ void create_config_dialog(void)
 #ifdef __GTK_COLOR_BUTTON_H__
       button = gtk_color_button_new_with_color(Mascot->def_colbal);
       gtk_box_pack_start(GTK_BOX(hbox), button,FALSE, FALSE, 0);
-#ifdef USE_CAIRO
       gtk_color_button_set_use_alpha(GTK_COLOR_BUTTON(button),TRUE);
       gtk_color_button_set_alpha(GTK_COLOR_BUTTON(button),
 				 Mascot->def_alpbal);
-#endif
       my_signal_connect(button,"color-set",ChangeColorButton, 
       			(gpointer *)CONF_DEF_COLOR_BAL);
 #else
@@ -13187,7 +9431,7 @@ void create_config_dialog(void)
 #ifdef __GTK_COLOR_BUTTON_H__
       button = gtk_color_button_new_with_color(Mascot->def_colbalbg);
       gtk_box_pack_start(GTK_BOX(hbox), button,FALSE, FALSE, 0);
-#if defined(USE_CAIRO) && !defined(USE_WIN32)
+#ifndef USE_WIN32
       gtk_color_button_set_use_alpha(GTK_COLOR_BUTTON(button),TRUE);
       gtk_color_button_set_alpha(GTK_COLOR_BUTTON(button),
 				 Mascot->def_alpbalbg);
@@ -13212,11 +9456,9 @@ void create_config_dialog(void)
 #ifdef __GTK_COLOR_BUTTON_H__
       button = gtk_color_button_new_with_color(Mascot->def_colbalbd);
       gtk_box_pack_start(GTK_BOX(hbox), button,FALSE, FALSE, 0);
-#ifdef USE_CAIRO
       gtk_color_button_set_use_alpha(GTK_COLOR_BUTTON(button),TRUE);
       gtk_color_button_set_alpha(GTK_COLOR_BUTTON(button),
 				 Mascot->def_alpbalbd);
-#endif
       my_signal_connect(button,"color-set",ChangeColorButton, 
       			(gpointer *)CONF_DEF_COLOR_BALBD);
 #else
@@ -13230,7 +9472,6 @@ void create_config_dialog(void)
 #endif
 
 
-#if defined(USE_CAIRO) || defined(USE_WIN32)
 #ifdef USE_WIN32
       frame = gtk_frame_new (_("Default Opacity"));
 #else
@@ -13294,9 +9535,7 @@ void create_config_dialog(void)
       gtk_scale_set_draw_value (GTK_SCALE (scale), TRUE);
       gtk_table_attach_defaults(GTK_TABLE(table1), scale, 1, 2, 1, 2);
 #ifndef USE_WIN32
-#if GTK_CHECK_VERSION(2,12,0)
       if(Mascot->flag_composite==COMPOSITE_FALSE)
-#endif
 	gtk_widget_set_sensitive(scale,FALSE);
 #endif
 
@@ -13310,9 +9549,7 @@ void create_config_dialog(void)
       gtk_scale_set_draw_value (GTK_SCALE (scale), TRUE);
       gtk_table_attach_defaults(GTK_TABLE(table1), scale, 1, 2, 2, 3);
 #ifndef USE_WIN32
-#if GTK_CHECK_VERSION(2,12,0)
       if(Mascot->flag_composite==COMPOSITE_FALSE)
-#endif
 	gtk_widget_set_sensitive(scale,FALSE);
 #endif
 #endif
@@ -13365,7 +9602,6 @@ void create_config_dialog(void)
       my_signal_connect (check, "toggled",cc_get_toggle,
 			 &tmp_mascot.def_flag_clkfg);
 #endif
-#endif
 
       table1=gtk_table_new(1,1,FALSE);
       gtk_table_attach_defaults(GTK_TABLE(table), table1, 0, 1, 3, 5);
@@ -13415,7 +9651,6 @@ void create_config_dialog(void)
 			 &tmp_mascot.duet_use_random);
 
 
-#ifdef USE_GTK2
       y_tbl++;
 
       frame = gtk_frame_new (_("Socket Message"));
@@ -13529,8 +9764,6 @@ void create_config_dialog(void)
       gtk_entry_set_editable(GTK_ENTRY(&GTK_SPIN_BUTTON(spinner)->entry),
 			     FALSE);
 
-
-#endif //USE_GTK2
 #endif //USE_SOCKMSG
 
       y_tbl++;
@@ -13783,11 +10016,7 @@ void create_config_dialog(void)
 #else
 		 "OFF",
 #endif
-#ifdef USE_CAIRO
 		 "ON",
-#else
-		 "OFF",
-#endif
 #ifdef USE_UNLHA32
 		 "ON",
 #else
@@ -14265,11 +10494,7 @@ void create_config_dialog(void)
       gtk_entry_set_text(GTK_ENTRY(entry_fontname_clk),Mascot->fontname_clk);
       gtk_entry_set_editable(GTK_ENTRY(entry_fontname_clk),FALSE);
 
-#ifdef __GTK_STOCK_H__
       button=gtkut_button_new_from_stock(NULL,GTK_STOCK_SELECT_FONT);
-#else
-      button = gtk_button_new_with_label("...");
-#endif
       gtk_table_attach (GTK_TABLE(table1), button, 1, 2, 0, 1, 
 			GTK_SHRINK,GTK_SHRINK,0,0);
       my_signal_connect(button,"clicked",create_font_selection_dialog, 
@@ -14419,11 +10644,9 @@ void create_config_dialog(void)
 #ifdef __GTK_COLOR_BUTTON_H__
       button = gtk_color_button_new_with_color(Mascot->colclk);
       gtk_table_attach (GTK_TABLE(table1), button,1,2,0,1,1,1,0,0);
-#ifdef USE_CAIRO
       gtk_color_button_set_use_alpha(GTK_COLOR_BUTTON(button),TRUE);
       gtk_color_button_set_alpha(GTK_COLOR_BUTTON(button),
 				 Mascot->alpclk);
-#endif
       my_signal_connect(button,"color-set",ChangeColorButton, 
       			(gpointer *)CONF_COLOR_CLK);
 #else
@@ -14442,7 +10665,7 @@ void create_config_dialog(void)
 #ifdef __GTK_COLOR_BUTTON_H__
       button = gtk_color_button_new_with_color(Mascot->colclkbg);
       gtk_table_attach(GTK_TABLE(table1), button,1,2,1,2,1,1,0,0);
-#if defined(USE_CAIRO) && !defined(USE_WIN32)
+#ifndef USE_WIN32
       gtk_color_button_set_use_alpha(GTK_COLOR_BUTTON(button),TRUE);
       gtk_color_button_set_alpha(GTK_COLOR_BUTTON(button),
 				 Mascot->alpclkbg);
@@ -14465,11 +10688,9 @@ void create_config_dialog(void)
 #ifdef __GTK_COLOR_BUTTON_H__
       button = gtk_color_button_new_with_color(Mascot->colclkbd);
       gtk_table_attach(GTK_TABLE(table1),button,1,2,2,3,1,1,0,0);
-#ifdef USE_CAIRO
       gtk_color_button_set_use_alpha(GTK_COLOR_BUTTON(button),TRUE);
       gtk_color_button_set_alpha(GTK_COLOR_BUTTON(button),
 				 Mascot->alpclkbd);
-#endif
       my_signal_connect(button,"color-set",ChangeColorButton, 
       			(gpointer *)CONF_COLOR_CLKBD);
 #else
@@ -14488,11 +10709,9 @@ void create_config_dialog(void)
 #ifdef __GTK_COLOR_BUTTON_H__
       button = gtk_color_button_new_with_color(Mascot->colclksd);
       gtk_table_attach(GTK_TABLE(table1),button,1,2,3,4,1,1,0,0);
-#ifdef USE_CAIRO
       gtk_color_button_set_use_alpha(GTK_COLOR_BUTTON(button),TRUE);
       gtk_color_button_set_alpha(GTK_COLOR_BUTTON(button),
 				 Mascot->alpclksd);
-#endif
       my_signal_connect(button,"color-set",ChangeColorButton, 
       			(gpointer *)CONF_COLOR_CLKSD);
 #else
@@ -14505,11 +10724,7 @@ void create_config_dialog(void)
 			(gpointer *)CONF_COLOR_CLKSD);
 #endif
 
-#ifdef __GTK_STOCK_H__
       button=gtkut_button_new_from_stock(_("Back to Default"),GTK_STOCK_REFRESH);
-#else
-      button=gtk_button_new_with_label(_("Back to Default"));
-#endif
       gtk_table_attach (GTK_TABLE(table1), button,0,2,4,5,1,1,0,0);
       my_signal_connect(button,"clicked",change_colclk_default, NULL);
 
@@ -14598,11 +10813,7 @@ void create_config_dialog(void)
       gtk_entry_set_text(GTK_ENTRY(entry_fontname_bal),Mascot->fontname_bal);
       gtk_entry_set_editable(GTK_ENTRY(entry_fontname_bal),FALSE);
 
-#ifdef __GTK_STOCK_H__
       button=gtkut_button_new_from_stock(NULL,GTK_STOCK_SELECT_FONT);
-#else
-      button = gtk_button_new_with_label("...");
-#endif
       gtk_table_attach (GTK_TABLE(table1), button, 1, 2, 0, 1, 
 			GTK_SHRINK,GTK_SHRINK,0,0);
       my_signal_connect(button,"clicked",create_font_selection_dialog, 
@@ -14738,11 +10949,9 @@ void create_config_dialog(void)
 #ifdef __GTK_COLOR_BUTTON_H__
       button = gtk_color_button_new_with_color(Mascot->colbal);
       gtk_table_attach (GTK_TABLE(table1), button,1,2,0,1,1,1,0,0);
-#ifdef USE_CAIRO
       gtk_color_button_set_use_alpha(GTK_COLOR_BUTTON(button),TRUE);
       gtk_color_button_set_alpha(GTK_COLOR_BUTTON(button),
 				 Mascot->alpbal);
-#endif
       my_signal_connect(button,"color-set",ChangeColorButton, 
       			(gpointer *)CONF_COLOR_BAL);
 #else
@@ -14761,7 +10970,7 @@ void create_config_dialog(void)
 #ifdef __GTK_COLOR_BUTTON_H__
       button = gtk_color_button_new_with_color(Mascot->colbalbg);
       gtk_table_attach(GTK_TABLE(table1), button,1,2,1,2,1,1,0,0);
-#if defined(USE_CAIRO) && !defined(USE_WIN32)
+#ifndef USE_WIN32
       gtk_color_button_set_use_alpha(GTK_COLOR_BUTTON(button),TRUE);
       gtk_color_button_set_alpha(GTK_COLOR_BUTTON(button),
 				 Mascot->alpbalbg);
@@ -14784,11 +10993,9 @@ void create_config_dialog(void)
 #ifdef __GTK_COLOR_BUTTON_H__
       button = gtk_color_button_new_with_color(Mascot->colbalbd);
       gtk_table_attach(GTK_TABLE(table1),button,1,2,2,3,1,1,0,0);
-#ifdef USE_CAIRO
       gtk_color_button_set_use_alpha(GTK_COLOR_BUTTON(button),TRUE);
       gtk_color_button_set_alpha(GTK_COLOR_BUTTON(button),
 				 Mascot->alpbalbd);
-#endif
       my_signal_connect(button,"color-set",ChangeColorButton, 
       			(gpointer *)CONF_COLOR_BALBD);
 #else
@@ -14801,11 +11008,7 @@ void create_config_dialog(void)
 			(gpointer *)CONF_COLOR_BALBD);
 #endif
 
-#ifdef __GTK_STOCK_H__
       button=gtkut_button_new_from_stock(_("Back to Default"),GTK_STOCK_REFRESH);
-#else
-      button=gtk_button_new_with_label(_("Back to Default"));
-#endif
       gtk_table_attach (GTK_TABLE(table1), button,0,2,3,4,1,1,0,0);
       my_signal_connect(button,"clicked",change_colbal_default, NULL);
 
@@ -14939,7 +11142,6 @@ void create_config_dialog(void)
       
       table = gtk_table_new (2, 4, FALSE);
       
-#if defined(USE_CAIRO) || defined(USE_WIN32)
 #ifdef USE_WIN32
       frame = gtk_frame_new (_("Opacity"));
 #else
@@ -14967,20 +11169,12 @@ void create_config_dialog(void)
       gtk_scale_set_draw_value (GTK_SCALE (scale), TRUE);
       gtk_table_attach_defaults(GTK_TABLE(table1), scale, 1, 2, 0, 1);
 #ifndef USE_WIN32
-#if GTK_CHECK_VERSION(2,12,0)
       if(Mascot->flag_composite==COMPOSITE_FALSE)
-#endif
 	gtk_widget_set_sensitive(scale,FALSE);
 #endif
 
-#endif
-
       scrwin = gtk_scrolled_window_new (NULL, NULL);
-#if defined(USE_CAIRO) || defined(USE_WIN32)
       gtk_table_attach_defaults (GTK_TABLE(table), scrwin, 0, 2, 1, 2);
-#else
-      gtk_table_attach_defaults (GTK_TABLE(table), scrwin, 0, 2, 0, 1);
-#endif
       gtk_container_set_border_width (GTK_CONTAINER (scrwin), 5);
       gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW(scrwin),
 				      GTK_POLICY_NEVER,
@@ -14993,21 +11187,13 @@ void create_config_dialog(void)
       gtk_table_attach(GTK_TABLE(table), hbox, 0, 2, 2, 3,
 		       GTK_SHRINK,GTK_SHRINK,0,0);
 
-#ifdef __GTK_STOCK_H__
       button=gtkut_button_new_from_stock(_("Append"),GTK_STOCK_ADD);
-#else
-      button=gtk_button_new_with_label(_("Append"));
-#endif
       gtk_box_pack_start(GTK_BOX(hbox), button,FALSE, FALSE, 0);
       my_signal_connect(button,"clicked",create_add_image_dialog,
 			(gpointer)scrwin);
       
 
-#ifdef __GTK_STOCK_H__
       button=gtkut_button_new_from_stock(_("Delete"),GTK_STOCK_REMOVE);
-#else
-      button=gtk_button_new_with_label(_("Delete"));
-#endif
       gtk_box_pack_start(GTK_BOX(hbox), button,FALSE, FALSE, 0);
       my_signal_connect(button,"clicked",create_del_image_dialog,
 			(gpointer)scrwin);
@@ -15054,29 +11240,17 @@ void create_config_dialog(void)
       gtk_container_set_border_width (GTK_CONTAINER (hbox), 5);
       gtk_table_attach(GTK_TABLE(table), hbox, 0, 1, 1, 2,
 		       GTK_SHRINK,GTK_SHRINK,0,0);
-#ifdef __GTK_STOCK_H__
       button=gtkut_button_new_from_stock(_("Append Pattern"),GTK_STOCK_ADD);
-#else
-      button=gtk_button_new_with_label(_("Append Pattern"));
-#endif
       gtk_box_pack_start(GTK_BOX(hbox), button,FALSE, FALSE, 0);
       my_signal_connect(button,"clicked",create_add_pattern_dialog,
 			(gpointer)ptn_note);
 	  
-#ifdef __GTK_STOCK_H__
       button=gtkut_button_new_from_stock(_("Copy Pattern"),GTK_STOCK_COPY);
-#else
-      button=gtk_button_new_with_label(_("Copy Pattern"));
-#endif
       gtk_box_pack_start(GTK_BOX(hbox), button,FALSE, FALSE, 0);
       my_signal_connect(button,"clicked",create_copy_pattern_dialog,
 			(gpointer)ptn_note);
 	  
-#ifdef __GTK_STOCK_H__
       button=gtkut_button_new_from_stock(_("Delete Pattern"),GTK_STOCK_REMOVE);
-#else
-      button=gtk_button_new_with_label(_("Delete Pattern"));
-#endif
       gtk_box_pack_start(GTK_BOX(hbox), button,FALSE, FALSE, 0);
       my_signal_connect(button,"clicked",create_del_pattern_dialog,
 			(gpointer)ptn_note);
@@ -15135,11 +11309,7 @@ void create_config_dialog(void)
       }
       gtk_entry_set_editable(GTK_ENTRY(entry),FALSE);
       
-#ifdef __GTK_STOCK_H__
       button=gtkut_button_new_from_stock(NULL,GTK_STOCK_OPEN);
-#else
-      button = gtk_button_new_with_label("...");
-#endif
       gtk_table_attach (GTK_TABLE(table2), button, 1, 2, 0, 1, 
 			GTK_SHRINK,GTK_SHRINK,0,0);
       my_signal_connect(button,"clicked",create_change_biff_image_dialog, 
@@ -15240,7 +11410,6 @@ void create_config_dialog(void)
       gtk_entry_set_editable(GTK_ENTRY(&GTK_SPIN_BUTTON(spinner)->entry),
 			     FALSE);
       
-#if defined(USE_CAIRO) || defined(USE_WIN32)
       label = gtk_label_new (_("Opacity Alpha[%]"));
       gtk_misc_set_alignment (GTK_MISC (label), 0, 0.5);
       gtk_table_attach(GTK_TABLE(table1), label, 0, 1, 2, 3,
@@ -15255,13 +11424,9 @@ void create_config_dialog(void)
       gtk_scale_set_draw_value (GTK_SCALE (scale), TRUE);
       gtk_table_attach_defaults(GTK_TABLE(table1), scale, 1, 4, 2, 3);
 #ifndef USE_WIN32
-#if GTK_CHECK_VERSION(2,12,0)
       if(Mascot->flag_composite==COMPOSITE_FALSE)
-#endif
 	gtk_widget_set_sensitive(scale,FALSE);
 #endif
-#endif
-
 
       frame = gtk_frame_new (_("Biff Action"));
       // 着信動作
@@ -15310,11 +11475,7 @@ void create_config_dialog(void)
       }
       gtk_entry_set_editable(GTK_ENTRY(entry),FALSE);
       
-#ifdef __GTK_STOCK_H__
       button=gtkut_button_new_from_stock(NULL,GTK_STOCK_OPEN);
-#else
-      button = gtk_button_new_with_label("...");
-#endif
       gtk_table_attach (GTK_TABLE(table2), button, 1, 2, 0, 1, 
 			GTK_SHRINK,GTK_SHRINK,0,0);
       my_signal_connect(button,"clicked",create_change_biff_sound_dialog, 
@@ -15482,27 +11643,15 @@ GtkWidget * create_menu_page()
   gtk_table_attach(GTK_TABLE(table), hbox, 0, 1, 1, 2,
 		   GTK_SHRINK,GTK_SHRINK,0,0);
   
-#ifdef __GTK_STOCK_H__
   button=gtkut_button_new_from_stock(_("Append Category"),GTK_STOCK_ADD);
-#else
-  button=gtk_button_new_with_label(_("Append Category"));
-#endif
   gtk_box_pack_start(GTK_BOX(hbox), button,FALSE, FALSE, 0);
   my_signal_connect(button,"clicked",create_add_cat_dialog,NULL);
   
-#ifdef __GTK_STOCK_H__
   button=gtkut_button_new_from_stock(_("Delete Category"),GTK_STOCK_REMOVE);
-#else
-  button=gtk_button_new_with_label(_("Delete Category"));
-#endif
   gtk_box_pack_start(GTK_BOX(hbox), button,FALSE, FALSE, 0);
   my_signal_connect(button,"clicked",create_del_cat_dialog,NULL);
   
-#ifdef __GTK_STOCK_H__
   button=gtkut_button_new_from_stock(_("Merge Menu"),GTK_STOCK_CONVERT);
-#else
-  button=gtk_button_new_with_label(_("Merge Menu"));
-#endif
   gtk_box_pack_start(GTK_BOX(hbox), button,FALSE, FALSE, 0);
   my_signal_connect(button,"clicked",create_merge_cat_dialog,NULL);
 
@@ -15554,17 +11703,13 @@ void make_pixmap_list(GtkWidget *scrwin)
   
   if(flag_make_pixmap_list){
     gtk_widget_destroy(pixmap_table);
-#ifdef USE_GTK2
     g_object_unref(pixmap_table);
-#endif
   }
   else flag_make_pixmap_list=TRUE;
 
   pixmap_table = gtk_table_new (3, MAX_PIXMAP+2, FALSE);
-#ifdef USE_GTK2
   g_object_ref(pixmap_table);
   gtk_object_sink(GTK_OBJECT(pixmap_table));
-#endif
 
   gtk_container_set_border_width (GTK_CONTAINER (pixmap_table), 5);
 
@@ -15601,11 +11746,7 @@ void make_pixmap_list(GtkWidget *scrwin)
     gtk_entry_set_editable(GTK_ENTRY(pixmap_entry[i_pix]),FALSE);
 	   
     
-#ifdef __GTK_STOCK_H__
     button=gtkut_button_new_from_stock(NULL,GTK_STOCK_OPEN);
-#else
-    button = gtk_button_new_with_label("...");
-#endif
     gtk_table_attach (GTK_TABLE(pixmap_table), button, 
 		      2, 3, i_pix+1, i_pix+2,
 		      GTK_SHRINK,GTK_SHRINK,0,0);
@@ -15635,9 +11776,7 @@ void make_pattern_list(GtkWidget *ptn_note, int i_ptn)
 
   if(flag_make_pattern_list[i_ptn]) {
     gtk_widget_destroy(GTK_WIDGET(pattern_table[i_ptn]));
-#ifdef USE_GTK2
     g_object_unref(GTK_WIDGET(pattern_table[i_ptn]));
-#endif
     flag_make_frame_list[i_ptn]=FALSE;
   }
   else flag_make_pattern_list[i_ptn]=TRUE;
@@ -15650,10 +11789,8 @@ void make_pattern_list(GtkWidget *ptn_note, int i_ptn)
   }
   
   pattern_table[i_ptn] = gtk_table_new (3, 6, FALSE);
-#ifdef USE_GTK2
   g_object_ref (pattern_table[i_ptn]); 
   gtk_object_sink (GTK_OBJECT (pattern_table[i_ptn]));
-#endif
 
   ptn_scrwin[i_ptn] = gtk_scrolled_window_new (NULL, NULL);
   gtk_widget_set_usize (ptn_scrwin[i_ptn], 30, 250);
@@ -15670,27 +11807,15 @@ void make_pattern_list(GtkWidget *ptn_note, int i_ptn)
   gtk_container_set_border_width (GTK_CONTAINER (hbox), 5);
   gtk_table_attach(GTK_TABLE(pattern_table[i_ptn]), hbox, 0, 3, 1, 2,
 		   GTK_SHRINK,GTK_SHRINK,0,0);
-#ifdef __GTK_STOCK_H__
   button=gtkut_button_new_from_stock(_("Append Frame"),GTK_STOCK_ADD);
-#else
-  button=gtk_button_new_with_label(_("Append Frame"));
-#endif
   gtk_box_pack_start(GTK_BOX(hbox), button,FALSE, FALSE, 0);
   my_signal_connect(button,"clicked",create_add_frame_dialog,i_ptn);
 	  
-#ifdef __GTK_STOCK_H__
   button=gtkut_button_new_from_stock(_("Delete Frame"),GTK_STOCK_REMOVE);
-#else
-  button=gtk_button_new_with_label(_("Delete Frame"));
-#endif
   gtk_box_pack_start(GTK_BOX(hbox), button,FALSE, FALSE, 0);
   my_signal_connect(button,"clicked",create_del_frame_dialog,i_ptn);
   
-#ifdef __GTK_STOCK_H__
   button=gtkut_button_new_from_stock(_("Test Anime"),GTK_STOCK_REDO);
-#else
-  button=gtk_button_new_with_label(_("Test Anime"));
-#endif
   gtk_box_pack_start(GTK_BOX(hbox), button,FALSE, FALSE, 0);
   my_signal_connect(button,"clicked",TestAnime,i_ptn);
   
@@ -15798,11 +11923,7 @@ void make_pattern_list(GtkWidget *ptn_note, int i_ptn)
       gtk_box_pack_start(GTK_BOX(hbox), duet_tgt_entry[i_ptn],TRUE, TRUE, 0);
       my_signal_connect (duet_tgt_entry[i_ptn],"changed",cc_get_entry,
 			 &tmp_mascot.duet_tgt[i_ptn]);
-#ifdef __GTK_STOCK_H__
       button=gtkut_button_new_from_stock(NULL,GTK_STOCK_OPEN);
-#else
-      button = gtk_button_new_with_label("...");
-#endif
       gtk_box_pack_start(GTK_BOX(hbox), button,FALSE, FALSE, 0);
       my_signal_connect(button,"clicked",create_change_duet_tgt_dialog, 
 			i_ptn);
@@ -15882,11 +12003,7 @@ void make_pattern_list(GtkWidget *ptn_note, int i_ptn)
       gtk_entry_set_editable(GTK_ENTRY(click_sound_entry[i_ptn]),FALSE);
       gtk_table_attach_defaults(GTK_TABLE(table2),
 				click_sound_entry[i_ptn], 1, 2, 0, 1);
-#ifdef __GTK_STOCK_H__
       button=gtkut_button_new_from_stock(NULL,GTK_STOCK_OPEN);
-#else
-      button = gtk_button_new_with_label("...");
-#endif
       gtk_table_attach(GTK_TABLE(table2),button, 2, 3, 0, 1,
 		       GTK_SHRINK,GTK_SHRINK,0,0);
       my_signal_connect(button,"clicked",create_change_click_sound_dialog, 
@@ -15994,19 +12111,11 @@ void make_cat_list(GtkWidget *cat_note, int i_cat)
   gtk_container_set_border_width (GTK_CONTAINER (hbox), 5);
   gtk_table_attach(GTK_TABLE(cat_table[i_cat]), hbox, 0, 4, 2, 3,
 		   GTK_SHRINK,GTK_SHRINK,0,0);
-#ifdef __GTK_STOCK_H__
   button=gtkut_button_new_from_stock(_("Append Mascot"),GTK_STOCK_ADD);
-#else
-  button=gtk_button_new_with_label(_("Append Mascot"));
-#endif
   gtk_box_pack_start(GTK_BOX(hbox), button,FALSE, FALSE, 0);
   my_signal_connect(button,"clicked",create_add_tgt_dialog,i_cat);
 	  
-#ifdef __GTK_STOCK_H__
   button=gtkut_button_new_from_stock(_("Delete Mascot"),GTK_STOCK_REMOVE);
-#else
-  button=gtk_button_new_with_label(_("Delete Mascot"));
-#endif
   gtk_box_pack_start(GTK_BOX(hbox), button,FALSE, FALSE, 0);
   my_signal_connect(button,"clicked",create_del_tgt_dialog,i_cat);
   
@@ -16035,17 +12144,13 @@ void make_frame_list(int i_ptn)
   
   if(flag_make_frame_list[i_ptn]){
     gtk_widget_destroy(frame_table[i_ptn]);
-#ifdef USE_GTK2
     g_object_unref(frame_table[i_ptn]);
-#endif
   }
   else flag_make_frame_list[i_ptn]=TRUE;
 
   frame_table[i_ptn] = gtk_table_new (7, MAX_ANIME_FRAME+3, FALSE);
-#ifdef USE_GTK2
   g_object_ref (frame_table[i_ptn]); 
   gtk_object_sink (GTK_OBJECT (frame_table[i_ptn]));
-#endif
   gtk_container_set_border_width (GTK_CONTAINER (frame_table[i_ptn]), 5);
   
   //gtk_table_set_row_spacings (GTK_TABLE (pixmap_table), 1);
@@ -16209,17 +12314,13 @@ void make_tgt_list(int i_cat)
 
   if(flag_make_tgt_list[i_cat]){
     gtk_widget_destroy(tgt_table[i_cat]);
-#ifdef USE_GTK2
     g_object_unref(tgt_table[i_cat]);
-#endif
   }
   else flag_make_tgt_list[i_cat]=TRUE;
 
   tgt_table[i_cat] = gtk_table_new (5, MAX_MENU_CATEGORY+2, FALSE);
-#ifdef USE_GTK2
   g_object_ref (tgt_table[i_cat]); 
   gtk_object_sink (GTK_OBJECT (tgt_table[i_cat]));
-#endif
   gtk_container_set_border_width (GTK_CONTAINER (tgt_table[i_cat]), 5);
   
   gtk_scrolled_window_add_with_viewport
@@ -16285,11 +12386,7 @@ void make_tgt_list(int i_cat)
     gtk_entry_set_editable(GTK_ENTRY(entry),FALSE);
     gtk_box_pack_start(GTK_BOX(hbox), entry,FALSE, FALSE, 0);
 
-#ifdef __GTK_STOCK_H__
     button=gtkut_button_new_from_stock(NULL,GTK_STOCK_OPEN);
-#else
-    button = gtk_button_new_with_label("...");
-#endif
     gtk_box_pack_start(GTK_BOX(hbox), button,FALSE, FALSE, 0);
     my_signal_connect(button,"clicked",create_change_tgt_dialog, 
 		      (i_cat*MAX_MENU_TARGET+i_tgt));
@@ -16334,9 +12431,7 @@ GtkWidget * make_popup_menu(void)
 #endif  // USE_BIFF
   GtkWidget *sig_check;
   GtkWidget *bar;
-#ifdef __GTK_STOCK_H__
   GtkWidget *image;
-#endif
 
   popup_menu = gtk_menu_new();
   gtk_widget_show(popup_menu);
@@ -16344,13 +12439,9 @@ GtkWidget * make_popup_menu(void)
   open_menu=make_open_menu();
   gtk_widget_show(open_menu);
 
-#ifdef __GTK_STOCK_H__
   image=gtk_image_new_from_stock (GTK_STOCK_OPEN, GTK_ICON_SIZE_MENU);
   popup_button =gtk_image_menu_item_new_with_label (_("Open"));
   gtk_image_menu_item_set_image(GTK_IMAGE_MENU_ITEM(popup_button),image);
-#else
-  popup_button =gtk_menu_item_new_with_label (_("Open"));
-#endif
   gtk_widget_show (popup_button);
   gtk_container_add (GTK_CONTAINER (popup_menu), popup_button);
   gtk_menu_item_set_submenu(GTK_MENU_ITEM(popup_button),open_menu);
@@ -16358,13 +12449,9 @@ GtkWidget * make_popup_menu(void)
   save_menu=make_save_menu();
   gtk_widget_show(save_menu);
 
-#ifdef __GTK_STOCK_H__
   image=gtk_image_new_from_stock (GTK_STOCK_SAVE, GTK_ICON_SIZE_MENU);
   popup_button =gtk_image_menu_item_new_with_label (_("Save"));
   gtk_image_menu_item_set_image(GTK_IMAGE_MENU_ITEM(popup_button),image);
-#else
-  popup_button =gtk_menu_item_new_with_label (_("Save"));
-#endif
   gtk_widget_show (popup_button);
   gtk_container_add (GTK_CONTAINER (popup_menu), popup_button);
   gtk_menu_item_set_submenu(GTK_MENU_ITEM(popup_button),save_menu);
@@ -16372,13 +12459,9 @@ GtkWidget * make_popup_menu(void)
   new_menu=make_new_menu();
   gtk_widget_show(new_menu);
 
-#ifdef __GTK_STOCK_H__
   image=gtk_image_new_from_stock (GTK_STOCK_NEW, GTK_ICON_SIZE_MENU);
   popup_button =gtk_image_menu_item_new_with_label (_("New"));
   gtk_image_menu_item_set_image(GTK_IMAGE_MENU_ITEM(popup_button),image);
-#else
-  popup_button =gtk_menu_item_new_with_label (_("New"));
-#endif
   gtk_widget_show (popup_button);
   gtk_container_add (GTK_CONTAINER (popup_menu), popup_button);
   gtk_menu_item_set_submenu(GTK_MENU_ITEM(popup_button),new_menu);
@@ -16386,26 +12469,18 @@ GtkWidget * make_popup_menu(void)
   install_menu=make_install_menu();
   gtk_widget_show(install_menu);
 
-#ifdef __GTK_STOCK_H__
   image=gtk_image_new_from_stock (GTK_STOCK_HARDDISK, GTK_ICON_SIZE_MENU);
   popup_button =gtk_image_menu_item_new_with_label (_("Install"));
   gtk_image_menu_item_set_image(GTK_IMAGE_MENU_ITEM(popup_button),image);
-#else
-  popup_button =gtk_menu_item_new_with_label (_("Install"));
-#endif
   gtk_widget_show (popup_button);
   gtk_container_add (GTK_CONTAINER (popup_menu), popup_button);
   gtk_menu_item_set_submenu(GTK_MENU_ITEM(popup_button),install_menu);
 
 
 
-#ifdef __GTK_STOCK_H__
   image=gtk_image_new_from_stock (GTK_STOCK_PROPERTIES, GTK_ICON_SIZE_MENU);
   popup_button =gtk_image_menu_item_new_with_label (_("Config"));
   gtk_image_menu_item_set_image(GTK_IMAGE_MENU_ITEM(popup_button),image);
-#else
-  popup_button =gtk_menu_item_new_with_label (_("Config"));
-#endif
   gtk_widget_show (popup_button);
   gtk_container_add (GTK_CONTAINER (popup_menu), popup_button);
   my_signal_connect (popup_button, "activate",create_config_dialog,NULL);
@@ -16451,13 +12526,9 @@ GtkWidget * make_popup_menu(void)
   cat_menu=make_cat_menu();
   gtk_widget_show(cat_menu);
 
-#ifdef __GTK_STOCK_H__
   image=gtk_image_new_from_stock (GTK_STOCK_REFRESH, GTK_ICON_SIZE_MENU);
   popup_button =gtk_image_menu_item_new_with_label (_("Mascot Launcher"));
   gtk_image_menu_item_set_image(GTK_IMAGE_MENU_ITEM(popup_button),image);
-#else
-  popup_button =gtk_menu_item_new_with_label (_("Mascot Launcher"));
-#endif
   gtk_widget_show (popup_button);
   gtk_container_add (GTK_CONTAINER (popup_menu), popup_button);
   gtk_menu_item_set_submenu(GTK_MENU_ITEM(popup_button),cat_menu);
@@ -16469,13 +12540,9 @@ GtkWidget * make_popup_menu(void)
   gtk_widget_show (bar);
   gtk_container_add (GTK_CONTAINER (popup_menu), bar);
 
-#ifdef __GTK_STOCK_H__
   image=gtk_image_new_from_stock (GTK_STOCK_QUIT, GTK_ICON_SIZE_MENU);
   popup_button =gtk_image_menu_item_new_with_label (_("Exit"));
   gtk_image_menu_item_set_image(GTK_IMAGE_MENU_ITEM(popup_button),image);
-#else
-  popup_button =gtk_menu_item_new_with_label (_("Exit"));
-#endif
   gtk_widget_show (popup_button);
   gtk_container_add (GTK_CONTAINER (popup_menu), popup_button);
   my_signal_connect (popup_button, "activate",quit_all,NULL);
@@ -16860,17 +12927,16 @@ void ChangeMascot(){
   InitMascot(Mascot);
   ReadMascot(Mascot,FALSE);
   InitComposite(Mascot);
-  LoadPixmaps(win_main, Mascot, Mascot->sprites);
+  LoadPixmaps(Mascot->win_main, Mascot, Mascot->sprites);
   ReInitGC(Mascot);
 #ifdef USE_WIN32
-  //#if GTK_CHECK_VERSION(2,12,0) || defined(USE_WIN32)
-  gtk_widget_unmap(balloon_fg);
+  gtk_widget_unmap(Mascot->balloon_fg);
 #endif
-  gtk_widget_unmap(balloon_main);
+  gtk_widget_unmap(Mascot->balloon_main);
   flag_balloon=FALSE;
 #ifdef USE_BIFF
-  gtk_widget_unmap(biff_pix);
-  LoadBiffPixmap(biff_pix, Mascot);
+  gtk_widget_unmap(Mascot->biff_pix);
+  LoadBiffPixmap(Mascot->biff_pix, Mascot);
   remap_biff_pix(Mascot);
 #endif  // USE_BIFF
   
@@ -16880,28 +12946,28 @@ void ChangeMascot(){
   if(Mascot->clkmode==CLOCK_PANEL){
 #ifdef USE_WIN32
     if((Mascot->flag_clkfg)&&(Mascot->alpha_clk!=100)){
-      gtk_widget_map(clock_fg);
+      gtk_widget_map(Mascot->clock_fg);
     }
-    else gtk_widget_unmap(clock_fg);
+    else gtk_widget_unmap(Mascot->clock_fg);
 #endif
-    gtk_widget_map(clock_main);
+    gtk_widget_map(Mascot->clock_main);
   }
   else{
 #ifdef USE_WIN32
-    gtk_widget_unmap(clock_fg);
+    gtk_widget_unmap(Mascot->clock_fg);
 #endif
-    gtk_widget_unmap(clock_main);
+    gtk_widget_unmap(Mascot->clock_main);
   }
 
 #ifdef USE_WIN32
   if((Mascot->sdw_flag)&&(Mascot->sdw_height>0)){
-    gtk_widget_map(win_sdw);
+    gtk_widget_map(Mascot->win_sdw);
   }
   else{
-    gtk_widget_unmap(win_sdw);
+    gtk_widget_unmap(Mascot->win_sdw);
   }
 #endif
-  gtk_widget_map(win_main);
+  gtk_widget_map(Mascot->win_main);
 
   if(Mascot->clkmode!=CLOCK_NO) clock_update(Mascot, TRUE);
 
@@ -16922,26 +12988,24 @@ void NkrChangeMascot(){
   NkrRead(Mascot);
 
   InitComposite(Mascot);
-  LoadPixmaps(win_main, Mascot, Mascot->sprites);
+  LoadPixmaps(Mascot->win_main, Mascot, Mascot->sprites);
   ReInitGC(Mascot);
 #ifdef USE_WIN32
-  //#if GTK_CHECK_VERSION(2,12,0) || defined(USE_WIN32)
-  gtk_widget_unmap(balloon_fg);
+  gtk_widget_unmap(Mascot->balloon_fg);
 #endif
-  gtk_widget_unmap(balloon_main);
+  gtk_widget_unmap(Mascot->balloon_main);
   flag_balloon=FALSE;
 #ifdef USE_BIFF
-  gtk_widget_unmap(biff_pix);
-  LoadBiffPixmap(biff_pix, Mascot);
+  gtk_widget_unmap(Mascot->biff_pix);
+  LoadBiffPixmap(Mascot->biff_pix, Mascot);
 #endif  // USE_BIFF
   
   Mascot->yoff=Mascot->height - Mascot->yoff;
 
 #ifdef USE_WIN32
-  //#if GTK_CHECK_VERSION(2,12,0) || defined(USE_WIN32)
-  gtk_widget_unmap(clock_fg);
+  gtk_widget_unmap(Mascot->clock_fg);
 #endif
-  gtk_widget_unmap(clock_main);
+  gtk_widget_unmap(Mascot->clock_main);
   MoveToFocus(Mascot,TRUE);
 }
 
@@ -16976,11 +13040,7 @@ void create_cons_dialog(typMascot *mascot,
 
   cdata=g_malloc0(sizeof(consType));
 
-#ifdef USE_GTK2  
   cons_main = gtk_window_new(GTK_WINDOW_TOPLEVEL);
-#else
-  cons_main = gtk_window_new(GTK_WINDOW_DIALOG);
-#endif
 
   gtk_window_set_position(GTK_WINDOW(cons_main), GTK_WIN_POS_CENTER);
 
@@ -17068,20 +13128,12 @@ void create_cons_dialog(typMascot *mascot,
   cdata->flag_ow=FALSE;
   cdata->flag_auto=FALSE;
 
-#ifdef __GTK_STOCK_H__
   button=gtkut_button_new_from_stock(_("Cancel"),GTK_STOCK_CANCEL);
-#else
-  button=gtk_button_new_with_label(_("Cancel"));
-#endif
   gtk_table_attach(GTK_TABLE(cons_tbl), button, 4, 5, 2, 3,
 		   GTK_FILL,GTK_SHRINK,0,0);
   my_signal_connect(button,"clicked",noow_cons, (gpointer)cdata);
 
-#ifdef __GTK_STOCK_H__
   button=gtkut_button_new_from_stock(_("OK"),GTK_STOCK_OK);
-#else
-  button=gtk_button_new_with_label(_("OK"));
-#endif
   gtk_table_attach(GTK_TABLE(cons_tbl), button, 5, 6, 2, 3,
 		   GTK_FILL,GTK_SHRINK,0,0);
   my_signal_connect(button,"clicked",ow_cons, (gpointer)cdata);
@@ -17159,12 +13211,7 @@ void create_smenu_dialog(typMascot *mascot, gboolean flag_popup)
   mascot->flag_menu=TRUE;
 
   
-#ifdef USE_GTK2  
   main = gtk_window_new(GTK_WINDOW_TOPLEVEL);
-#else
-  main = gtk_window_new(GTK_WINDOW_DIALOG);
-#endif
-
 
   gtk_window_set_position(GTK_WINDOW(main), GTK_WIN_POS_CENTER);
 
@@ -17297,20 +13344,12 @@ void create_smenu_dialog(typMascot *mascot, gboolean flag_popup)
     make_smenu_list(scrwin, smenu);
     
     
-#ifdef __GTK_STOCK_H__
     button=gtkut_button_new_from_stock(_("Cancel"),GTK_STOCK_CANCEL);
-#else
-    button=gtk_button_new_with_label(_("Cancel"));
-#endif
     gtk_table_attach(GTK_TABLE(table), button, 2, 3, 1, 2,
 		     GTK_FILL,GTK_SHRINK,0,0);
     my_signal_connect(button,"clicked",close_smenu,GTK_WIDGET(main));
     
-#ifdef __GTK_STOCK_H__
     button=gtkut_button_new_from_stock(_("OK"),GTK_STOCK_OK);
-#else
-    button=gtk_button_new_with_label(_("OK"));
-#endif
     gtk_table_attach(GTK_TABLE(table), button, 3, 4, 1, 2,
 		     GTK_FILL,GTK_SHRINK,0,0);
     my_signal_connect(button,"clicked",gtk_main_quit, NULL);
@@ -17344,9 +13383,9 @@ void create_smenu_dialog(typMascot *mascot, gboolean flag_popup)
       }
      
       if(flag_popup){// Popupから
-	gtk_widget_destroy(PopupMenu);
+	gtk_widget_destroy(mascot->PopupMenu);
 	ReadMenu(mascot,0,NULL);
-	PopupMenu=make_popup_menu();
+	mascot->PopupMenu=make_popup_menu();
       }
       gtk_widget_destroy(main);
     }
@@ -17362,27 +13401,17 @@ GtkWidget *make_start_menubar(typMascot *mascot){
   GtkWidget *menu;
   GtkWidget *popup_button;
   GtkWidget *bar;
-#ifdef __GTK_STOCK_H__
   GtkWidget *image;
-#endif
 
   menu_bar=gtk_menu_bar_new();
   gtk_widget_show (menu_bar);
 
 
-#ifdef __GTK_STOCK_H__
   image=gtk_image_new_from_stock (GTK_STOCK_QUIT, GTK_ICON_SIZE_MENU);
   menu_item =gtk_image_menu_item_new_with_label (_("Exit"));
   gtk_image_menu_item_set_image(GTK_IMAGE_MENU_ITEM(menu_item),image);
-#else
-  menu_item =gtk_menu_item_new_with_label (_("Exit"));
-#endif
   gtk_widget_show (menu_item);
-#ifdef USE_GTK2
   gtk_menu_shell_append(GTK_MENU_SHELL(menu_bar), menu_item);
-#else
-  gtk_menu_bar_append(GTK_MENU_BAR(menu_bar), menu_item);
-#endif
   
   menu=gtk_menu_new();
   gtk_widget_show (menu);
@@ -17394,19 +13423,11 @@ GtkWidget *make_start_menubar(typMascot *mascot){
   my_signal_connect (popup_button, "activate",gtk_main_quit,NULL);
 
   // Install
-#ifdef __GTK_STOCK_H__
   image=gtk_image_new_from_stock (GTK_STOCK_HARDDISK, GTK_ICON_SIZE_MENU);
   menu_item =gtk_image_menu_item_new_with_label (_("Install"));
   gtk_image_menu_item_set_image(GTK_IMAGE_MENU_ITEM(menu_item),image);
-#else
-  menu_item =gtk_menu_item_new_with_label (_("Install"));
-#endif
   gtk_widget_show (menu_item);
-#ifdef USE_GTK2
   gtk_menu_shell_append(GTK_MENU_SHELL(menu_bar), menu_item);
-#else
-  gtk_menu_bar_append(GTK_MENU_BAR(menu_bar), menu_item);
-#endif
   
   menu=gtk_menu_new();
   gtk_widget_show (menu);
@@ -17446,19 +13467,11 @@ GtkWidget *make_start_menubar(typMascot *mascot){
 #endif
 
   // Open
-#ifdef __GTK_STOCK_H__
   image=gtk_image_new_from_stock (GTK_STOCK_OPEN, GTK_ICON_SIZE_MENU);
   menu_item =gtk_image_menu_item_new_with_label (_("Open"));
   gtk_image_menu_item_set_image(GTK_IMAGE_MENU_ITEM(menu_item),image);
-#else
-  menu_item =gtk_menu_item_new_with_label (_("Open"));
-#endif
   gtk_widget_show (menu_item);
-#ifdef USE_GTK2
   gtk_menu_shell_append(GTK_MENU_SHELL(menu_bar), menu_item);
-#else
-  gtk_menu_bar_append(GTK_MENU_BAR(menu_bar), menu_item);
-#endif
   
   menu=gtk_menu_new();
   gtk_widget_show (menu);
@@ -17578,11 +13591,7 @@ void make_smenu_list(GtkWidget *scrwin, typScanMenu *smenu)
   
   for(i_menu=0;i_menu<smenu->max_menu;i_menu++){
     check = gtk_radio_button_new(group);
-#ifdef USE_GTK2
     group=gtk_radio_button_get_group(GTK_RADIO_BUTTON(check));
-#else
-    group=gtk_radio_button_group(GTK_RADIO_BUTTON(check));
-#endif
     gtk_table_attach (GTK_TABLE(smenu_table),
 		      check, 0, 1, i_menu+1, i_menu+2,
 		      GTK_SHRINK,GTK_SHRINK,0,2);
@@ -17667,9 +13676,7 @@ void popup_message(gint delay, ...){
   gtk_container_set_border_width(GTK_CONTAINER(dialog),5);
   gtk_window_set_title(GTK_WINDOW(dialog),_("MaCoPiX Message"));
 
-#ifdef USE_GTK2  
   gtk_dialog_set_has_separator(GTK_DIALOG(dialog),FALSE);
-#endif
 
   if(delay>0){
     timer=g_timeout_add(delay*1000, 
@@ -17710,9 +13717,7 @@ void popup_progress(typMascot *mascot, gchar *msg1){
   gtk_window_set_title(GTK_WINDOW(mascot->pdata->dialog),
 		       _("MaCoPiX : Installing Mascots"));
 
-#ifdef USE_GTK2  
   gtk_dialog_set_has_separator(GTK_DIALOG(mascot->pdata->dialog),FALSE);
-#endif
 
   label=gtk_label_new(msg1);
   gtk_misc_set_alignment (GTK_MISC (label), 0.0, 0.5);
@@ -17837,20 +13842,12 @@ void unlink_all(gchar *dirname)
   cdata->update=FALSE;
   cdata->dialog=dialog;
     
-#ifdef __GTK_STOCK_H__
   button=gtkut_button_new_from_stock(_("Cancel"),GTK_STOCK_CANCEL);
-#else
-  button=gtk_button_new_with_label(_("Cancel"));
-#endif
   gtk_box_pack_start(GTK_BOX(GTK_DIALOG(dialog)->action_area),
 		     button,TRUE,TRUE,0);
   my_signal_connect(button,"clicked",close_child_dialog, GTK_WIDGET(dialog));
 
-#ifdef __GTK_STOCK_H__
   button=gtkut_button_new_from_stock(_("OK"),GTK_STOCK_OK);
-#else
-  button=gtk_button_new_with_label(_("OK"));
-#endif
   gtk_box_pack_start(GTK_BOX(GTK_DIALOG(dialog)->action_area),
 		     button,TRUE,TRUE,0);
   my_signal_connect(button,"clicked",ConfirmUnlink, (gpointer)cdata);

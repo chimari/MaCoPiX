@@ -59,17 +59,6 @@
 
 // *** GLOBAL ARGUMENT ***
 typMascot *Mascot;
-GtkWidget *win_main, *clock_main, *balloon_main, *conf_main;
-#ifdef USE_WIN32
-GtkWidget *win_sdw;
-#endif
-#ifdef USE_BIFF
-GtkWidget *biff_pix;
-#endif
-#ifdef USE_WIN32
-GtkWidget *clock_fg, *balloon_fg;
-#endif
-GtkWidget *PopupMenu; 
 GdkDrawable *pixmap_main[2]={NULL,NULL}, 
   *pixmap_clk[2]={NULL,NULL},
   *pixmap_bal[2]={NULL,NULL};
@@ -81,135 +70,15 @@ gboolean FlagInstalledMenu;
 // スプライト初期化
 static typSprite sprite_void[MAX_PIXMAP+1];
 
-
-
-//Callbacks
-extern void MoveMascot();
-extern void drag_begin();
-extern void drag_end();
-extern gint dw_configure_main();
-extern gint dw_expose_main();
-#ifdef USE_WIN32
-extern gint dw_configure_sdw();
-extern gint dw_expose_sdw();
-#endif
-extern void window_motion();
-extern void focus_in();
-extern void focus_out();
-extern gint time_update();
-extern void NkrChangeMascot();
-extern void callbacks_arg_init();
-extern void clock_update();
-
-
-extern void screen_changed();
-
-//GUI
-extern GtkWidget * make_popup_menu();
-#ifdef USE_WIN32
-extern void make_clock_fg();
-#endif
-extern void create_cons_dialog();
-extern void create_smenu_dialog();
-extern void gui_arg_init();
-extern void popup_message();
-extern void popup_progress();
-extern void destroy_progress();
-extern void my_signal_connect();
-extern gboolean my_main_iteration();
-
-
-//Pixmap
-extern void LoadPixmaps();
-extern void LoadBiffPixmap();
-extern void InitComposite();
-
-//BALLOON
-extern void make_balloon();
-#ifdef USE_WIN32
-extern void make_balloon_fg();
-#endif
-extern void balloon_arg_init();
-
-//Clock
-extern void make_clock();
-extern void DrawPanelClock0();
-
-
-
-// UTILS
-extern void copy_file();
-#ifdef USE_COMMON
-extern void check_common_dir();
-#endif
-#ifdef USE_WIN32
-extern gchar* get_win_home();
-#endif
-extern void unlink_all();
-extern gchar* my_dirname();
-extern gchar* my_basename();
-
-// Mail
-#ifdef USE_BIFF
-extern gint SetMailChecker();
-extern make_biff_pix();
-extern void mail_arg_init();
-#endif
-
-
-// SockMsg
-#ifdef USE_SOCKMSG
-extern SockMsgInitResult sockmsg_init2();
-extern SockMsgInitResult sockmsg_init();
-extern void sockmsg_send_msg();
-extern void duet_sv_done();
-extern void sockmsg_set_mascot();
-extern void sockmsg_done();
-#endif
-
-// TrayIcon
-#ifdef __GTK_STATUS_ICON_H__
-extern void trayicon_create();
-extern void trayicon_show();
-extern void trayicon_hyde();
-extern void trayicon_destroy();
-extern void trayicon_set_tooltip();
-#endif
-
-// SSL
-#ifdef USE_SSL
-extern void ssl_init(void);
-#endif
-
-// DnD
-extern void signal_drag_data_received();
-
-
 // Prototype of functions in this file
 void exit_w_msg();
-gchar* to_utf8();
-gchar* to_locale();
-gchar* all_random_menu_mascot_file();
 void ReadMenu();
-void SaveMenu();
-void ScanMenu();
 gboolean ScanMenu2();
 void InitDefCol();
 void ReadRC();
-void SaveRC();
-void SaveDefMenu();
-void ReadMascot();
 void MascotInstall();
-gchar* FullPathMascotFile();
 gboolean FullPathMascotCehck();
-gchar* FullPathPixmapFile();
-gchar* FullPathSoundFile();
 gchar* FullPathRcFile();
-gchar* ReadMascotName();
-void SaveMascot();
-void SetFontForReleaseData();
-void SetColorForReleaseData();
-void InitMascot();
 void InitMascot0();
 void get_option();
 void get_rc_option();
@@ -223,7 +92,6 @@ void exit_w_msg(gchar *s){
   exit(1);
 }
 
-#ifdef USE_GTK2
 gchar *x_locale_to_utf8(gchar *srcstr, gssize len,
 	gsize *r, gsize *w, GError **error, gchar *locale)
 {
@@ -259,9 +127,7 @@ gchar *x_locale_to_utf8(gchar *srcstr, gssize len,
 	  return (srcstr);
 	}
 }
-#endif
 
-#ifdef USE_GTK2
 gchar *x_locale_from_utf8(gchar *srcstr, gssize len,
 	gsize *r, gsize *w, GError **error, gchar *locale)
 {
@@ -293,26 +159,17 @@ gchar *x_locale_from_utf8(gchar *srcstr, gssize len,
 	if (res) return res;
 	else return (srcstr);
 }
-#endif
 
 gchar* to_utf8(gchar *input){
-#ifdef USE_GTK2
   return(x_locale_to_utf8(input,-1,NULL,NULL,NULL,NULL));
-#else
-  return(g_strdup(input));
-#endif
 }
 
 gchar* to_locale(gchar *input){
-#ifdef USE_GTK2
 #ifdef USE_WIN32
   //return(x_locale_from_utf8(input,-1,NULL,NULL,NULL,"SJIS"));
   return(g_win32_locale_filename_from_utf8(input));
 #else
   return(x_locale_from_utf8(input,-1,NULL,NULL,NULL,NULL));
-#endif
-#else
-  return(input);
 #endif
 }
 
@@ -349,9 +206,7 @@ void ReadMenu(typMascot *mascot, gint offset_i_cat, gchar *merge_file)
   time_t user_mtime=0, common_mtime=0;
   gchar *dummy;
   gint menu_total_for_install;
-#ifdef USE_GTK2
   gchar progress_txt[128];
-#endif
 
   mascot->flag_consow=FALSE;
 
@@ -531,20 +386,13 @@ void ReadMenu(typMascot *mascot, gint offset_i_cat, gchar *merge_file)
   
 
   if (cfgfile) {
-#ifdef USE_GTK2
     if(!xmms_cfg_read_string(cfgfile, "General", "code",&mascot->menu_code))
       mascot->menu_code = NULL;
-#endif
 
     if(mascot->flag_install){
       popup_progress(mascot,"MaCoPiX: Installing Mascots...");
-#ifdef USE_GTK2
       gtk_progress_bar_set_text(GTK_PROGRESS_BAR(mascot->pdata->pbar),
 				_("Preparing for Installation"));
-#else
-      gtk_progress_set_format_string(GTK_PROGRESS(mascot->pdata->pbar),
-			     _("Preparing for Installation"));
-#endif
 
       // PRESCAN for INSTALLING
       menu_total_for_install=0;
@@ -589,14 +437,12 @@ void ReadMenu(typMascot *mascot, gint offset_i_cat, gchar *merge_file)
       if(!xmms_cfg_read_string(cfgfile, f_tmp0, "Name",
 			       &mascot->menu_cat[i_cat]))
 	mascot->menu_cat[i_cat]=NULL;
-#ifdef USE_GTK2
       if(mascot->menu_cat[i_cat]){
       	mascot->menu_cat[i_cat]=
       	  x_locale_to_utf8(mascot->menu_cat[i_cat],-1,NULL,NULL,NULL,mascot->menu_code);
 	if(!mascot->menu_cat[i_cat]) 
 	  mascot->menu_cat[i_cat]=g_strdup(_("(Invalid Character Code)"));
       }
-#endif
       
       for(i_tgt=0;i_tgt<MAX_MENU_TARGET;i_tgt++){
 	sprintf(tmp0,"file%02d",i_tgt);
@@ -630,23 +476,13 @@ void ReadMenu(typMascot *mascot, gint offset_i_cat, gchar *merge_file)
 	  mascot->menu_tgt_name[i_cat][i_tgt]
 	    =ReadMascotName(mascot, mascot->menu_tgt[i_cat][i_tgt]);
 	  if(mascot->flag_install){
-#ifdef USE_GTK2
 	    gtk_progress_bar_set_fraction(GTK_PROGRESS_BAR(mascot->pdata->pbar),
 			  (gdouble)((i_tgt+1)/(gfloat)menu_total_for_install));
-#else
-	    gtk_progress_set_percentage(GTK_PROGRESS(mascot->pdata->pbar),
-			   (gfloat)((i_tgt+1)/(gfloat)menu_total_for_install));
-#endif
-#ifdef USE_GTK2
 	    g_sprintf(progress_txt,
 		      _("Installing mascots [%2d/%2d]"),
 		      i_tgt+1,menu_total_for_install);
 	    gtk_progress_bar_set_text(GTK_PROGRESS_BAR(mascot->pdata->pbar),
 				      progress_txt);
-#else
-	    gtk_progress_set_format_string(GTK_PROGRESS(mascot->pdata->pbar),
-					   _("Installing mascots [%p%%]"));
-#endif
 	    while (my_main_iteration(FALSE));
 	    gdk_flush();
 	    usleep(INTERVAL*1e3);
@@ -658,11 +494,7 @@ void ReadMenu(typMascot *mascot, gint offset_i_cat, gchar *merge_file)
     }
     xmms_cfg_free(cfgfile);
     if(mascot->flag_install){
-#ifdef USE_GTK2
       gtk_progress_bar_set_fraction(GTK_PROGRESS_BAR(mascot->pdata->pbar),1.0);
-#else
-      gtk_progress_set_percentage(GTK_PROGRESS(mascot->pdata->pbar),1.0);
-#endif
       destroy_progress(mascot);
     }
 
@@ -832,22 +664,18 @@ gboolean ScanMenu2(typScanMenu *smenu,gint i_menu)
   cfgfile = xmms_cfg_open_file(smenu->file[i_menu]);
 
   if (cfgfile) {
-#ifdef USE_GTK2
     if(!xmms_cfg_read_string(cfgfile, "General", "code",&menu_code))
       menu_code = NULL;
-#endif
 
     for(i_cat=0;i_cat<MAX_MENU_CATEGORY;i_cat++){
 
       sprintf(f_tmp0,"Menu%02d",i_cat);
       if(xmms_cfg_read_string(cfgfile, f_tmp0, "Name", &dummy)){
 	if(i_cat==0){
-#ifdef USE_GTK2
 	  if(dummy){
 	    dummy=x_locale_to_utf8(dummy,-1,NULL,NULL,NULL,menu_code);
 	    if(!dummy) dummy=g_strdup(_("(Invalid Character Code)"));
 	  }
-#endif
 	  smenu->cat[i_menu]=g_strdup(dummy);
 	}
       }
@@ -898,9 +726,7 @@ void SaveMenu(typMascot *mascot)
   gchar *filename;
   gchar tmp0[10], f_tmp0[10];
   int i_cat, i_tgt;
-#ifdef USE_GTK2
   gchar *tmp_conv=NULL;
-#endif
 
   
   filename = g_strdup(mascot->menu_file);
@@ -908,24 +734,18 @@ void SaveMenu(typMascot *mascot)
   //if (!cfgfile)  cfgfile = xmms_cfg_new();
   cfgfile = xmms_cfg_new();
 
-#ifdef USE_GTK2
   if(mascot->menu_code)
     xmms_cfg_write_string(cfgfile, "General", "code", mascot->menu_code);
-#endif
 
   for(i_cat=0;i_cat<mascot->menu_cat_max;i_cat++){
      
     sprintf(f_tmp0,"Menu%02d",i_cat);
-#ifdef USE_GTK2
     if(mascot->menu_cat[i_cat]){
       tmp_conv=
 	x_locale_from_utf8(mascot->menu_cat[i_cat],-1,NULL,NULL,NULL,mascot->menu_code);
       if(!tmp_conv) tmp_conv=g_strdup(_("(Invalid Character Code)"));
     }
     xmms_cfg_write_string(cfgfile, f_tmp0, "Name",tmp_conv);
-#else
-    xmms_cfg_write_string(cfgfile, f_tmp0, "Name",mascot->menu_cat[i_cat]);
-#endif
 
     for(i_tgt=0;i_tgt<mascot->menu_tgt_max[i_cat];i_tgt++){
     
@@ -941,10 +761,7 @@ void SaveMenu(typMascot *mascot)
   xmms_cfg_free(cfgfile);
 
   g_free(filename);
-#ifdef USE_GTK2
   g_free(tmp_conv);
-#endif
-  
 }
 
 
@@ -977,7 +794,6 @@ void InitDefCol(typMascot* mascot){
   mascot->def_colbalbg=gdk_color_copy(&init_colbalbg);
   mascot->def_colbalbd=gdk_color_copy(&init_colbalbd);
 
-#ifdef USE_CAIRO
   mascot->def_alpclk  =CAIRO_DEF_ALPHA_OTHER;
   mascot->def_alpclkbg=CAIRO_DEF_ALPHA_CLK;
   mascot->def_alpclkbd=CAIRO_DEF_ALPHA_OTHER;
@@ -985,7 +801,6 @@ void InitDefCol(typMascot* mascot){
   mascot->def_alpbal  =CAIRO_DEF_ALPHA_OTHER;
   mascot->def_alpbalbg=CAIRO_DEF_ALPHA_BAL;
   mascot->def_alpbalbd=CAIRO_DEF_ALPHA_OTHER;
-#endif
 }
 
 
@@ -1068,7 +883,6 @@ void ReadRC(typMascot *mascot, gboolean def_flag)
     if(!xmms_cfg_read_boolean(cfgfile, field_tmp, "auto_install",
 			      &mascot->flag_install))
       mascot->flag_install=FALSE;
-#ifdef USE_CAIRO
     if(!xmms_cfg_read_boolean(cfgfile, field_tmp, "force_composite",
 			      &mascot->force_composite))
       mascot->force_composite=FALSE;
@@ -1085,7 +899,6 @@ void ReadRC(typMascot *mascot, gboolean def_flag)
     if(!xmms_cfg_read_boolean(cfgfile, field_tmp, "cairo_clock",
 			      &mascot->flag_clk_cairo))
       mascot->flag_clk_cairo=TRUE;
-#endif
     if(!xmms_cfg_read_int(cfgfile, field_tmp, "magnify",
 			  &mascot->magnify))
       mascot->magnify=100;
@@ -1133,11 +946,9 @@ void ReadRC(typMascot *mascot, gboolean def_flag)
     if(!xmms_cfg_read_int(cfgfile, field_tmp, "text_b", &col_tmp))
       col_tmp=COLOR_CLK_B;
     mascot->def_colclk->blue=col_tmp;
-#ifdef USE_CAIRO
     if(!xmms_cfg_read_int(cfgfile, field_tmp, "text_p", &col_tmp))
       col_tmp=CAIRO_DEF_ALPHA_OTHER;
     mascot->def_alpclk=col_tmp;
-#endif
 
     if(!xmms_cfg_read_int(cfgfile, field_tmp, "shadow_r", &col_tmp))
       col_tmp=COLOR_CLKSD_R;
@@ -1148,11 +959,9 @@ void ReadRC(typMascot *mascot, gboolean def_flag)
     if(!xmms_cfg_read_int(cfgfile, field_tmp, "shadow_b", &col_tmp))
       col_tmp=COLOR_CLKSD_B;
     mascot->def_colclksd->blue=col_tmp;
-#ifdef USE_CAIRO
     if(!xmms_cfg_read_int(cfgfile, field_tmp, "shadow_p", &col_tmp))
       col_tmp=CAIRO_DEF_ALPHA_SDW;
     mascot->def_alpclksd=col_tmp;
-#endif
 
     if(!xmms_cfg_read_int(cfgfile, field_tmp, "bg_r", &col_tmp))
       col_tmp=COLOR_CLKBG_R;
@@ -1163,11 +972,9 @@ void ReadRC(typMascot *mascot, gboolean def_flag)
     if(!xmms_cfg_read_int(cfgfile, field_tmp, "bg_b", &col_tmp))
       col_tmp=COLOR_CLKBG_B;
     mascot->def_colclkbg->blue=col_tmp;
-#ifdef USE_CAIRO
     if(!xmms_cfg_read_int(cfgfile, field_tmp, "bg_p", &col_tmp))
       col_tmp=CAIRO_DEF_ALPHA_CLK;
     mascot->def_alpclkbg=col_tmp;
-#endif
 
     if(!xmms_cfg_read_int(cfgfile, field_tmp, "border_r", &col_tmp))
       col_tmp=COLOR_CLKBD_R;
@@ -1178,12 +985,9 @@ void ReadRC(typMascot *mascot, gboolean def_flag)
     if(!xmms_cfg_read_int(cfgfile, field_tmp, "border_b", &col_tmp))
       col_tmp=COLOR_CLKBD_B;
     mascot->def_colclkbd->blue=col_tmp;
-#ifdef USE_CAIRO
     if(!xmms_cfg_read_int(cfgfile, field_tmp, "border_p", &col_tmp))
       col_tmp=CAIRO_DEF_ALPHA_OTHER;
     mascot->def_alpclkbd=col_tmp;
-#endif
-
 
     // Color for Balloon
     if(def_flag)  field_tmp=g_strdup("Default-BalloonColor");
@@ -1198,11 +1002,9 @@ void ReadRC(typMascot *mascot, gboolean def_flag)
     if(!xmms_cfg_read_int(cfgfile, field_tmp, "text_b", &col_tmp))
       col_tmp=COLOR_BAL_B;
     mascot->def_colbal->blue=(guint)col_tmp;
-#ifdef USE_CAIRO
     if(!xmms_cfg_read_int(cfgfile, field_tmp, "text_p", &col_tmp))
       col_tmp=CAIRO_DEF_ALPHA_OTHER;
     mascot->def_alpbal=col_tmp;
-#endif
        
     if(!xmms_cfg_read_int(cfgfile, field_tmp, "bg_r", &col_tmp))
       col_tmp=COLOR_BALBG_R;
@@ -1213,11 +1015,9 @@ void ReadRC(typMascot *mascot, gboolean def_flag)
     if(!xmms_cfg_read_int(cfgfile, field_tmp, "bg_b", &col_tmp))
       col_tmp=COLOR_BALBG_B;
     mascot->def_colbalbg->blue=(guint)col_tmp;
-#ifdef USE_CAIRO
     if(!xmms_cfg_read_int(cfgfile, field_tmp, "bg_p", &col_tmp))
       col_tmp=CAIRO_DEF_ALPHA_BAL;
     mascot->def_alpbalbg=col_tmp;
-#endif
 
     if(!xmms_cfg_read_int(cfgfile, field_tmp, "border_r", &col_tmp))
       col_tmp=COLOR_BALBD_R;
@@ -1228,11 +1028,9 @@ void ReadRC(typMascot *mascot, gboolean def_flag)
     if(!xmms_cfg_read_int(cfgfile, field_tmp, "border_b", &col_tmp))
       col_tmp=COLOR_BALBD_B;
     mascot->def_colbalbd->blue=(guint)col_tmp;
-#ifdef USE_CAIRO
     if(!xmms_cfg_read_int(cfgfile, field_tmp, "border_p", &col_tmp))
       col_tmp=CAIRO_DEF_ALPHA_OTHER;
     mascot->def_alpbalbd=col_tmp;
-#endif
 
 
     // Focus Movement etc.
@@ -1287,7 +1085,6 @@ void ReadRC(typMascot *mascot, gboolean def_flag)
     if(!xmms_cfg_read_int(cfgfile, field_tmp, "home_y",&mascot->home_y))
       mascot->home_y=0;
 
-#ifdef USE_CAIRO
     if(def_flag) field_tmp=g_strdup("Default-Shadow");
     else         field_tmp=g_strdup("Shadow");
 
@@ -1301,7 +1098,6 @@ void ReadRC(typMascot *mascot, gboolean def_flag)
 
     if(!xmms_cfg_read_int(cfgfile, field_tmp, "alpha",&mascot->sdw_alpha))
       mascot->sdw_alpha=CAIRO_SHADOW_ALPHA;
-#endif
 
     // 時報
     if(def_flag) field_tmp=g_strdup("Default-Signal");
@@ -1429,7 +1225,6 @@ void ReadRC(typMascot *mascot, gboolean def_flag)
 #endif  // USE_SOCKMSG
     
 
-#if GTK_CHECK_VERSION(2,12,0) || defined(USE_CAIRO) || defined(USE_WIN32) 
     // Alpha Percentage
     if(def_flag)  field_tmp=g_strdup("Default-Alpha");
     else          field_tmp=g_strdup("Alpha");
@@ -1441,7 +1236,6 @@ void ReadRC(typMascot *mascot, gboolean def_flag)
 #ifdef USE_BIFF
     if(!xmms_cfg_read_int(cfgfile, field_tmp, "biff",&mascot->def_alpha_biff))
       mascot->def_alpha_biff=DEF_ALPHA_BIFF;
-#endif
 #endif
 
 #ifdef USE_WIN32
@@ -1460,7 +1254,6 @@ void ReadRC(typMascot *mascot, gboolean def_flag)
   else{
     // USER_RCFILEがないときは作成する : おそらく初回起動時のみ
     mascot->flag_install=FALSE;
-#ifdef USE_CAIRO
     mascot->force_composite=FALSE;
 #ifdef USE_WIN32
     mascot->flag_img_cairo=FALSE;
@@ -1469,7 +1262,6 @@ void ReadRC(typMascot *mascot, gboolean def_flag)
 #endif
     mascot->flag_bal_cairo=TRUE;
     mascot->flag_clk_cairo=TRUE;
-#endif
     mascot->flag_ow=FALSE;
     mascot->flag_ow_ini=FALSE;
     mascot->magnify=100;
@@ -1505,13 +1297,10 @@ void ReadRC(typMascot *mascot, gboolean def_flag)
     mascot->home_x=0;
     mascot->home_y=0;
 
-#ifdef USE_CAIRO
     mascot->sdw_flag=TRUE;
     mascot->sdw_x=CAIRO_SHADOW_X;
     mascot->sdw_y=CAIRO_SHADOW_Y;
     mascot->sdw_alpha=CAIRO_SHADOW_ALPHA;
-#endif
-    
     
     mascot->signal.type=SIGACT_NO;
     mascot->signal.com=NULL;
@@ -1547,12 +1336,10 @@ void ReadRC(typMascot *mascot, gboolean def_flag)
     mascot->sockmsg_expire_def=(SYS_BALLOON_EXPIRE)*(INTERVAL);
 #endif  // USE_SOCKMSG
 
-#if GTK_CHECK_VERSION(2,12,0) || defined(USE_CAIRO) || defined(USE_WIN32) 
     mascot->force_def_alpha=FALSE;
     mascot->def_alpha_main=DEF_ALPHA_MAIN;
 #ifdef USE_BIFF
     mascot->def_alpha_biff=DEF_ALPHA_BIFF;
-#endif
 #endif
 #ifdef USE_WIN32
     mascot->def_alpha_bal=DEF_ALPHA_BAL;
@@ -1586,12 +1373,10 @@ void SaveRC(typMascot *mascot,  gboolean def_flag)
   else         field_tmp=g_strdup("General");
   xmms_cfg_write_string(cfgfile, field_tmp, "prog_ver",VERSION);
   xmms_cfg_write_boolean(cfgfile, field_tmp, "auto_install",mascot->flag_install);
-#ifdef USE_CAIRO
   xmms_cfg_write_boolean(cfgfile, field_tmp, "force_composite",mascot->force_composite);
   xmms_cfg_write_boolean(cfgfile, field_tmp, "cairo_image",mascot->flag_img_cairo);
   xmms_cfg_write_boolean(cfgfile, field_tmp, "cairo_balloon",mascot->flag_bal_cairo);
   xmms_cfg_write_boolean(cfgfile, field_tmp, "cairo_clock",mascot->flag_clk_cairo);
-#endif
   xmms_cfg_write_int(cfgfile, field_tmp, "magnify",mascot->magnify);
   xmms_cfg_write_int(cfgfile, field_tmp, "ip_style",mascot->ip_style);
   xmms_cfg_write_string(cfgfile, field_tmp, "font_clock",mascot->deffontname_clk);
@@ -1630,12 +1415,10 @@ void SaveRC(typMascot *mascot,  gboolean def_flag)
     xmms_cfg_write_int(cfgfile, field_tmp, "text_g",mascot->def_colclk->green);
     xmms_cfg_write_int(cfgfile, field_tmp, "text_b",mascot->def_colclk->blue);
   }
-#ifdef USE_CAIRO
   if(mascot->def_alpclk==CAIRO_DEF_ALPHA_OTHER)
     xmms_cfg_remove_key(cfgfile,field_tmp, "text_p");
   else
     xmms_cfg_write_int(cfgfile, field_tmp, "text_p",mascot->def_alpclk);
-#endif
 
   if((  mascot->def_colclksd->red  ==COLOR_CLKSD_R)
      &&(mascot->def_colclksd->green==COLOR_CLKSD_G)
@@ -1649,12 +1432,10 @@ void SaveRC(typMascot *mascot,  gboolean def_flag)
     xmms_cfg_write_int(cfgfile, field_tmp, "shadow_g",mascot->def_colclksd->green);
     xmms_cfg_write_int(cfgfile, field_tmp, "shadow_b",mascot->def_colclksd->blue);
   }
-#ifdef USE_CAIRO
   if(mascot->def_alpclk==CAIRO_DEF_ALPHA_SDW)
     xmms_cfg_remove_key(cfgfile,field_tmp, "shadow_p");
   else
     xmms_cfg_write_int(cfgfile, field_tmp, "shadow_p",mascot->def_alpclksd);
-#endif
 
   if((  mascot->def_colclkbg->red  ==COLOR_CLKBG_R)
      &&(mascot->def_colclkbg->green==COLOR_CLKBG_G)
@@ -1668,12 +1449,10 @@ void SaveRC(typMascot *mascot,  gboolean def_flag)
     xmms_cfg_write_int(cfgfile, field_tmp, "bg_g",mascot->def_colclkbg->green);
     xmms_cfg_write_int(cfgfile, field_tmp, "bg_b",mascot->def_colclkbg->blue);
   }
-#ifdef USE_CAIRO
   if(mascot->def_alpclk==CAIRO_DEF_ALPHA_CLK)
     xmms_cfg_remove_key(cfgfile,field_tmp, "bg_p");
   else
     xmms_cfg_write_int(cfgfile, field_tmp, "bg_p",mascot->def_alpclkbg);
-#endif
 
   if((  mascot->def_colclkbd->red  ==COLOR_CLKBD_R)
      &&(mascot->def_colclkbd->green==COLOR_CLKBD_G)
@@ -1687,12 +1466,10 @@ void SaveRC(typMascot *mascot,  gboolean def_flag)
     xmms_cfg_write_int(cfgfile, field_tmp, "border_g",mascot->def_colclkbd->green);
     xmms_cfg_write_int(cfgfile, field_tmp, "border_b",mascot->def_colclkbd->blue);
   }
-#ifdef USE_CAIRO
   if(mascot->def_alpclk==CAIRO_DEF_ALPHA_OTHER)
     xmms_cfg_remove_key(cfgfile,field_tmp, "border_p");
   else
     xmms_cfg_write_int(cfgfile, field_tmp, "border_p",mascot->def_alpclkbd);
-#endif
 
 
   // Color for Balloon
@@ -1711,12 +1488,10 @@ void SaveRC(typMascot *mascot,  gboolean def_flag)
     xmms_cfg_write_int(cfgfile, field_tmp, "text_g",mascot->def_colbal->green);
     xmms_cfg_write_int(cfgfile, field_tmp, "text_b",mascot->def_colbal->blue);
   }
-#ifdef USE_CAIRO
   if(mascot->def_alpclk==CAIRO_DEF_ALPHA_OTHER)
     xmms_cfg_remove_key(cfgfile,field_tmp, "text_p");
   else
     xmms_cfg_write_int(cfgfile, field_tmp, "text_p",mascot->def_alpbal);
-#endif
 
   if((  mascot->def_colbalbg->red  ==COLOR_BALBG_R)
      &&(mascot->def_colbalbg->green==COLOR_BALBG_G)
@@ -1730,12 +1505,10 @@ void SaveRC(typMascot *mascot,  gboolean def_flag)
     xmms_cfg_write_int(cfgfile, field_tmp, "bg_g",mascot->def_colbalbg->green);
     xmms_cfg_write_int(cfgfile, field_tmp, "bg_b",mascot->def_colbalbg->blue);
   }
-#ifdef USE_CAIRO
   if(mascot->def_alpclk==CAIRO_DEF_ALPHA_BAL)
     xmms_cfg_remove_key(cfgfile,field_tmp, "bg_p");
   else
     xmms_cfg_write_int(cfgfile, field_tmp, "bg_p",mascot->def_alpbalbg);
-#endif
 
   if((  mascot->def_colbalbd->red  ==COLOR_BALBD_R)
      &&(mascot->def_colbalbd->green==COLOR_BALBD_G)
@@ -1749,12 +1522,10 @@ void SaveRC(typMascot *mascot,  gboolean def_flag)
     xmms_cfg_write_int(cfgfile, field_tmp, "border_g",mascot->def_colbalbd->green);
     xmms_cfg_write_int(cfgfile, field_tmp, "border_b",mascot->def_colbalbd->blue);
   }
-#ifdef USE_CAIRO
   if(mascot->def_alpclk==CAIRO_DEF_ALPHA_OTHER)
     xmms_cfg_remove_key(cfgfile,field_tmp, "border_p");
   else
     xmms_cfg_write_int(cfgfile, field_tmp, "border_p",mascot->def_alpbalbd);
-#endif
 
   // Focus Movement etc.
 
@@ -1783,7 +1554,6 @@ void SaveRC(typMascot *mascot,  gboolean def_flag)
   xmms_cfg_write_int(cfgfile, field_tmp, "home_x",mascot->home_x);
   xmms_cfg_write_int(cfgfile, field_tmp, "home_y",mascot->home_y);
 
-#ifdef USE_CAIRO
   // Shadow with Cairo
 
   if(def_flag) field_tmp=g_strdup("Default-Shadow");
@@ -1792,7 +1562,6 @@ void SaveRC(typMascot *mascot,  gboolean def_flag)
   xmms_cfg_write_float(cfgfile, field_tmp, "x",mascot->sdw_x);
   xmms_cfg_write_float(cfgfile, field_tmp, "y",mascot->sdw_y);
   xmms_cfg_write_int(cfgfile, field_tmp, "alpha",mascot->sdw_alpha);
-#endif
 
 
   // 時報
@@ -1972,9 +1741,7 @@ void ReadMascot(typMascot *mascot, gboolean def_flag)
   struct stat statbuf;
   time_t common_mtime=0,user_mtime=0;
   gint col_tmp;
-#ifdef USE_GTK2
   gchar *tmp_conv=NULL;
-#endif
   gboolean flag_def_col=FALSE;
 
 
@@ -2177,21 +1944,17 @@ void ReadMascot(typMascot *mascot, gboolean def_flag)
     if(def_flag)      f_tmp0=g_strdup("Default-General");
     else              f_tmp0=g_strdup("General");
     
-#ifdef USE_GTK2
     if(!xmms_cfg_read_string(cfgfile, f_tmp0, "code",&mascot->code))
       mascot->code = NULL;
-#endif
 
     if(!xmms_cfg_read_string(cfgfile, f_tmp0, "name",&mascot->name))
       mascot->name=NULL;
-#ifdef USE_GTK2
     if(mascot->name){
       mascot->name=
 	x_locale_to_utf8(mascot->name,-1,NULL,NULL,NULL,mascot->code);
       if(!mascot->name) mascot->name=g_strdup(_("(Invalid Character Code)"));
       
     }
-#endif
     if(!xmms_cfg_read_string(cfgfile, f_tmp0, "copyright",&mascot->copyright))
       mascot->copyright=NULL;
     if(!xmms_cfg_read_boolean(cfgfile, f_tmp0, "default_color",&flag_def_col))
@@ -2277,25 +2040,19 @@ void ReadMascot(typMascot *mascot, gboolean def_flag)
     if(!xmms_cfg_read_int(cfgfile, f_tmp0, "text_b", &col_tmp))
       col_tmp=mascot->def_colclk->blue;
     mascot->colclk->blue=col_tmp;
-#ifdef USE_CAIRO
     if(!xmms_cfg_read_int(cfgfile, f_tmp0, "text_p", &col_tmp))
       col_tmp=mascot->def_alpclk;
     mascot->alpclk=col_tmp;
-#endif
     if((!flag_def_col)
 	    &&(mascot->colclk->red  ==COLOR_CLK_R)
 	    &&(mascot->colclk->green==COLOR_CLK_G)
 	    &&(mascot->colclk->blue ==COLOR_CLK_B)
-#ifdef USE_CAIRO
 	    &&(mascot->alpclk ==CAIRO_DEF_ALPHA_OTHER)
-#endif
        ){
       mascot->colclk->red  =mascot->def_colclk->red;
       mascot->colclk->green=mascot->def_colclk->green;
       mascot->colclk->blue =mascot->def_colclk->blue;
-#ifdef USE_CAIRO
       mascot->alpclk =mascot->def_alpclk;
-#endif
     }
 
 
@@ -2308,25 +2065,19 @@ void ReadMascot(typMascot *mascot, gboolean def_flag)
     if(!xmms_cfg_read_int(cfgfile, f_tmp0, "shadow_b", &col_tmp))
       col_tmp=mascot->def_colclksd->blue;
     mascot->colclksd->blue=col_tmp;
-#ifdef USE_CAIRO
     if(!xmms_cfg_read_int(cfgfile, f_tmp0, "sahdow_p", &col_tmp))
       col_tmp=mascot->def_alpclksd;
     mascot->alpclksd=col_tmp;
-#endif
     if((!flag_def_col)
 	    &&(mascot->colclksd->red  ==COLOR_CLKSD_R)
 	    &&(mascot->colclksd->green==COLOR_CLKSD_G)
 	    &&(mascot->colclksd->blue ==COLOR_CLKSD_B)
-#ifdef USE_CAIRO
 	    &&(mascot->alpclksd ==CAIRO_DEF_ALPHA_SDW)
-#endif
        ){
       mascot->colclksd->red  =mascot->def_colclksd->red;
       mascot->colclksd->green=mascot->def_colclksd->green;
       mascot->colclksd->blue =mascot->def_colclksd->blue;
-#ifdef USE_CAIRO
       mascot->alpclksd =mascot->def_alpclksd;
-#endif
     }
 
     if(!xmms_cfg_read_int(cfgfile, f_tmp0, "bg_r", &col_tmp))
@@ -2338,25 +2089,19 @@ void ReadMascot(typMascot *mascot, gboolean def_flag)
     if(!xmms_cfg_read_int(cfgfile, f_tmp0, "bg_b", &col_tmp))
       col_tmp=mascot->def_colclkbg->blue;
     mascot->colclkbg->blue=col_tmp;
-#ifdef USE_CAIRO
     if(!xmms_cfg_read_int(cfgfile, f_tmp0, "bg_p", &col_tmp))
       col_tmp=mascot->def_alpclkbg;
     mascot->alpclkbg=col_tmp;
-#endif
-     if((!flag_def_col)
+    if((!flag_def_col)
 	    &&(mascot->colclkbg->red  ==COLOR_CLKBG_R)
 	    &&(mascot->colclkbg->green==COLOR_CLKBG_G)
 	    &&(mascot->colclkbg->blue ==COLOR_CLKBG_B)
-#ifdef USE_CAIRO
 	    &&(mascot->alpclkbg ==CAIRO_DEF_ALPHA_CLK)
-#endif
 	){
       mascot->colclkbg->red  =mascot->def_colclkbg->red;
       mascot->colclkbg->green=mascot->def_colclkbg->green;
       mascot->colclkbg->blue =mascot->def_colclkbg->blue;
-#ifdef USE_CAIRO
       mascot->alpclkbg =mascot->def_alpclkbg;
-#endif
     }
 
     if(!xmms_cfg_read_int(cfgfile, f_tmp0, "border_r", &col_tmp))
@@ -2368,25 +2113,19 @@ void ReadMascot(typMascot *mascot, gboolean def_flag)
     if(!xmms_cfg_read_int(cfgfile, f_tmp0, "border_b", &col_tmp))
       col_tmp=mascot->def_colclkbd->blue;
     mascot->colclkbd->blue=col_tmp;
-#ifdef USE_CAIRO
     if(!xmms_cfg_read_int(cfgfile, f_tmp0, "border_p", &col_tmp))
       col_tmp=mascot->def_alpclkbd;
     mascot->alpclkbd=col_tmp;
-#endif
     if((!flag_def_col)
 	    &&(mascot->colclkbd->red  ==COLOR_CLKBD_R)
 	    &&(mascot->colclkbd->green==COLOR_CLKBD_G)
 	    &&(mascot->colclkbd->blue ==COLOR_CLKBD_B)
-#ifdef USE_CAIRO
 	    &&(mascot->alpclkbd ==CAIRO_DEF_ALPHA_OTHER)
-#endif
        ){
       mascot->colclkbd->red  =mascot->def_colclkbd->red;
       mascot->colclkbd->green=mascot->def_colclkbd->green;
       mascot->colclkbd->blue =mascot->def_colclkbd->blue;
-#ifdef USE_CAIRO
       mascot->alpclkbd =mascot->def_alpclkbd;
-#endif
     }
 
 
@@ -2404,25 +2143,19 @@ void ReadMascot(typMascot *mascot, gboolean def_flag)
     if(!xmms_cfg_read_int(cfgfile, f_tmp0, "text_b", &col_tmp))
       col_tmp=mascot->def_colbal->blue;
     mascot->colbal->blue=(guint)col_tmp;
-#ifdef USE_CAIRO
     if(!xmms_cfg_read_int(cfgfile, f_tmp0, "text_p", &col_tmp))
       col_tmp=mascot->def_alpbal;
     mascot->alpbal=col_tmp;
-#endif
     if((!flag_def_col)
 	    &&(mascot->colbal->red  ==COLOR_BAL_R)
 	    &&(mascot->colbal->green==COLOR_BAL_G)
 	    &&(mascot->colbal->blue ==COLOR_BAL_B)
-#ifdef USE_CAIRO
 	    &&(mascot->alpbal ==CAIRO_DEF_ALPHA_OTHER)
-#endif
        ){
       mascot->colbal->red  =mascot->def_colbal->red;
       mascot->colbal->green=mascot->def_colbal->green;
       mascot->colbal->blue =mascot->def_colbal->blue;
-#ifdef USE_CAIRO
       mascot->alpbal =mascot->def_alpbal;
-#endif
     }
        
     if(!xmms_cfg_read_int(cfgfile, f_tmp0, "bg_r", &col_tmp))
@@ -2434,25 +2167,19 @@ void ReadMascot(typMascot *mascot, gboolean def_flag)
     if(!xmms_cfg_read_int(cfgfile, f_tmp0, "bg_b", &col_tmp))
       col_tmp=mascot->def_colbalbg->blue;
     mascot->colbalbg->blue=(guint)col_tmp;
-#ifdef USE_CAIRO
     if(!xmms_cfg_read_int(cfgfile, f_tmp0, "bg_p", &col_tmp))
       col_tmp=mascot->def_alpbalbg;
     mascot->alpbalbg=col_tmp;
-#endif
     if((!flag_def_col)
 	    &&(mascot->colbalbg->red  ==COLOR_BALBG_R)
 	    &&(mascot->colbalbg->green==COLOR_BALBG_G)
 	    &&(mascot->colbalbg->blue ==COLOR_BALBG_B)
-#ifdef USE_CAIRO
 	    &&(mascot->alpbalbg ==CAIRO_DEF_ALPHA_BAL)
-#endif
        ){
       mascot->colbalbg->red  =mascot->def_colbalbg->red;
       mascot->colbalbg->green=mascot->def_colbalbg->green;
       mascot->colbalbg->blue =mascot->def_colbalbg->blue;
-#ifdef USE_CAIRO
       mascot->alpbalbg =mascot->def_alpbalbg;
-#endif
     }
 
     if(!xmms_cfg_read_int(cfgfile, f_tmp0, "border_r", &col_tmp))
@@ -2464,25 +2191,19 @@ void ReadMascot(typMascot *mascot, gboolean def_flag)
     if(!xmms_cfg_read_int(cfgfile, f_tmp0, "border_b", &col_tmp))
       col_tmp=mascot->def_colbalbd->blue;
     mascot->colbalbd->blue=(guint)col_tmp;
-#ifdef USE_CAIRO
     if(!xmms_cfg_read_int(cfgfile, f_tmp0, "border_p", &col_tmp))
       col_tmp=mascot->def_alpbalbd;
     mascot->alpbalbd=col_tmp;
-#endif
     if((!flag_def_col)
 	    &&(mascot->colbalbd->red  ==COLOR_BALBD_R)
 	    &&(mascot->colbalbd->green==COLOR_BALBD_G)
 	    &&(mascot->colbalbd->blue ==COLOR_BALBD_B)
-#ifdef USE_CAIRO
 	    &&(mascot->alpbalbd ==CAIRO_DEF_ALPHA_OTHER)
-#endif
        ){
       mascot->colbalbd->red  =mascot->def_colbalbd->red;
       mascot->colbalbd->green=mascot->def_colbalbd->green;
       mascot->colbalbd->blue =mascot->def_colbalbd->blue;
-#ifdef USE_CAIRO
       mascot->alpbalbd =mascot->def_alpbalbd;
-#endif
     }
 
 
@@ -2509,7 +2230,6 @@ void ReadMascot(typMascot *mascot, gboolean def_flag)
     if(!xmms_cfg_read_string(cfgfile, f_tmp0, "word",&mascot->mail.word))
       // Biff用ふきだしメッセージ
       mascot->mail.word=NULL;
-#ifdef USE_GTK2
     if(mascot->mail.word){
       mascot->mail.word=
 	x_locale_to_utf8(mascot->mail.word,
@@ -2517,7 +2237,6 @@ void ReadMascot(typMascot *mascot, gboolean def_flag)
       if(!mascot->mail.word) mascot->mail.word=g_strdup(_("(Invalid Character Code)"));
       
     }
-#endif
    
     if(!xmms_cfg_read_string(cfgfile, f_tmp0, "sound",&mascot->mail.sound))
       // Biff着信時再生用ファイル
@@ -2525,8 +2244,6 @@ void ReadMascot(typMascot *mascot, gboolean def_flag)
 #endif // USE_BIFF
 
 
-
-#if GTK_CHECK_VERSION(2,12,0) || defined(USE_CAIRO) || defined(USE_WIN32) 
     // Alpha Percentage
     if(mascot->force_def_alpha){
       mascot->alpha_main=mascot->def_alpha_main;
@@ -2562,8 +2279,6 @@ void ReadMascot(typMascot *mascot, gboolean def_flag)
 	mascot->flag_clkfg=mascot->def_flag_clkfg;
 #endif
     }
-#endif
-
                                                                                
 
     // Pixmapデータ
@@ -2572,16 +2287,6 @@ void ReadMascot(typMascot *mascot, gboolean def_flag)
     else           f_tmp0=g_strdup("Pixmap");
     
     for(i_pix=0;i_pix<MAX_PIXMAP;i_pix++){
-      //if(mascot->sprites[i_pix].pixmap!=NULL){
-		//g_object_unref(G_OBJECT(mascot->sprites[i_pix].pixmap));
-		// fprintf(stderr,"Clear\n");
-	  //}
-      //mascot->sprites[i_pix].pixmap=NULL;
-      //if(mascot->sprites[i_pix].mask!=NULL){
-		// g_object_unref(G_OBJECT(mascot->sprites[i_pix].mask));
-		 //fprintf(stderr,"Clear\n");
-	  //}
-      //mascot->sprites[i_pix].mask=NULL;
       sprintf(tmp, "pixmap%02d", i_pix);
       if(!xmms_cfg_read_string(cfgfile, f_tmp0, tmp, &filename0)){
 	for(i_pix2=i_pix;i_pix2<MAX_PIXMAP;i_pix2++){
@@ -2636,10 +2341,10 @@ void ReadMascot(typMascot *mascot, gboolean def_flag)
 	mascot->bal_ryoff[i_ptn]=0;
 
       if(!xmms_cfg_read_string(cfgfile, tmp0, "click_word",
-			      &mascot->click_word[i_ptn]))
+			       &mascot->click_word[i_ptn])){
 	// バルーン表示用テキスト
 	mascot->click_word[i_ptn]=NULL;
-#ifdef USE_GTK2
+      }
       else if(mascot->click_word[i_ptn]){
 	mascot->click_word[i_ptn]=
 	  x_locale_to_utf8(mascot->click_word[i_ptn],
@@ -2648,7 +2353,6 @@ void ReadMascot(typMascot *mascot, gboolean def_flag)
 	  mascot->click_word[i_ptn]=g_strdup(_("(Invalid Character Code)"));
 			   
       }
-#endif
    
       if(!xmms_cfg_read_string(cfgfile, tmp0, "click_sound",
 			      &mascot->click_sound[i_ptn]))
@@ -2667,9 +2371,9 @@ void ReadMascot(typMascot *mascot, gboolean def_flag)
 	mascot->duet_ptn[i_ptn]=2;
    
       if(!xmms_cfg_read_string(cfgfile, tmp0, "duet_word",
-			      &mascot->duet_word[i_ptn]))
+			       &mascot->duet_word[i_ptn])){
 	mascot->duet_word[i_ptn]=NULL;
-#ifdef USE_GTK2
+      }
       else if(mascot->duet_word[i_ptn]){
 	mascot->duet_word[i_ptn]=
 	  x_locale_to_utf8(mascot->duet_word[i_ptn],
@@ -2678,7 +2382,6 @@ void ReadMascot(typMascot *mascot, gboolean def_flag)
 	  mascot->duet_word[i_ptn]=g_strdup(_("(Invalid Character Code)"));
 			   
       }
-#endif
    
       if(!xmms_cfg_read_int(cfgfile, tmp0, "duet_delay",
 			    &mascot->duet_delay[i_ptn]))
@@ -2769,9 +2472,7 @@ void ReadMascot(typMascot *mascot, gboolean def_flag)
   if(f_tmp0) g_free(f_tmp0);
   if(filename) g_free(filename);
   if(filename2) g_free(filename2);
-#ifdef USE_GTK2
   if(tmp_conv) g_free(tmp_conv);
-#endif
 
   mascot->flag_consow=FALSE;
 }
@@ -3187,7 +2888,7 @@ gboolean FullPathMascotCheck(typMascot *mascot, gchar *mascotfile)
 
 
   if(flag_mf){
-    Mascot->file=filename;
+    mascot->file=filename;
     return(TRUE);
   }
   else{
@@ -3530,20 +3231,16 @@ gchar * ReadMascotName(typMascot *mascot, gchar *mascotfile)
     // General
     f_tmp0=g_strdup("General");
     
-#ifdef USE_GTK2
     if(!xmms_cfg_read_string(cfgfile, f_tmp0, "code",&code))
       code = NULL;
-#endif
 
     if(!xmms_cfg_read_string(cfgfile, f_tmp0, "name",&mascotname))
       mascotname = g_strconcat("(",my_basename(mascotfile),")", NULL);
-#ifdef USE_GTK2
     if(mascotname){
       mascotname=x_locale_to_utf8(mascotname,-1,NULL,NULL,NULL,code);
       if(!mascotname) 
 	mascotname=g_strdup(_("(Invalid Character Code)"));
     }
-#endif
     
     xmms_cfg_free(cfgfile);
   }
@@ -3563,47 +3260,38 @@ void SaveMascot(typMascot *mascot, gboolean def_flag)
   gchar tmp[64], tmp0[64];
   int i_pix=0, i_ptn=0, i_frm=0, i_pix2=0;
   gchar *f_tmp=NULL;
-#ifdef USE_GTK2
   gchar *tmp_conv=NULL;
-#endif
 
 
 
   filename = g_strdup(mascot->file);
   cfgfile = xmms_cfg_open_file(filename);
   if (!cfgfile)  cfgfile = xmms_cfg_new();
-
+  
   // General 
-  if(def_flag) f_tmp=g_strdup("Default-General");
-  else         f_tmp=g_strdup("General");
+  f_tmp=g_strdup((def_flag) ? "Default-General" : "General");
   
   xmms_cfg_write_string(cfgfile, f_tmp, "prog_ver",VERSION);
-
-#ifdef USE_GTK2
+  
   if(mascot->code){
     xmms_cfg_write_string(cfgfile, f_tmp, "code",mascot->code);
   }
   else{
     xmms_cfg_remove_key(cfgfile,f_tmp, "code");
   }
-
+  
   if(mascot->name){
     tmp_conv=
       x_locale_from_utf8(mascot->name,-1,NULL,NULL,NULL,mascot->code);
     xmms_cfg_write_string(cfgfile, f_tmp, "name",tmp_conv);
   }
-#else
-  if(mascot->name)
-    xmms_cfg_write_string(cfgfile, f_tmp, "name",mascot->name);
-#endif
   if(mascot->copyright)
     xmms_cfg_write_string(cfgfile, f_tmp, "copyright",mascot->copyright);
   xmms_cfg_write_boolean(cfgfile, f_tmp, "default_color",TRUE);
 
 
   // Focus Movement etc.
-  if(def_flag) f_tmp=g_strdup("Default-Move");
-  else         f_tmp=g_strdup("Move");
+  f_tmp=g_strdup((def_flag) ? "Default-Move" : "Move");
 
   xmms_cfg_write_int(cfgfile, f_tmp, "move",mascot->move);
   xmms_cfg_write_int(cfgfile, f_tmp, "xoff",mascot->xoff);
@@ -3615,8 +3303,7 @@ void SaveMascot(typMascot *mascot, gboolean def_flag)
 
 
   // Clock
-  if(def_flag) f_tmp=g_strdup("Default-Clock");
-  else         f_tmp=g_strdup("Clock");
+  f_tmp=g_strdup((def_flag) ? "Default-Clock" : "Clock");
 
   xmms_cfg_write_int(cfgfile, f_tmp, "mode",mascot->clkmode);
   xmms_cfg_write_int(cfgfile, f_tmp, "type",mascot->clktype);
@@ -3636,8 +3323,7 @@ void SaveMascot(typMascot *mascot, gboolean def_flag)
 
 
   // Balloon
-  if(def_flag) f_tmp=g_strdup("Default-Balloon");
-  else         f_tmp=g_strdup("Balloon");
+  f_tmp=g_strdup((def_flag) ? "Default-Balloon" : "Balloon");
 
   xmms_cfg_write_int(cfgfile, f_tmp, "text_x",mascot->baltext_x);
   xmms_cfg_write_int(cfgfile, f_tmp, "text_y",mascot->baltext_y);
@@ -3649,8 +3335,7 @@ void SaveMascot(typMascot *mascot, gboolean def_flag)
     xmms_cfg_remove_key(cfgfile,f_tmp, "font");
 
   // Color for Clock
-  if(def_flag) f_tmp=g_strdup("Default-ClockColor");
-  else         f_tmp=g_strdup("ClockColor");
+  f_tmp=g_strdup((def_flag) ? "Default-ClockColor" : "ClockColor");
 
   if((  mascot->colclk->red  ==mascot->def_colclk->red)
      &&(mascot->colclk->green==mascot->def_colclk->green)
@@ -3664,12 +3349,12 @@ void SaveMascot(typMascot *mascot, gboolean def_flag)
     xmms_cfg_write_int(cfgfile, f_tmp, "text_g",mascot->colclk->green);
     xmms_cfg_write_int(cfgfile, f_tmp, "text_b",mascot->colclk->blue);
   }
-#ifdef USE_CAIRO
-  if(mascot->alpclk  ==mascot->def_alpclk)
+  if(mascot->alpclk  ==mascot->def_alpclk){
     xmms_cfg_remove_key(cfgfile,f_tmp, "text_p");
-  else
+  }
+  else{
     xmms_cfg_write_int(cfgfile, f_tmp, "text_p",mascot->alpclk);
-#endif
+  }
 
   if((  mascot->colclksd->red  ==mascot->def_colclksd->red)
      &&(mascot->colclksd->green==mascot->def_colclksd->green)
@@ -3683,12 +3368,12 @@ void SaveMascot(typMascot *mascot, gboolean def_flag)
     xmms_cfg_write_int(cfgfile, f_tmp, "shadow_g",mascot->colclksd->green);
     xmms_cfg_write_int(cfgfile, f_tmp, "shadow_b",mascot->colclksd->blue);
   }
-#ifdef USE_CAIRO
-  if(mascot->alpclksd  ==mascot->def_alpclksd)
+  if(mascot->alpclksd  ==mascot->def_alpclksd){
     xmms_cfg_remove_key(cfgfile,f_tmp, "shadow_p");
-  else
+  }
+  else{
     xmms_cfg_write_int(cfgfile, f_tmp, "shadow_p",mascot->alpclksd);
-#endif
+  }
 
   if((  mascot->colclkbg->red  ==mascot->def_colclkbg->red)
      &&(mascot->colclkbg->green==mascot->def_colclkbg->green)
@@ -3702,12 +3387,12 @@ void SaveMascot(typMascot *mascot, gboolean def_flag)
     xmms_cfg_write_int(cfgfile, f_tmp, "bg_g",mascot->colclkbg->green);
     xmms_cfg_write_int(cfgfile, f_tmp, "bg_b",mascot->colclkbg->blue);
   }
-#ifdef USE_CAIRO
-  if(mascot->alpclkbg  ==mascot->def_alpclkbg)
+  if(mascot->alpclkbg  ==mascot->def_alpclkbg){
     xmms_cfg_remove_key(cfgfile,f_tmp, "bg_p");
-  else
+  }
+  else{
     xmms_cfg_write_int(cfgfile, f_tmp, "bg_p",mascot->alpclkbg);
-#endif
+  }
 
   if((  mascot->colclkbd->red  ==mascot->def_colclkbd->red)
      &&(mascot->colclkbd->green==mascot->def_colclkbd->green)
@@ -3721,17 +3406,16 @@ void SaveMascot(typMascot *mascot, gboolean def_flag)
     xmms_cfg_write_int(cfgfile, f_tmp, "border_g",mascot->colclkbd->green);
     xmms_cfg_write_int(cfgfile, f_tmp, "border_b",mascot->colclkbd->blue);
   }
-#ifdef USE_CAIRO
-  if(mascot->alpclkbd  ==mascot->def_alpclkbd)
+  if(mascot->alpclkbd  ==mascot->def_alpclkbd){
     xmms_cfg_remove_key(cfgfile,f_tmp, "border_p");
-  else
+  }
+  else{
     xmms_cfg_write_int(cfgfile, f_tmp, "border_p",mascot->alpclkbd);
-#endif
+  }
 
 
   // Color for Balloon
-  if(def_flag) f_tmp=g_strdup("Default-BalloonColor");
-  else         f_tmp=g_strdup("BalloonColor");
+  f_tmp=g_strdup((def_flag) ? "Default-BalloonColor" : "BalloonColor");
 
   if((  mascot->colbal->red  ==mascot->def_colbal->red)
      &&(mascot->colbal->green==mascot->def_colbal->green)
@@ -3745,12 +3429,12 @@ void SaveMascot(typMascot *mascot, gboolean def_flag)
     xmms_cfg_write_int(cfgfile, f_tmp, "text_g",mascot->colbal->green);
     xmms_cfg_write_int(cfgfile, f_tmp, "text_b",mascot->colbal->blue);
   }
-#ifdef USE_CAIRO
-  if(mascot->alpbal  ==mascot->def_alpbal)
+  if(mascot->alpbal  ==mascot->def_alpbal){
     xmms_cfg_remove_key(cfgfile,f_tmp, "text_p");
-  else
+  }
+  else{
     xmms_cfg_write_int(cfgfile, f_tmp, "text_p",mascot->alpbal);
-#endif
+  }
 
   if((  mascot->colbalbg->red  ==mascot->def_colbalbg->red)
      &&(mascot->colbalbg->green==mascot->def_colbalbg->green)
@@ -3764,12 +3448,12 @@ void SaveMascot(typMascot *mascot, gboolean def_flag)
     xmms_cfg_write_int(cfgfile, f_tmp, "bg_g",mascot->colbalbg->green);
     xmms_cfg_write_int(cfgfile, f_tmp, "bg_b",mascot->colbalbg->blue);
   }
-#ifdef USE_CAIRO
-  if(mascot->alpbalbg  ==mascot->def_alpbalbg)
+  if(mascot->alpbalbg  ==mascot->def_alpbalbg){
     xmms_cfg_remove_key(cfgfile,f_tmp, "bg_p");
-  else
+  }
+  else{
     xmms_cfg_write_int(cfgfile, f_tmp, "bg_p",mascot->alpbalbg);
-#endif
+  }
 
   if((  mascot->colbalbd->red  ==mascot->def_colbalbd->red)
      &&(mascot->colbalbd->green==mascot->def_colbalbd->green)
@@ -3783,12 +3467,12 @@ void SaveMascot(typMascot *mascot, gboolean def_flag)
     xmms_cfg_write_int(cfgfile, f_tmp, "border_g",mascot->colbalbd->green);
     xmms_cfg_write_int(cfgfile, f_tmp, "border_b",mascot->colbalbd->blue);
   }
-#ifdef USE_CAIRO
-  if(mascot->alpbalbd  ==mascot->def_alpbalbd)
+  if(mascot->alpbalbd  ==mascot->def_alpbalbd){
     xmms_cfg_remove_key(cfgfile,f_tmp, "border_p");
-  else
+  }
+  else{
     xmms_cfg_write_int(cfgfile, f_tmp, "border_p",mascot->alpbalbd);
-#endif
+  }
 
 
 #ifdef USE_BIFF
@@ -3807,29 +3491,26 @@ void SaveMascot(typMascot *mascot, gboolean def_flag)
   xmms_cfg_write_int(cfgfile, f_tmp, "pix-y",mascot->mail.pix_y);
 
   // Biff用ふきだしメッセージ
-#ifdef USE_GTK2
   if(mascot->mail.word){
     tmp_conv=
       x_locale_from_utf8(mascot->mail.word,-1,NULL,NULL,NULL,mascot->code);
     xmms_cfg_write_string(cfgfile, f_tmp, "word",tmp_conv);
   }
-#else
-  if(mascot->mail.word) 
-    xmms_cfg_write_string(cfgfile, f_tmp, "word",mascot->mail.word);
-#endif
-  else
+  else{
     xmms_cfg_remove_key(cfgfile,f_tmp, "word");
+  }
 
   // Biff着信時再生音声ファイル
-  if(mascot->mail.sound) 
+  if(mascot->mail.sound){
     xmms_cfg_write_string(cfgfile, f_tmp, "sound",mascot->mail.sound);
-  else
+  }
+  else{
     xmms_cfg_remove_key(cfgfile, f_tmp, "sound");
+  }
 #endif  // USE_BIFF
 
 
-#if GTK_CHECK_VERSION(2,12,0) || defined(USE_CAIRO) || defined(USE_WIN32) 
-    // Alpha Percentage
+  // Alpha Percentage
   if(!mascot->force_def_alpha){
     if(def_flag)  f_tmp=g_strdup("Default-Alpha");
     else          f_tmp=g_strdup("Alpha");
@@ -3845,13 +3526,10 @@ void SaveMascot(typMascot *mascot, gboolean def_flag)
     xmms_cfg_write_boolean(cfgfile, f_tmp,"clockfg",mascot->flag_clkfg);
 #endif
   }
-#endif
-                                                                               
 
   
   // Pixmapデータ
-  if(def_flag) f_tmp=g_strdup("Default-Pixmap");
-  else         f_tmp=g_strdup("Pixmap");
+  f_tmp=g_strdup((def_flag) ? "Default-Pixmap" : "Pixmap");
 
   for(i_pix=0;i_pix<MAX_PIXMAP;i_pix++){
     sprintf(tmp, "pixmap%02d", i_pix);
@@ -3873,8 +3551,7 @@ void SaveMascot(typMascot *mascot, gboolean def_flag)
   // Animationデータ
   for(i_ptn=0;i_ptn<MAX_ANIME_PATTERN;i_ptn++){
     
-  if(def_flag) sprintf(tmp0, "Default-Pattern%02d", i_ptn);
-  else         sprintf(tmp0, "Pattern%02d", i_ptn);
+    sprintf(tmp0, (def_flag) ? "Default-Pattern%02d" : "Pattern%02d", i_ptn);
     
     if(mascot->random_weight[i_ptn]!=0){ // ランダムアニメ重み
       xmms_cfg_write_int(cfgfile, tmp0, "random_weight",
@@ -3883,7 +3560,7 @@ void SaveMascot(typMascot *mascot, gboolean def_flag)
     else{
       xmms_cfg_remove_key(cfgfile,tmp0, "random_weight");
     }
-  
+    
     if(mascot->click_weight[i_ptn]!=0){ // クリックアニメ重み
       xmms_cfg_write_int(cfgfile, tmp0, "click_weight",
 			 mascot->click_weight[i_ptn]);
@@ -3924,18 +3601,11 @@ void SaveMascot(typMascot *mascot, gboolean def_flag)
       xmms_cfg_remove_key(cfgfile,tmp0, "balloon_ryoff");
     }
     
-#ifdef USE_GTK2
-  if(mascot->click_word[i_ptn]){
-    tmp_conv=
-      x_locale_from_utf8(mascot->click_word[i_ptn],-1,NULL,NULL,NULL,mascot->code);
-    xmms_cfg_write_string(cfgfile, tmp0, "click_word",tmp_conv);
-  }
-#else
-    if(mascot->click_word[i_ptn]){ // バルーン用テキスト
-      xmms_cfg_write_string(cfgfile, tmp0, "click_word",
-			    (gchar *)mascot->click_word[i_ptn]);
+    if(mascot->click_word[i_ptn]){
+      tmp_conv=
+	x_locale_from_utf8(mascot->click_word[i_ptn],-1,NULL,NULL,NULL,mascot->code);
+      xmms_cfg_write_string(cfgfile, tmp0, "click_word",tmp_conv);
     }
-#endif
     else{
       xmms_cfg_remove_key(cfgfile,tmp0, "click_word");
     }
@@ -3947,25 +3617,18 @@ void SaveMascot(typMascot *mascot, gboolean def_flag)
     else{
       xmms_cfg_remove_key(cfgfile,tmp0, "click_sound");
     }
-   
+    
 #ifdef USE_SOCKMSG
     if(mascot->duet_tgt[i_ptn]){ // デュエットアニメ
       xmms_cfg_write_string(cfgfile, tmp0, "duet_tgt",
 			    (gchar *)mascot->duet_tgt[i_ptn]);
       xmms_cfg_write_int(cfgfile, tmp0, "duet_ptn",
 			 mascot->duet_ptn[i_ptn]);
-#ifdef USE_GTK2
       if(mascot->duet_word[i_ptn]){
 	tmp_conv=
 	  x_locale_from_utf8(mascot->duet_word[i_ptn],-1,NULL,NULL,NULL,mascot->code);
 	xmms_cfg_write_string(cfgfile, tmp0, "duet_word",tmp_conv);
       }
-#else
-      if(mascot->duet_word[i_ptn]){ 
-	xmms_cfg_write_string(cfgfile, tmp0, "duet_word",
-			      (gchar *)mascot->duet_word[i_ptn]);
-      }
-#endif
       xmms_cfg_write_int(cfgfile, tmp0, "duet_delay",
 			 mascot->duet_delay[i_ptn]);
     }
@@ -3995,13 +3658,13 @@ void SaveMascot(typMascot *mascot, gboolean def_flag)
 	sprintf(tmp, "max%02d", i_frm);
 	xmms_cfg_write_int(cfgfile, tmp0, tmp,
 			   mascot->frame_max[i_ptn][i_frm]);
-      
+	
 	if(mascot->frame_loop[i_ptn][i_frm].next!=-1){
 	  // Block Loop Next Frame
 	  sprintf(tmp, "loop%02dnext", i_frm);
 	  xmms_cfg_write_int(cfgfile, tmp0, tmp,
 			     mascot->frame_loop[i_ptn][i_frm].next);
-	
+	  
 	  // Block Loop Minimum
 	  sprintf(tmp, "loop%02dmin", i_frm);
 	  xmms_cfg_write_int(cfgfile, tmp0, tmp,
@@ -4015,10 +3678,10 @@ void SaveMascot(typMascot *mascot, gboolean def_flag)
 	else{
 	  sprintf(tmp, "loop%02dnext", i_frm);
 	  xmms_cfg_remove_key(cfgfile,tmp0,tmp);
-
+	  
 	  sprintf(tmp, "loop%02dmin", i_frm);
 	  xmms_cfg_remove_key(cfgfile,tmp0,tmp);
-
+	  
 	  sprintf(tmp, "loop%02dmax", i_frm);
 	  xmms_cfg_remove_key(cfgfile,tmp0,tmp);
 	}
@@ -4026,13 +3689,13 @@ void SaveMascot(typMascot *mascot, gboolean def_flag)
       else{
 	sprintf(tmp, "pix%02d", i_frm);
 	xmms_cfg_remove_key(cfgfile,tmp0,tmp);
-
+	
 	sprintf(tmp, "min%02d", i_frm);
 	xmms_cfg_remove_key(cfgfile,tmp0,tmp);
-
+	
 	sprintf(tmp, "max%02d", i_frm);
 	xmms_cfg_remove_key(cfgfile,tmp0,tmp);
-
+	
 	sprintf(tmp, "loop%02dnext", i_frm);
 	xmms_cfg_remove_key(cfgfile,tmp0,tmp);
 	
@@ -4044,7 +3707,7 @@ void SaveMascot(typMascot *mascot, gboolean def_flag)
       }
     }
   }
-	 
+  
   if(!def_flag){
     if(!xmms_cfg_read_string(cfgfile, "Default-General","prog_ver",&f_tmp)){
       xmms_cfg_write_file(cfgfile, filename);
@@ -4063,9 +3726,7 @@ void SaveMascot(typMascot *mascot, gboolean def_flag)
 
   g_free(f_tmp);
   g_free(filename);
-#ifdef USE_GTK2
   g_free(tmp_conv);
-#endif
 }
 
 
@@ -4143,11 +3804,9 @@ void SetColorForReleaseData(typMascot *mascot, gboolean def_flag,
 	xmms_cfg_remove_key(cfgfile, f_tmp, "border_r");
 	xmms_cfg_remove_key(cfgfile, f_tmp, "border_g");
 	xmms_cfg_remove_key(cfgfile, f_tmp, "border_b");
-#ifdef USE_CAIRO
 	xmms_cfg_remove_key(cfgfile, f_tmp, "text_p");
 	xmms_cfg_remove_key(cfgfile, f_tmp, "bg_p");
 	xmms_cfg_remove_key(cfgfile, f_tmp, "border_p");
-#endif
       }
       else{
 	xmms_cfg_write_int(cfgfile, f_tmp, "text_r",mascot->colbal->red);
@@ -4159,11 +3818,9 @@ void SetColorForReleaseData(typMascot *mascot, gboolean def_flag,
 	xmms_cfg_write_int(cfgfile, f_tmp, "border_r",mascot->colbalbd->red);
 	xmms_cfg_write_int(cfgfile, f_tmp, "border_g",mascot->colbalbd->green);
 	xmms_cfg_write_int(cfgfile, f_tmp, "border_b",mascot->colbalbd->blue);
-#ifdef USE_CAIRO
 	xmms_cfg_write_int(cfgfile, f_tmp, "text_p",mascot->alpbal);
 	xmms_cfg_write_int(cfgfile, f_tmp, "bg_p",mascot->alpbalbg);
 	xmms_cfg_write_int(cfgfile, f_tmp, "border_p",mascot->alpbalbd);
-#endif
       }
     }
     else if(field==SET_RELEASE_CLOCK){
@@ -4184,12 +3841,10 @@ void SetColorForReleaseData(typMascot *mascot, gboolean def_flag,
 	xmms_cfg_remove_key(cfgfile, f_tmp, "border_r");
 	xmms_cfg_remove_key(cfgfile, f_tmp, "border_g");
 	xmms_cfg_remove_key(cfgfile, f_tmp, "border_b");
-#ifdef USE_CAIRO
 	xmms_cfg_remove_key(cfgfile, f_tmp, "text_p");
 	xmms_cfg_remove_key(cfgfile, f_tmp, "shadow_p");
 	xmms_cfg_remove_key(cfgfile, f_tmp, "bg_p");
 	xmms_cfg_remove_key(cfgfile, f_tmp, "border_p");
-#endif
       }
       else{
 	xmms_cfg_write_int(cfgfile, f_tmp, "text_r",mascot->colclk->red);
@@ -4204,12 +3859,10 @@ void SetColorForReleaseData(typMascot *mascot, gboolean def_flag,
 	xmms_cfg_write_int(cfgfile, f_tmp, "border_r",mascot->colclkbd->red);
 	xmms_cfg_write_int(cfgfile, f_tmp, "border_g",mascot->colclkbd->green);
 	xmms_cfg_write_int(cfgfile, f_tmp, "border_b",mascot->colclkbd->blue);
-#ifdef USE_CAIRO
 	xmms_cfg_write_int(cfgfile, f_tmp, "text_p",mascot->alpclk);
 	xmms_cfg_write_int(cfgfile, f_tmp, "shadow_p",mascot->alpclksd);
 	xmms_cfg_write_int(cfgfile, f_tmp, "bg_p",mascot->alpclkbg);
 	xmms_cfg_write_int(cfgfile, f_tmp, "border_p",mascot->alpclkbd);
-#endif
       }
     }
 
@@ -4374,7 +4027,7 @@ void InitMascot0(typMascot *mascot){
   height_root=GetSystemMetrics(SM_CYVIRTUALSCREEN);
 
 #else
-  XGetGeometry(GDK_WINDOW_XDISPLAY(win_main->window),
+  XGetGeometry(GDK_WINDOW_XDISPLAY(gtk_widget_get_window(mascot->win_main)),
 	       GDK_ROOT_WINDOW(),
 	       &rootwin,
 	       &x_root,
@@ -4772,9 +4425,7 @@ int main(int argc, char **argv)
 #endif
   GtkStyle *style;
   gint timer;
-#ifndef USE_GTK2
   gchar *rcfile=NULL;
-#endif
   int i_opt ;
 #ifdef USE_SOCKMSG
   SockMsgInitResult sockres;
@@ -4815,9 +4466,7 @@ int main(int argc, char **argv)
   setlocale (LC_ALL, "");
   bindtextdomain (PACKAGE, LOCALEDIR);
   textdomain (PACKAGE);
-#ifdef USE_GTK2
   bind_textdomain_codeset(PACKAGE, "UTF-8");
-#endif
 
 #ifdef USE_SOCKMSG
   while(i_opt < argc) {
@@ -4889,12 +4538,6 @@ int main(int argc, char **argv)
   gtk_init(&argc, &argv);
 
 
-
-#ifndef USE_GTK2
-  rcfile=g_strconcat(g_get_home_dir(),G_DIR_SEPARATOR_S,".gtkrc",NULL);
-  gtk_rc_parse(rcfile);
-  g_free(rcfile);
-#endif
   InitDefCol(Mascot);
 
   ReadRC(Mascot,FALSE);
@@ -4911,11 +4554,9 @@ int main(int argc, char **argv)
   gdk_rgb_init();
 
 #ifndef USE_WIN32  
-#ifdef USE_GTK2
   icon = gdk_pixbuf_new_from_inline(sizeof(macopix_icon), macopix_icon, 
 				    FALSE, NULL);
   gtk_window_set_default_icon(icon);
-#endif
 #endif
 
 
@@ -4928,7 +4569,7 @@ int main(int argc, char **argv)
   Mascot->installed_menu_dir=NULL;
   Mascot->menu_code=NULL;
   ReadMenu(Mascot,0,NULL);
-  PopupMenu=make_popup_menu();
+  Mascot->PopupMenu=make_popup_menu();
   
   if(!Mascot->file){
     if(Mascot->menu_file){
@@ -4939,63 +4580,53 @@ int main(int argc, char **argv)
       create_smenu_dialog(Mascot,FALSE);
       if(Mascot->menu_file){
 	ReadMenu(Mascot,0,NULL);
-	PopupMenu=make_popup_menu();
+	Mascot->PopupMenu=make_popup_menu();
 	Mascot->file=g_strdup(all_random_menu_mascot_file(Mascot));
       }
     }
   }
 
-  win_main = gtk_window_new(GTK_WINDOW_POPUP);
+  Mascot->win_main = gtk_window_new(GTK_WINDOW_POPUP);
 
-#ifdef USE_GTK2
-  gtk_window_set_accept_focus(GTK_WINDOW(win_main),FALSE);
-#endif
-#ifdef USE_GTK2
-  gtk_window_set_resizable(GTK_WINDOW(win_main),TRUE);
-#endif
-  gtk_widget_set_app_paintable(win_main, TRUE);
-  gtk_window_set_title(GTK_WINDOW(win_main), "MaCoPiX");
-  //gtk_window_set_icon(GTK_WINDOW(win_main),icon);
+  gtk_window_set_accept_focus(GTK_WINDOW(Mascot->win_main),FALSE);
+  gtk_window_set_resizable(GTK_WINDOW(Mascot->win_main),TRUE);
+  gtk_widget_set_app_paintable(Mascot->win_main, TRUE);
+  gtk_window_set_title(GTK_WINDOW(Mascot->win_main), "MaCoPiX");
 
-  //gtk_window_set_policy(GTK_WINDOW(win_main), FALSE, FALSE, TRUE);
-  gtk_window_set_wmclass(GTK_WINDOW(win_main), "main_window", "MaCoPiX");
+  gtk_window_set_wmclass(GTK_WINDOW(Mascot->win_main),
+			 "main_window", "MaCoPiX");
   
-  my_signal_connect(win_main, "destroy",gtk_main_quit,NULL);
+  my_signal_connect(Mascot->win_main, "destroy",gtk_main_quit,NULL);
 
-  gtk_widget_set_events(GTK_WIDGET (win_main), 
+  gtk_widget_set_events(Mascot->win_main, 
 			GDK_FOCUS_CHANGE_MASK | 
 			GDK_BUTTON_MOTION_MASK | 
 			GDK_BUTTON_RELEASE_MASK | 
 			GDK_BUTTON_PRESS_MASK | 
 			GDK_EXPOSURE_MASK);
 
-  gtk_widget_realize(win_main);
-#ifdef USE_GTK2
-  gtk_window_resize(GTK_WINDOW(win_main),1,1);
-#endif
+  gtk_widget_realize(Mascot->win_main);
+  gtk_window_resize(GTK_WINDOW(Mascot->win_main),1,1);
 
 #ifdef USE_WIN32
-  win_sdw = gtk_window_new(GTK_WINDOW_POPUP);
-  gtk_window_set_accept_focus(GTK_WINDOW(win_sdw),FALSE);
-  gtk_window_set_resizable(GTK_WINDOW(win_sdw),TRUE);
-  gtk_widget_set_app_paintable(win_sdw, TRUE);
-  gtk_window_set_title(GTK_WINDOW(win_sdw), "MaCoPiX");
-  gtk_window_set_wmclass(GTK_WINDOW(win_sdw), "sdw_window", "MaCoPiX");
+  Mascot->win_sdw = gtk_window_new(GTK_WINDOW_POPUP);
+  gtk_window_set_accept_focus(GTK_WINDOW(Mascot->win_sdw),FALSE);
+  gtk_window_set_resizable(GTK_WINDOW(Mascot->win_sdw),TRUE);
+  gtk_widget_set_app_paintable(Mascot->win_sdw, TRUE);
+  gtk_window_set_title(GTK_WINDOW(Mascot->win_sdw), "MaCoPiX");
+  gtk_window_set_wmclass(GTK_WINDOW(Mascot->win_sdw), "sdw_window", "MaCoPiX");
   
-  my_signal_connect(win_sdw, "destroy",gtk_main_quit,NULL);
+  my_signal_connect(Mascot->win_sdw, "destroy",gtk_main_quit,NULL);
 
-  gtk_widget_set_events(GTK_WIDGET (win_sdw), 
+  gtk_widget_set_events(GTK_WIDGET (Mascot->win_sdw), 
 			GDK_FOCUS_CHANGE_MASK | 
 			GDK_BUTTON_MOTION_MASK | 
 			GDK_BUTTON_RELEASE_MASK | 
 			GDK_BUTTON_PRESS_MASK | 
 			GDK_EXPOSURE_MASK);
 
-  gtk_widget_realize(win_sdw);
-#ifdef USE_GTK2
-  gtk_window_resize(GTK_WINDOW(win_sdw),1,1);
-#endif
-
+  gtk_widget_realize(Mascot->win_sdw);
+  gtk_window_resize(GTK_WINDOW(Mascot->win_sdw),1,1);
 #endif
 
 
@@ -5009,35 +4640,36 @@ int main(int argc, char **argv)
   }
 #endif
 
-  gdk_window_set_decorations(win_main->window, 0);
+  gdk_window_set_decorations(gtk_widget_get_window(Mascot->win_main), 0);
 #ifndef USE_WIN32
   //  gdk_window_set_decorations(win_main->window, GDK_DECOR_MENU);
   // Win32 Gtk+> 2.10 -> trayicon 
-  gdk_window_set_override_redirect(win_main->window,TRUE);
+  gdk_window_set_override_redirect(gtk_widget_get_window(Mascot->win_main),
+				   TRUE);
 #endif
 
 #ifdef USE_WIN32
-  gdk_window_set_decorations(win_sdw->window, 0);
+  gdk_window_set_decorations(gtk_widget_get_window(Mascot->win_sdw), 0);
 #endif
   
-  my_signal_connect(win_main, "focus_in_event",focus_in, NULL);
-  my_signal_connect(win_main, "focus_out_event",focus_out, NULL);
-  my_signal_connect(win_main, "button_press_event",drag_begin,
+  my_signal_connect(Mascot->win_main, "focus_in_event",focus_in, NULL);
+  my_signal_connect(Mascot->win_main, "focus_out_event",focus_out, NULL);
+  my_signal_connect(Mascot->win_main, "button_press_event",drag_begin,
 		    (gpointer)Mascot);
-  my_signal_connect(win_main, "button_release_event",drag_end,
+  my_signal_connect(Mascot->win_main, "button_release_event",drag_end,
 		    (gpointer)Mascot);
-  my_signal_connect(win_main, "motion_notify_event",window_motion,
+  my_signal_connect(Mascot->win_main, "motion_notify_event",window_motion,
 		    (gpointer)Mascot);
 
 
   /* Drag and Drop */
-  gtk_drag_dest_set (win_main, GTK_DEST_DEFAULT_MOTION
+  gtk_drag_dest_set (Mascot->win_main, GTK_DEST_DEFAULT_MOTION
                         | GTK_DEST_DEFAULT_HIGHLIGHT | GTK_DEST_DEFAULT_DROP,
                                             drag_types, 1, GDK_ACTION_COPY);
-  my_signal_connect (win_main, "drag-data-received",
+  my_signal_connect (Mascot->win_main, "drag-data-received",
 		     signal_drag_data_received, NULL);
 
-  style = gtk_widget_get_style(win_main);
+  style = gtk_widget_get_style(Mascot->win_main);
 
 
   InitMascot0(Mascot);
@@ -5066,28 +4698,28 @@ int main(int argc, char **argv)
 #endif
 
   InitComposite(Mascot);
-  LoadPixmaps(win_main, Mascot, Mascot->sprites);
+  LoadPixmaps(Mascot->win_main, Mascot, Mascot->sprites);
   
 
   Mascot->flag_ow=FALSE;
 
   // Window作成・変形
-  my_signal_connect(win_main, "configure_event",dw_configure_main,
+  my_signal_connect(Mascot->win_main, "configure_event",dw_configure_main,
   		    (gpointer)Mascot);
   // 重なった場合の再描画関連
-  my_signal_connect(win_main, "expose_event",dw_expose_main,
+  my_signal_connect(Mascot->win_main, "expose_event",dw_expose_main,
   		    (gpointer)Mascot);
 
 #ifdef USE_WIN32
-  my_signal_connect(win_sdw, "configure_event",dw_configure_sdw,
+  my_signal_connect(Mascot->win_sdw, "configure_event",dw_configure_sdw,
   		    (gpointer)Mascot);
   // 重なった場合の再描画関連
-  my_signal_connect(win_sdw, "expose_event",dw_expose_sdw,
+  my_signal_connect(Mascot->win_sdw, "expose_event",dw_expose_sdw,
   		    (gpointer)Mascot);
 #endif
   
 #ifdef USE_BIFF
-  LoadBiffPixmap(biff_pix, Mascot);
+  LoadBiffPixmap(Mascot->biff_pix, Mascot);
 #ifndef __GTK_TOOLTIP_H__
   Mascot->mail.tooltips=gtk_tooltips_new();
 #endif
@@ -5112,40 +4744,41 @@ int main(int argc, char **argv)
   }
     
 
-  gdk_window_set_cursor(win_main->window,Mascot->cursor.normal);
+  gdk_window_set_cursor(gtk_widget_get_window(Mascot->win_main),
+			Mascot->cursor.normal);
 #ifdef USE_BIFF
-  gdk_window_set_cursor(biff_pix->window,Mascot->cursor.biff);
+  gdk_window_set_cursor(gtk_widget_get_window(Mascot->biff_pix),Mascot->cursor.biff);
 #endif // USE_BIFF
 
 
 #ifdef USE_WIN32
-  gtk_widget_show(balloon_fg);
+  gtk_widget_show(Mascot->balloon_fg);
 #endif
-  gtk_widget_show(balloon_main);
+  gtk_widget_show(Mascot->balloon_main);
 #ifdef USE_WIN32
-  gtk_widget_unmap(balloon_fg);
+  gtk_widget_unmap(Mascot->balloon_fg);
 #endif
-  gtk_widget_unmap(balloon_main);
+  gtk_widget_unmap(Mascot->balloon_main);
 
 #ifdef USE_WIN32
-  gtk_widget_show(clock_fg);
+  gtk_widget_show(Mascot->clock_fg);
 #endif
-  gtk_widget_show(clock_main);
+  gtk_widget_show(Mascot->clock_main);
 
   if(Mascot->clkmode!=CLOCK_PANEL){
 #ifdef USE_WIN32
-    gtk_widget_unmap(clock_fg);
+    gtk_widget_unmap(Mascot->clock_fg);
 #endif
-    gtk_widget_unmap(clock_main);
+    gtk_widget_unmap(Mascot->clock_main);
   }
   else{
     DrawPanelClock0(Mascot);
 #ifdef USE_WIN32
     if((!Mascot->flag_clkfg)||(Mascot->alpha_clk==100)){
-      gtk_widget_unmap(clock_fg);
+      gtk_widget_unmap(Mascot->clock_fg);
     }
 #endif
-    gtk_widget_map(clock_main);
+    gtk_widget_map(Mascot->clock_main);
   }
 
   if(Mascot->clkmode!=CLOCK_NO){
@@ -5154,22 +4787,22 @@ int main(int argc, char **argv)
   }
 
 #ifdef USE_BIFF
-  gtk_widget_show(biff_pix);
-  gtk_widget_unmap(biff_pix);
+  gtk_widget_show(Mascot->biff_pix);
+  gtk_widget_unmap(Mascot->biff_pix);
 #endif // USE_BIFF
 
 #ifdef USE_WIN32
-  gtk_widget_show(win_sdw);
+  gtk_widget_show(Mascot->win_sdw);
   if((Mascot->sdw_flag)&&(Mascot->sdw_height)){
-      gtk_widget_map(win_sdw);
+      gtk_widget_map(Mascot->win_sdw);
     }
     else{
-      gtk_widget_unmap(win_sdw);
+      gtk_widget_unmap(Mascot->win_sdw);
     }
 #endif
   
-  gtk_widget_show(win_main);
-  gtk_widget_map(win_main);
+  gtk_widget_show(Mascot->win_main);
+  gtk_widget_map(Mascot->win_main);
 
 
 #ifndef USE_WIN32

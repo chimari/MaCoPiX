@@ -42,8 +42,8 @@ extern void	FromL         	(gint32,
 extern gint16	ToS           	(guchar *);
 extern void	FromS         	(gint16,
 				 guchar *);
-extern int	WriteBMP 	(const gchar  	*filename,
-				 GdkPixbuf	*pbuf);
+//extern int	WriteBMP 	(const gchar  	*filename,
+//				 GdkPixbuf	*pbuf);
 extern void	WriteColorMap 	(FILE *,
 				 gint *,
 				 gint *,

@@ -141,11 +141,7 @@ void unmime_header(gchar *out, const gchar *str)
 		}
 
 		/* convert to internal encoding */
-#ifdef USE_GTK2
 		conv_str = conv_codeset_strdup(decoded_text, charset, CS_UTF_8);
-#else
-		conv_str = conv_codeset_strdup(decoded_text, charset, NULL);
-#endif
 
 		if (conv_str) {
 			len = strlen(conv_str);

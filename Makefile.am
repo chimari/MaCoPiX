@@ -1,4 +1,4 @@
-SUBDIRS= m4 po src
+SUBDIRS= intl m4 po src
 
 EXTRA_DIST =  config.rpath\
 	ChangeLog.ja \

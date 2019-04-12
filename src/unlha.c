@@ -33,13 +33,6 @@
 #include "UNLHA32.H"
 #endif  // USE_WIN32
 
-extern gchar* to_utf8();
-extern gchar* to_locale();
-
-extern gchar* my_dirname();
-extern gchar* my_basename();
-
-
 gchar* unlha_menu();
 void unlha_fail();
 void menu_fail();

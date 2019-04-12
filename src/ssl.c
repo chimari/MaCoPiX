@@ -66,10 +66,6 @@ static SSL_CTX *ssl_ctx_TLSv1 = NULL;
 static GSList *trust_list = NULL;
 static GSList *reject_list = NULL;
 
-extern void pop_debug_print(const gchar *format, ...);
-#ifdef USE_WIN32
-extern gchar *get_win_home();
-#endif
 extern gchar *get_rc_dir();
 
 gboolean is_dir_exist(const gchar *dir);
@@ -447,12 +443,7 @@ gboolean is_dir_exist(const gchar *dir)
 	if (dir == NULL)
 		return FALSE;
 
-#ifdef USE_GTK2
 	return g_file_test(dir, G_FILE_TEST_IS_DIR);
-#else
-	if(access(dir,F_OK)) return(TRUE);
-	else return(FALSE);
-#endif
 }
 
 #endif /* USE_SSL */

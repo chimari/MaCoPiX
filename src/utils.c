@@ -43,33 +43,6 @@ typedef struct{
 
 
 
-// Prototype of functions in this file
-void copy_file();
-#ifdef USE_COMMON
-void check_common_dir();
-gboolean check_common_dir2();
-#endif
-#ifdef USE_WIN32
-gchar* get_win_home();
-gchar* WindowsVersion();
-#endif
-gchar* get_rc_dir();
-void pop_debug_print (const gchar *format, ...) G_GNUC_PRINTF(1, 2);
-#ifdef __GTK_STOCK_H__
-GtkWidget* gtkut_button_new_from_stock();
-#endif
-gchar* my_dirname();
-gchar* my_basename();
-gboolean my_main_iteration();
-void my_signal_connect();
-
-extern gchar* to_utf8();
-extern gchar* to_locale();
-
-#ifndef USE_WIN32
-gchar* GetCurrentWMName();
-#endif
-gdouble GetCurrentResolution();
 
 void copy_file(gchar *src, gchar *dest)
 {
@@ -295,72 +268,20 @@ void pop_debug_print(const gchar *format, ...)
 }
 
 
-#ifdef __GTK_STOCK_H__
-GtkWidget* gtkut_button_new_from_stock(gchar *txt,
-				       const gchar *stock){
-  GtkWidget *button;
-  GtkWidget *box;
-  GtkWidget *image;
-  GtkWidget *label;
-  GtkWidget *box2;
-  
-  box2=gtk_hbox_new(TRUE,0);
-
-  box=gtk_hbox_new(FALSE,0);
-  gtk_box_pack_start(GTK_BOX(box2),box, FALSE,FALSE,0);
-
-  gtk_container_set_border_width(GTK_CONTAINER(box),0);
-  
-  if(txt){
-    image=gtk_image_new_from_stock (stock, GTK_ICON_SIZE_BUTTON);
-    gtk_box_pack_start(GTK_BOX(box),image, FALSE,FALSE,2);
-  }
-  else{
-    image=gtk_image_new_from_stock (stock, GTK_ICON_SIZE_MENU);
-    gtk_box_pack_start(GTK_BOX(box),image, FALSE,FALSE,0);
-  }
-  gtk_widget_show(image);
-
-  if(txt){
-    label=gtk_label_new (txt);
-    gtk_box_pack_start(GTK_BOX(box),label, FALSE,FALSE,2);
-    gtk_widget_show(label);
-  }
-
-  button=gtk_button_new();
-  gtk_container_add(GTK_CONTAINER(button),box2);
-
-  gtk_widget_show(button);
-  return(button);
-}
-#endif
-
 
 gchar* my_dirname(const gchar *file_name){
-#ifdef USE_GTK2
   return(g_path_get_dirname(file_name));
-#else
-  return(g_dirname(file_name));
-#endif
 }
 
 gchar* my_basename(const gchar *file_name){
-#ifdef USE_GTK2
   return(g_path_get_basename(file_name));
-#else
-  return(g_basename(file_name));
-#endif
 }
 
 gboolean my_main_iteration(gboolean may_block){
-#ifdef USE_GTK2
 #ifdef USE_WIN32
   return(FALSE);
 #else
   return(g_main_context_iteration(NULL, may_block));
-#endif
-#else
-  return(g_main_iteration(may_block));
 #endif
 }
 
@@ -369,21 +290,14 @@ void my_signal_connect(GtkWidget *widget,
 		       void *func,
 		       gpointer data)
 {
-#ifdef USE_GTK2
   g_signal_connect(G_OBJECT(widget),
 		   detailed_signal,
 		   G_CALLBACK(func),
 		   data);
-#else
-  gtk_signal_connect(GTK_OBJECT(widget),
-		     detailed_signal,
-		     GTK_SIGNAL_FUNC(func),
-		     data);
-#endif
 }
 
 
-#if defined(USE_GTK2) && !defined(USE_WIN32)
+#ifndef USE_WIN32
 gchar* GetCurrentWMName(GtkWidget *widget){
   GdkScreen *screen = gtk_widget_get_screen(widget);
   //GdkScreen *screen = gdk_screen_get_default();
@@ -393,11 +307,7 @@ gchar* GetCurrentWMName(GtkWidget *widget){
 #endif
 
 gdouble GetCurrentResolution(void){
-#if GTK_CHECK_VERSION(2,10,0) 
   GdkScreen *screen = gdk_screen_get_default();
 
   return(gdk_screen_get_resolution(screen));
-#else
-  return(96.0);
-#endif
 }

@@ -28,26 +28,8 @@
 
 GdkBitmap *mask_clk[2]={NULL,NULL};;
 
-extern GtkWidget *win_main, *clock_main;
 extern GdkDrawable *pixmap_clk[2];
 
-extern gint dw_configure_clk();
-extern gint dw_expose_clk();
-extern void clk_drag_begin();
-extern void clk_drag_end();
-extern void clk_window_motion();
-#ifdef USE_CAIRO
-extern gint dw_configure_clk2();
-extern gint dw_expose_clk2();
-#endif
-
-extern void my_signal_connect();
-
-extern gdouble GetCurrentResolution();
-
-#ifdef USE_WIN32
-extern GtkWidget *clock_fg;
-#endif
 
 // from gui.c
 #ifndef __GTK_TOOLTIP_H__
@@ -55,98 +37,77 @@ extern GtkTooltips *tooltip;
 #endif
 
 
-void make_clock();
-
-#ifdef USE_WIN32
-void make_clock_fg();
-#endif
 void DrawPanelClock();
-#ifdef USE_CAIRO
 void DrawPanelClock2();
-#endif
-void DrawPanelClock0();
 
 //GtkWidget * make_clock(typMascot *mascot){
 void  make_clock(typMascot *mascot){
-  clock_main = gtk_window_new(GTK_WINDOW_POPUP);
-#ifdef USE_GTK2
-  gtk_window_set_accept_focus(GTK_WINDOW(clock_main),FALSE);
-#endif
-  gtk_widget_set_app_paintable(clock_main, TRUE);
-  gtk_widget_set_events(GTK_WIDGET (clock_main), 
+  mascot->clock_main = gtk_window_new(GTK_WINDOW_POPUP);
+  gtk_window_set_accept_focus(GTK_WINDOW(mascot->clock_main),FALSE);
+  gtk_widget_set_app_paintable(mascot->clock_main, TRUE);
+  gtk_widget_set_events(GTK_WIDGET (mascot->clock_main), 
 			GDK_FOCUS_CHANGE_MASK | 
 			GDK_BUTTON_MOTION_MASK | 
 			GDK_BUTTON_RELEASE_MASK | 
 			GDK_BUTTON_PRESS_MASK | 
 			GDK_EXPOSURE_MASK);
-  //#ifdef USE_CAIRO
-  //  screen_changed(clock_main, NULL, NULL, FALSE);
-  //#endif
-  gtk_widget_realize(clock_main);
+  gtk_widget_realize(mascot->clock_main);
 
-  gdk_window_set_decorations(clock_main->window, 0);
+  gdk_window_set_decorations(gtk_widget_get_window(mascot->clock_main), 0);
 #ifndef USE_WIN32
   /* gdk_window_set_override_redirect is not implemented (for warning) */
-  gdk_window_set_override_redirect(clock_main->window,TRUE);
+  gdk_window_set_override_redirect(gtk_widget_get_window(mascot->clock_main),TRUE);
 #endif
 #ifndef __GTK_TOOLTIP_H__
   tooltip = gtk_tooltips_new();
 #endif
-  my_signal_connect(clock_main, "configure_event",
+  my_signal_connect(mascot->clock_main, "configure_event",
   		    dw_configure_clk, (gpointer)mascot);
-  my_signal_connect(clock_main, "expose_event",
+  my_signal_connect(mascot->clock_main, "expose_event",
   		    dw_expose_clk, (gpointer)mascot);
-  my_signal_connect(clock_main, "button_press_event",
+  my_signal_connect(mascot->clock_main, "button_press_event",
   		    clk_drag_begin, (gpointer)mascot);
-  my_signal_connect(clock_main, "button_release_event",
+  my_signal_connect(mascot->clock_main, "button_release_event",
   		    clk_drag_end, (gpointer)mascot);
-  my_signal_connect(clock_main, "motion_notify_event",
+  my_signal_connect(mascot->clock_main, "motion_notify_event",
   		    clk_window_motion, (gpointer)mascot);
 
-  gdk_window_set_cursor(clock_main->window,mascot->cursor.clk);
+  gdk_window_set_cursor(gtk_widget_get_window(mascot->clock_main),mascot->cursor.clk);
 
-#ifdef USE_GTK2
-  gtk_window_resize (GTK_WINDOW(clock_main), 1, 1);
-#else
-  gdk_window_resize (clock_main->window, 1, 1);
-#endif
-  dw_configure_clk(clock_main, "configure_event",(gpointer)mascot);
-  //gtk_widget_show(clock_main);
+  gtk_window_resize (GTK_WINDOW(mascot->clock_main), 1, 1);
+  dw_configure_clk(mascot->clock_main, "configure_event",(gpointer)mascot);
 }
 
 
 #ifdef USE_WIN32
 void make_clock_fg(typMascot *mascot){
 
-  clock_fg = gtk_window_new(GTK_WINDOW_POPUP);
-#ifdef USE_GTK2
-  gtk_window_set_accept_focus(GTK_WINDOW(clock_fg),FALSE);
-#endif
-  gtk_widget_set_app_paintable(clock_fg, TRUE);
-  gtk_widget_set_events(GTK_WIDGET (clock_fg), 
+  mascot->clock_fg = gtk_window_new(GTK_WINDOW_POPUP);
+  gtk_window_set_accept_focus(GTK_WINDOW(mascot->clock_fg),FALSE);
+  gtk_widget_set_app_paintable(mascot->clock_fg, TRUE);
+  gtk_widget_set_events(GTK_WIDGET (mascot->clock_fg), 
 			GDK_FOCUS_CHANGE_MASK | 
 			GDK_BUTTON_MOTION_MASK | 
 			GDK_BUTTON_RELEASE_MASK | 
 			GDK_BUTTON_PRESS_MASK | 
 			GDK_EXPOSURE_MASK);
-  gtk_widget_realize(clock_fg);
-  gdk_window_set_decorations(clock_fg->window, 0);
+  gtk_widget_realize(mascot->clock_fg);
+  gdk_window_set_decorations(gtk_widget_get_window(mascot->clock_fg), 0);
 
 
-  my_signal_connect(clock_fg, "configure_event",
+  my_signal_connect(mascot->clock_fg, "configure_event",
   		    dw_configure_clk, (gpointer)mascot);
-  my_signal_connect(clock_fg, "expose_event",
+  my_signal_connect(mascot->clock_fg, "expose_event",
   		    dw_expose_clk, (gpointer)mascot);
-  my_signal_connect(clock_fg, "button_press_event",
+  my_signal_connect(mascot->clock_fg, "button_press_event",
 		    clk_drag_begin, (gpointer)mascot);
-  my_signal_connect(clock_fg, "button_release_event",
+  my_signal_connect(mascot->clock_fg, "button_release_event",
 		    clk_drag_end, (gpointer)mascot);
-  my_signal_connect(clock_fg, "motion_notify_event",
+  my_signal_connect(mascot->clock_fg, "motion_notify_event",
 		    clk_window_motion, (gpointer)mascot);
 
-  gdk_window_resize (clock_fg->window, 1, 1);
-  dw_configure_clk(clock_fg, "configure_event",(gpointer)mascot);
-  //gtk_widget_show(clock_fg);
+  gdk_window_resize (gtk_widget_get_window(mascot->clock_fg), 1, 1);
+  dw_configure_clk(mascot->clock_fg, "configure_event",(gpointer)mascot);
 }
 #endif
 
@@ -156,26 +117,16 @@ void DrawPanelClock(typMascot *mascot)
 {
   gint clk_width,clk_height;
   gint work_page;
-#ifdef USE_GTK2
   PangoLayout *pango_text;
-#else
-  gint lb,rb,as,ds;
-#endif
   gint new_w, new_h;
   GdkGCValues gcv;
 
   work_page=mascot->clk_page;
   work_page^=1;
 
-#ifdef USE_GTK2
-  pango_text=gtk_widget_create_pango_layout(clock_main,
+  pango_text=gtk_widget_create_pango_layout(mascot->clock_main,
 					    mascot->digit);
   pango_layout_get_pixel_size(pango_text,&clk_width,&clk_height);
-#else
-  gdk_string_extents(mascot->fontclk,mascot->digit,
-		     &lb,&rb,&clk_width,&as,&ds);
-  clk_height=as+ds;
-#endif
 
 
   switch(mascot->clktype){
@@ -187,31 +138,23 @@ void DrawPanelClock(typMascot *mascot)
 
   
   if (pixmap_clk[work_page]) {
-#ifdef USE_GTK2
     g_object_unref(G_OBJECT(pixmap_clk[work_page]));
-#else
-    gdk_pixmap_unref(pixmap_clk[work_page]);
-#endif
   } 
   
   new_w=clk_width+(mascot->clktext_x+mascot->wclkbd)*2;
   new_h=clk_height+(mascot->clktext_y+mascot->wclkbd)*2;
 
-  pixmap_clk[work_page] = gdk_pixmap_new(clock_main->window,
+  pixmap_clk[work_page] = gdk_pixmap_new(gtk_widget_get_window(mascot->clock_main),
 					 new_w,
 					 new_h,
 					 -1);
   
   if(mascot->flag_clkrd){
     if (mask_clk[work_page]) {
-#ifdef USE_GTK2
       g_object_unref(G_OBJECT(mask_clk[work_page]));
-#else
-      gdk_pixmap_unref(mask_clk[work_page]);
-#endif
     } 
     
-    mask_clk[work_page] = gdk_pixmap_new(clock_main->window,
+    mask_clk[work_page] = gdk_pixmap_new(gtk_widget_get_window(mascot->clock_main),
 					 new_w,new_h,1); // Depth =1 (Bitmap)
     
     if(mascot->gc_clkmask[work_page]){
@@ -430,34 +373,18 @@ void DrawPanelClock(typMascot *mascot)
   
   // digital clock
   if(mascot->flag_clksd){
-#ifdef USE_GTK2
     gdk_draw_layout(pixmap_clk[work_page],
 		    mascot->gc_clksd[work_page],
 		    mascot->clktext_x+mascot->wclkbd+mascot->clksd_x,
 		    mascot->clktext_y+mascot->wclkbd+mascot->clksd_y,
 		    pango_text);
-#else
-    gdk_draw_string(pixmap_clk[work_page],mascot->fontclk,
-		    mascot->gc_clksd[work_page],
-		    mascot->clktext_x+mascot->wclkbd+mascot->clksd_x,
-		    as+mascot->clktext_y+mascot->wclkbd+mascot->clksd_y,
-		    mascot->digit);
-#endif
   }
 
-#ifdef USE_GTK2
   gdk_draw_layout(pixmap_clk[work_page],
 		  mascot->gc_clk[work_page],
 		  mascot->clktext_x+mascot->wclkbd,
 		  mascot->clktext_y+mascot->wclkbd,
 		  pango_text);
-#else
-  gdk_draw_string(pixmap_clk[work_page],mascot->fontclk,
-		  mascot->gc_clk[work_page],
-		  mascot->clktext_x+mascot->wclkbd,
-		  as+mascot->clktext_y+mascot->wclkbd,
-		  mascot->digit);
-#endif
   
   switch(mascot->clktype){
   case CLOCK_TYPE_12S:
@@ -507,60 +434,54 @@ void DrawPanelClock(typMascot *mascot)
   
 #ifdef USE_WIN32
   if((mascot->flag_clkfg)&&(mascot->alpha_clk!=100)){
-    gdk_window_set_back_pixmap(clock_fg->window,
+    gdk_window_set_back_pixmap(gtk_widget_get_window(mascot->clock_fg),
 			       pixmap_clk[mascot->clk_page],
 			       FALSE);
   }
 #endif
-  gdk_window_set_back_pixmap(clock_main->window,
+  gdk_window_set_back_pixmap(gtk_widget_get_window(mascot->clock_main),
 			     pixmap_clk[mascot->clk_page],
 			     FALSE);
   
   
 #ifdef USE_WIN32
   if((mascot->flag_clkfg)&&(mascot->alpha_clk!=100)){
-    gdk_window_resize (clock_fg->window,new_w,new_h);
+    gdk_window_resize (gtk_widget_get_window(mascot->clock_fg),new_w,new_h);
   }
 #endif
-  gdk_window_resize (clock_main->window, new_w, new_h);
+  gdk_window_resize (gtk_widget_get_window(mascot->clock_main), new_w, new_h);
 
   if(mascot->flag_clkrd){
 #ifdef USE_WIN32
     if((mascot->flag_clkfg)&&(mascot->alpha_clk!=100)){
-      gdk_window_shape_combine_mask( clock_fg->window,
+      gdk_window_shape_combine_mask( gtk_widget_get_window(mascot->clock_fg),
 				     mask_clk[mascot->clk_page],
 				     0,0);
     }
 #endif
     
-    gdk_window_shape_combine_mask( clock_main->window,
+    gdk_window_shape_combine_mask( gtk_widget_get_window(mascot->clock_main),
 				   mask_clk[mascot->clk_page],
 				   0,0);
   }
 
 #ifdef USE_WIN32
-  gdk_draw_drawable(clock_fg->window,
-		    clock_fg->style->fg_gc[GTK_WIDGET_STATE(clock_main)],
+  gdk_draw_drawable(gtk_widget_get_window(mascot->clock_fg),
+		    mascot->clock_fg->style->fg_gc[GTK_WIDGET_STATE(mascot->clock_main)],
 		    pixmap_clk[mascot->clk_page],
 		    0,0,0,0,
 		    new_w,
 		    new_h);
 #endif
 
-#ifdef USE_GTK2
-  gdk_draw_drawable(clock_main->window,
-#else
-  gdk_draw_pixmap(clock_main->window,
-#endif
-		    clock_main->style->fg_gc[GTK_WIDGET_STATE(clock_main)],
+  gdk_draw_drawable(gtk_widget_get_window(mascot->clock_main),
+		    mascot->clock_main->style->fg_gc[GTK_WIDGET_STATE(mascot->clock_main)],
 		    pixmap_clk[mascot->clk_page],
 		    0,0,0,0,
 		    new_w,
 		    new_h);
 
-#ifdef USE_GTK2
   g_object_unref(G_OBJECT(pango_text));
-#endif
   
   while (my_main_iteration(FALSE));
   gdk_flush();
@@ -568,7 +489,6 @@ void DrawPanelClock(typMascot *mascot)
 }
 
 
-#ifdef USE_CAIRO
 // パネル時計のpixmap bufferへの描画
 void DrawPanelClock2(typMascot *mascot)
 {
@@ -597,12 +517,12 @@ void DrawPanelClock2(typMascot *mascot)
   }
 
 #ifdef __PANGOCAIRO_H__
-  pango_text=gtk_widget_create_pango_layout(clock_main,
+  pango_text=gtk_widget_create_pango_layout(mascot->clock_main,
 					    mascot->digit);
   pango_layout_get_pixel_size(pango_text,&clk_width,&clk_height);
 #endif
 
-  cr = gdk_cairo_create(clock_main->window);
+  cr = gdk_cairo_create(gtk_widget_get_window(mascot->clock_main));
  
   cairo_select_font_face (cr, 
 			  mascot->fontclk_pc.family,
@@ -635,21 +555,17 @@ void DrawPanelClock2(typMascot *mascot)
   new_w=clk_width+(mascot->clktext_x+mascot->wclkbd)*2;
   new_h=clk_height+(mascot->clktext_y+mascot->wclkbd)*2;
 
-  pixmap_clk[work_page] = gdk_pixmap_new(clock_main->window,
+  pixmap_clk[work_page] = gdk_pixmap_new(gtk_widget_get_window(mascot->clock_main),
 					 new_w,
 					 new_h,
 					 -1);
 
   if(shape_flag){
     if (mask_clk[work_page]) {
-#ifdef USE_GTK2
       g_object_unref(G_OBJECT(mask_clk[work_page]));
-#else
-      gdk_pixmap_unref(mask_clk[work_page]);
-#endif
     } 
     
-    mask_clk[work_page] = gdk_pixmap_new(clock_main->window,
+    mask_clk[work_page] = gdk_pixmap_new(gtk_widget_get_window(mascot->clock_main),
 					 new_w,new_h,1); // Depth =1 (Bitmap)
     
     cr_mask = gdk_cairo_create(mask_clk[work_page]);
@@ -862,47 +778,47 @@ void DrawPanelClock2(typMascot *mascot)
   
 #ifdef USE_WIN32
   if((mascot->flag_clkfg)&&(mascot->alpha_clk!=100)){
-    gdk_window_set_back_pixmap(clock_fg->window,
+    gdk_window_set_back_pixmap(gtk_widget_get_window(mascot->clock_fg),
 			       pixmap_clk[mascot->clk_page],
 			       FALSE);
   }
 #endif
-  gdk_window_set_back_pixmap(clock_main->window,
+  gdk_window_set_back_pixmap(gtk_widget_get_window(mascot->clock_main),
   			     pixmap_clk[mascot->clk_page],
   			     FALSE);
   
 #ifdef USE_WIN32
   if((mascot->flag_clkfg)&&(mascot->alpha_clk!=100)){
-    gdk_window_resize (clock_fg->window, new_w, new_h);
+    gdk_window_resize (gtk_widget_get_window(mascot->clock_fg), new_w, new_h);
   }
 #endif
-  gdk_window_resize (clock_main->window, new_w, new_h);
+  gdk_window_resize (gtk_widget_get_window(mascot->clock_main), new_w, new_h);
 
   if(shape_flag){
 #ifdef USE_WIN32
     if((mascot->flag_clkfg)&&(mascot->alpha_clk!=100)){
-      gdk_window_shape_combine_mask( clock_fg->window,
+      gdk_window_shape_combine_mask( gtk_widget_get_window(mascot->clock_fg),
 				     mask_clk[mascot->clk_page],
 				     0,0);
     }
 #endif
 
-    gdk_window_shape_combine_mask( clock_main->window,
+    gdk_window_shape_combine_mask( gtk_widget_get_window(mascot->clock_main),
 				   mask_clk[mascot->clk_page],
 				   0,0);
     cairo_destroy(cr_mask);
   }
 
 #ifdef USE_WIN32
-  gdk_draw_drawable(clock_fg->window,
-		    clock_fg->style->fg_gc[GTK_WIDGET_STATE(clock_main)],
+  gdk_draw_drawable(gtk_widget_get_window(mascot->clock_fg),
+		    mascot->clock_fg->style->fg_gc[GTK_WIDGET_STATE(mascot->clock_main)],
 		    pixmap_clk[mascot->clk_page],
 		    0,0,0,0,
 		    new_w,
 		    new_h);
 #endif
-  gdk_draw_drawable(clock_main->window,
-		    clock_main->style->fg_gc[GTK_WIDGET_STATE(clock_main)],
+  gdk_draw_drawable(gtk_widget_get_window(mascot->clock_main),
+		    mascot->clock_main->style->fg_gc[GTK_WIDGET_STATE(mascot->clock_main)],
 		    pixmap_clk[mascot->clk_page],
 		    0,0,0,0,
 		    new_w,
@@ -918,17 +834,12 @@ void DrawPanelClock2(typMascot *mascot)
   gdk_flush();
   
 }
-#endif
 
 void DrawPanelClock0(typMascot *mascot){
-#ifdef USE_CAIRO	
   //  if(((mascot->flag_clk_cairo)&&(mascot->flag_composite!=COMPOSITE_FALSE))
   //     ||(!mascot->flag_clkrd))
   if(mascot->flag_clk_cairo)
     DrawPanelClock2(mascot);
   else
     DrawPanelClock(mascot);
-#else
-    DrawPanelClock(mascot);
-#endif
 }

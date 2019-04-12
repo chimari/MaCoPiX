@@ -33,10 +33,6 @@
 #endif
 #include <signal.h>
 
-#ifndef USE_GTK2
-#include <png.h>
-#endif
-
 #if HAVE_ICONV
 #  include <iconv.h>
 #endif
@@ -50,10 +46,6 @@ void NkrRead();
 gint anim_loop();
 void remove_anim_loop();
 
-#ifndef USE_GTK2
-void WritePNG();
-#endif
-
 #if HAVE_ICONV
 void CodeHenkanSJIS();
 void CodeHenkanEUC();
@@ -62,28 +54,6 @@ void CodeHenkanEUC();
 void create_nkr_dialog();
 static void close_nkr();
 
-extern gchar* to_locale();
-extern gchar* to_utf8();
-
-extern int WriteBMP ();
-
-extern gchar* create_nkr_change_image_dialog();
-
-extern void copy_file();
-
-#if HAVE_ICONV
-extern gchar *conv_iconv_strdup();
-#endif
-
-#ifdef __GTK_STOCK_H__
-extern GtkWidget* gtkut_button_new_from_stock();
-#endif
-
-extern void my_signal_connect();
-extern gchar* my_dirname();
-extern gchar* my_basename();
-extern gboolean my_main_iteration();
-
 int total_ptn;
 gchar *rdm_ptn, *clk_ptn;
 
@@ -91,8 +61,6 @@ gchar *nkr_msg;
 
 
 extern typMascot *Mascot;
-
-extern gchar* FullPathPixmapFile();
 
 // のっかりキャラ用 iniファイルのセーブ
 void NkrSave (typMascot *mascot)
@@ -128,22 +96,14 @@ void NkrSave (typMascot *mascot)
       strcpy(p,".bmp");
       
       // BMPファイルの書き出し
-#ifdef USE_GTK2
       pixbuf = gdk_pixbuf_new_from_file(mascot->sprites[i_pix].filename,NULL);
-#else
-      pixbuf = gdk_pixbuf_new_from_file(mascot->sprites[i_pix].filename);
-#endif
       if(pixbuf==NULL){
 	g_print (_("Cannot Load Image %s\n"), mascot->sprites[i_pix].filename);
 	exit(1);
       }
       tmp1=g_strconcat(my_dirname(mascot->inifile),G_DIR_SEPARATOR_S,tmp2,NULL);
       WriteBMP (tmp1, pixbuf);
-#ifdef USE_GTK2
       g_object_unref(G_OBJECT(pixbuf));
-#else
-      gdk_pixbuf_unref(pixbuf);
-#endif
       
       if(mascot->sprites[i_pix].filename){
 	xmms_cfg_write_string(cfgfile, "Pat", tmp, tmp2);
@@ -589,29 +549,16 @@ void NkrRead(typMascot *mascot)
 	    }
 	  }
 	  tmp_open=to_utf8(filename0);
-#ifdef USE_GTK2
 	  pixbuf = gdk_pixbuf_new_from_file(tmp_open,NULL);
-#else
-	  pixbuf = gdk_pixbuf_new_from_file(tmp_open);
-#endif
 	  // BMPの緑はAlphaの抜き部分に
 	  pixbuf2=gdk_pixbuf_add_alpha(pixbuf,TRUE,0x00,0xFF,0x00);
 	  tmp2=g_strdup(my_basename(tmp1));
 	  p=(char *)strstr(tmp2,".bmp");
 	  strcpy(p,".png");
 	  filename0=g_strconcat(my_dirname(mascot->inifile),G_DIR_SEPARATOR_S,tmp2,NULL);
-#ifdef USE_GTK2	  
 	  gdk_pixbuf_save(pixbuf2,filename0,"png",NULL,NULL);
-#else
-	  WritePNG(pixbuf2,filename0);
-#endif
-#ifdef USE_GTK2
 	  g_object_unref(G_OBJECT(pixbuf));
 	  g_object_unref(G_OBJECT(pixbuf2));
-#else
-	  gdk_pixbuf_unref(pixbuf);
-	  gdk_pixbuf_unref(pixbuf2);
-#endif
 	  g_free(tmp_open);
 
 	  mascot->sprites[i_pix].filename=
@@ -797,11 +744,7 @@ void CodeHenkanSJIS(typMascot *mascot){
 
   while( fgets( buf,BUFFSIZE-2,src_fp ) != NULL ){
 
-#ifdef USE_GTK2
     buf2=conv_iconv_strdup(buf, "UTF-8", "SJIS");
-#else
-    buf2=conv_iconv_strdup(buf, "EUCJP", "SJIS");
-#endif
     if(buf2[strlen(buf2)-1]=='\n'){
       buf2[strlen(buf2)-1]='\r';
       buf3=g_strconcat(buf2,"\n",NULL);
@@ -876,89 +819,6 @@ void CodeHenkanEUC(typMascot *mascot){
 }
 #endif /* HAVE_ICONV */
 
-#ifndef USE_GTK2
-// From "Linux Moe Moe project"  
-void  WritePNG(GdkPixbuf *pic, gchar *fname)
-{
-  FILE *fp;
-  png_structp png_ptr;
-  png_infop info_ptr;
-
-  fp = fopen(fname, "wb");
-  if (fp == NULL) {
-    return;
-  }
-
-  png_ptr = png_create_write_struct(PNG_LIBPNG_VER_STRING,
-				    NULL, NULL, NULL);
-
-  if (png_ptr == NULL) {
-    fclose(fp);
-    return;
-  }
-
-  info_ptr = png_create_info_struct(png_ptr);
-  if (info_ptr == NULL) {
-    fclose(fp);
-    png_destroy_write_struct(&png_ptr, (png_infopp)NULL);
-    return;
-  }
-
-  if (setjmp(png_ptr->jmpbuf)) {
-    fclose(fp);
-    png_destroy_write_struct(&png_ptr,  (png_infopp)NULL);
-    return;
-  }
-
-  /* ----- libpng にストリームを渡す */
-  png_init_io(png_ptr, fp);
-
-  /* ----- png タイプの設定 */
-  if (gdk_pixbuf_get_has_alpha(pic) == TRUE) {
-    png_set_IHDR(png_ptr, info_ptr,	
-		 gdk_pixbuf_get_width(pic),
-		 gdk_pixbuf_get_height(pic),
-		 8,
-		 PNG_COLOR_TYPE_RGB_ALPHA,
-		 PNG_INTERLACE_NONE,
-		 PNG_COMPRESSION_TYPE_BASE,
-		 PNG_FILTER_TYPE_BASE);
-  }
-  else {
-    png_set_IHDR(png_ptr, info_ptr,	
-		 gdk_pixbuf_get_width(pic),
-		 gdk_pixbuf_get_height(pic),
-		 8,
-		 PNG_COLOR_TYPE_RGB,
-		 PNG_INTERLACE_NONE,
-		 PNG_COMPRESSION_TYPE_BASE,
-		 PNG_FILTER_TYPE_BASE);
-  }
-
-  /* ----- インフォメーションヘッダー書出し */
-  png_write_info(png_ptr, info_ptr);
-
-  /* ----- ピクセル書出し */
-  { 
-    png_uint_32  k, height;
-    png_bytep row_pointers[gdk_pixbuf_get_height(pic)];
-    height = gdk_pixbuf_get_height(pic);
-    for(k=0; k<height; k++) {
-      row_pointers[k] = gdk_pixbuf_get_pixels(pic) +
-	(gdk_pixbuf_get_rowstride(pic) * k);
-    }
-    png_write_image(png_ptr, row_pointers);
-  }
-
-  /* ----- 書き出しの終了、後始末 */
-  png_write_end(png_ptr, info_ptr);
-  png_destroy_write_struct(&png_ptr, (png_infopp)NULL);
-
-  fclose(fp);
-
-  return;
-}
-#endif
 
 // のっかり変換ログの生成
 void create_nkr_dialog(typMascot *mascot)
@@ -968,10 +828,8 @@ void create_nkr_dialog(typMascot *mascot)
   GtkWidget *nkr_text;
   GtkWidget *button;
   GtkWidget *nkr_scroll;
-#ifdef USE_GTK2
   GtkTextBuffer *text_buffer;
   GtkTextIter start_iter;
-#endif
 
   // Win構築は重いので先にExposeイベント等をすべて処理してから
   while (my_main_iteration(FALSE));
@@ -979,12 +837,8 @@ void create_nkr_dialog(typMascot *mascot)
   mascot->flag_menu=TRUE;
 
   
-#ifdef USE_GTK2
   nkr_main = gtk_window_new(GTK_WINDOW_TOPLEVEL);
   text_buffer = gtk_text_buffer_new(NULL);
-#else
-  nkr_main = gtk_window_new(GTK_WINDOW_DIALOG);
-#endif
 
   gtk_window_set_title(GTK_WINDOW(nkr_main), 
 		       _("MaCoPiX <--> Nokkari-Chara Convert Log"));
@@ -996,7 +850,6 @@ void create_nkr_dialog(typMascot *mascot)
   nkr_tbl = gtk_table_new (6, 3, FALSE);
   gtk_container_add (GTK_CONTAINER (nkr_main), nkr_tbl);
 
-#ifdef USE_GTK2
   nkr_scroll = gtk_scrolled_window_new(NULL, NULL);
   gtk_scrolled_window_set_policy(GTK_SCROLLED_WINDOW(nkr_scroll),
                                  GTK_POLICY_NEVER, GTK_POLICY_AUTOMATIC);
@@ -1010,16 +863,6 @@ void create_nkr_dialog(typMascot *mascot)
 
   gtk_table_attach (GTK_TABLE (nkr_tbl), nkr_scroll, 0, 5, 0, 1,
 		    GTK_FILL, GTK_EXPAND | GTK_SHRINK | GTK_FILL, 0, 0);
-#else
-   nkr_text = gtk_text_new (NULL, NULL);
-   gtk_widget_set_usize (nkr_text, NKR_WIN_WIDTH, NKR_WIN_HEIGHT);
-   gtk_text_set_editable (GTK_TEXT (nkr_text), FALSE);
-   gtk_table_attach_defaults (GTK_TABLE(nkr_tbl), nkr_text, 0, 5, 0, 1);
-
-   nkr_scroll = gtk_vscrollbar_new (GTK_TEXT (nkr_text)->vadj);
-   gtk_table_attach (GTK_TABLE (nkr_tbl), nkr_scroll, 5, 6, 0, 1,
-		     GTK_FILL, GTK_EXPAND | GTK_SHRINK | GTK_FILL, 0, 0);
-#endif
 
   if(nkr_msg){
     nkr_msg=g_strconcat(nkr_msg,
@@ -1030,20 +873,11 @@ void create_nkr_dialog(typMascot *mascot)
     nkr_msg=g_strdup(_("\n Congratulations!!\n===================\n\n  You've scceeded to convert with no errors.\n\n  Please use this mascot on Nokkari-Chara ver1.40 or later.\n"));
   }
 
-#ifdef USE_GTK2
   gtk_text_buffer_get_start_iter(text_buffer, &start_iter);
   gtk_text_buffer_insert (text_buffer, &start_iter, nkr_msg, -1);
-#else
-   gtk_text_insert (GTK_TEXT (nkr_text), NULL, NULL, NULL,
-                  nkr_msg, -1);
-#endif
  
 
-#ifdef __GTK_STOCK_H__
   button=gtkut_button_new_from_stock(_("OK"),GTK_STOCK_OK);
-#else
-  button=gtk_button_new_with_label(_("OK"));
-#endif
   gtk_table_attach(GTK_TABLE(nkr_tbl), button, 4, 5, 2, 3,
 		   GTK_FILL,GTK_SHRINK,0,0);
   my_signal_connect(button,"clicked",close_nkr, GTK_WIDGET(nkr_main));

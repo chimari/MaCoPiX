@@ -403,7 +403,6 @@ void conv_anytoeuc(gchar *outbuf, gint outlen, const gchar *inbuf)
 	}
 }
 
-#ifdef USE_GTK2
 void conv_anytoutf8(gchar *outbuf, gint outlen, const gchar *inbuf)
 {
 #if HAVE_ICONV
@@ -433,7 +432,6 @@ void conv_anytoutf8(gchar *outbuf, gint outlen, const gchar *inbuf)
 		break;
 	}
 }
-#endif
 
 void conv_anytojis(gchar *outbuf, gint outlen, const gchar *inbuf)
 {
@@ -693,7 +691,6 @@ void conv_mb_alnum(gchar *str)
 	}
 }
 
-#ifdef USE_GTK2
 #define REDUCE_STR(p, len)		\
 {					\
 	p++;				\
@@ -751,7 +748,6 @@ void conv_mb_alnum_utf8(gchar *str)
 			SKIP_CHAR(p, len);
 	}
 }
-#endif /* USE_GTK2 */
 
 CharSet conv_guess_ja_encoding(const gchar *str)
 {
@@ -813,7 +809,6 @@ void conv_euctodisp(gchar *outbuf, gint outlen, const gchar *inbuf)
 	conv_unreadable_eucjp(outbuf);
 }
 
-#ifdef USE_GTK2
 void conv_jistoutf8(gchar *outbuf, gint outlen, const gchar *inbuf)
 {
 #if HAVE_ICONV
@@ -863,13 +858,6 @@ void conv_anytodisp(gchar *outbuf, gint outlen, const gchar *inbuf)
 	conv_anytoutf8(outbuf, outlen, inbuf);
 }
 #endif
-#else /* USE_GTK2 */
-void conv_anytodisp(gchar *outbuf, gint outlen, const gchar *inbuf)
-{
-	conv_anytoeuc(outbuf, outlen, inbuf);
-	conv_unreadable_eucjp(outbuf);
-}
-#endif /* USE_GTK2 */
 
 void conv_ustodisp(gchar *outbuf, gint outlen, const gchar *inbuf)
 {
@@ -899,9 +887,7 @@ CodeConverter *conv_code_converter_new(const gchar *charset)
 	CodeConverter *conv;
 
 	conv = g_new0(CodeConverter, 1);
-#ifdef USE_GTK2
 #warning FIXME_GTK2
-#endif /* USE_GTK2 */
 	conv->code_conv_func = conv_get_code_conv_func(charset, NULL);
 	conv->charset_str = g_strdup(charset);
 	conv->charset = conv_get_charset_from_str(charset);
@@ -924,12 +910,8 @@ gint conv_convert(CodeConverter *conv, gchar *outbuf, gint outlen,
 	else {
 		gchar *str;
 
-#ifdef USE_GTK2
 #warning FIXME_GTK2
 		str = conv_iconv_strdup(inbuf, conv->charset_str, CS_UTF_8);
-#else
-		str = conv_iconv_strdup(inbuf, conv->charset_str, NULL);
-#endif
 		if (!str)
 			return -1;
 		else {
@@ -988,18 +970,13 @@ CodeConvFunc conv_get_code_conv_func(const gchar *src_charset_str,
 			return conv_noconv;
 	}
 
-#ifdef USE_GTK2
 	if (!dest_charset_str)
 		dest_charset = C_UTF_8;
 	else
 		dest_charset = conv_get_charset_from_str(dest_charset_str);
-#else
-	dest_charset = conv_get_charset_from_str(dest_charset_str);
-#endif
 
 	if (dest_charset == C_US_ASCII)
 		return conv_ustodisp;
-#ifdef USE_GTK2
 #warning FIXME_GTK2
 #if 0
 	else if (dest_charset == C_UTF_8 ||
@@ -1007,12 +984,6 @@ CodeConvFunc conv_get_code_conv_func(const gchar *src_charset_str,
 		  conv_get_current_charset() == C_UTF_8))
 		return conv_noconv;
 #endif
-#else /* USE_GTK2 */
-	else if (dest_charset == C_UTF_8 ||
-		 (dest_charset == C_AUTO &&
-		  conv_get_current_charset() == C_UTF_8))
-		return conv_noconv;
-#endif /* USE_GTK2 */
 
 	switch (src_charset) {
 	case C_ISO_2022_JP:
@@ -1023,13 +994,11 @@ CodeConvFunc conv_get_code_conv_func(const gchar *src_charset_str,
 			code_conv = conv_jistodisp;
 		else if (dest_charset == C_EUC_JP)
 			code_conv = conv_jistoeuc;
-#ifdef USE_GTK2
 		else if (dest_charset == C_AUTO &&
 			 conv_get_current_charset() == C_UTF_8)
 			code_conv = conv_jistoutf8;
 		else if (dest_charset == C_UTF_8)
 			code_conv = conv_jistoutf8;
-#endif
 		break;
 	case C_US_ASCII:
 		if (dest_charset == C_AUTO)
@@ -1060,13 +1029,11 @@ CodeConvFunc conv_get_code_conv_func(const gchar *src_charset_str,
 			code_conv = conv_sjistodisp;
 		else if (dest_charset == C_EUC_JP)
 			code_conv = conv_sjistoeuc;
-#ifdef USE_GTK2
 		else if (dest_charset == C_AUTO &&
 		    conv_get_current_charset() == C_UTF_8)
 			code_conv = conv_sjistoutf8;
 		else if (dest_charset == C_UTF_8)
 			code_conv = conv_sjistoutf8;
-#endif
 		break;
 	case C_EUC_JP:
 		if (dest_charset == C_AUTO &&
@@ -1076,13 +1043,11 @@ CodeConvFunc conv_get_code_conv_func(const gchar *src_charset_str,
 			 dest_charset == C_ISO_2022_JP_2 ||
 			 dest_charset == C_ISO_2022_JP_3)
 			code_conv = conv_euctojis;
-#ifdef USE_GTK2
 		else if (dest_charset == C_AUTO &&
 			 conv_get_current_charset() == C_UTF_8)
 			code_conv = conv_euctoutf8;
 		else if (dest_charset == C_UTF_8)
 			code_conv = conv_euctoutf8;
-#endif
 		break;
 	default:
 		break;
@@ -1662,21 +1627,15 @@ void conv_unmime_header_overwrite(gchar *str)
 	gchar *buf;
 	gint buflen;
 	CharSet cur_charset;
-#ifdef USE_GTK2
 	const gchar *locale;
-#endif
 
 	cur_charset = conv_get_current_charset();
 
-#ifdef USE_GTK2
 #warning FIXME_GTK2
 /* Should we always ensure to convert? */
 	locale = conv_get_current_locale();
 
 	if (locale && !strncasecmp(locale, "ja", 2)) {
-#else
-	if (cur_charset == C_EUC_JP) {
-#endif
 	  //buflen = strlen(str) * 2 + 1;  // fixed for raw-JIS 2009/1/22
 	        buflen = strlen(str) + 1;
 		Xalloca(buf, buflen, return);
@@ -1693,21 +1652,15 @@ void conv_unmime_header_overwrite(gchar *str)
 void conv_unmime_header(gchar *outbuf, gint outlen, const gchar *str)
 {
 	CharSet cur_charset;
-#ifdef USE_GTK2
 	const gchar *locale;
 	gchar *tmp;
-#endif
 	cur_charset = conv_get_current_charset();
 
-#ifdef USE_GTK2
 #warning FIXME_GTK2
 /* Should we always ensure to convert? */
 	locale = conv_get_current_locale();
 
 	if (locale && !strncasecmp(locale, "ja", 2)) {
-#else
-	if (cur_charset == C_EUC_JP) {
-#endif
 		gchar *buf;
 		gint buflen;
 
@@ -1715,7 +1668,6 @@ void conv_unmime_header(gchar *outbuf, gint outlen, const gchar *str)
 		Xalloca(buf, buflen, return);
 		conv_anytodisp(buf, buflen, str);
 		unmime_header(outbuf, buf);
-#ifdef USE_GTK2
 	} else {
 		unmime_header(outbuf, str);
 		if (outbuf && !g_utf8_validate(outbuf, -1, NULL)) {
@@ -1729,10 +1681,6 @@ void conv_unmime_header(gchar *outbuf, gint outlen, const gchar *str)
 			}
 		}
 	}
-#else
-        } else
-	  unmime_header(outbuf, str);
-#endif
 }
 
 #define MAX_LINELEN		76

@@ -36,8 +36,6 @@
 #include <netdb.h>
 #include <ctype.h>
 
-#include "sockmsg.h"
-
 extern gboolean flag_balloon;
 
 gchar *cut_spc(gchar * obj_name);
@@ -51,20 +49,13 @@ static gboolean io_callback(GIOChannel * source,
 			    GIOCondition condition, gpointer data);
 static gboolean io_callback_sv(GIOChannel * source,
 			       GIOCondition condition, gpointer data);
-SockMsgInitResult sockmsg_init(void);
 SockMsgInitResult duet_sv_init(gchar *mascotname);
 SockMsgInitResult duet_cl_init(gchar *mascotname);
-void sockmsg_set_mascot(typMascot *mascot);
 void duet_set_mascot(typMascot *mascot);
-void sockmsg_send_msg(gchar *msg);
 void duet_send_msg(gchar *msg);
-void sockmsg_done(void);
-void duet_sv_done(gchar *mascotname, gboolean flag_close);
 void duet_cl_done(gchar *mascotname, gboolean flag_close);
-#ifdef USE_GTK2
 gchar* set_typing_msg();
 gchar* my_strbuf();
-#endif //USE_GTK2
 
 
 gchar *cut_spc(gchar * obj_name){
@@ -245,16 +236,12 @@ static gboolean io_callback(GIOChannel * source,
 	mascot->bal_mode=BALLOON_SOCKMSG;
 	if (mascot->sockmsg != NULL)
 		g_free(mascot->sockmsg);
-#ifdef USE_GTK2
 	if(mode==SOCK_STEPPING){
 	  mascot->sockmsg = set_typing_msg(buf+8+2+4,step);
 	}
 	else{
 	  mascot->sockmsg = g_strdup(buf+8+2+4);
 	}
-#else
-	mascot->sockmsg = g_strdup(buf+8+2+4);
-#endif       
 	DoBalloon(mascot);
 	flag_balloon=TRUE;
 
@@ -422,11 +409,9 @@ void duet_set_mascot(typMascot *mascot)
 
 void sockmsg_send_msg(gchar *msg)
 {
-#ifdef USE_GTK2
         msg = g_locale_to_utf8(msg,-1,NULL,NULL,NULL);
         if(!msg)
     		_("(Invalid Character Code)");
-#endif
 
 	if (write(sock, msg, strlen(msg)) <0){
 	  printf("Error : sockmsg_send_msg();\n");
@@ -436,11 +421,9 @@ void sockmsg_send_msg(gchar *msg)
 
 void duet_send_msg(gchar *msg)
 {
-#ifdef USE_GTK2
         msg = g_locale_to_utf8(msg,-1,NULL,NULL,NULL);
         if(!msg)
     		_("(Invalid Character Code)");
-#endif
 
 	if (write(duet_cl, msg, strlen(msg)) <0){
 	  printf("Error : duet_send_msg();\n");
@@ -487,7 +470,6 @@ void duet_cl_done(gchar *mascotname, gboolean flag_close)
 	}
 }
 
-#ifdef USE_GTK2
 gchar* set_typing_msg(gchar* input, gint interval){
   gchar *p, *p1, *ret;
   gint i,j,num;
@@ -576,7 +558,6 @@ gchar* my_strbuf(gchar *p)
   }
   return start;
 }
-#endif //USE_GTK2
 
 #endif  // USE_SOCKMSG
 

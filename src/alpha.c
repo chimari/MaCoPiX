@@ -34,7 +34,6 @@
 
 void GdkWinChangeAlpha();
 void GdkWinChangeAlphaFG();
-void GdkWinSetAlpha();
 
 
 

@@ -32,37 +32,7 @@
 #endif
 
 extern typMascot *Mascot;
-extern GtkWidget *PopupMenu;
 
-// MAIN
-extern void ReadMenu();
-
-
-// GUI
-extern GtkWidget* make_popup_menu();
-extern gchar* to_locale();
-
-// LHA
-#ifdef USE_LHA32
-extern gchar* unlha_menu();
-#endif
-
-// TAR
-#if defined(USE_GTAR) || defined(USE_TAR32)
-extern gchar* untar_menu();
-#endif
-
-// UTILS
-extern GtkWidget* gtkut_button_new_from_stock();
-#ifdef USE_WIN32
-extern gchar* get_win_home();
-#endif
-extern gchar* my_dirname();
-extern gboolean my_main_iteration();
-
-
-void signal_drag_data_received();
-void signal_drag_data_received_smenu();
 gboolean create_dnd_confirm_window();
 static void cc_true();
 
@@ -85,25 +55,8 @@ signal_drag_data_received (GtkWidget        *widget,
   for (i = 0; files[i] && *files[i] != '\0'; i++)
     {
       //g_print ("%s", files[i]);
-#ifdef USE_GTK2
       file0 = g_filename_from_uri (files[i], NULL, NULL);
       file = to_locale(file0);
-#else
-      file0 = g_strdup(files[i]+strlen("file:"));
-      file = to_locale(file0);
-      if(access(file,F_OK)!=0){
-	if(file) g_free(file);
-	if(file0) g_free(file0);
-	file0 = g_strdup(files[i]+strlen("file://"));
-	file = to_locale(file0);
-	if(access(file,F_OK)!=0){
-	  if(file) g_free(file);
-	  if(file0) g_free(file0);
-	  file0 = g_strdup(files[i]+strlen("file://localhost"));
-	  file = to_locale(file0);
-	}
-      }
-#endif
       if (file){
 	if(access(file,F_OK)==0){
 	  if(strcmp(file+strlen(file)-strlen(LZH_EXTENSION)+1,
@@ -136,9 +89,9 @@ signal_drag_data_received (GtkWidget        *widget,
 	  Mascot->flag_ow=TRUE;
 	  Mascot->flag_ow_ini=TRUE;
 	  
-	  gtk_widget_destroy(PopupMenu);
+	  gtk_widget_destroy(Mascot->PopupMenu);
 	  ReadMenu(Mascot,0,NULL);
-	  PopupMenu=make_popup_menu();
+	  Mascot->PopupMenu=make_popup_menu();
 	  
 	  Mascot->flag_menu=FALSE;
 	  Mascot->flag_install=flag_install;
@@ -207,11 +160,7 @@ gboolean create_dnd_confirm_window (gchar *file)
      file,userdir);
   g_free(userdir);
 
-#ifdef USE_GTK2  
   main = gtk_window_new(GTK_WINDOW_TOPLEVEL);
-#else
-  main = gtk_window_new(GTK_WINDOW_DIALOG);
-#endif
 
   gtk_window_set_position(GTK_WINDOW(main), GTK_WIN_POS_CENTER);
   gtk_window_set_modal(GTK_WINDOW(main), TRUE);
@@ -235,19 +184,11 @@ gboolean create_dnd_confirm_window (gchar *file)
   label = gtk_label_new("");
   gtk_box_pack_start(GTK_BOX(hbox),label,TRUE,TRUE,0);
   
-#ifdef __GTK_STOCK_H__
   button=gtkut_button_new_from_stock(_("OK"),GTK_STOCK_OK);
-#else
-  button=gtk_button_new_with_label(_("OK"));
-#endif
   gtk_box_pack_start(GTK_BOX(hbox),button,FALSE,FALSE,0);
   my_signal_connect(button,"clicked",cc_true, &result);
 
-#ifdef __GTK_STOCK_H__
   button=gtkut_button_new_from_stock(_("Cancel"),GTK_STOCK_CANCEL);
-#else
-  button=gtk_button_new_with_label(_("Cancel"));
-#endif
   gtk_box_pack_start(GTK_BOX(hbox),button,FALSE,FALSE,0);
   my_signal_connect(button,"clicked",gtk_main_quit, NULL);
 
