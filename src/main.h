@@ -105,6 +105,7 @@
 #include <cairo.h>
 #endif
 
+#include "resources.h"
 #include "version.h"
 #include "configfile.h"
 #include "intl.h"
@@ -966,6 +967,9 @@ int WriteBMP ();
 void MoveMascot();
 int MoveToFocus();
 void MoveBalloon();
+#ifdef USE_BIFF
+void MoveBiffPix();
+#endif
 void ResizeMoveBalloon();
 void drag_begin();
 void drag_end();
@@ -1073,12 +1077,20 @@ void LoadBiffPixmap();
 gboolean TestLoadPixmaps();
 void ReInitGC();
 
+// pop.c
+int popReadLine(char *ptr, int size, guint ssl_mode);
+int popWriteLine(char *ptr, guint ssl_mode);
 
 // sockmsg.c
 #ifdef USE_SOCKMSG
 SockMsgInitResult sockmsg_init(void);
 void sockmsg_send_msg(gchar *msg);
+SockMsgInitResult duet_sv_init(gchar *mascotname);
 void duet_sv_done(gchar *mascotname, gboolean flag_close);
+void duet_set_mascot(typMascot *mascot);
+SockMsgInitResult duet_cl_init(gchar *mascotname);
+void duet_send_msg(gchar *msg);
+void duet_cl_done(gchar *mascotname, gboolean flag_close);
 void sockmsg_set_mascot(typMascot *mascot);
 void sockmsg_done(void);
 #endif
@@ -1104,6 +1116,9 @@ void trayicon_set_tooltip();
 #ifdef USE_LHA32
 gchar* unlha_menu();
 #endif
+
+// unmime.c
+void unmime_header();
 
 // untar.c
 // TAR

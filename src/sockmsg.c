@@ -49,11 +49,6 @@ static gboolean io_callback(GIOChannel * source,
 			    GIOCondition condition, gpointer data);
 static gboolean io_callback_sv(GIOChannel * source,
 			       GIOCondition condition, gpointer data);
-SockMsgInitResult duet_sv_init(gchar *mascotname);
-SockMsgInitResult duet_cl_init(gchar *mascotname);
-void duet_set_mascot(typMascot *mascot);
-void duet_send_msg(gchar *msg);
-void duet_cl_done(gchar *mascotname, gboolean flag_close);
 gchar* set_typing_msg();
 gchar* my_strbuf();
 
@@ -199,52 +194,53 @@ static gboolean io_callback(GIOChannel * source,
 		  GIOCondition condition, gpointer data)
 {
   gchar buf[2048],tmp[10];
-	gint fd, readsize;
-	typMascot *mascot = data;
-	gint step,mode;
+  gint fd, readsize;
+  typMascot *mascot = data;
+  gint step,mode;
+  
+  fd = fd_accept(g_io_channel_unix_get_fd(source));
+  
+  readsize = read(fd, buf, 2047);
+  buf[readsize] = '\0';
+  
+  fd_close(fd);
+  
+  // Expiration
+  strncpy(tmp,buf,8);
+  mascot->sockmsg_expire=(gint)(atoi(tmp)/INTERVAL);
+  if(mascot->sockmsg_expire<=0){
+    mascot->sockmsg_expire=mascot->sockmsg_expire_def/INTERVAL;
+  }
+  
+  // Stepping or Lump Sum?
+  strncpy(tmp,buf+8,2);
+  mode=(gint)atoi(tmp);
+  if(mode<0){
+    mode=mascot->sockmsg_type;
+  }
+  
+  // Stepping Interval
+  strncpy(tmp,buf+8+2,4);
+  step=(gint)atoi(tmp);
+  if(step<0){
+    step=mascot->sockmsg_step;
+  }
+  
+  
+  mascot->balseq=0;
+  mascot->bal_mode=BALLOON_SOCKMSG;
+  if (mascot->sockmsg != NULL)
+    g_free(mascot->sockmsg);
+  if(mode==SOCK_STEPPING){
+    mascot->sockmsg = set_typing_msg(buf+8+2+4,step);
+  }
+  else{
+    mascot->sockmsg = g_strdup(buf+8+2+4);
+  }
+  DoBalloon(mascot);
+  flag_balloon=TRUE;
 
-	fd = fd_accept(g_io_channel_unix_get_fd(source));
-
-	readsize = read(fd, buf, 2047);
-	buf[readsize] = '\0';
-
-	fd_close(fd);
-
-	// Expiration
-	strncpy(tmp,buf,8);
-	mascot->sockmsg_expire=(gint)(atoi(tmp)/INTERVAL);
-	if(mascot->sockmsg_expire<=0){
-	  mascot->sockmsg_expire=mascot->sockmsg_expire_def/INTERVAL;
-	}
-
-	// Stepping or Lump Sum?
-	strncpy(tmp,buf+8,2);
-	mode=(gint)atoi(tmp);
-	if(mode<0){
-	  mode=mascot->sockmsg_type;
-	}
-
-	// Stepping Interval
-	strncpy(tmp,buf+8+2,4);
-	step=(gint)atoi(tmp);
-	if(step<0){
-	  step=mascot->sockmsg_step;
-	}
-	
-	
-	mascot->balseq=0;
-	mascot->bal_mode=BALLOON_SOCKMSG;
-	if (mascot->sockmsg != NULL)
-		g_free(mascot->sockmsg);
-	if(mode==SOCK_STEPPING){
-	  mascot->sockmsg = set_typing_msg(buf+8+2+4,step);
-	}
-	else{
-	  mascot->sockmsg = g_strdup(buf+8+2+4);
-	}
-	DoBalloon(mascot);
-	flag_balloon=TRUE;
-
+  return(TRUE);
 }
 
 static gboolean io_callback_sv(GIOChannel * source,
@@ -263,7 +259,7 @@ static gboolean io_callback_sv(GIOChannel * source,
 
 	fd_close(fd);
 	
-	if(readsize<4) return;
+	if(readsize<4) return(FALSE);
 	
 	strncpy(tmp,buf,2);
 	mode=atoi(tmp);
@@ -313,6 +309,7 @@ static gboolean io_callback_sv(GIOChannel * source,
 	    }
 	  }
 	}
+	return(TRUE);
 }
 
 

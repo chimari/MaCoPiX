@@ -89,10 +89,6 @@ int ehandler ();
 #endif
 
 #ifdef USE_BIFF
-void MoveBiffPix();
-#endif
-
-#ifdef USE_BIFF
 #endif
 
 #ifdef USE_WIN32
@@ -444,7 +440,7 @@ int MoveToFocus(typMascot *mascot, gboolean force_fl)
 	    if((win_bar_size==0)&&(mascot->no_capbar)){
 	      // for windows w/o title bar 
 	      flag_homepos=mascot->homepos_nb;
-	      if(flag_homepos==HOMEPOS_NEVER) return;
+	      if(flag_homepos==HOMEPOS_NEVER) return(0);
 	    }
 	    break;
 	  }

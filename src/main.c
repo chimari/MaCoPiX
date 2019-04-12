@@ -206,7 +206,7 @@ void ReadMenu(typMascot *mascot, gint offset_i_cat, gchar *merge_file)
   time_t user_mtime=0, common_mtime=0;
   gchar *dummy;
   gint menu_total_for_install;
-  gchar progress_txt[128];
+  gchar *progress_txt=NULL;
 
   mascot->flag_consow=FALSE;
 
@@ -478,11 +478,12 @@ void ReadMenu(typMascot *mascot, gint offset_i_cat, gchar *merge_file)
 	  if(mascot->flag_install){
 	    gtk_progress_bar_set_fraction(GTK_PROGRESS_BAR(mascot->pdata->pbar),
 			  (gdouble)((i_tgt+1)/(gfloat)menu_total_for_install));
-	    g_sprintf(progress_txt,
-		      _("Installing mascots [%2d/%2d]"),
+	    progress_txt=g_strdup_printf(_("Installing mascots [%2d/%2d]"),
 		      i_tgt+1,menu_total_for_install);
 	    gtk_progress_bar_set_text(GTK_PROGRESS_BAR(mascot->pdata->pbar),
 				      progress_txt);
+	    g_free(progress_txt);
+	    progress_txt=NULL;
 	    while (my_main_iteration(FALSE));
 	    gdk_flush();
 	    usleep(INTERVAL*1e3);
@@ -4554,8 +4555,7 @@ int main(int argc, char **argv)
   gdk_rgb_init();
 
 #ifndef USE_WIN32  
-  icon = gdk_pixbuf_new_from_inline(sizeof(macopix_icon), macopix_icon, 
-				    FALSE, NULL);
+  icon = gdk_pixbuf_new_from_resource ("/icons/macopix_icon.png", NULL);
   gtk_window_set_default_icon(icon);
 #endif
 

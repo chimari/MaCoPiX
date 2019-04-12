@@ -67,8 +67,7 @@ void trayicon_create(typMascot *mascot){
   GtkWidget *popup_button, *bar;
   GtkWidget *image;
 
-  icon = gdk_pixbuf_new_from_inline(sizeof(macopix_icon), macopix_icon, 
-				    FALSE, NULL);
+  icon = gdk_pixbuf_new_from_resource ("/icons/macopix_icon.png", NULL);
   mascot->tray_icon = gtk_status_icon_new_from_pixbuf(icon);
 
   g_signal_connect(G_OBJECT(mascot->tray_icon), "popup-menu",

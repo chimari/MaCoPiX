@@ -17061,6 +17061,46 @@ _ACEOF
   fi
 
 
+# Extract the first word of "glib-compile-resources", so it can be a program name with args.
+set dummy glib-compile-resources; ac_word=$2
+{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for $ac_word" >&5
+$as_echo_n "checking for $ac_word... " >&6; }
+if ${ac_cv_path_GLIB_COMPILE_RESOURCES+:} false; then :
+  $as_echo_n "(cached) " >&6
+else
+  case $GLIB_COMPILE_RESOURCES in
+  [\\/]* | ?:[\\/]*)
+  ac_cv_path_GLIB_COMPILE_RESOURCES="$GLIB_COMPILE_RESOURCES" # Let the user override the test with a path.
+  ;;
+  *)
+  as_save_IFS=$IFS; IFS=$PATH_SEPARATOR
+for as_dir in $PATH
+do
+  IFS=$as_save_IFS
+  test -z "$as_dir" && as_dir=.
+    for ac_exec_ext in '' $ac_executable_extensions; do
+  if as_fn_executable_p "$as_dir/$ac_word$ac_exec_ext"; then
+    ac_cv_path_GLIB_COMPILE_RESOURCES="$as_dir/$ac_word$ac_exec_ext"
+    $as_echo "$as_me:${as_lineno-$LINENO}: found $as_dir/$ac_word$ac_exec_ext" >&5
+    break 2
+  fi
+done
+  done
+IFS=$as_save_IFS
+
+  ;;
+esac
+fi
+GLIB_COMPILE_RESOURCES=$ac_cv_path_GLIB_COMPILE_RESOURCES
+if test -n "$GLIB_COMPILE_RESOURCES"; then
+  { $as_echo "$as_me:${as_lineno-$LINENO}: result: $GLIB_COMPILE_RESOURCES" >&5
+$as_echo "$GLIB_COMPILE_RESOURCES" >&6; }
+else
+  { $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
+$as_echo "no" >&6; }
+fi
+
+
 
 ALL_LINGUAS="ja"
 
@@ -22090,7 +22130,7 @@ commondir='${prefix}/share/${PACKAGE}/'
 fi
 
 
-ac_config_files="$ac_config_files Makefile po/Makefile.in intl/Makefile m4/Makefile src/version.h src/macopix_res.rc src/Makefile"
+ac_config_files="$ac_config_files Makefile po/Makefile.in intl/Makefile m4/Makefile src/version.h src/macopix_res.rc src/Makefile src/icons/Makefile"
 
 cat >confcache <<\_ACEOF
 # This file is a shell script that caches the results of configure
@@ -23131,6 +23171,7 @@ do
     "src/version.h") CONFIG_FILES="$CONFIG_FILES src/version.h" ;;
     "src/macopix_res.rc") CONFIG_FILES="$CONFIG_FILES src/macopix_res.rc" ;;
     "src/Makefile") CONFIG_FILES="$CONFIG_FILES src/Makefile" ;;
+    "src/icons/Makefile") CONFIG_FILES="$CONFIG_FILES src/icons/Makefile" ;;
 
   *) as_fn_error $? "invalid argument: \`$ac_config_target'" "$LINENO" 5;;
   esac

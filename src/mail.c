@@ -500,7 +500,7 @@ void mail_check_qmail(typMascot *mascot){
     struct stat t;
     DIR *dp;
     struct dirent *entry;
-    char tmp[256];
+    gchar *tmp=NULL;
     time_t newest_time=0;
     int filenum=0;
     int wo_spam;
@@ -513,13 +513,15 @@ void mail_check_qmail(typMascot *mascot){
     
     while((entry=readdir(dp))!=NULL){
       if(entry->d_name[0]!='.'){
-	sprintf(tmp,"%s/%s",mascot->mail.file,entry->d_name);
+	tmp=g_strdup_printf("%s/%s",mascot->mail.file,entry->d_name);
 	if (!stat(tmp, &t)){
 	  filenum++;
 	  if (t.st_mtime>newest_time){ 
 	    newest_time=t.st_mtime;
 	  }
 	}
+	if(tmp) g_free(tmp);
+	tmp=NULL;
       }
     }
 	
@@ -1370,7 +1372,7 @@ ed_fl = FALSE;  /* tnaka */
 gchar *  fs_get_procmail(typMascot  *mascot){
     FILE *fp,*fp_folder;
     gchar buf[BUFFSIZE],tmp[10],bufs[BUFFSIZE5];
-    gchar *folder_file,folder_tmp[BUFFSIZE];
+    gchar *folder_file=NULL,folder_tmp[BUFFSIZE];
     gchar *froms=NULL, *p;
     gboolean ed_fl=FALSE;
     fpos_t pos;
@@ -1381,7 +1383,7 @@ gchar *  fs_get_procmail(typMascot  *mascot){
     froms=strbuf(NULL);
 
     if((fp=fopen(mascot->mail.file,"r"))==NULL){
-	return;
+      return(NULL);
     }
     
     while(!feof(fp)){
@@ -1476,6 +1478,8 @@ gchar *  fs_get_procmail(typMascot  *mascot){
 		}
 	    }
 	}
+	if(folder_file) g_free(folder_file);
+	folder_file=NULL;
 	
     }
     fclose(fp);
@@ -1490,7 +1494,7 @@ gchar *  fs_get_procmail(typMascot  *mascot){
 gchar * fs_get_qmail(typMascot *mascot){
     FILE *fp_folder;
     gchar buf[BUFFSIZE],tmp[10],bufs[BUFFSIZE5];
-    gchar folder_file[BUFFSIZE],folder_tmp[BUFFSIZE];
+    gchar *folder_file,folder_tmp[BUFFSIZE];
     gchar *froms=NULL, *p;
     gboolean ed_fl=FALSE, spam_flag;
     fpos_t pos;
@@ -1504,7 +1508,7 @@ gchar * fs_get_qmail(typMascot *mascot){
     froms=strbuf(NULL);
 
     if ((dp=opendir(mascot->mail.file))==NULL){
-	return;
+      return(NULL);
     }	
     
 
@@ -2089,7 +2093,7 @@ static void mailer_start(GtkWidget *w, GtkWidget *dialog)
 
 gchar* set_mhdir(){
   FILE *fp;
-  gchar *c=NULL,buf[256],*mhd=NULL, *tmp;
+  gchar *c=NULL, buf[256],*mhd=NULL, *tmp;
     
   c=g_strconcat(g_get_home_dir(),PROCMAILRC,NULL);
 
@@ -2102,7 +2106,7 @@ gchar* set_mhdir(){
 	  mhd=g_strconcat(g_get_home_dir(),tmp+5,NULL);
 	}
 	else{
-	  mhd=tmp;
+	  mhd=g_strdup(tmp);
 	}
 	break;
       }

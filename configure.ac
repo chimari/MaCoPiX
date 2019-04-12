@@ -163,6 +163,8 @@ AC_SUBST(GTK3_CFLAGS)
 dnl Checks for iconv
 AM_ICONV
 
+dnl gresource
+AC_PATH_PROG([GLIB_COMPILE_RESOURCES], [glib-compile-resources])
 
 dnl for gettext
 ALL_LINGUAS="ja"
@@ -379,7 +381,8 @@ AC_CONFIG_FILES([Makefile
                  m4/Makefile
 		 src/version.h
 		 src/macopix_res.rc
-                 src/Makefile])
+                 src/Makefile
+		 src/icons/Makefile])
 AC_OUTPUT
 
 

@@ -27,11 +27,6 @@
 
 #include "main.h"
 
-#ifdef USE_BIFF
-#include "def_biff.xpm"
-#include "def_biff_r.xpm"
-#endif
-
 
 
 // *** GLOBAL ARGUMENT ***
@@ -707,10 +702,10 @@ void LoadBiffPixmap(GtkWidget *widget, typMascot *mascot){
   }
   else{
     if(mascot->mail.pix_pos==MAIL_PIX_LEFT){
-      pixbuf = gdk_pixbuf_new_from_xpm_data(def_biff);
+      pixbuf = gdk_pixbuf_new_from_resource ("/icons/def_biff.png", NULL);
     }
     else{
-      pixbuf = gdk_pixbuf_new_from_xpm_data(def_biff_r);
+      pixbuf = gdk_pixbuf_new_from_resource ("/icons/def_biff_r.png", NULL);
     }
   }
   w = gdk_pixbuf_get_width(pixbuf)*((gfloat)(mascot->magnify)/100);

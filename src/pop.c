@@ -82,8 +82,6 @@ extern typMascot *Mascot;
 /*==========================================================================*/
 /* Function Prototype                                                       */
 /*==========================================================================*/
-int popReadLine(char *ptr, int size, guint ssl_mode);
-int popWriteLine(char *ptr, guint ssl_mode);
 
 //from Sylpheed
 gint sock_gets();
@@ -1191,7 +1189,7 @@ popConnect(char *server, int port, char *apop_key, guint ssl_mode, gboolean ssl_
       set_nonblocking_mode(Sockfd, FALSE);
       
       ssl=ssl_init_socket_with_method(Sockfd, server, ssl_cert_res, 
-				      subject, issue, verify, SSL_METHOD_TLSv1);
+				      subject, issue, verify, SSL_METHOD_TLSv12);
       if(!ssl){
 	//g_warning("can't start TLS session.\n");
 	//if (nb_mode)

@@ -71,7 +71,7 @@
 
 typedef enum {
 	SSL_METHOD_SSLv23,
-	SSL_METHOD_TLSv1
+	SSL_METHOD_TLSv12
 } SSLMethod;
 
 

@@ -1,4 +1,4 @@
-SUBDIRS= intl m4 po src
+SUBDIRS= intl m4 po src src/icons
 
 EXTRA_DIST =  config.rpath\
 	ChangeLog.ja \

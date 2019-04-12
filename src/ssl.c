@@ -61,7 +61,7 @@
 #endif
 
 static SSL_CTX *ssl_ctx_SSLv23 = NULL;
-static SSL_CTX *ssl_ctx_TLSv1 = NULL;
+static SSL_CTX *ssl_ctx_TLSv12 = NULL;
 
 static GSList *trust_list = NULL;
 static GSList *reject_list = NULL;
@@ -169,18 +169,18 @@ void ssl_init(void)
 			g_warning("SSLv23 SSL_CTX_load_verify_locations failed.\n");
 	}
 
-	ssl_ctx_TLSv1 = SSL_CTX_new(TLSv1_client_method());
-	if (ssl_ctx_TLSv1 == NULL) {
-		pop_debug_print("TLSv1 not available\n");
+	ssl_ctx_TLSv12 = SSL_CTX_new(TLS_client_method());
+	if (ssl_ctx_TLSv12 == NULL) {
+		pop_debug_print("TLSv1 or 2 not available\n");
 	} else {
-		pop_debug_print("TLSv1 available\n");
+		pop_debug_print("TLSv1 or 2 available\n");
 		if ((certs_file || certs_dir) 
 #ifdef USE_OPENSSL
 		    &&
-		    !SSL_CTX_load_verify_locations(ssl_ctx_TLSv1, certs_file, certs_dir)
+		    !SSL_CTX_load_verify_locations(ssl_ctx_TLSv12, certs_file, certs_dir)
 #endif
 		    )
-			g_warning("TLSv1 SSL_CTX_load_verify_locations failed.\n");
+			g_warning("TLSv1_2 SSL_CTX_load_verify_locations failed.\n");
 	}
 
 	if(certs_dir) g_free(certs_dir);
@@ -206,9 +206,9 @@ void ssl_done(void)
 		ssl_ctx_SSLv23 = NULL;
 	}
 
-	if (ssl_ctx_TLSv1) {
-		SSL_CTX_free(ssl_ctx_TLSv1);
-		ssl_ctx_TLSv1 = NULL;
+	if (ssl_ctx_TLSv12) {
+		SSL_CTX_free(ssl_ctx_TLSv12);
+		ssl_ctx_TLSv12 = NULL;
 	}
 	pop_debug_print("SSL done : out\n");
 }
@@ -262,12 +262,12 @@ SSL *ssl_init_socket_with_method(gint fd, char *hostname,  gint ssl_cert_res,
 		}
 		ssl = SSL_new(ssl_ctx_SSLv23);
 		break;
-	case SSL_METHOD_TLSv1:
-		if (!ssl_ctx_TLSv1) {
+	case SSL_METHOD_TLSv12:
+		if (!ssl_ctx_TLSv12) {
 			g_warning("SSL method not available\n");
 			return(NULL);
 		}
-		ssl = SSL_new(ssl_ctx_TLSv1);
+		ssl = SSL_new(ssl_ctx_TLSv12);
 		break;
 	default:
 	  g_warning("Unknown SSL method *PROGRAM BUG*\n");

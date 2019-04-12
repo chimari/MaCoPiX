@@ -2846,7 +2846,7 @@ gchar* create_nkr_change_image_dialog (gchar *lost_filename, int i_pix)
   gchar *dest_file;
 
   if(flagChildDialog){
-    return;
+    return(NULL);
   }
   else{
     flagChildDialog=TRUE;
