@@ -466,6 +466,9 @@ EXTRA_DIST = config.rpath\
 	makewin32.sh
 
 man_MANS = macopix.1
+CLEANFILES = *~
+DISTCLEANFILES = 
+AM_CPPFLAGS = -DLOCALEDIR=\""$(localedir)"\"
 BZIP2_ENV = 
 GZIP_ENV = 
 TAR = tar
@@ -902,10 +905,12 @@ install-strip:
 mostlyclean-generic:
 
 clean-generic:
+	-test -z "$(CLEANFILES)" || rm -f $(CLEANFILES)
 
 distclean-generic:
 	-test -z "$(CONFIG_CLEAN_FILES)" || rm -f $(CONFIG_CLEAN_FILES)
 	-test . = "$(srcdir)" || test -z "$(CONFIG_CLEAN_VPATH_FILES)" || rm -f $(CONFIG_CLEAN_VPATH_FILES)
+	-test -z "$(DISTCLEANFILES)" || rm -f $(DISTCLEANFILES)
 
 maintainer-clean-generic:
 	@echo "This command is intended for maintainers to use"

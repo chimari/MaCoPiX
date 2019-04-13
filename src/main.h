@@ -93,16 +93,20 @@
 
 #include<gtk/gtk.h>
 #include<gdk-pixbuf/gdk-pixbuf.h>
-//#include <gdk_imlib.h>
-
-#ifndef DISABLE_CAIRO
-#if defined(CAIRO_H)
-#define USE_CAIRO
-#endif
-#endif
-
-#ifdef USE_CAIRO
 #include <cairo.h>
+#include <signal.h>
+
+#if HAVE_SYS_WAIT_H
+#include <sys/wait.h>
+#endif
+
+#ifdef USE_WIN32
+#include <windows.h>
+#include <gdk/gdkwin32.h>
+#include <mmsystem.h>
+#else // for WIN32
+#include <gdk/gdkx.h>
+#include <X11/Xatom.h>
 #endif
 
 #include "resources.h"
@@ -321,9 +325,7 @@ enum{ CLOCK_TYPE_24S,
 
 
 // Font size ratio for AM/PM sign
-#ifdef USE_CAIRO
 #define CLOCK_AMPM_RATIO 0.6
-#endif
 
 // Install mode
 enum{   MENU_SELECT, 
@@ -334,12 +336,10 @@ enum{   MENU_SELECT,
 	  START_MENU_INSTALL_COMMON,
  } MenuSelect;
 
-#if GTK_CHECK_VERSION(2,12,0) || defined(USE_CAIRO) || defined(USE_WIN32)
 //DEFAULT Alpha
 #define DEF_ALPHA_MAIN 100
 #ifdef USE_BIFF
 #define DEF_ALPHA_BIFF 100
-#endif
 #endif
 
 #ifdef USE_WIN32
@@ -347,7 +347,6 @@ enum{   MENU_SELECT,
 #define DEF_ALPHA_CLK 50
 #endif
 
-#ifdef USE_CAIRO
 #define CAIRO_DEF_ALPHA_OTHER 0xFFFF
 #define CAIRO_DEF_ALPHA_SDW 0xB000
 #ifdef USE_WIN32
@@ -357,9 +356,6 @@ enum{   MENU_SELECT,
 #define CAIRO_DEF_ALPHA_CLK 0x9000
 #define CAIRO_DEF_ALPHA_BAL 0xB000
 #endif
-#endif
-
-#ifdef USE_CAIRO // SHADOW
 
 #ifdef USE_WIN32
 #define CAIRO_SHADOW_X 2.0
@@ -370,7 +366,6 @@ enum{   MENU_SELECT,
 #endif
 
 #define CAIRO_SHADOW_ALPHA 40
-#endif
 
 
 //DEFAULT COLOR
@@ -600,7 +595,6 @@ struct _typSignal{
   gboolean flag;
 };
 
-#ifdef USE_CAIRO
 // PangoCairo Font変換用
 typedef struct _myPangoCairo myPangoCairo;
 struct _myPangoCairo{
@@ -609,7 +603,6 @@ struct _myPangoCairo{
   cairo_font_slant_t slant;
   cairo_font_weight_t weight;
 };
-#endif
 
 // メニュースキャン用構造体
 typedef struct _typScanMenu typScanMenu;
@@ -729,10 +722,8 @@ struct _typMascot{
   gchar *fontname_clk;  
   gchar *deffontname_bal;  
   gchar *deffontname_clk;  
-#ifdef USE_CAIRO
   myPangoCairo fontbal_pc;
   myPangoCairo fontclk_pc;
-#endif
   typSprite *sprites;
   int clkmode;
   int clk_x;
@@ -760,6 +751,22 @@ struct _typMascot{
   GdkGC *gc_balbg[2];
   GdkGC *gc_balbd[2];
   GdkGC *gc_balmask[2];
+#ifdef USE_GTK3
+  GdkRGBA *def_colclk;
+  GdkRGBA *def_colclksd;
+  GdkRGBA *def_colclkbg;
+  GdkRGBA *def_colclkbd;
+  GdkRGBA *def_colbal;
+  GdkRGBA *def_colbalbg;
+  GdkRGBA *def_colbalbd;
+  GdkRGBA *colclk;
+  GdkRGBA *colclksd;
+  GdkRGBA *colclkbg;
+  GdkRGBA *colclkbd;
+  GdkRGBA *colbal;
+  GdkRGBA *colbalbg;
+  GdkRGBA *colbalbd;
+#else
   GdkColor *def_colclk;
   GdkColor *def_colclksd;
   GdkColor *def_colclkbg;
@@ -774,7 +781,7 @@ struct _typMascot{
   GdkColor *colbal;
   GdkColor *colbalbg;
   GdkColor *colbalbd;
-#ifdef USE_CAIRO
+#endif
   gint def_alpclk;
   gint def_alpclksd;
   gint def_alpclkbg;
@@ -796,18 +803,15 @@ struct _typMascot{
   gint alpha_biff;
   gint def_alpha_biff;
 #endif
-#endif
 #ifdef USE_WIN32
   gint alpha_bal;
   gint def_alpha_bal;
   gint alpha_clk;
   gint def_alpha_clk;
 #endif
-#ifdef USE_CAIRO
   gboolean flag_img_cairo;
   gboolean flag_bal_cairo;
   gboolean flag_clk_cairo;
-#endif
   gboolean flag_clksd;
   gboolean flag_clkrd;
 #ifdef USE_WIN32
@@ -909,21 +913,27 @@ struct _typMascot{
   GtkStatusIcon *tray_icon;
   gboolean tray_icon_flag;
 #endif
-#if GTK_CHECK_VERSION(2,12,0) || defined(USE_CAIRO)
   gint flag_composite;
   gint force_composite;
-#endif
-#ifdef USE_CAIRO
   gint    sdw_flag;
   gfloat  sdw_x;
   gfloat  sdw_y;
   gint    sdw_alpha;
-#endif
   gint sdw_x_int;
   gint sdw_y_int;
 };
 
 #endif
+
+///////////   Global Arguments   //////////
+GdkPixmap *pixmap_main[2], *pixmap_clk[2], *pixmap_bal[2];
+#ifdef USE_WIN32
+GdkPixmap *pixmap_sdw[2];
+#endif
+gint window_x, window_y;
+gboolean supports_alpha;
+gboolean flag_balloon;
+typMascot *Mascot;
 
 
 ///////////   Proto types   //////////
@@ -1150,4 +1160,5 @@ gchar* GetCurrentWMName();
 gchar* WindowsVersion();
 #endif
 void pop_debug_print (const gchar *format, ...) G_GNUC_PRINTF(1, 2);
+gchar *fgets_new();
 

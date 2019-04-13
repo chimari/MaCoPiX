@@ -30,12 +30,6 @@
 
 
 // *** GLOBAL ARGUMENT ***
-extern gint window_x, window_y;
-
-extern GdkDrawable *pixmap_main[2], *pixmap_clk[2], *pixmap_bal[2];
-#ifdef USE_WIN32
-extern GdkDrawable *pixmap_sdw[2];
-#endif
 
 #ifdef USE_WIN32
 void GdkWinChangeAlpha();
@@ -59,8 +53,6 @@ gint DrawMascotTemp();
 void create_default_font_selection_dialog();
 void ChangeDefFontname();
 static void close_child_dialog();
-
-gboolean supports_alpha;
 
 gboolean flag_img_cairo_go=FALSE;
 

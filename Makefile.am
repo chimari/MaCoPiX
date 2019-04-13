@@ -12,6 +12,10 @@ EXTRA_DIST =  config.rpath\
 
 man_MANS = macopix.1
 
+CLEANFILES      = *~
+DISTCLEANFILES  = 
+AM_CPPFLAGS = -DLOCALEDIR=\""$(localedir)"\"
+
 BZIP2_ENV =
 GZIP_ENV =
 TAR = tar

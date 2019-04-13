@@ -26,34 +26,10 @@
 
 
 #include "main.h"
-#include <signal.h>
-
-#if HAVE_SYS_WAIT_H
-#include <sys/wait.h>
-#endif
-
-#ifdef USE_WIN32
-#include <windows.h>
-#include <gdk/gdkwin32.h>
-#include <mmsystem.h>
-#else // for WIN32
-#include <gdk/gdkx.h>
-#include <X11/Xatom.h>
-#endif
-
-#include "sockmsg.h"
 
 #undef DEBUG
 
 // *** GLOBAL ARGUMENT ***
-#ifndef __GTK_TOOLTIP_H__
-extern GtkTooltips *tooltip;
-#endif
-extern GdkDrawable *pixmap_main[2], *pixmap_clk[2], *pixmap_bal[2];
-#ifdef USE_WIN32
-extern GdkDrawable *pixmap_sdw[2];
-#endif
-
 
 void DrawPanelClock0();
 
@@ -64,13 +40,12 @@ gint start_x, start_y, clk_start_x, clk_start_y;
 #ifdef USE_BIFF
 gint biff_start_x, biff_start_y;
 #endif
-gboolean flag_balloon;
 gboolean flag_anime, flag_clock;
 int old_day;
 int errflag;
 int xpop,ypop;
 gint FWinX,FWinWidth;
-gint window_x, window_y, clk_window_x, clk_window_y;
+gint clk_window_x, clk_window_y;
 #ifdef USE_BIFF
 gint biff_window_x, biff_window_y;
 #endif
@@ -732,7 +707,7 @@ int MoveToFocus(typMascot *mascot, gboolean force_fl)
 
 
 // 色つきGCの作成とカラーallocation
-GdkGC *MPCreatePen(GdkDrawable *pixmap, GdkColor *color)
+GdkGC *MPCreatePen(GdkPixmap *pixmap, GdkColor *color)
 {
   GdkGC *gc;
 
@@ -1593,18 +1568,10 @@ void clock_update(typMascot *mascot, gboolean force_flag){
                                       tmpt->tm_mday,week);
     g_free(week);
 
-#ifdef __GTK_TOOLTIP_H__
     gtk_widget_set_tooltip_text(mascot->clock_main,caldigit);
-#else
-    gtk_tooltips_set_tip(tooltip,mascot->clock_main,caldigit,NULL);
-#endif
 
 #ifdef USE_WIN32
-#ifdef __GTK_TOOLTIP_H__
     gtk_widget_set_tooltip_text(mascot->clock_fg,caldigit);
-#else
-    gtk_tooltips_set_tip(tooltip,mascot->clock_fg,caldigit,NULL);
-#endif
 #endif
 
     g_free(caldigit);

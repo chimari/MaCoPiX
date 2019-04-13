@@ -160,18 +160,8 @@ typedef struct{
 
 
 
-
 // *** GLOBAL ARGUMENT ***
-extern gint window_x, window_y;
-extern typMascot *Mascot;
-extern gboolean flag_balloon;
-
-// *** GLOBAL ARGUMENT ***
-#ifdef __GTK_TOOLTIP_H__
 GtkTooltip *tooltip;
-#else
-GtkTooltips *tooltip;
-#endif
 typMascot tmp_mascot;
 gchar *tmp_pixfile[MAX_PIXMAP];
 gboolean flag_make_pattern_list[MAX_ANIME_PATTERN];

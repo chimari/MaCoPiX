@@ -39,8 +39,6 @@
 #include <gdk/gdkwin32.h>
 #endif
 
-extern typMascot *Mascot;
-
 static void cc_get_toggle();
 static void cc_true ();
 

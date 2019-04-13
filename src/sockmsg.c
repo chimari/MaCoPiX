@@ -36,8 +36,6 @@
 #include <netdb.h>
 #include <ctype.h>
 
-extern gboolean flag_balloon;
-
 gchar *cut_spc(gchar * obj_name);
 static gchar *get_socket_name(void);
 static gchar *get_duet_name(gchar *mascotname);

@@ -58,13 +58,6 @@
 
 
 // *** GLOBAL ARGUMENT ***
-typMascot *Mascot;
-GdkDrawable *pixmap_main[2]={NULL,NULL}, 
-  *pixmap_clk[2]={NULL,NULL},
-  *pixmap_bal[2]={NULL,NULL};
-#ifdef USE_WIN32
-GdkDrawable *pixmap_sdw[2]={NULL,NULL};
-#endif
 
 gboolean FlagInstalledMenu;
 // スプライト初期化
@@ -485,7 +478,11 @@ void ReadMenu(typMascot *mascot, gint offset_i_cat, gchar *merge_file)
 	    g_free(progress_txt);
 	    progress_txt=NULL;
 	    while (my_main_iteration(FALSE));
+#ifdef USE_GTK3	    
+	    gdk_display_flush(gdk_display_get_default());
+#else	    
 	    gdk_flush();
+#endif	    
 	    usleep(INTERVAL*1e3);
 	  }
 	  mascot->menu_total++;
@@ -768,6 +765,54 @@ void SaveMenu(typMascot *mascot)
 
 void InitDefCol(typMascot* mascot){
   // Default Color for GUI
+#ifdef USE_GTK3
+  GdkRGBA init_colclk = {(gdouble)COLOR_CLK_R/(gdouble)0xFFFF,
+			 (gdouble)COLOR_CLK_G/(gdouble)0xFFFF,
+			 (gdouble)COLOR_CLK_B/(gdouble)0xFFFF,
+			 (gdouble)CAIRO_DEF_ALPHA_OTHER/(gdouble)0xFFFF};
+  GdkRGBA init_colclksd = {(gdouble)COLOR_CLKSD_R/(gdouble)0xFFFF,
+			   (gdouble)COLOR_CLKSD_G/(gdouble)0xFFFF,
+			   (gdouble)COLOR_CLKSD_B/(gdouble)0xFFFF,
+			   (gdouble)CAIRO_DEF_ALPHA_SDW/(gdouble)0xFFFF};
+  GdkRGBA init_colclkbg = {(gdouble)COLOR_CLKBG_R/(gdouble)0xFFFF,
+			   (gdouble)COLOR_CLKBG_G/(gdouble)0xFFFF,
+			   (gdouble)COLOR_CLKBG_B/(gdouble)0xFFFF,
+			   (gdouble)CAIRO_DEF_ALPHA_CLK/(gdouble)0xFFFF};
+  GdkRGBA init_colclkbd = {(gdouble)COLOR_CLKBD_R/(gdouble)0xFFFF,
+			   (gdouble)COLOR_CLKBD_G/(gdouble)0xFFFF,
+			   (gdouble)COLOR_CLKBD_B/(gdouble)0xFFFF,
+			   (gdouble)CAIRO_DEF_ALPHA_OTHER/(gdouble)0xFFFF};
+  
+  GdkRGBA init_colbal = {(gdouble)COLOR_BAL_R/(gdouble)0xFFFF,
+			 (gdouble)COLOR_BAL_G/(gdouble)0xFFFF,
+			 (gdouble)COLOR_BAL_B/(gdouble)0xFFFF,
+			 (gdouble)CAIRO_DEF_ALPHA_OTHER/(gdouble)0xFFFF};
+  GdkRGBA init_colbalbg = {(gdouble)COLOR_BALBG_R/(gdouble)0xFFFF,
+			   (gdouble)COLOR_BALBG_G/(gdouble)0xFFFF,
+			   (gdouble)COLOR_BALBG_B/(gdouble)0xFFFF,
+			   (gdouble)CAIRO_DEF_ALPHA_BAL/(gdouble)0xFFFF};
+  GdkRGBA init_colbalbd = {(gdouble)COLOR_BALBD_R/(gdouble)0xFFFF,
+			   (gdouble)COLOR_BALBD_G/(gdouble)0xFFFF,
+			   (gdouble)COLOR_BALBD_B/(gdouble)0xFFFF,
+			   (gdouble)CAIRO_DEF_ALPHA_OTHER/(gdouble)0xFFFF};
+  
+  mascot->def_colclk=g_malloc0(sizeof(GdkRGBA));
+  mascot->def_colclksd=g_malloc0(sizeof(GdkRGBA));
+  mascot->def_colclkbg=g_malloc0(sizeof(GdkRGBA));
+  mascot->def_colclkbd=g_malloc0(sizeof(GdkRGBA));
+
+  mascot->def_colbal=g_malloc0(sizeof(GdkRGBA));
+  mascot->def_colbalbg=g_malloc0(sizeof(GdkRGBA));
+  mascot->def_colbalbd=g_malloc0(sizeof(GdkRGBA));
+  
+  mascot->def_colclk=gdk_rgba_copy(&init_colclk);
+  mascot->def_colclksd=gdk_rgba_copy(&init_colclksd);
+  mascot->def_colclkbg=gdk_rgba_copy(&init_colclkbg);
+  mascot->def_colclkbd=gdk_rgba_copy(&init_colclkbd);
+  mascot->def_colbal=gdk_rgba_copy(&init_colbal);
+  mascot->def_colbalbg=gdk_rgba_copy(&init_colbalbg);
+  mascot->def_colbalbd=gdk_rgba_copy(&init_colbalbd);
+#else
   GdkColor init_colclk = {0, COLOR_CLK_R, COLOR_CLK_G, COLOR_CLK_B};
   GdkColor init_colclksd = {0, COLOR_CLKSD_R, COLOR_CLKSD_G, COLOR_CLKSD_B};
   GdkColor init_colclkbg = {0, COLOR_CLKBG_R, COLOR_CLKBG_G, COLOR_CLKBG_B};
@@ -776,7 +821,6 @@ void InitDefCol(typMascot* mascot){
   GdkColor init_colbal = {0, COLOR_BAL_R, COLOR_BAL_G, COLOR_BAL_B};
   GdkColor init_colbalbg = {0, COLOR_BALBG_R, COLOR_BALBG_G, COLOR_BALBG_B};
   GdkColor init_colbalbd = {0, COLOR_BALBD_R, COLOR_BALBD_G, COLOR_BALBD_B};
- 
 
   mascot->def_colclk=g_malloc0(sizeof(GdkColor));
   mascot->def_colclksd=g_malloc0(sizeof(GdkColor));
@@ -802,6 +846,7 @@ void InitDefCol(typMascot* mascot){
   mascot->def_alpbal  =CAIRO_DEF_ALPHA_OTHER;
   mascot->def_alpbalbg=CAIRO_DEF_ALPHA_BAL;
   mascot->def_alpbalbd=CAIRO_DEF_ALPHA_OTHER;
+#endif 
 }
 
 
@@ -3948,6 +3993,16 @@ void InitMascot(typMascot *mascot)
   mascot->bal_pos=mascot->bal_defpos;
   mascot->fontname_bal = NULL;
 
+#ifdef USE_GTK3
+  mascot->colclk=gdk_rgba_copy(mascot->def_colclk);
+  mascot->colclksd=gdk_rgba_copy(mascot->def_colclksd);
+  mascot->colclkbg=gdk_rgba_copy(mascot->def_colclkbg);
+  mascot->colclkbd=gdk_rgba_copy(mascot->def_colclkbd);
+
+  mascot->colbal=gdk_rgba_copy(mascot->def_colbal);
+  mascot->colbalbg=gdk_rgba_copy(mascot->def_colbalbg);
+  mascot->colbalbd=gdk_rgba_copy(mascot->def_colbalbd);
+#else
   mascot->colclk=gdk_color_copy(mascot->def_colclk);
   mascot->colclksd=gdk_color_copy(mascot->def_colclksd);
   mascot->colclkbg=gdk_color_copy(mascot->def_colclkbg);
@@ -3956,16 +4011,7 @@ void InitMascot(typMascot *mascot)
   mascot->colbal=gdk_color_copy(mascot->def_colbal);
   mascot->colbalbg=gdk_color_copy(mascot->def_colbalbg);
   mascot->colbalbd=gdk_color_copy(mascot->def_colbalbd);
-
-  mascot->def_colclk=gdk_color_copy(mascot->def_colclk);
-  mascot->def_colclksd=gdk_color_copy(mascot->def_colclksd);
-  mascot->def_colclkbg=gdk_color_copy(mascot->def_colclkbg);
-  mascot->def_colclkbd=gdk_color_copy(mascot->def_colclkbd);
-
-  mascot->def_colbal=gdk_color_copy(mascot->def_colbal);
-  mascot->def_colbalbg=gdk_color_copy(mascot->def_colbalbg);
-  mascot->def_colbalbd=gdk_color_copy(mascot->def_colbalbd);
-
+#endif
 #ifdef USE_BIFF
   mascot->mail.pix_file=NULL;
   mascot->mail.pix_pos=MAIL_PIX_RIGHT;
@@ -4424,7 +4470,6 @@ int main(int argc, char **argv)
 #ifndef USE_WIN32  
   GdkPixbuf *icon;
 #endif
-  GtkStyle *style;
   gint timer;
   gchar *rcfile=NULL;
   int i_opt ;
@@ -4534,10 +4579,22 @@ int main(int argc, char **argv)
 
   get_rc_option(argc, argv, Mascot);
 
+#ifndef USE_GTK3
   gtk_set_locale();
+#endif
 
   gtk_init(&argc, &argv);
 
+  pixmap_main[0]=NULL;
+  pixmap_main[1]=NULL;
+  pixmap_clk[0]=NULL;
+  pixmap_clk[1]=NULL;
+  pixmap_bal[0]=NULL;
+  pixmap_bal[1]=NULL;
+#ifdef USE_WIN32
+  pixmap_sdw[0]=NULL;
+  pixmap_sdw[1]=NULL;
+#endif
 
   InitDefCol(Mascot);
 
@@ -4552,7 +4609,9 @@ int main(int argc, char **argv)
 
 
   // Gdk-Pixbufで使用
+#ifndef USE_GTK3
   gdk_rgb_init();
+#endif
 
 #ifndef USE_WIN32  
   icon = gdk_pixbuf_new_from_resource ("/icons/macopix_icon.png", NULL);
@@ -4593,8 +4652,10 @@ int main(int argc, char **argv)
   gtk_widget_set_app_paintable(Mascot->win_main, TRUE);
   gtk_window_set_title(GTK_WINDOW(Mascot->win_main), "MaCoPiX");
 
+#ifndef USE_GTK3
   gtk_window_set_wmclass(GTK_WINDOW(Mascot->win_main),
 			 "main_window", "MaCoPiX");
+#endif
   
   my_signal_connect(Mascot->win_main, "destroy",gtk_main_quit,NULL);
 
@@ -4669,13 +4730,26 @@ int main(int argc, char **argv)
   my_signal_connect (Mascot->win_main, "drag-data-received",
 		     signal_drag_data_received, NULL);
 
-  style = gtk_widget_get_style(Mascot->win_main);
-
-
   InitMascot0(Mascot);
   ReadMascot(Mascot,FALSE);
 
   // カーソル
+#ifdef USE_GTK3
+  Mascot->cursor.normal=gdk_cursor_new_for_display(gdk_display_get_default(),
+						   CURSOR_NORMAL);
+  Mascot->cursor.push  =gdk_cursor_new_for_display(gdk_display_get_default(),
+						   CURSOR_PUSH);
+  Mascot->cursor.drag_h=gdk_cursor_new_for_display(gdk_display_get_default(),
+						   CURSOR_DRAG_H);
+  Mascot->cursor.drag_f=gdk_cursor_new_for_display(gdk_display_get_default(),
+						   CURSOR_DRAG_F);
+#ifdef USE_BIFF
+  Mascot->cursor.biff  =gdk_cursor_new_for_display(gdk_display_get_default(),
+						   CURSOR_BIFF);
+#endif // USE_BIFF
+  Mascot->cursor.clk   =gdk_cursor_new_for_display(gdk_display_get_default(),
+						   CURSOR_CLK);
+#else // USE_GTK3
   Mascot->cursor.normal=gdk_cursor_new(CURSOR_NORMAL);
   Mascot->cursor.push  =gdk_cursor_new(CURSOR_PUSH);
   Mascot->cursor.drag_h=gdk_cursor_new(CURSOR_DRAG_H);
@@ -4684,6 +4758,7 @@ int main(int argc, char **argv)
   Mascot->cursor.biff  =gdk_cursor_new(CURSOR_BIFF);
 #endif // USE_BIFF
   Mascot->cursor.clk   =gdk_cursor_new(CURSOR_CLK);
+#endif  // USE_GTK3
 
   make_balloon(Mascot);
 #ifdef USE_WIN32

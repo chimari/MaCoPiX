@@ -31,7 +31,7 @@
 #define POP_OK 0
 #define POP_ERROR 1
 #define POP_INVALID 2
-#define POP_MAX_LINE 1024
+#define POP_MAX_LINE 4096
 #define POP_MAX_CMD 512
 #define POP_MAX_UIDL 32
 

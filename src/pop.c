@@ -69,15 +69,12 @@
 #include <stdio.h>
 
 #include "libpop.h"
-#include "main.h"
 
 #ifdef USE_SSL
 #include<fcntl.h>
 #  include "ssl.h"
 SSL *ssl;
 #endif
-
-extern typMascot *Mascot;
 
 /*==========================================================================*/
 /* Function Prototype                                                       */

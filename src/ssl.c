@@ -66,8 +66,6 @@ static SSL_CTX *ssl_ctx_TLSv12 = NULL;
 static GSList *trust_list = NULL;
 static GSList *reject_list = NULL;
 
-extern gchar *get_rc_dir();
-
 gboolean is_dir_exist(const gchar *dir);
 
 

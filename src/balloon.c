@@ -30,13 +30,6 @@
 #include<ctype.h>
 
 // *** GLOBAL ARGUMENT ***
-extern gint window_x, window_y;
-extern GdkDrawable *pixmap_bal[2];
-
-extern gboolean supports_alpha;
-
-extern gboolean flag_balloon;
-
 GdkBitmap *mask_bal[2]={NULL,NULL};;
 
 

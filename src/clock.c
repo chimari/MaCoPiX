@@ -28,14 +28,7 @@
 
 GdkBitmap *mask_clk[2]={NULL,NULL};;
 
-extern GdkDrawable *pixmap_clk[2];
-
-
 // from gui.c
-#ifndef __GTK_TOOLTIP_H__
-extern GtkTooltips *tooltip;
-#endif
-
 
 void DrawPanelClock();
 void DrawPanelClock2();
@@ -57,9 +50,6 @@ void  make_clock(typMascot *mascot){
 #ifndef USE_WIN32
   /* gdk_window_set_override_redirect is not implemented (for warning) */
   gdk_window_set_override_redirect(gtk_widget_get_window(mascot->clock_main),TRUE);
-#endif
-#ifndef __GTK_TOOLTIP_H__
-  tooltip = gtk_tooltips_new();
 #endif
   my_signal_connect(mascot->clock_main, "configure_event",
   		    dw_configure_clk, (gpointer)mascot);

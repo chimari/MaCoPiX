@@ -1903,7 +1903,7 @@ configure:18103: result: yes
 configure:18103: checking for pthread.h
 configure:18103: result: yes
 configure:18141: gcc -o conftest -g -O2   conftest.c   >&5
-/tmp/cccvFBHm.o: In function `main':
+/tmp/ccO2QCej.o: In function `main':
 /home/taji/tmp/macopix/conftest.c:117: undefined reference to `pthread_mutexattr_init'
 collect2: error: ld returned 1 exit status
 configure:18141: $? = 1
@@ -2233,7 +2233,7 @@ configure:19032: $? = 0
 configure:19032: result: yes
 configure:19045: checking for getlocalename_l
 configure:19045: gcc -o conftest -g -O2   conftest.c  >&5
-/tmp/ccNhxUe5.o: In function `main':
+/tmp/ccXs7gET.o: In function `main':
 /home/taji/tmp/macopix/conftest.c:170: undefined reference to `getlocalename_l'
 collect2: error: ld returned 1 exit status
 configure:19045: $? = 1

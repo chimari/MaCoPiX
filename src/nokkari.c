@@ -60,8 +60,6 @@ gchar *rdm_ptn, *clk_ptn;
 gchar *nkr_msg;
 
 
-extern typMascot *Mascot;
-
 // のっかりキャラ用 iniファイルのセーブ
 void NkrSave (typMascot *mascot)
 {

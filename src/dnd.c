@@ -31,8 +31,6 @@
 #include <gdk/gdkwin32.h>
 #endif
 
-extern typMascot *Mascot;
-
 gboolean create_dnd_confirm_window();
 static void cc_true();
 
