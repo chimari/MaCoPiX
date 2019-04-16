@@ -37,6 +37,7 @@ gint old_x, old_y;
 
 // *** Protptype of function in this file
 void DrawBalloon();
+void DrawBalloon2();
 
 void DrawBalloon(typMascot *mascot, char **wn_iwp, int wn_max)
 {
@@ -357,10 +358,24 @@ void DrawBalloon(typMascot *mascot, char **wn_iwp, int wn_max)
   }
 #endif
 
+  {
+    GtkAllocation *allocation=g_new(GtkAllocation, 1);
+    GtkStyle *style=gtk_widget_get_style(mascot->dw_balloon);
+    gtk_widget_get_allocation(mascot->dw_balloon,allocation);
+    
+    gdk_draw_drawable(gtk_widget_get_window(mascot->dw_balloon),
+		      style->fg_gc[gtk_widget_get_state(mascot->dw_balloon)],
+		      pixmap_bal[mascot->bal_page],
+		      0,0,0,0,
+		      allocation->width,
+		      allocation->height);
+    g_free(allocation);
+  }
+  /*
   gdk_window_set_back_pixmap(gtk_widget_get_window(mascot->balloon_main),
 			     pixmap_bal[mascot->bal_page],
 			     FALSE);
-
+  */
  
   // Resize of Balloon (calling dw_bal_expose)
 #ifdef USE_WIN32
@@ -369,6 +384,7 @@ void DrawBalloon(typMascot *mascot, char **wn_iwp, int wn_max)
   }
 #endif
   gdk_window_resize (gtk_widget_get_window(mascot->balloon_main),w,h+h_arrow);
+  gtk_widget_set_size_request (mascot->dw_balloon,1,1);
   //ResizeMoveBalloon (mascot,mascot->x, mascot->y, w,h+h_arrow);
 
 
@@ -443,12 +459,12 @@ void DrawBalloon2(typMascot *mascot, char **wn_iwp, int wn_max)
   bal_width=0;
   for(i_wn=0;i_wn<wn_max;i_wn++){
 #ifdef __PANGOCAIRO_H__
-    pango_text=gtk_widget_create_pango_layout(mascot->balloon_main,
+    pango_text=gtk_widget_create_pango_layout(mascot->dw_balloon,
 					      wn_iwp[i_wn]);
     pango_layout_get_pixel_size(pango_text,&tmp_w,&tmp_h);
 #else
 
-    cr = gdk_cairo_create(gtk_widget_get_window(mascot->balloon_main));
+    cr = gdk_cairo_create(gtk_widget_get_window(mascot->dw_balloon));
     
     cairo_select_font_face (cr, 
 			    mascot->fontbal_pc.family,
@@ -681,10 +697,11 @@ void DrawBalloon2(typMascot *mascot, char **wn_iwp, int wn_max)
   }
 #endif
 
+  /*
   gdk_window_set_back_pixmap(gtk_widget_get_window(mascot->balloon_main),
 			     pixmap_bal[mascot->bal_page],
 			     FALSE);
-
+  */
  
 
 #ifdef USE_WIN32
@@ -698,13 +715,27 @@ void DrawBalloon2(typMascot *mascot, char **wn_iwp, int wn_max)
   }
 #endif
 
-  gdk_draw_drawable(gtk_widget_get_window(mascot->balloon_main),
+  {
+    GtkAllocation *allocation=g_new(GtkAllocation, 1);
+    GtkStyle *style=gtk_widget_get_style(mascot->dw_balloon);
+    gtk_widget_get_allocation(mascot->dw_balloon,allocation);
+    
+    gdk_draw_drawable(gtk_widget_get_window(mascot->dw_balloon),
+		      style->fg_gc[gtk_widget_get_state(mascot->dw_balloon)],
+		      pixmap_bal[mascot->bal_page],
+		      0,0,0,0,
+		      w,
+		      h+h_arrow);
+    g_free(allocation);
+  }
+  /*
+  gdk_draw_drawable(gtk_widget_get_window(mascot->dw_balloon),
 		    mascot->balloon_main->style->fg_gc[GTK_WIDGET_STATE(mascot->balloon_main)],
 		    pixmap_bal[mascot->bal_page],
 		    0,0,0,0,
 		    w,
 		    h+h_arrow);
-
+  */
   // Resize of Balloon (calling dw_bal_expose)
 #ifdef USE_WIN32
     if((mascot->flag_balfg)&&(mascot->alpha_bal!=100)){
@@ -712,6 +743,7 @@ void DrawBalloon2(typMascot *mascot, char **wn_iwp, int wn_max)
     }
 #endif
   gdk_window_resize (gtk_widget_get_window(mascot->balloon_main),w,h+h_arrow);
+  gtk_widget_set_size_request (mascot->dw_balloon, w, h+h_arrow);
   //ResizeMoveBalloon (mascot,mascot->x, mascot->y, w,h+h_arrow);
 
   if(shape_flag){
@@ -1032,17 +1064,21 @@ void DoBalloon(typMascot *mascot)
 
 
 void make_balloon(typMascot *mascot){
+  GtkWidget *ebox;
+  
   mascot->balloon_main = gtk_window_new(GTK_WINDOW_POPUP);
   gtk_window_set_accept_focus(GTK_WINDOW(mascot->balloon_main),FALSE);
   gtk_widget_set_app_paintable(mascot->balloon_main, TRUE);
   gtk_window_set_wmclass(GTK_WINDOW(mascot->balloon_main), "balloon", "MaCoPiX");
 
-  gtk_widget_set_events(mascot->balloon_main, 
-			GDK_FOCUS_CHANGE_MASK | 
-			GDK_BUTTON_MOTION_MASK | 
-			GDK_BUTTON_RELEASE_MASK | 
-			GDK_BUTTON_PRESS_MASK | 
-			GDK_EXPOSURE_MASK);
+  ebox=gtk_event_box_new();
+  gtk_container_add (GTK_CONTAINER (mascot->balloon_main), ebox);
+  
+  mascot->dw_balloon = gtk_drawing_area_new();
+  gtk_widget_set_size_request (mascot->dw_balloon, 1, 1);
+  gtk_container_add(GTK_CONTAINER(ebox), mascot->dw_balloon);
+  gtk_widget_set_app_paintable(mascot->dw_balloon, TRUE);
+
   gtk_widget_realize(mascot->balloon_main);
   gdk_window_set_decorations(gtk_widget_get_window(mascot->balloon_main), 0);
   gtk_window_set_resizable(GTK_WINDOW(mascot->balloon_main),TRUE);
@@ -1051,13 +1087,15 @@ void make_balloon(typMascot *mascot){
   gdk_window_set_override_redirect(gtk_widget_get_window(mascot->balloon_main),TRUE);
 #endif
 
-
-  my_signal_connect(mascot->balloon_main, "configure_event",
-		    dw_configure_bal, (gpointer)mascot);
   my_signal_connect(mascot->balloon_main, "expose_event",
+		    expose_bal, (gpointer)mascot);
+  my_signal_connect(mascot->dw_balloon, "configure_event",
+		    dw_configure_bal, (gpointer)mascot);
+  my_signal_connect(mascot->dw_balloon, "expose_event",
 		    dw_expose_bal, (gpointer)mascot);
 
   gtk_window_resize (GTK_WINDOW(mascot->balloon_main),1,1);
+  gtk_widget_set_size_request (mascot->dw_balloon,1,1);
 }
 
 
@@ -1077,7 +1115,7 @@ void make_balloon_fg(typMascot *mascot){
   gtk_widget_realize(mascot->balloon_fg);
   gdk_window_set_decorations(gtk_widget_get_window(mascot->balloon_fg), 0);
   gtk_window_set_resizable(GTK_WINDOW(mascot->balloon_main),TRUE);
-
+  
   my_signal_connect(mascot->balloon_fg, "configure_event",
 		    dw_configure_bal, (gpointer)mascot);
   my_signal_connect(mascot->balloon_fg, "expose_event",

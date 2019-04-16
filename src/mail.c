@@ -219,17 +219,32 @@ gboolean MailChecker(gpointer gdata){
 
 
 void make_biff_pix(typMascot *mascot){
+  GtkWidget *ebox;
   
   mascot->biff_pix = gtk_window_new(GTK_WINDOW_POPUP);
   gtk_window_set_accept_focus(GTK_WINDOW(mascot->biff_pix),FALSE);
   gtk_widget_set_app_paintable(mascot->biff_pix, TRUE);
-  gtk_widget_set_events(GTK_WIDGET (mascot->biff_pix), 
+
+  ebox=gtk_event_box_new();
+  gtk_container_add (GTK_CONTAINER (mascot->biff_pix), ebox);
+  
+  mascot->dw_biff = gtk_drawing_area_new();
+  gtk_widget_set_size_request (mascot->dw_biff, 1, 1);
+  gtk_container_add(GTK_CONTAINER(ebox), mascot->dw_biff);
+  gtk_widget_set_app_paintable(mascot->dw_biff, TRUE);
+
+  gtk_widget_set_events(ebox, 
 			GDK_FOCUS_CHANGE_MASK | 
 			GDK_BUTTON_MOTION_MASK | 
 			GDK_BUTTON_RELEASE_MASK | 
 			GDK_BUTTON_PRESS_MASK | 
 			GDK_EXPOSURE_MASK);
+  
+  gtk_widget_set_events(mascot->dw_biff, 
+			GDK_STRUCTURE_MASK | GDK_EXPOSURE_MASK);
+  
   gtk_widget_realize(mascot->biff_pix);
+  gtk_widget_realize(mascot->dw_biff);
   gtk_window_set_resizable(GTK_WINDOW(mascot->biff_pix),TRUE);
   gdk_window_set_decorations(gtk_widget_get_window(mascot->biff_pix), 0);
 #ifndef USE_WIN32
@@ -237,18 +252,21 @@ void make_biff_pix(typMascot *mascot){
   gdk_window_set_override_redirect(gtk_widget_get_window(mascot->biff_pix),TRUE);
 #endif
 
-  my_signal_connect(mascot->biff_pix, "configure_event",
-		    dw_configure_biff_pix, (gpointer)mascot);
   my_signal_connect(mascot->biff_pix, "expose_event",
+		    expose_biff_pix, (gpointer)mascot);
+  my_signal_connect(mascot->dw_biff, "configure_event",
+		    dw_configure_biff_pix, (gpointer)mascot);
+  my_signal_connect(mascot->dw_biff, "expose_event",
 		    dw_expose_biff_pix, (gpointer)mascot);
-  my_signal_connect(mascot->biff_pix, "button_press_event",
+  my_signal_connect(ebox, "button_press_event",
 		    biff_drag_begin, (gpointer)mascot);
-  my_signal_connect(mascot->biff_pix, "button_release_event",
+  my_signal_connect(ebox, "button_release_event",
 		    biff_drag_end, (gpointer)mascot);
-  my_signal_connect(mascot->biff_pix, "motion_notify_event",
+  my_signal_connect(ebox, "motion_notify_event",
 		    biff_window_motion, (gpointer)mascot);
 
   gtk_window_resize (GTK_WINDOW(mascot->biff_pix), 1, 1);
+  gtk_widget_set_size_request (mascot->dw_biff, 1, 1);
 }
 
 

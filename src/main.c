@@ -4106,6 +4106,7 @@ void InitMascot0(typMascot *mascot){
 
   mascot->flag_menu=FALSE;
 
+#ifndef USE_GTK3  
   for(i_page=0;i_page<2;i_page++){
     mascot->gc_main[i_page] = NULL;
     mascot->gc_mainsd[i_page] = NULL;
@@ -4119,13 +4120,18 @@ void InitMascot0(typMascot *mascot){
     mascot->gc_balbd[i_page] = NULL;
     mascot->gc_balmask[i_page] = NULL;
   }
-
+#endif
+  
   mascot->sprites=sprite_void;
 
 #ifdef USE_BIFF
   mascot->mail.proc_id=-1;
+#ifdef USE_GTK3
+  mascot->mail.pixbuf=NULL;
+#else  
   mascot->mail.pixmap=NULL;
   mascot->mail.mask=NULL;
+#endif  
   mascot->mail.drag=FALSE;
   mascot->mail.fs_max=NULL;
   mascot->mail.pop_readed=FALSE;
@@ -4489,6 +4495,7 @@ int main(int argc, char **argv)
 #endif
 #endif
   GtkTargetEntry drag_types[1] = {{"text/uri-list", 0, 0}};
+  GtkWidget *ebox;
 
 #ifdef USE_SOCKMSG
   sockmsg_flag=FALSE;
@@ -4585,6 +4592,18 @@ int main(int argc, char **argv)
 
   gtk_init(&argc, &argv);
 
+#ifdef USE_GTK3
+  pixbuf_main[0]=NULL;
+  pixbuf_main[1]=NULL;
+  pixbuf_clk[0]=NULL;
+  pixbuf_clk[1]=NULL;
+  pixbuf_bal[0]=NULL;
+  pixbuf_bal[1]=NULL;
+#ifdef USE_WIN32
+  pixbuf_sdw[0]=NULL;
+  pixbuf_sdw[1]=NULL;
+#endif
+#else
   pixmap_main[0]=NULL;
   pixmap_main[1]=NULL;
   pixmap_clk[0]=NULL;
@@ -4595,7 +4614,8 @@ int main(int argc, char **argv)
   pixmap_sdw[0]=NULL;
   pixmap_sdw[1]=NULL;
 #endif
-
+#endif
+  
   InitDefCol(Mascot);
 
   ReadRC(Mascot,FALSE);
@@ -4657,18 +4677,29 @@ int main(int argc, char **argv)
 			 "main_window", "MaCoPiX");
 #endif
   
-  my_signal_connect(Mascot->win_main, "destroy",gtk_main_quit,NULL);
+  my_signal_connect(Mascot->win_main, "destroy", gtk_main_quit, NULL);
 
-  gtk_widget_set_events(Mascot->win_main, 
+  gtk_window_resize(GTK_WINDOW(Mascot->win_main),1,1);
+
+  ebox=gtk_event_box_new();
+  gtk_container_add (GTK_CONTAINER (Mascot->win_main), ebox);
+  Mascot->dw_main = gtk_drawing_area_new();
+  gtk_widget_set_size_request (Mascot->dw_main, 1, 1);
+  gtk_container_add(GTK_CONTAINER(ebox), Mascot->dw_main);
+  gtk_widget_set_app_paintable(Mascot->dw_main, TRUE);
+
+  gtk_widget_set_events(ebox, 
 			GDK_FOCUS_CHANGE_MASK | 
 			GDK_BUTTON_MOTION_MASK | 
 			GDK_BUTTON_RELEASE_MASK | 
 			GDK_BUTTON_PRESS_MASK | 
 			GDK_EXPOSURE_MASK);
 
-  gtk_widget_realize(Mascot->win_main);
-  gtk_window_resize(GTK_WINDOW(Mascot->win_main),1,1);
+  gtk_widget_set_events(Mascot->dw_main, GDK_STRUCTURE_MASK | GDK_EXPOSURE_MASK);
 
+  // Realizing after set_events
+  gtk_widget_realize(Mascot->win_main);
+  
 #ifdef USE_WIN32
   Mascot->win_sdw = gtk_window_new(GTK_WINDOW_POPUP);
   gtk_window_set_accept_focus(GTK_WINDOW(Mascot->win_sdw),FALSE);
@@ -4686,7 +4717,6 @@ int main(int argc, char **argv)
 			GDK_BUTTON_PRESS_MASK | 
 			GDK_EXPOSURE_MASK);
 
-  gtk_widget_realize(Mascot->win_sdw);
   gtk_window_resize(GTK_WINDOW(Mascot->win_sdw),1,1);
 #endif
 
@@ -4712,7 +4742,8 @@ int main(int argc, char **argv)
 #ifdef USE_WIN32
   gdk_window_set_decorations(gtk_widget_get_window(Mascot->win_sdw), 0);
 #endif
-  
+
+  /*
   my_signal_connect(Mascot->win_main, "focus_in_event",focus_in, NULL);
   my_signal_connect(Mascot->win_main, "focus_out_event",focus_out, NULL);
   my_signal_connect(Mascot->win_main, "button_press_event",drag_begin,
@@ -4720,6 +4751,15 @@ int main(int argc, char **argv)
   my_signal_connect(Mascot->win_main, "button_release_event",drag_end,
 		    (gpointer)Mascot);
   my_signal_connect(Mascot->win_main, "motion_notify_event",window_motion,
+		    (gpointer)Mascot);
+  */
+  my_signal_connect(ebox, "focus_in_event",focus_in, NULL);
+  my_signal_connect(ebox, "focus_out_event",focus_out, NULL);
+  my_signal_connect(ebox, "button_press_event",drag_begin,
+		    (gpointer)Mascot);
+  my_signal_connect(ebox, "button_release_event",drag_end,
+		    (gpointer)Mascot);
+  my_signal_connect(ebox, "motion_notify_event",window_motion,
 		    (gpointer)Mascot);
 
 
@@ -4779,11 +4819,18 @@ int main(int argc, char **argv)
   Mascot->flag_ow=FALSE;
 
   // Window作成・変形
-  my_signal_connect(Mascot->win_main, "configure_event",dw_configure_main,
+  my_signal_connect(Mascot->dw_main, "configure_event",dw_configure_main,
   		    (gpointer)Mascot);
   // 重なった場合の再描画関連
-  my_signal_connect(Mascot->win_main, "expose_event",dw_expose_main,
+#ifdef USE_GTK3
+  my_signal_connect(Mascot->dw_main, "draw",dw_expose_main,
   		    (gpointer)Mascot);
+#else
+  my_signal_connect(Mascot->dw_main, "expose_event",dw_expose_main,
+  		    (gpointer)Mascot);
+  my_signal_connect(Mascot->win_main, "expose_event",expose_main,
+  		    (gpointer)Mascot);
+#endif
 
 #ifdef USE_WIN32
   my_signal_connect(Mascot->win_sdw, "configure_event",dw_configure_sdw,
@@ -4827,18 +4874,18 @@ int main(int argc, char **argv)
 
 
 #ifdef USE_WIN32
-  gtk_widget_show(Mascot->balloon_fg);
+  gtk_widget_show_all(Mascot->balloon_fg);
 #endif
-  gtk_widget_show(Mascot->balloon_main);
+  gtk_widget_show_all(Mascot->balloon_main);
 #ifdef USE_WIN32
   gtk_widget_unmap(Mascot->balloon_fg);
 #endif
   gtk_widget_unmap(Mascot->balloon_main);
 
 #ifdef USE_WIN32
-  gtk_widget_show(Mascot->clock_fg);
+  gtk_widget_show_all(Mascot->clock_fg);
 #endif
-  gtk_widget_show(Mascot->clock_main);
+  gtk_widget_show_all(Mascot->clock_main);
 
   if(Mascot->clkmode!=CLOCK_PANEL){
 #ifdef USE_WIN32
@@ -4862,7 +4909,7 @@ int main(int argc, char **argv)
   }
 
 #ifdef USE_BIFF
-  gtk_widget_show(Mascot->biff_pix);
+  gtk_widget_show_all(Mascot->biff_pix);
   gtk_widget_unmap(Mascot->biff_pix);
 #endif // USE_BIFF
 
@@ -4876,7 +4923,7 @@ int main(int argc, char **argv)
     }
 #endif
   
-  gtk_widget_show(Mascot->win_main);
+  gtk_widget_show_all(Mascot->win_main);
   gtk_widget_map(Mascot->win_main);
 
 

@@ -9956,7 +9956,7 @@ void create_config_dialog(void)
       vbox = gtk_vbox_new(FALSE,0);
       gtk_container_add (GTK_CONTAINER (frame), vbox);
       gtk_container_set_border_width (GTK_CONTAINER (vbox), 5);
-      label = gtk_label_new ("macopix : Mascot Constructive Pilot for X , version "VERSION);
+      label = gtkut_label_new ("<span size=\"larger\"><b>MaCoPiX</b> : <b>Mascot Constructive Pilot for X</b></span>   version "VERSION);
       gtk_misc_set_alignment (GTK_MISC (label), 0.5, 0.5);
       gtk_box_pack_start(GTK_BOX(vbox), label,FALSE, FALSE, 0);
 
@@ -10025,7 +10025,7 @@ void create_config_dialog(void)
       gtk_misc_set_alignment (GTK_MISC (label), 0.5, 0.5);
       gtk_box_pack_start(GTK_BOX(vbox), label,FALSE, FALSE, 0);
 
-      label = gtk_label_new ("Copyright(C) 2002-2008 K.Chimari <chimari@rosegray.sakura.ne.jp>");
+      label = gtkut_label_new ("&#xA9; 2002 K. Chimari &lt;<i>chimari@rosegray.sakura.ne.jp</i>&gt;");
       gtk_misc_set_alignment (GTK_MISC (label), 0.5, 0.5);
       gtk_box_pack_start(GTK_BOX(vbox), label,FALSE, FALSE, 0);
 
@@ -12923,15 +12923,18 @@ void ChangeMascot(){
   gtk_widget_unmap(Mascot->balloon_fg);
 #endif
   gtk_widget_unmap(Mascot->balloon_main);
+#ifdef USE_WIN32
+  gtk_widget_unmap(Mascot->balloon_fg);
+#endif
+  gtk_widget_unmap(Mascot->balloon_main);
   flag_balloon=FALSE;
 #ifdef USE_BIFF
   gtk_widget_unmap(Mascot->biff_pix);
   LoadBiffPixmap(Mascot->biff_pix, Mascot);
   remap_biff_pix(Mascot);
 #endif  // USE_BIFF
-  
-  if(Mascot->clkmode!=CLOCK_NO) clock_update(Mascot, TRUE);
 
+  //if(Mascot->clkmode!=CLOCK_NO) clock_update(Mascot, TRUE);
 
   if(Mascot->clkmode==CLOCK_PANEL){
 #ifdef USE_WIN32
@@ -12959,7 +12962,7 @@ void ChangeMascot(){
 #endif
   gtk_widget_map(Mascot->win_main);
 
-  if(Mascot->clkmode!=CLOCK_NO) clock_update(Mascot, TRUE);
+  if(Mascot->clkmode!=CLOCK_NO) clock_update(Mascot, TRUE); 
 
   if(Mascot->move==MOVE_FIX){
     MoveMascot(Mascot,Mascot->xfix,Mascot->yfix);
@@ -12968,6 +12971,11 @@ void ChangeMascot(){
     MoveToFocus(Mascot,TRUE);
   }
 
+  // DrawingArea ¤Îrealize
+  gtk_widget_realize(Mascot->dw_main);
+  gtk_widget_realize(Mascot->dw_balloon);
+  gtk_widget_realize(Mascot->dw_clock);
+  gtk_widget_realize(Mascot->dw_biff);
 }
 
 
@@ -12997,6 +13005,12 @@ void NkrChangeMascot(){
 #endif
   gtk_widget_unmap(Mascot->clock_main);
   MoveToFocus(Mascot,TRUE);
+
+  // DrawingArea ¤Îrealize
+  gtk_widget_realize(Mascot->dw_main);
+  gtk_widget_realize(Mascot->dw_balloon);
+  gtk_widget_realize(Mascot->dw_clock);
+  gtk_widget_realize(Mascot->dw_biff);
 }
 
 

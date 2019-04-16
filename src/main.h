@@ -449,7 +449,7 @@ enum{ MAIL_NO, MAIL_LOCAL, MAIL_POP3, MAIL_APOP, MAIL_QMAIL, MAIL_PROCMAIL } Mai
 
 enum{ MAIL_PIX_LEFT, MAIL_PIX_RIGHT } MailPixPos;
 
-#define POP_DEBUG  /* pop3 debugging mode */
+#undef POP_DEBUG  /* pop3 debugging mode */
 
 #define POP3_PORT_NO         110       /* pop3 port */
 #ifdef USE_SSL
@@ -561,11 +561,18 @@ typedef struct{
 typedef struct{
   //gchar **xpm_data;
   gchar *filename;
+#ifdef USE_GTK3
+  GdkPixbuf *pixbuf;
+#ifdef USE_WIN32
+  GdkPixbuf *pixbuf_sdw;
+#endif
+#else  
   GdkPixmap *pixmap;
   GdkBitmap *mask;
 #ifdef USE_WIN32
   GdkPixmap *pixmap_sdw;
   GdkBitmap *mask_sdw;
+#endif
 #endif
 }typSprite;
 
@@ -646,13 +653,14 @@ struct _typMail{
   signed int      status;
   signed int      pop3_fs_status;
   gint proc_id;
+#ifdef USE_GTK3
+  GdkPixbuf *pixbuf;
+#else
   GdkPixmap *pixmap;
   GdkBitmap *mask;
+#endif  
   //GtkWidget *w_draw;
   //GtkWidget *e_draw;
-#ifndef __GTK_TOOLTIP_H__
-  GtkTooltips *tooltips;
-#endif
   gboolean  tooltips_fl;
   gboolean drag;
   gchar *fs_max;
@@ -678,16 +686,16 @@ struct _typMail{
 
 typedef struct _typMascot typMascot;
 struct _typMascot{
-  GtkWidget *win_main;
-  GtkWidget *balloon_main;
-  GtkWidget *clock_main;
+  GtkWidget *win_main, *dw_main;
+  GtkWidget *balloon_main, *dw_balloon;
+  GtkWidget *clock_main, *dw_clock;
 #ifdef USE_WIN32
   GtkWidget *balloon_fg;
   GtkWidget *clock_fg;
   GtkWidget *win_sdw;
 #endif
 #ifdef USE_BIFF
-  GtkWidget *biff_pix;
+  GtkWidget *biff_pix, *dw_biff;
 #endif
   GtkWidget *PopupMenu; 
   
@@ -740,17 +748,6 @@ struct _typMascot{
   gint balwidth;
   gint balheight;
   //GtkWidget *w_drawing;
-  GdkGC *gc_main[2];
-  GdkGC *gc_mainsd[2];
-  GdkGC *gc_clk[2];
-  GdkGC *gc_clksd[2];
-  GdkGC *gc_clkbg[2];
-  GdkGC *gc_clkbd[2];
-  GdkGC *gc_clkmask[2];
-  GdkGC *gc_bal[2];
-  GdkGC *gc_balbg[2];
-  GdkGC *gc_balbd[2];
-  GdkGC *gc_balmask[2];
 #ifdef USE_GTK3
   GdkRGBA *def_colclk;
   GdkRGBA *def_colclksd;
@@ -767,6 +764,17 @@ struct _typMascot{
   GdkRGBA *colbalbg;
   GdkRGBA *colbalbd;
 #else
+  GdkGC *gc_main[2];
+  GdkGC *gc_mainsd[2];
+  GdkGC *gc_clk[2];
+  GdkGC *gc_clksd[2];
+  GdkGC *gc_clkbg[2];
+  GdkGC *gc_clkbd[2];
+  GdkGC *gc_clkmask[2];
+  GdkGC *gc_bal[2];
+  GdkGC *gc_balbg[2];
+  GdkGC *gc_balbd[2];
+  GdkGC *gc_balmask[2];
   GdkColor *def_colclk;
   GdkColor *def_colclksd;
   GdkColor *def_colclkbg;
@@ -926,10 +934,17 @@ struct _typMascot{
 #endif
 
 ///////////   Global Arguments   //////////
+#ifdef USE_GTK3
+GdkPixbuf *pixbuf_main[2], *pixbuf_clk[2], *pixbuf_bal[2];
+#ifdef USE_WIN32
+GdkPixbuf *pixbuf_sdw[2];
+#endif
+#else  // USE_GTK3
 GdkPixmap *pixmap_main[2], *pixmap_clk[2], *pixmap_bal[2];
 #ifdef USE_WIN32
 GdkPixmap *pixmap_sdw[2];
 #endif
+#endif // USE_GTK3
 gint window_x, window_y;
 gboolean supports_alpha;
 gboolean flag_balloon;
@@ -988,6 +1003,7 @@ void clk_drag_end();
 void clk_window_motion();
 gint dw_configure_main();
 gint dw_expose_main();
+gint expose_main();
 void window_motion();
 #ifdef USE_WIN32
 gint dw_configure_sdw();
@@ -995,11 +1011,14 @@ gint dw_expose_sdw();
 #endif
 gint dw_configure_bal();
 gint dw_expose_bal();
+gint expose_bal();
 gint dw_configure_clk();
 gint dw_expose_clk();
+gint expose_clk();
 #ifdef USE_BIFF
 gint dw_configure_biff_pix();
 gint dw_expose_biff_pix();
+gint expose_biff_pix();
 void biff_drag_begin();
 void biff_drag_end();
 void biff_window_motion();
@@ -1011,7 +1030,9 @@ void callbacks_arg_init();
 void clock_update();
 void ext_play();
 void sound_play();
+#ifndef USE_GTK3
 GdkGC *MPCreatePen();
+#endif
 gint dw_init_main();
 void raise_all();
 

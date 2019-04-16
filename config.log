@@ -1903,7 +1903,7 @@ configure:18103: result: yes
 configure:18103: checking for pthread.h
 configure:18103: result: yes
 configure:18141: gcc -o conftest -g -O2   conftest.c   >&5
-/tmp/ccO2QCej.o: In function `main':
+/tmp/ccm0C2hq.o: In function `main':
 /home/taji/tmp/macopix/conftest.c:117: undefined reference to `pthread_mutexattr_init'
 collect2: error: ld returned 1 exit status
 configure:18141: $? = 1
@@ -2233,7 +2233,7 @@ configure:19032: $? = 0
 configure:19032: result: yes
 configure:19045: checking for getlocalename_l
 configure:19045: gcc -o conftest -g -O2   conftest.c  >&5
-/tmp/ccXs7gET.o: In function `main':
+/tmp/ccRF3lj9.o: In function `main':
 /home/taji/tmp/macopix/conftest.c:170: undefined reference to `getlocalename_l'
 collect2: error: ld returned 1 exit status
 configure:19045: $? = 1
@@ -3552,7 +3552,6 @@ config.status:1370: creating src/macopix_res.rc
 config.status:1370: creating src/Makefile
 config.status:1370: creating src/icons/Makefile
 config.status:1370: creating config.h
-config.status:1551: config.h is unchanged
 config.status:1599: executing depfiles commands
 config.status:1599: executing libtool commands
 config.status:1599: executing po-directories commands
