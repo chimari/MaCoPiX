@@ -283,7 +283,7 @@ void LoadPixmaps(GtkWidget *widget, //GtkWidget *draw,
 #endif
   if((mascot->flag_balfg)&&(mascot->alpha_bal!=100)){
     GdkWinChangeAlphaFG(gtk_widget_get_window(mascot->balloon_fg), mascot->colbalbg);
-  }y
+  }
   GdkWinChangeAlpha(gtk_widget_get_window(mascot->balloon_main), mascot->alpha_bal);
   if((mascot->flag_clkfg)&&(mascot->alpha_clk!=100)){
     GdkWinChangeAlphaFG(gtk_widget_get_window(mascot->clock_fg), mascot->colclkbg);
