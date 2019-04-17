@@ -126,9 +126,7 @@
 #include "libpop.h"
 #include "gtkut.h"
 
-#ifdef USE_SOCKMSG
 #include "sockmsg.h"
-#endif // USE_SOCKMSG
 
 #if HAVE_SYS_UTSNAME_H
 #include <sys/utsname.h>
