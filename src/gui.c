@@ -27,16 +27,6 @@
 #include "main.h"
 #include <stdarg.h>
 
-#ifdef USE_WIN32
-#include <windows.h>
-#define usleep(x) g_usleep(x)
-#endif
-
-#if HAVE_SYS_UTSNAME_H
-#include <sys/utsname.h>
-#endif
-
-#include <dirent.h>
 
 //Callback受け渡し用抱き合わせ構造体 POP password変更用
 typedef struct{

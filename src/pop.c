@@ -53,26 +53,7 @@
 
 #ifdef USE_BIFF
 
-// #include <config.h>
-#include <stdlib.h>
-#include <sys/types.h>
-#ifdef USE_WIN32
-#include <winsock2.h>
-#else
-#include <sys/socket.h>
-#include <netinet/in.h>
-#include <netdb.h>
-#endif
-#include <unistd.h>
-#include <errno.h>
-#include <strings.h>
-#include <stdio.h>
-
-#include "libpop.h"
-
 #ifdef USE_SSL
-#include<fcntl.h>
-#  include "ssl.h"
 SSL *ssl;
 #endif
 

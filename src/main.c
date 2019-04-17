@@ -31,30 +31,6 @@
 
 
 #include "main.h"
-#ifdef USE_SOCKMSG
-#include "sockmsg.h"
-#endif // USE_SOCKMSG
-#include <signal.h>
-
-#ifdef USE_WIN32
-#include <gdk/gdkwin32.h>
-#define usleep(x) g_usleep(x)
-#ifdef USE_BIFF
-#include <winsock2.h>
-#endif
-#else
-#include <gdk/gdkx.h>
-#endif
-
-
-#include <string.h>
-#include <dirent.h>
-#include <locale.h>
-
-#include "macopix_icon.h"
-#ifdef USE_SSL
-#include "ssl.h"
-#endif
 
 
 // *** GLOBAL ARGUMENT ***

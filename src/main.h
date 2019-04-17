@@ -90,6 +90,7 @@
 #include<sys/types.h>
 #include<string.h>
 #include<ctype.h>
+#include<errno.h>
 
 #include<gtk/gtk.h>
 #include<gdk-pixbuf/gdk-pixbuf.h>
@@ -101,10 +102,19 @@
 #endif
 
 #ifdef USE_WIN32
+#ifdef USE_BIFF
+#include <winsock2.h>
+#endif
 #include <windows.h>
 #include <gdk/gdkwin32.h>
 #include <mmsystem.h>
-#else // for WIN32
+#define usleep(x) g_usleep(x)
+#else // for USE_WIN32
+#ifdef USE_BIFF
+#include <sys/socket.h>
+#include <netinet/in.h>
+#include <netdb.h>
+#endif
 #include <gdk/gdkx.h>
 #include <X11/Xatom.h>
 #endif
@@ -114,9 +124,24 @@
 #include "configfile.h"
 #include "intl.h"
 #include "libpop.h"
-
-#include "sockmsg.h"
 #include "gtkut.h"
+
+#ifdef USE_SOCKMSG
+#include "sockmsg.h"
+#endif // USE_SOCKMSG
+
+#if HAVE_SYS_UTSNAME_H
+#include <sys/utsname.h>
+#endif
+
+#include <string.h>
+#include <dirent.h>
+#include <locale.h>
+
+#ifdef USE_SSL
+#include<fcntl.h>
+#include "ssl.h"
+#endif
 
 
 // Homepage URL

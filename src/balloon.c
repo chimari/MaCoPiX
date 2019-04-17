@@ -844,7 +844,7 @@ void DoBalloon(typMascot *mascot)
       /* mail count %m */
       while(NULL != (w_tmp_m2 = strstr(w_tmp, "%m"))){
 	mp = strlen(w_tmp) - strlen(w_tmp_m2); 
-	strncpy(w_tmp_m, w_tmp, mp);
+	memcpy(w_tmp_m, w_tmp, mp);
 	w_tmp_m[mp] = '\0';
 	w_tmp_m2 +=  strlen("%m");
 	sprintf(w_tmp_m3,"%s%d%s",
@@ -853,7 +853,7 @@ void DoBalloon(typMascot *mascot)
       }
       while(NULL != (w_tmp_m2 = strstr(w_tmp, "%f"))){  // Last From
 	mp = strlen(w_tmp) - strlen(w_tmp_m2); 
-	strncpy(w_tmp_m, w_tmp, mp);
+	memcpy(w_tmp_m, w_tmp, mp);
 	w_tmp_m[mp] = '\0';
 	w_tmp_m2 +=  strlen("%f");  //Last Sbject
 	if(mascot->mail.last_f!=NULL)
@@ -866,7 +866,7 @@ void DoBalloon(typMascot *mascot)
       }
       while(NULL != (w_tmp_m2 = strstr(w_tmp, "%s"))){
 	mp = strlen(w_tmp) - strlen(w_tmp_m2); 
-	strncpy(w_tmp_m, w_tmp, mp);
+	memcpy(w_tmp_m, w_tmp, mp);
 	w_tmp_m[mp] = '\0';
 	w_tmp_m2 +=  strlen("%s");
 	if(mascot->mail.last_s!=NULL)

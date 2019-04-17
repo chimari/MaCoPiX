@@ -375,7 +375,7 @@ int MoveToFocus(typMascot *mascot, gboolean force_fl)
 #ifdef USE_BIFF
      && hWnd!=GDK_WINDOW_HWND(gtk_widget_get_window(mascot->biff_pix))
 #endif
-     && (int)hWnd!=0){
+     && hWnd!=HWND_TOP){
 
     if(mascot->task_force){  // force to sit on the task bar
       if((hWnd!=hWnd_active)&&(hWnd!=hWndTaskBar)){
