@@ -26,7 +26,6 @@
 
 
 #include "main.h"
-#include <gdk/gdkx.h>
 
 #ifdef USE_WIN32
 #include <windows.h>

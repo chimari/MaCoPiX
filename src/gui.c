@@ -242,28 +242,6 @@ static void mc_down_tgt();
 static void mc_up_cat();
 static void mc_down_cat();
 
-static void fs_set_udir();
-#ifdef USE_COMMON
-static void fs_set_ddir();
-#endif
-static void fs_set_updir();
-#ifdef USE_COMMON
-static void fs_set_dpdir();
-#endif
-static void fs_set_usdir();
-#ifdef USE_COMMON
-static void fs_set_dsdir();
-#endif
-static void fs_set_mascotext();
-static void fs_set_pngext();
-static void fs_set_gifext();
-static void fs_set_xpmext();
-static void fs_set_menuext();
-static void fs_set_lzhext();
-static void fs_set_rcext();
-static void fs_set_nkrext();
-static void fs_set_bmpext();
-
 #ifdef USE_WIN32
 static void uri_clicked();
 #endif
@@ -1723,6 +1701,18 @@ static void mc_down_cat (GtkWidget *widget, gint gdata)
   gtk_widget_queue_draw(GTK_WIDGET(cat_note));
 
 }
+
+#ifdef USE_WIN32
+static void uri_clicked(GtkButton *button, gpointer data)
+{
+  ShellExecute(NULL, 
+	       "open", 
+	       DEFAULT_URL,
+	       NULL, 
+	       NULL, 
+	       SW_SHOWNORMAL);
+}
+#endif
 
 void my_file_chooser_add_filter (GtkWidget *dialog, 
 				 const gchar *name,

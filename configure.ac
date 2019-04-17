@@ -103,6 +103,14 @@ LDFLAGS="$LDFLAGS -mwindows"
 WINMM_LIBS="-lwinmm"
 WINSOCK_LIBS="-lws2_32"
 else
+dnl X11
+AC_SEARCH_LIBS([XFree], [X11], [], [
+  LDFLAGS="$LDFLAGS -L/usr/X11R6/lib -L/usr/X11R6/lib64"
+  AC_MSG_CHECKING(["Looking for XFree in /usr/X11R6"])
+  AC_SEARCH_LIBS([XFree], [X11], [], [
+    AC_MSG_FAILURE(["Cannot find X11. Try setting LDFLAGS -L"], [-1])
+  ])
+])
 AC_DEFINE(USE_BIFF,[], [Use Biff function])
 AC_DEFINE(USE_SOCKMSG,[], [Use Socket Message function])
 AC_DEFINE(USE_COMMON,[], [Use Common Directory])

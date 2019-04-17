@@ -105,8 +105,8 @@ void make_clock_fg(typMascot *mascot){
   gdk_window_set_decorations(gtk_widget_get_window(mascot->clock_fg), 0);
 
   
-  my_signal_connect(mascot->clock_fg, "configure_event",
-  		    configure_clk, (gpointer)mascot);
+  my_signal_connect(mascot->clock_fg, "expose_event",
+  		    expose_clk, (gpointer)mascot);
   /*
   my_signal_connect(mascot->clock_fg, "expose_event",
   		    dw_expose_clk, (gpointer)mascot);
