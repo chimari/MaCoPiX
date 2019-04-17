@@ -80,28 +80,34 @@ void  make_clock(typMascot *mascot){
   gdk_window_set_cursor(gtk_widget_get_window(mascot->clock_main),mascot->cursor.clk);
 
   gtk_window_resize (GTK_WINDOW(mascot->clock_main), 1, 1);
+  gtk_widget_set_size_request (mascot->dw_clock, 1, 1);
   //dw_configure_clk(mascot->dw_clock, "configure_event",(gpointer)mascot);
 }
 
 
 #ifdef USE_WIN32
 void make_clock_fg(typMascot *mascot){
+  GtkWidget *ebox;
 
   mascot->clock_fg = gtk_window_new(GTK_WINDOW_POPUP);
   gtk_window_set_accept_focus(GTK_WINDOW(mascot->clock_fg),FALSE);
   gtk_widget_set_app_paintable(mascot->clock_fg, TRUE);
-  gtk_widget_set_events(GTK_WIDGET (mascot->clock_fg), 
-			GDK_FOCUS_CHANGE_MASK | 
-			GDK_BUTTON_MOTION_MASK | 
-			GDK_BUTTON_RELEASE_MASK | 
-			GDK_BUTTON_PRESS_MASK | 
-			GDK_EXPOSURE_MASK);
+
+  ebox=gtk_event_box_new();
+  gtk_container_add (GTK_CONTAINER (mascot->clock_fg), ebox);
+  
+  mascot->dw_clkfg = gtk_drawing_area_new();
+  gtk_widget_set_size_request (mascot->dw_clkfg, 1, 1);
+  gtk_container_add(GTK_CONTAINER(ebox), mascot->dw_clkfg);
+  gtk_widget_set_app_paintable(mascot->dw_clkfg, TRUE);
+  
   gtk_widget_realize(mascot->clock_fg);
   gdk_window_set_decorations(gtk_widget_get_window(mascot->clock_fg), 0);
 
-
+  
   my_signal_connect(mascot->clock_fg, "configure_event",
-  		    dw_configure_clk, (gpointer)mascot);
+  		    configure_clk, (gpointer)mascot);
+  /*
   my_signal_connect(mascot->clock_fg, "expose_event",
   		    dw_expose_clk, (gpointer)mascot);
   my_signal_connect(mascot->clock_fg, "button_press_event",
@@ -110,8 +116,9 @@ void make_clock_fg(typMascot *mascot){
 		    clk_drag_end, (gpointer)mascot);
   my_signal_connect(mascot->clock_fg, "motion_notify_event",
 		    clk_window_motion, (gpointer)mascot);
-
+  */
   gdk_window_resize (gtk_widget_get_window(mascot->clock_fg), 1, 1);
+  gtk_widget_set_size_request (mascot->dw_clkfg, 1, 1);
   //dw_configure_clk(mascot->clock_fg, "configure_event",(gpointer)mascot);
 }
 #endif
@@ -466,9 +473,11 @@ void DrawPanelClock(typMascot *mascot)
 #ifdef USE_WIN32
   if((mascot->flag_clkfg)&&(mascot->alpha_clk!=100)){
     gdk_window_resize (gtk_widget_get_window(mascot->clock_fg),new_w,new_h);
+    gtk_widget_set_size_request (mascot->dw_clkfg, new_w,new_h);
   }
 #endif
   gdk_window_resize (gtk_widget_get_window(mascot->clock_main), new_w, new_h);
+  gtk_widget_set_size_request (mascot->dw_clock, new_w,new_h);
 
   if(mascot->flag_clkrd){
 #ifdef USE_WIN32
@@ -824,9 +833,11 @@ void DrawPanelClock2(typMascot *mascot)
 #ifdef USE_WIN32
   if((mascot->flag_clkfg)&&(mascot->alpha_clk!=100)){
     gdk_window_resize (gtk_widget_get_window(mascot->clock_fg), new_w, new_h);
+    gtk_widget_set_size_request (mascot->dw_clkfg, new_w,new_h);
   }
 #endif
   gdk_window_resize (gtk_widget_get_window(mascot->clock_main), new_w, new_h);
+  gtk_widget_set_size_request (mascot->dw_clock, new_w,new_h);
 
   if(shape_flag){
 #ifdef USE_WIN32

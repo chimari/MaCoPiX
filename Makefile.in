@@ -454,7 +454,7 @@ target_vendor = @target_vendor@
 top_build_prefix = @top_build_prefix@
 top_builddir = @top_builddir@
 top_srcdir = @top_srcdir@
-SUBDIRS = intl m4 po src src/icons
+SUBDIRS = intl m4 po src
 EXTRA_DIST = config.rpath\
 	ChangeLog.ja \
 	README.ja \
@@ -466,8 +466,6 @@ EXTRA_DIST = config.rpath\
 	makewin32.sh
 
 man_MANS = macopix.1
-CLEANFILES = *~
-DISTCLEANFILES = 
 AM_CPPFLAGS = -DLOCALEDIR=\""$(localedir)"\"
 BZIP2_ENV = 
 GZIP_ENV = 
@@ -905,12 +903,10 @@ install-strip:
 mostlyclean-generic:
 
 clean-generic:
-	-test -z "$(CLEANFILES)" || rm -f $(CLEANFILES)
 
 distclean-generic:
 	-test -z "$(CONFIG_CLEAN_FILES)" || rm -f $(CONFIG_CLEAN_FILES)
 	-test . = "$(srcdir)" || test -z "$(CONFIG_CLEAN_VPATH_FILES)" || rm -f $(CONFIG_CLEAN_VPATH_FILES)
-	-test -z "$(DISTCLEANFILES)" || rm -f $(DISTCLEANFILES)
 
 maintainer-clean-generic:
 	@echo "This command is intended for maintainers to use"

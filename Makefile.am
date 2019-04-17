@@ -1,4 +1,4 @@
-SUBDIRS= intl m4 po src src/icons
+SUBDIRS= intl m4 po src
 
 EXTRA_DIST =  config.rpath\
 	ChangeLog.ja \
@@ -12,8 +12,6 @@ EXTRA_DIST =  config.rpath\
 
 man_MANS = macopix.1
 
-CLEANFILES      = *~
-DISTCLEANFILES  = 
 AM_CPPFLAGS = -DLOCALEDIR=\""$(localedir)"\"
 
 BZIP2_ENV =

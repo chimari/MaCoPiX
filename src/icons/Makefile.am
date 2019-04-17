@@ -3,4 +3,3 @@ EXTRA_DIST = \
 	def_biff.png\
 	def_biff_r.png
 
-CLEANFILES      = *~

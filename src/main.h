@@ -690,9 +690,9 @@ struct _typMascot{
   GtkWidget *balloon_main, *dw_balloon;
   GtkWidget *clock_main, *dw_clock;
 #ifdef USE_WIN32
-  GtkWidget *balloon_fg;
-  GtkWidget *clock_fg;
-  GtkWidget *win_sdw;
+  GtkWidget *balloon_fg, *dw_balfg;
+  GtkWidget *clock_fg, *dw_clkfg;
+  GtkWidget *win_sdw, *dw_sdw;
 #endif
 #ifdef USE_BIFF
   GtkWidget *biff_pix, *dw_biff;
@@ -996,19 +996,9 @@ void MoveBalloon();
 void MoveBiffPix();
 #endif
 void ResizeMoveBalloon();
-void drag_begin();
-void drag_end();
 void clk_drag_begin();
 void clk_drag_end();
 void clk_window_motion();
-gint dw_configure_main();
-gint dw_expose_main();
-gint expose_main();
-void window_motion();
-#ifdef USE_WIN32
-gint dw_configure_sdw();
-gint dw_expose_sdw();
-#endif
 gint dw_configure_bal();
 gint dw_expose_bal();
 gint expose_bal();
@@ -1023,8 +1013,6 @@ void biff_drag_begin();
 void biff_drag_end();
 void biff_window_motion();
 #endif
-void focus_in();
-void focus_out();
 gboolean time_update();
 void callbacks_arg_init();
 void clock_update();
@@ -1035,6 +1023,7 @@ GdkGC *MPCreatePen();
 #endif
 gint dw_init_main();
 void raise_all();
+void make_mascot();
 
 
 // clock.c

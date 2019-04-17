@@ -1060,6 +1060,18 @@ static void conf_change(GtkWidget *w, GtkWidget *dialog)
 
   flag_make_pixmap_list=FALSE;
   Mascot->flag_menu=FALSE;
+
+  // DrawingArea ¤Îrealize
+  gtk_widget_realize(Mascot->dw_main);
+  gtk_widget_realize(Mascot->dw_balloon);
+  gtk_widget_realize(Mascot->dw_clock);
+  gtk_widget_realize(Mascot->dw_biff);
+#ifdef USE_WIN32
+  gtk_widget_realize(Mascot->dw_sdw);
+  gtk_widget_realize(Mascot->dw_balfg);
+  gtk_widget_realize(Mascot->dw_clkfg);
+#endif
+
   while (my_main_iteration(FALSE));
   gdk_flush();
 }
@@ -12976,6 +12988,11 @@ void ChangeMascot(){
   gtk_widget_realize(Mascot->dw_balloon);
   gtk_widget_realize(Mascot->dw_clock);
   gtk_widget_realize(Mascot->dw_biff);
+#ifdef USE_WIN32
+  gtk_widget_realize(Mascot->dw_sdw);
+  gtk_widget_realize(Mascot->dw_balfg);
+  gtk_widget_realize(Mascot->dw_clkfg);
+#endif
 }
 
 
@@ -13011,6 +13028,11 @@ void NkrChangeMascot(){
   gtk_widget_realize(Mascot->dw_balloon);
   gtk_widget_realize(Mascot->dw_clock);
   gtk_widget_realize(Mascot->dw_biff);
+#ifdef USE_WIN32
+  gtk_widget_realize(Mascot->dw_sdw);
+  gtk_widget_realize(Mascot->dw_balfg);
+  gtk_widget_realize(Mascot->dw_clkfg);
+#endif
 }
 
 

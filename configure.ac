@@ -170,7 +170,6 @@ dnl for gettext
 ALL_LINGUAS="ja"
 AM_GNU_GETTEXT
 GETTEXT_PACKAGE=macopix
-LOCALEDIR='${prefix}/share/locale'
 AC_SUBST(LOCALEDIR)
 AC_SUBST(GETTEXT_PACKAGE)
 AC_DEFINE_UNQUOTED(GETTEXT_PACKAGE,"$GETTEXT_PACKAGE", [Define text domain.])
@@ -375,15 +374,17 @@ commondir='${prefix}/share/${PACKAGE}/'
 fi
 AC_SUBST(commondir)
 
-AC_CONFIG_FILES([Makefile
-		 po/Makefile.in
-		 intl/Makefile
-                 m4/Makefile
-		 src/version.h
-		 src/macopix_res.rc
-                 src/Makefile
-		 src/icons/Makefile])
-AC_OUTPUT
+AC_OUTPUT([
+Makefile
+po/Makefile.in
+intl/Makefile
+m4/Makefile
+src/version.h
+src/macopix_res.rc
+src/Makefile
+src/icons/Makefile
+])
+
 
 
 

@@ -168,6 +168,7 @@ void ssl_init(void)
 	}
 
 	ssl_ctx_TLSv12 = SSL_CTX_new(TLS_client_method());
+	//ssl_ctx_TLSv12 = SSL_CTX_new(TLSv1_2_client_method());
 	if (ssl_ctx_TLSv12 == NULL) {
 		pop_debug_print("TLSv1 or 2 not available\n");
 	} else {

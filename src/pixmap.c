@@ -522,6 +522,7 @@ void LoadPixmaps(GtkWidget *widget, //GtkWidget *draw,
 #ifdef USE_WIN32
   if((mascot->sdw_flag)&&(mascot->sdw_height>0)){
     gtk_window_resize (GTK_WINDOW(mascot->win_sdw), w, mascot->sdw_height);
+    gtk_widget_set_size_request (mascot->dw_sdw, w, mascot->sdw_height);
   }
 #endif
   
@@ -894,11 +895,12 @@ gint DrawMascot(typMascot *mascot)
 			     FALSE);
   */
 #ifdef USE_WIN32
-  if((mascot->sdw_flag)&&(mascot->sdw_height>0)){
+  /*if((mascot->sdw_flag)&&(mascot->sdw_height>0)){
     gdk_window_set_back_pixmap(gtk_widget_get_window(mascot->win_sdw),
 			       pixmap_sdw[work_page],
 			       FALSE);
-  }
+			       }
+  */
 #endif  
   if(flag_img_cairo_go){
     gdk_window_input_shape_combine_mask
@@ -1022,9 +1024,24 @@ gint DrawMascotTemp(typMascot *mascot, gint i_pix)
   */
 #ifdef USE_WIN32
   if((mascot->sdw_flag)&&(mascot->sdw_height>0)){
-    gdk_window_set_back_pixmap(gtk_widget_get_window(mascot->win_sdw),
+    {
+      GtkAllocation *allocation=g_new(GtkAllocation, 1);
+      GtkStyle *style=gtk_widget_get_style(mascot->dw_sdw);
+      gtk_widget_get_allocation(mascot->dw_sdw,allocation);
+      
+      gdk_draw_drawable(gtk_widget_get_window(mascot->dw_sdw),
+		      style->fg_gc[gtk_widget_get_state(mascot->dw_sdw)],
+			pixmap_sdw[work_page],
+			0,0,0,0,
+			allocation->width,
+			allocation->height);
+      g_free(allocation);
+    }
+    /*
+      gdk_window_set_back_pixmap(gtk_widget_get_window(mascot->win_sdw),
 			       pixmap_sdw[work_page],
 			       FALSE);
+    */
   }
 #endif  
 

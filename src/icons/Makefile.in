@@ -344,7 +344,6 @@ EXTRA_DIST = \
 	def_biff.png\
 	def_biff_r.png
 
-CLEANFILES = *~
 all: all-am
 
 .SUFFIXES:
@@ -446,7 +445,6 @@ install-strip:
 mostlyclean-generic:
 
 clean-generic:
-	-test -z "$(CLEANFILES)" || rm -f $(CLEANFILES)
 
 distclean-generic:
 	-test -z "$(CONFIG_CLEAN_FILES)" || rm -f $(CONFIG_CLEAN_FILES)
