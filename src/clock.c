@@ -545,7 +545,8 @@ void DrawPanelClock2(typMascot *mascot)
   }
 
 #ifdef __PANGOCAIRO_H__
-  pango_text=gtk_widget_create_pango_layout(mascot->clock_main,
+  gtk_widget_modify_font(mascot->dw_clock,mascot->fontclk);
+  pango_text=gtk_widget_create_pango_layout(mascot->dw_clock,
 					    mascot->digit);
   pango_layout_get_pixel_size(pango_text,&clk_width,&clk_height);
 #endif

@@ -612,7 +612,8 @@ void LoadPixmaps(GtkWidget *widget, //GtkWidget *draw,
   gtk_widget_modify_font(mascot->balloon_main,mascot->fontbal);
   mascot->fontname_bal=pango_font_description_to_string(mascot->fontbal);
 #ifdef USE_WIN32
-  gtk_widget_modify_font(mascot->clock_fg,mascot->fontclk);
+  //gtk_widget_modify_font(mascot->dw_clkfg,mascot->fontclk);
+  //gtk_widget_modify_font(mascot->dw_balfg,mascot->fontbal);
 #endif
 
   mascot->nPixmap = i;

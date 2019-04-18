@@ -980,6 +980,17 @@ static void conf_change(GtkWidget *w, GtkWidget *dialog)
   LoadBiffPixmap(Mascot->biff_pix, Mascot);
 #endif
 
+  // DrawingArea のrealize
+  gtk_widget_realize(Mascot->dw_main);
+  gtk_widget_realize(Mascot->dw_balloon);
+  gtk_widget_realize(Mascot->dw_clock);
+  gtk_widget_realize(Mascot->dw_biff);
+#ifdef USE_WIN32
+  gtk_widget_realize(Mascot->dw_sdw);
+  gtk_widget_realize(Mascot->dw_balfg);
+  gtk_widget_realize(Mascot->dw_clkfg);
+#endif
+  
   if(Mascot->clkmode!=CLOCK_NO) clock_update(Mascot, TRUE);
 
   if(Mascot->clkmode==CLOCK_PANEL){
@@ -1028,17 +1039,6 @@ static void conf_change(GtkWidget *w, GtkWidget *dialog)
 
   flag_make_pixmap_list=FALSE;
   Mascot->flag_menu=FALSE;
-
-  // DrawingArea のrealize
-  gtk_widget_realize(Mascot->dw_main);
-  gtk_widget_realize(Mascot->dw_balloon);
-  gtk_widget_realize(Mascot->dw_clock);
-  gtk_widget_realize(Mascot->dw_biff);
-#ifdef USE_WIN32
-  gtk_widget_realize(Mascot->dw_sdw);
-  gtk_widget_realize(Mascot->dw_balfg);
-  gtk_widget_realize(Mascot->dw_clkfg);
-#endif
 
   while (my_main_iteration(FALSE));
   gdk_flush();
@@ -7258,6 +7258,11 @@ static void create_color_selection_dialog(GtkWidget *w, gpointer gdata)
 
 static void change_colbal_default(GtkWidget *w, gpointer gdata)
 {
+  tmp_mascot.colbal  =gdk_color_copy(tmp_mascot.def_colbal);
+  tmp_mascot.colbalbg=gdk_color_copy(tmp_mascot.def_colbalbg);
+  tmp_mascot.colbalbd=gdk_color_copy(tmp_mascot.def_colbalbd);
+
+  /*
   tmp_mascot.colbal->red  =tmp_mascot.def_colbal->red;
   tmp_mascot.colbal->green=tmp_mascot.def_colbal->green;
   tmp_mascot.colbal->blue =tmp_mascot.def_colbal->blue;
@@ -7269,7 +7274,7 @@ static void change_colbal_default(GtkWidget *w, gpointer gdata)
   tmp_mascot.colbalbd->red  =tmp_mascot.def_colbalbd->red;
   tmp_mascot.colbalbd->green=tmp_mascot.def_colbalbd->green;
   tmp_mascot.colbalbd->blue =tmp_mascot.def_colbalbd->blue;
-
+  */
   tmp_mascot.alpbal =tmp_mascot.def_alpbal;
   tmp_mascot.alpbalbg =tmp_mascot.def_alpbalbg;
   tmp_mascot.alpbalbd =tmp_mascot.def_alpbalbd;
@@ -7278,6 +7283,12 @@ static void change_colbal_default(GtkWidget *w, gpointer gdata)
 
 static void change_colclk_default(GtkWidget *w, gpointer gdata)
 {
+  tmp_mascot.colclk  =gdk_color_copy(tmp_mascot.def_colclk);
+  tmp_mascot.colclkbg=gdk_color_copy(tmp_mascot.def_colclkbg);
+  tmp_mascot.colclkbd=gdk_color_copy(tmp_mascot.def_colclkbd);
+  tmp_mascot.colclksd=gdk_color_copy(tmp_mascot.def_colclksd);
+
+  /*
   tmp_mascot.colclk->red  =tmp_mascot.def_colclk->red;
   tmp_mascot.colclk->green=tmp_mascot.def_colclk->green;
   tmp_mascot.colclk->blue =tmp_mascot.def_colclk->blue;
@@ -7293,7 +7304,7 @@ static void change_colclk_default(GtkWidget *w, gpointer gdata)
   tmp_mascot.colclksd->red  =tmp_mascot.def_colclksd->red;
   tmp_mascot.colclksd->green=tmp_mascot.def_colclksd->green;
   tmp_mascot.colclksd->blue =tmp_mascot.def_colclksd->blue;
-
+  */
   tmp_mascot.alpclk =tmp_mascot.def_alpclk;
   tmp_mascot.alpclksd =tmp_mascot.def_alpclksd;
   tmp_mascot.alpclkbg =tmp_mascot.def_alpclkbg;
@@ -7318,6 +7329,15 @@ void create_config_dialog(void)
 
   // テンポラリデータの用意
   tmp_mascot=*Mascot;
+
+  tmp_mascot.def_colbal=gdk_color_copy(Mascot->def_colbal);
+  tmp_mascot.def_colbalbg=gdk_color_copy(Mascot->def_colbalbg);
+  tmp_mascot.def_colbalbd=gdk_color_copy(Mascot->def_colbalbd);
+  tmp_mascot.def_colclk=gdk_color_copy(Mascot->def_colclk);
+  tmp_mascot.def_colclkbg=gdk_color_copy(Mascot->def_colclkbg);
+  tmp_mascot.def_colclkbd=gdk_color_copy(Mascot->def_colclkbd);
+  tmp_mascot.def_colclksd=gdk_color_copy(Mascot->def_colclksd);
+  
 
   for(i_pix=0;i_pix<MAX_PIXMAP;i_pix++){
     tmp_pixfile[i_pix]=Mascot->sprites[i_pix].filename;

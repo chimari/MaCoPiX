@@ -437,6 +437,9 @@ enum{   MENU_SELECT,
 #define COLOR_BALBD_G 0x67d2
 #define COLOR_BALBD_B 0x53f4
 
+
+
+
 // for Callback of Configuration Dialog
 enum{CONF_FONT_CLK,	   
        CONF_FONT_BAL,	   
