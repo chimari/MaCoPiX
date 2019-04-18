@@ -452,7 +452,7 @@ void DrawBalloon2(typMascot *mascot, char **wn_iwp, int wn_max)
   cairo_t *cr;
   cairo_t *cr_mask;
   gdouble M_PI=3.14159265;
-  gdouble dx,dy;
+  gdouble dx,dy,bd;
 #ifndef __PANGOCAIRO_H__
   cairo_text_extents_t extents;
 #endif  
@@ -468,7 +468,7 @@ void DrawBalloon2(typMascot *mascot, char **wn_iwp, int wn_max)
     shape_flag=TRUE;
   }
 
-  h_arrow+=mascot->wbalbd;
+  //h_arrow+=mascot->wbalbd;
 
   // bal_height, bal_width  テキスト一行の大きさ
   bal_height=0;
@@ -592,50 +592,51 @@ void DrawBalloon2(typMascot *mascot, char **wn_iwp, int wn_max)
   // border
   dx=(gdouble)mascot->baltext_x;
   dy=(gdouble)mascot->baltext_y;
+  bd=(gdouble)mascot->wbalbd;
 
   cairo_move_to(cr,0,dy);
 
   cairo_save (cr);
-  cairo_translate (cr, dx, dy);
+  cairo_translate (cr, dx+bd, dy+bd);
   cairo_scale (cr, dx, dy);
   cairo_arc (cr, 0, 0, 1., 180*(M_PI/180.), 270*(M_PI/180.));
   cairo_restore (cr);
 
-  cairo_line_to(cr, w-dx, 0);
+  cairo_line_to(cr, w-dx-bd, bd);
 
   cairo_save (cr);
-  cairo_translate (cr, w-dx, dy);
+  cairo_translate (cr, w-dx-bd, dy+bd);
   cairo_scale (cr, dx, dy);
   cairo_arc (cr, 0, 0, 1., 270*(M_PI/180.), 360*(M_PI/180.));
   cairo_restore (cr);
 
-  cairo_line_to(cr, w, h-dy);
+  cairo_line_to(cr, w-bd, h-dy-bd);
 
   cairo_save (cr);
-  cairo_translate (cr, w-dx, h-dy);
+  cairo_translate (cr, w-dx-bd, h-dy-bd);
   cairo_scale (cr, dx, dy);
   cairo_arc (cr, 0, 0, 1., 0*(M_PI/180.), 90*(M_PI/180.));
   cairo_restore (cr);
   // *** Bottom
   if(mascot->bal_pos==BAL_POS_RIGHT){
-    cairo_line_to(cr, dx+6+mascot->wbalbd*3,  h);
-    cairo_line_to(cr, 0,  h+h_arrow);
-    cairo_line_to(cr, dx+mascot->wbalbd, h);
+    cairo_line_to(cr, bd+dx+h_arrow,  h-bd);
+    cairo_line_to(cr, bd,  h+h_arrow-bd);
+    cairo_line_to(cr, bd+dx, h-bd);
   }
   else{
-    cairo_line_to(cr, w-dx-mascot->wbalbd,  h);
-    cairo_line_to(cr, w,     h+h_arrow);
-    cairo_line_to(cr, w-dx-6-mascot->wbalbd*3,  h);
+    cairo_line_to(cr, w-dx-bd,  h-bd);
+    cairo_line_to(cr, w-bd, h+h_arrow-bd);
+    cairo_line_to(cr, w-bd-dx-h_arrow,  h-bd);
   }
   cairo_line_to(cr, dx,  h);
 
   cairo_save (cr);
-  cairo_translate (cr, dx, h-dy);
+  cairo_translate (cr, bd+dx, h-dy-bd);
   cairo_scale (cr, dx, dy);
   cairo_arc (cr, 0, 0, 1., 90*(M_PI/180.), 180*(M_PI/180.));
   cairo_restore (cr);
 
-  cairo_line_to(cr, 0,  dy);
+  cairo_line_to(cr, bd,  bd+dy);
 
   if(shape_flag){
     cairo_append_path(cr_mask,cairo_copy_path(cr));
