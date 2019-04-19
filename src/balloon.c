@@ -439,11 +439,8 @@ void DrawBalloon(typMascot *mascot, char **wn_iwp, int wn_max)
 void DrawBalloon2(typMascot *mascot, char **wn_iwp, int wn_max)
 {
   gint bal_width,bal_height;
-  GdkGCValues gcv;
   gint w,h;
-  gint lb,rb,as,ds=0;
-  GdkPoint points[4];
-  gint h_arrow=6;
+  gint h_arrow;
   int tmp_h,tmp_w,tmp_ds;
   int i_wn;
   gint work_page;
@@ -457,6 +454,8 @@ void DrawBalloon2(typMascot *mascot, char **wn_iwp, int wn_max)
   cairo_text_extents_t extents;
 #endif  
   gboolean shape_flag=FALSE;
+  GdkPixmap *pixmap_mask;
+  GdkPixbuf *pixbuf_mask;
 
   work_page=mascot->bal_page;
   work_page^=1;
@@ -468,8 +467,7 @@ void DrawBalloon2(typMascot *mascot, char **wn_iwp, int wn_max)
     shape_flag=TRUE;
   }
 
-  //h_arrow+=mascot->wbalbd;
-
+  h_arrow=mascot->wbalbd*2+6;
   // bal_height, bal_width  テキスト一行の大きさ
   bal_height=0;
   bal_width=0;
@@ -499,7 +497,6 @@ void DrawBalloon2(typMascot *mascot, char **wn_iwp, int wn_max)
     }
      if(tmp_h>bal_height){
        bal_height=tmp_h;
-       ds=0;
      }
   }
   
@@ -534,6 +531,21 @@ void DrawBalloon2(typMascot *mascot, char **wn_iwp, int wn_max)
 					  -1);
 
   if(shape_flag){
+    pixmap_mask = gdk_pixmap_new(gtk_widget_get_window(mascot->balloon_main),
+				 w,
+				 h+h_arrow,
+					    -1);
+    //surface = cairo_image_surface_create(CAIRO_FORMAT_ARGB32,
+    //					 w, h+h_arrow);
+    //					  -1);
+    cr_mask = gdk_cairo_create(pixmap_mask); 
+  
+    cairo_set_source_rgba (cr_mask, 1, 1, 1, 0);
+    cairo_fill (cr_mask);
+    cairo_paint (cr_mask);
+    cairo_set_source_rgba (cr_mask, 1, 1, 1, 1);
+
+    /*
     if (mask_bal[work_page]) {
       g_object_unref(G_OBJECT(mask_bal[work_page]));
     } 
@@ -543,9 +555,10 @@ void DrawBalloon2(typMascot *mascot, char **wn_iwp, int wn_max)
     
     cr_mask = gdk_cairo_create(mask_bal[work_page]);
     cairo_set_operator (cr_mask, CAIRO_OPERATOR_CLEAR);
+    cairo_fill (cr_mask);
     cairo_paint (cr_mask);
-    cairo_set_operator (cr_mask, CAIRO_OPERATOR_SOURCE);
-    cairo_set_source_rgb (cr_mask, 1, 1, 1); // opaque white
+    cairo_set_operator (cr_mask, CAIRO_OPERATOR_SATURATE);
+    cairo_set_source_rgb (cr_mask, 0, 0, 0); // opaque black*/
   }
 
   cr = gdk_cairo_create(pixmap_bal[work_page]);
@@ -564,26 +577,29 @@ void DrawBalloon2(typMascot *mascot, char **wn_iwp, int wn_max)
   
   cairo_set_operator (cr, CAIRO_OPERATOR_OVER);
 
+  
 #ifdef USE_WIN32  
   //BG should be opaque to BG only translucency for Win32
   cairo_set_source_rgba (cr, 
-			 (gdouble)mascot->colbalbg->red/0xFFFF,
-			 (gdouble)mascot->colbalbg->green/0xFFFF,
-			 (gdouble)mascot->colbalbg->blue/0xFFFF,
-			 1); /* opaque BG */
+			 1,
+			 1,
+			 1,
+			 0); /* opaque BG */
   cairo_rectangle(cr, 0, 0, w, h+h_arrow);
   cairo_fill(cr);
+  cairo_paint (cr);
 #else
   //Even for X, to get clear shape and border,
   //Full area of the balloon window should be painted with BG color
   cairo_set_source_rgba (cr, 
-			 (gdouble)mascot->colbalbg->red/0xFFFF,
-			 (gdouble)mascot->colbalbg->green/0xFFFF,
-			 (gdouble)mascot->colbalbg->blue/0xFFFF,
-			 (gdouble)mascot->alpbalbg/0xFFFF); /* transparent */
+			 1,
+			 1,
+			 1,
+			 0); /* transparent */
   if(shape_flag){
     cairo_rectangle(cr, 0, 0, w, h+h_arrow);
     cairo_fill(cr);
+    cairo_paint (cr);
   }
 #endif
 
@@ -594,7 +610,7 @@ void DrawBalloon2(typMascot *mascot, char **wn_iwp, int wn_max)
   dy=(gdouble)mascot->baltext_y;
   bd=(gdouble)mascot->wbalbd;
 
-  cairo_move_to(cr,0,dy);
+  cairo_move_to(cr,bd,bd+dy);
 
   cairo_save (cr);
   cairo_translate (cr, dx+bd, dy+bd);
@@ -628,7 +644,7 @@ void DrawBalloon2(typMascot *mascot, char **wn_iwp, int wn_max)
     cairo_line_to(cr, w-bd, h+h_arrow-bd);
     cairo_line_to(cr, w-bd-dx-h_arrow,  h-bd);
   }
-  cairo_line_to(cr, dx,  h);
+  cairo_line_to(cr, dx,  h-bd);
 
   cairo_save (cr);
   cairo_translate (cr, bd+dx, h-dy-bd);
@@ -640,7 +656,28 @@ void DrawBalloon2(typMascot *mascot, char **wn_iwp, int wn_max)
 
   if(shape_flag){
     cairo_append_path(cr_mask,cairo_copy_path(cr));
-    cairo_fill(cr_mask);
+    cairo_clip_preserve (cr_mask);
+    cairo_paint(cr_mask);
+    cairo_destroy(cr_mask);
+    gdk_pixbuf_get_from_drawable(pixbuf_mask,
+				 pixmap_mask,
+				 gdk_colormap_get_system(),
+				 0,0,0,0,
+				 w,h+h_arrow);
+    g_object_unref(G_OBJECT(pixmap_mask));
+    //pixbuf_mask=gdk_pixbuf_get_from_surface(surface,0,0,w,h+h_arrow);
+    //cairo_surface_destroy(surface);
+    
+    if (mask_bal[work_page]) {
+      g_object_unref(G_OBJECT(mask_bal[work_page]));
+    }
+
+    gdk_pixbuf_render_threshold_alpha(pixbuf_mask, mask_bal[work_page],
+				      0, 0, 0, 0,
+				      w, h+h_arrow, 0.5);
+    
+    g_object_unref(G_OBJECT(pixbuf_mask));
+    
     // If having a mask, never clip
     // Anti-alias of cairo could cause discoloration
   }
@@ -650,10 +687,37 @@ void DrawBalloon2(typMascot *mascot, char **wn_iwp, int wn_max)
 
 #ifndef USE_WIN32
   // Paint BG with alpha
-  if(!shape_flag)
+  if(!shape_flag){
     cairo_fill_preserve(cr);
+  }
+#endif
+
+  ///// BACKGROUND /////
+#ifdef USE_WIN32  
+  //BG should be opaque to BG only translucency for Win32
+  cairo_set_source_rgba (cr, 
+			 (gdouble)mascot->colbalbg->red/0xFFFF,
+			 (gdouble)mascot->colbalbg->green/0xFFFF,
+			 (gdouble)mascot->colbalbg->blue/0xFFFF,
+			 1); /* opaque BG */
+  cairo_fill(cr);
+  cairo_paint (cr);
+#else
+  //Even for X, to get clear shape and border,
+  //Full area of the balloon window should be painted with BG color
+  cairo_set_source_rgba (cr, 
+			 (gdouble)mascot->colbalbg->red/0xFFFF,
+			 (gdouble)mascot->colbalbg->green/0xFFFF,
+			 (gdouble)mascot->colbalbg->blue/0xFFFF,
+			 (gdouble)mascot->alpbalbg/0xFFFF); /* transparent */
+  //if(shape_flag){
+  cairo_fill_preserve(cr);
+  cairo_paint (cr);
+    //}
 #endif
   
+
+  ///// BORDER //////
   if(mascot->wbalbd>0){
     cairo_set_source_rgba (cr, 
 			   (gdouble)mascot->colbalbd->red/0xFFFF,
@@ -793,7 +857,6 @@ void DrawBalloon2(typMascot *mascot, char **wn_iwp, int wn_max)
     gdk_window_shape_combine_mask( gtk_widget_get_window(mascot->balloon_main),
 				   mask_bal[mascot->bal_page],
 				   0,0);
-    cairo_destroy(cr_mask);
   }
 
  
