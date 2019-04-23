@@ -971,10 +971,7 @@ static void conf_change(GtkWidget *w, GtkWidget *dialog)
   InitComposite(Mascot);
   LoadPixmaps(Mascot->win_main, Mascot, Mascot->sprites);
   ReInitGC(Mascot);
-#ifdef USE_WIN32
-  gtk_widget_unmap(Mascot->balloon_fg);
-#endif
-  gtk_widget_unmap(Mascot->balloon_main);
+  map_balloon(Mascot, FALSE);
   flag_balloon=FALSE;
 #ifdef USE_BIFF
   LoadBiffPixmap(Mascot->biff_pix, Mascot);
@@ -994,31 +991,13 @@ static void conf_change(GtkWidget *w, GtkWidget *dialog)
   if(Mascot->clkmode!=CLOCK_NO) clock_update(Mascot, TRUE);
 
   if(Mascot->clkmode==CLOCK_PANEL){
-#ifdef USE_WIN32
-    if((Mascot->flag_clkfg)&&(Mascot->alpha_clk!=100)){
-      gtk_widget_map(Mascot->clock_fg);
-    }
-    else gtk_widget_unmap(Mascot->clock_fg);
-#endif
-    gtk_widget_map(Mascot->clock_main);
+    map_clock(Mascot, TRUE);
   }
   else{
-#ifdef USE_WIN32
-    gtk_widget_unmap(Mascot->clock_fg);
-#endif
-    gtk_widget_unmap(Mascot->clock_main);
+    map_clock(Mascot, FALSE);
   }
 
-#ifdef USE_WIN32
-  if((Mascot->sdw_flag)&&(Mascot->sdw_height>0)){
-    gtk_widget_map(Mascot->win_sdw);
-  }
-  else{
-    gtk_widget_unmap(Mascot->win_sdw);
-  }
-#endif
-
-  gtk_widget_map(Mascot->win_main);
+  map_main(Mascot, TRUE);
 
   if(Mascot->clkmode!=CLOCK_NO)  clock_update(Mascot, TRUE);
 
@@ -5078,10 +5057,7 @@ static void MakeNewMascot(GtkWidget *w, gpointer gdata)
   InitComposite(Mascot);
   LoadPixmaps(Mascot->win_main, Mascot, Mascot->sprites);
   ReInitGC(Mascot);
-#ifdef USE_WIN32
-  gtk_widget_unmap(Mascot->balloon_fg);
-#endif
-  gtk_widget_unmap(Mascot->balloon_main);
+  map_balloon(Mascot, FALSE);
   flag_balloon=FALSE;
 #ifdef USE_BIFF
   LoadBiffPixmap(Mascot->biff_pix, Mascot);
@@ -5091,30 +5067,13 @@ static void MakeNewMascot(GtkWidget *w, gpointer gdata)
   if(Mascot->clkmode!=CLOCK_NO) clock_update(Mascot, TRUE);
 
   if(Mascot->clkmode==CLOCK_PANEL){
-#ifdef USE_WIN32
-    if((Mascot->flag_clkfg)&&(Mascot->alpha_clk!=100)){
-      gtk_widget_map(Mascot->clock_fg);
-    }
-    else gtk_widget_unmap(Mascot->clock_fg);
-#endif
-    gtk_widget_map(Mascot->clock_main);
+    map_clock(Mascot, TRUE);
   }
   else{
-#ifdef USE_WIN32
-    gtk_widget_unmap(Mascot->clock_fg);
-#endif
-    gtk_widget_unmap(Mascot->clock_main);
+    map_clock(Mascot, FALSE);
   }
 
-#ifdef USE_WIN32
-  if((Mascot->sdw_flag)&&(Mascot->sdw_height>0)){
-    gtk_widget_map(Mascot->win_sdw);
-  }
-  else{
-    gtk_widget_unmap(Mascot->win_sdw);
-  }
-#endif
-  gtk_widget_map(Mascot->win_main);
+  map_main(Mascot, TRUE);
 
   if(Mascot->clkmode!=CLOCK_NO) clock_update(Mascot, TRUE);
 
@@ -7540,7 +7499,9 @@ void create_config_dialog(void)
       gtk_table_attach(GTK_TABLE(table3), label, 1, 2, 0, 1,
 		       GTK_SHRINK,GTK_FILL,0,0);
       adj = (GtkAdjustment *)gtk_adjustment_new 
-	((gfloat)Mascot->offset, 0, Mascot->width_root, 1.0, 10.0, 0.0);
+	((gfloat)Mascot->offset,
+	 -Mascot->width_root, Mascot->width_root,
+	 1.0, 10.0, 0.0);
       my_signal_connect (adj, "value_changed",cc_get_adj,&tmp_mascot.offset);
       scale =  gtk_hscale_new (GTK_ADJUSTMENT(adj));
       gtk_scale_set_digits (GTK_SCALE (scale), 0);
@@ -12931,17 +12892,10 @@ void ChangeMascot(){
   InitComposite(Mascot);
   LoadPixmaps(Mascot->win_main, Mascot, Mascot->sprites);
   ReInitGC(Mascot);
-#ifdef USE_WIN32
-  gtk_widget_unmap(Mascot->balloon_fg);
-#endif
-  gtk_widget_unmap(Mascot->balloon_main);
-#ifdef USE_WIN32
-  gtk_widget_unmap(Mascot->balloon_fg);
-#endif
-  gtk_widget_unmap(Mascot->balloon_main);
+  map_balloon(Mascot, FALSE);
   flag_balloon=FALSE;
 #ifdef USE_BIFF
-  gtk_widget_unmap(Mascot->biff_pix);
+  map_biff(Mascot, FALSE);
   LoadBiffPixmap(Mascot->biff_pix, Mascot);
   remap_biff_pix(Mascot);
 #endif  // USE_BIFF
@@ -12949,30 +12903,13 @@ void ChangeMascot(){
   //if(Mascot->clkmode!=CLOCK_NO) clock_update(Mascot, TRUE);
 
   if(Mascot->clkmode==CLOCK_PANEL){
-#ifdef USE_WIN32
-    if((Mascot->flag_clkfg)&&(Mascot->alpha_clk!=100)){
-      gtk_widget_map(Mascot->clock_fg);
-    }
-    else gtk_widget_unmap(Mascot->clock_fg);
-#endif
-    gtk_widget_map(Mascot->clock_main);
+    map_clock(Mascot, TRUE);
   }
   else{
-#ifdef USE_WIN32
-    gtk_widget_unmap(Mascot->clock_fg);
-#endif
-    gtk_widget_unmap(Mascot->clock_main);
+    map_clock(Mascot, FALSE);
   }
 
-#ifdef USE_WIN32
-  if((Mascot->sdw_flag)&&(Mascot->sdw_height>0)){
-    gtk_widget_map(Mascot->win_sdw);
-  }
-  else{
-    gtk_widget_unmap(Mascot->win_sdw);
-  }
-#endif
-  gtk_widget_map(Mascot->win_main);
+  map_main(Mascot, TRUE);
 
   if(Mascot->clkmode!=CLOCK_NO) clock_update(Mascot, TRUE); 
 
@@ -13005,22 +12942,16 @@ void NkrChangeMascot(){
   InitComposite(Mascot);
   LoadPixmaps(Mascot->win_main, Mascot, Mascot->sprites);
   ReInitGC(Mascot);
-#ifdef USE_WIN32
-  gtk_widget_unmap(Mascot->balloon_fg);
-#endif
-  gtk_widget_unmap(Mascot->balloon_main);
+  map_balloon(Mascot, FALSE);
   flag_balloon=FALSE;
 #ifdef USE_BIFF
-  gtk_widget_unmap(Mascot->biff_pix);
+  map_biff(Mascot, FALSE);
   LoadBiffPixmap(Mascot->biff_pix, Mascot);
 #endif  // USE_BIFF
   
   Mascot->yoff=Mascot->height - Mascot->yoff;
 
-#ifdef USE_WIN32
-  gtk_widget_unmap(Mascot->clock_fg);
-#endif
-  gtk_widget_unmap(Mascot->clock_main);
+  map_clock(Mascot, FALSE);
   MoveToFocus(Mascot,TRUE);
 
   // DrawingArea ¤Îrealize

@@ -1050,7 +1050,12 @@ GdkGC *MPCreatePen();
 gint dw_init_main();
 void raise_all();
 void make_mascot();
-
+void map_balloon();
+void map_clock();
+#ifdef USE_BIFF
+void map_biff();
+#endif
+void map_main();
 
 // clock.c
 #ifdef USE_WIN32

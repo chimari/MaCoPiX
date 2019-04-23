@@ -210,7 +210,6 @@ gboolean TestLoadPixmaps(typMascot *mascot, gchar *filename, gint i_pix)
 			     w, mascot->sdw_height,
 			     1); // Depth =1 (Bitmap)
 	  
-	  
 	  gdk_draw_drawable(mascot->sprites[i_pix].pixmap_sdw,
 			    mascot->win_sdw->style->fg_gc[GTK_WIDGET_STATE(mascot->win_sdw)],
 			    mascot->sprites[i_pix].mask,
@@ -223,8 +222,7 @@ gboolean TestLoadPixmaps(typMascot *mascot, gchar *filename, gint i_pix)
 			    mascot->sprites[i_pix].mask,
 			    0, h-mascot->sdw_height,
 			    0,0,
-			    w,mascot->sdw_height);
-	  
+			    w,mascot->sdw_height);  
 	}
       }
       else{
@@ -477,7 +475,6 @@ void LoadPixmaps(GtkWidget *widget, //GtkWidget *draw,
 			    0, h-mascot->sdw_height,
 			    0,0,
 			    w,mascot->sdw_height);
-	  
 	}
       }
       else{
@@ -1031,7 +1028,7 @@ gint DrawMascotTemp(typMascot *mascot, gint i_pix)
       gtk_widget_get_allocation(mascot->dw_sdw,allocation);
       
       gdk_draw_drawable(gtk_widget_get_window(mascot->dw_sdw),
-		      style->fg_gc[gtk_widget_get_state(mascot->dw_sdw)],
+			style->fg_gc[gtk_widget_get_state(mascot->dw_sdw)],
 			pixmap_sdw[work_page],
 			0,0,0,0,
 			allocation->width,
@@ -1580,19 +1577,13 @@ void screen_changed(GtkWidget *widget, GdkScreen *old_screen,
 }
 
 void InitComposite(typMascot *mascot){
-#ifdef USE_WIN32
-  gtk_widget_unmap(mascot->win_sdw);
-#endif
-  gtk_widget_unmap(mascot->win_main);
+  map_main(mascot, FALSE);
 #ifdef USE_BIFF
-  gtk_widget_unmap(mascot->biff_pix);
+  map_biff(mascot, FALSE);
 #endif
   //#endif
-  gtk_widget_unmap(mascot->clock_main);
-  gtk_widget_unmap(mascot->balloon_main);
-#ifdef USE_WIN32
-  gtk_widget_unmap(mascot->balloon_fg);
-#endif
+  map_clock(mascot, FALSE);
+  map_balloon(mascot, FALSE);
 
   if(gtk_widget_is_composited(mascot->win_main))
     mascot->flag_composite=COMPOSITE_TRUE;

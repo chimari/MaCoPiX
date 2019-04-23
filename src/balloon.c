@@ -38,7 +38,7 @@ gint old_x, old_y;
 // *** Protptype of function in this file
 void DrawBalloon();
 void DrawBalloon2();
-void make_mask();
+GdkBitmap * make_mask_from_surface();
 
 void DrawBalloon(typMascot *mascot, char **wn_iwp, int wn_max)
 {
@@ -423,12 +423,7 @@ void DrawBalloon(typMascot *mascot, char **wn_iwp, int wn_max)
   MoveBalloon(mascot,mascot->x,mascot->y);
   gdk_flush();
 
-#ifdef USE_WIN32
-  if((mascot->flag_balfg)&&(mascot->alpha_bal!=100)){
-    gtk_widget_map(mascot->balloon_fg);
-  }
-#endif
-  gtk_widget_map(mascot->balloon_main);
+  map_balloon(mascot, TRUE);
   // ToolTips使用時に削除 for v1.4.0
   //while (g_main_iteration(FALSE));
 
@@ -641,7 +636,11 @@ void DrawBalloon2(typMascot *mascot, char **wn_iwp, int wn_max)
     cairo_paint(cr_mask);
     cairo_destroy(cr_mask);
 
-    make_mask(surface, work_page);
+    if (mask_bal[work_page]) {
+      g_object_unref(G_OBJECT(mask_bal[work_page]));
+    }
+
+    mask_bal[work_page] = make_mask_from_surface(surface);
     // If having a mask, never clip
     // Anti-alias of cairo could cause discoloration
   }
@@ -795,12 +794,7 @@ void DrawBalloon2(typMascot *mascot, char **wn_iwp, int wn_max)
 
   MoveBalloon(mascot,mascot->x,mascot->y);
   gdk_flush();
-#ifdef USE_WIN32
-  if((mascot->flag_balfg)&&(mascot->alpha_bal!=100)){
-    gtk_widget_map(mascot->balloon_fg);
-  }
-#endif
-  gtk_widget_map(mascot->balloon_main);
+  map_balloon(mascot, TRUE);
 
 #ifdef __PANGOCAIRO_H__
   if(pango_text)
@@ -811,10 +805,11 @@ void DrawBalloon2(typMascot *mascot, char **wn_iwp, int wn_max)
 }
 
 
-void make_mask(cairo_surface_t *surface, gint work_page){
+GdkBitmap * make_mask_from_surface(cairo_surface_t *surface){
   unsigned char *data, *p_ret;
   gint stride, width, height, sz, i, j, pos;
   GdkPixbuf *pixbuf_mask;
+  GdkBitmap *mask_ret;
     
   data=cairo_image_surface_get_data(surface);
   stride=cairo_image_surface_get_stride(surface);
@@ -845,18 +840,16 @@ void make_mask(cairo_surface_t *surface, gint work_page){
   
   cairo_surface_destroy(surface);
   
-  if (mask_bal[work_page]) {
-    g_object_unref(G_OBJECT(mask_bal[work_page]));
-  }
-
-  mask_bal[work_page] = gdk_pixmap_new(NULL,
-				       width, height,1); // Depth =1 (Bitmap)
+  mask_ret = gdk_pixmap_new(NULL,
+			    width, height,1); // Depth =1 (Bitmap)
   
-  gdk_pixbuf_render_threshold_alpha(pixbuf_mask, mask_bal[work_page],
+  gdk_pixbuf_render_threshold_alpha(pixbuf_mask, mask_ret,
 				    0, 0, 0, 0,
 				    width, height, 10);
     
   g_object_unref(G_OBJECT(pixbuf_mask));
+
+  return(mask_ret);
 }
 
 // Balloonのpixmap bufferへの描画
@@ -1098,10 +1091,7 @@ void DoBalloon(typMascot *mascot)
     }
     else if(balseqp==-2){
       if(balseqp_biff==0){  // Biff用バルーンのクローズ
-#ifdef USE_WIN32
-	gtk_widget_unmap(mascot->balloon_fg);
-#endif
-	gtk_widget_unmap(mascot->balloon_main);
+	map_balloon(mascot, FALSE);
 	flag_balloon=FALSE;
       }
       else{
@@ -1110,10 +1100,7 @@ void DoBalloon(typMascot *mascot)
     } 
     else if(balseqp==-3){
       if(balseqp_sock==0){  // Socket用バルーンのクローズ
-#ifdef USE_WIN32
-	gtk_widget_unmap(mascot->balloon_fg);
-#endif
-	gtk_widget_unmap(mascot->balloon_main);
+	map_balloon(mascot, FALSE);
 	flag_balloon=FALSE;
       }
       else{
@@ -1122,11 +1109,7 @@ void DoBalloon(typMascot *mascot)
     }
     else if(balseqp==-4){
       if(balseqp_sys==0){  // Sys用バルーンのクローズ
-#ifdef USE_WIN32
-	gtk_widget_unmap(mascot->balloon_fg);
-#endif
-	gtk_widget_unmap(mascot->balloon_main);
-
+	map_balloon(mascot, FALSE);
 	flag_balloon=FALSE;
       }
       else{

@@ -4562,14 +4562,12 @@ int main(int argc, char **argv)
 
   Mascot->flag_ow=FALSE;
 
-  
 #ifdef USE_BIFF
   LoadBiffPixmap(Mascot->biff_pix, Mascot);
 #ifndef __GTK_TOOLTIP_H__
   Mascot->mail.tooltips=gtk_tooltips_new();
 #endif
 #endif
-
 
   // 時計更新
   timer=g_timeout_add_full(G_PRIORITY_HIGH,
@@ -4599,10 +4597,7 @@ int main(int argc, char **argv)
   gtk_widget_show_all(Mascot->balloon_fg);
 #endif
   gtk_widget_show_all(Mascot->balloon_main);
-#ifdef USE_WIN32
-  gtk_widget_unmap(Mascot->balloon_fg);
-#endif
-  gtk_widget_unmap(Mascot->balloon_main);
+  map_balloon(Mascot, FALSE);
 
 #ifdef USE_WIN32
   gtk_widget_show_all(Mascot->clock_fg);
@@ -4610,19 +4605,11 @@ int main(int argc, char **argv)
   gtk_widget_show_all(Mascot->clock_main);
 
   if(Mascot->clkmode!=CLOCK_PANEL){
-#ifdef USE_WIN32
-    gtk_widget_unmap(Mascot->clock_fg);
-#endif
-    gtk_widget_unmap(Mascot->clock_main);
+    map_clock(Mascot, FALSE);
   }
   else{
     DrawPanelClock0(Mascot);
-#ifdef USE_WIN32
-    if((!Mascot->flag_clkfg)||(Mascot->alpha_clk==100)){
-      gtk_widget_unmap(Mascot->clock_fg);
-    }
-#endif
-    gtk_widget_map(Mascot->clock_main);
+    map_clock(Mascot, TRUE);
   }
 
   if(Mascot->clkmode!=CLOCK_NO){
@@ -4632,21 +4619,16 @@ int main(int argc, char **argv)
 
 #ifdef USE_BIFF
   gtk_widget_show_all(Mascot->biff_pix);
-  gtk_widget_unmap(Mascot->biff_pix);
+  map_biff(Mascot, FALSE);
 #endif // USE_BIFF
+
 
 #ifdef USE_WIN32
   gtk_widget_show_all(Mascot->win_sdw);
-  if((Mascot->sdw_flag)&&(Mascot->sdw_height)){
-      gtk_widget_map(Mascot->win_sdw);
-    }
-    else{
-      gtk_widget_unmap(Mascot->win_sdw);
-    }
 #endif
-  
   gtk_widget_show_all(Mascot->win_main);
-  gtk_widget_map(Mascot->win_main);
+  map_main(Mascot, TRUE);
+  
 
 
 #ifndef USE_WIN32

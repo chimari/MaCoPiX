@@ -152,7 +152,7 @@ gint SetMailChecker(gpointer gdata){
     fflush(stdin);
     fflush(stdout);
   }
-  gtk_widget_unmap(mascot->biff_pix);
+  map_biff(mascot, FALSE);
 
   if(mascot->mail.flag){
     biff_init(mascot);
@@ -180,7 +180,7 @@ gint ResetMailChecker(gpointer gdata){
     fflush(stdin);
     fflush(stdout);
   }
-  gtk_widget_unmap(mascot->biff_pix);
+  map_biff(mascot, FALSE);
 
   if(mascot->mail.flag){
     MailChecker(mascot);
@@ -310,7 +310,7 @@ void display_biff_balloon(typMascot *mascot)
   }
 
   if(mascot->mail.status == POP3_ERROR){
-    gtk_widget_unmap(mascot->biff_pix);
+    map_biff(mascot, FALSE);
 
     if(flag_balloon==FALSE){
       mascot->balseq=0;
@@ -321,7 +321,7 @@ void display_biff_balloon(typMascot *mascot)
     }
   }
   else if(mascot->mail.status == POP3_SSL_CERT){
-    gtk_widget_unmap(mascot->biff_pix);
+    map_biff(mascot, FALSE);
     
 #ifdef USE_SSL
     mascot->mail.ssl_cert_res=ssl_manager_verify_cert(mascot);
@@ -331,10 +331,10 @@ void display_biff_balloon(typMascot *mascot)
   }
   else if(mascot->mail.status != NO_MAIL){
     MoveBiffPix(mascot,mascot->x,mascot->y);
-    gtk_widget_map(mascot->biff_pix);
+    map_biff(mascot, TRUE);
   }
   else{
-    gtk_widget_unmap(mascot->biff_pix);
+    map_biff(mascot, FALSE);
   }
   if(mascot->mail.status==NEW_MAIL){
     sound_play(mascot,mascot->mail.sound);
@@ -355,14 +355,14 @@ void display_biff_balloon(typMascot *mascot)
 void remap_biff_pix(typMascot *mascot){
   if(!mascot->mail.flag) return;
   if(mascot->mail.status == (POP3_ERROR|POP3_SSL_CERT)){
-    gtk_widget_unmap(mascot->biff_pix);
+    map_biff(mascot, FALSE);
   }
   else if(mascot->mail.status != NO_MAIL){
     MoveBiffPix(mascot,mascot->x,mascot->y);
-    gtk_widget_map(mascot->biff_pix);
+    map_biff(mascot, TRUE);
   }
   else{
-    gtk_widget_unmap(mascot->biff_pix);
+    map_biff(mascot, FALSE);
   }
 }
 
