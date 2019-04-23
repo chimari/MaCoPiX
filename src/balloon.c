@@ -38,6 +38,7 @@ gint old_x, old_y;
 // *** Protptype of function in this file
 void DrawBalloon();
 void DrawBalloon2();
+void make_mask();
 
 void DrawBalloon(typMascot *mascot, char **wn_iwp, int wn_max)
 {
@@ -455,8 +456,6 @@ void DrawBalloon2(typMascot *mascot, char **wn_iwp, int wn_max)
 #endif
   cairo_surface_t *surface;
   gboolean shape_flag=FALSE;
-  GdkPixmap *pixmap_mask;
-  GdkPixbuf *pixbuf_mask;
 
   work_page=mascot->bal_page;
   work_page^=1;
@@ -532,40 +531,14 @@ void DrawBalloon2(typMascot *mascot, char **wn_iwp, int wn_max)
 					  -1);
 
   if(shape_flag){
-    //pixmap_mask = gdk_pixmap_new(gtk_widget_get_window(mascot->balloon_main),
-    //				 w,
-    //				 h+h_arrow,
-    //				 -1);
     surface = cairo_image_surface_create(CAIRO_FORMAT_RGB24,
     					 w, h+h_arrow);
     cr_mask = cairo_create(surface); 
-    //cr_mask = gdk_cairo_create(pixmap_mask); 
     cairo_set_source_rgb (cr_mask, 0, 0, 0); // opaque black
     cairo_rectangle(cr_mask, 0, 0, w, h+h_arrow);
     cairo_fill(cr_mask);
     cairo_paint (cr_mask);
     cairo_set_source_rgb (cr_mask, 1, 1, 1); // opaque white
-
-    /*
-    cairo_set_source_rgba (cr_mask, 1, 1, 1, 0);
-    cairo_fill (cr_mask);
-    cairo_paint (cr_mask);
-    cairo_set_source_rgba (cr_mask, 1, 1, 1, 1);
-    */
-    /*
-    if (mask_bal[work_page]) {
-      g_object_unref(G_OBJECT(mask_bal[work_page]));
-    } 
-    
-    mask_bal[work_page] = gdk_pixmap_new(gtk_widget_get_window(mascot->balloon_main),
-					 w,h+h_arrow,1); // Depth =1 (Bitmap)
-    
-    cr_mask = gdk_cairo_create(mask_bal[work_page]);
-    cairo_set_operator (cr_mask, CAIRO_OPERATOR_CLEAR);
-    cairo_fill (cr_mask);
-    cairo_paint (cr_mask);
-    cairo_set_operator (cr_mask, CAIRO_OPERATOR_SATURATE);
-    cairo_set_source_rgb (cr_mask, 0, 0, 0); // opaque black*/
   }
 
   cr = gdk_cairo_create(pixmap_bal[work_page]);
@@ -588,10 +561,11 @@ void DrawBalloon2(typMascot *mascot, char **wn_iwp, int wn_max)
 #ifdef USE_WIN32  
   //BG should be opaque to BG only translucency for Win32
   cairo_set_source_rgba (cr, 
-			 1,
-			 1,
-			 1,
-			 0); /* opaque BG */
+			 (gdouble)mascot->colbalbd->red/0xFFFF,
+			 (gdouble)mascot->colbalbd->green/0xFFFF,
+			 (gdouble)mascot->colbalbd->blue/0xFFFF,
+			 1); /* opaque BG */
+
   cairo_rectangle(cr, 0, 0, w, h+h_arrow);
   cairo_fill(cr);
   cairo_paint (cr);
@@ -662,82 +636,12 @@ void DrawBalloon2(typMascot *mascot, char **wn_iwp, int wn_max)
   cairo_line_to(cr, bd,  bd+dy);
 
   if(shape_flag){
-    unsigned char *data, *p_ret;
-    gint i, j, stride, sz, width, height;
-    gdouble lpix;
-    
     cairo_append_path(cr_mask,cairo_copy_path(cr));
     cairo_clip_preserve (cr_mask);
     cairo_paint(cr_mask);
     cairo_destroy(cr_mask);
 
-    data=cairo_image_surface_get_data(surface);
-    stride=cairo_image_surface_get_stride(surface);
-    width=cairo_image_surface_get_width(surface);
-    height=cairo_image_surface_get_height(surface);
-    sz=stride/width;
-
-    pixbuf_mask=gdk_pixbuf_new(GDK_COLORSPACE_RGB, TRUE, 8, width, height);
-    p_ret = gdk_pixbuf_get_pixels(pixbuf_mask);
-
-    for(i=0; i< h+h_arrow; i++){
-      for(j=0; j< w; j++){
-	if(data[(w*i+j)*sz]>10){
-	  p_ret[(w*i+j)*sz]  =0xFF;
-	  p_ret[(w*i+j)*sz+1]=0xFF;
-	  p_ret[(w*i+j)*sz+2]=0xFF;
-	  p_ret[(w*i+j)*sz+3]=0xFF;
-	}
-	else{
-	  p_ret[(w*i+j)*sz]  =0x00;
-	  p_ret[(w*i+j)*sz+1]=0x00;
-	  p_ret[(w*i+j)*sz+2]=0x00;
-	  p_ret[(w*i+j)*sz+3]=0x00;
-	}
-      }
-    }
-    
-    cairo_surface_destroy(surface);
-
-    if (mask_bal[work_page]) {
-      g_object_unref(G_OBJECT(mask_bal[work_page]));
-    }
-    
-    mask_bal[work_page] = gdk_pixmap_new(NULL,
-					 w,h+h_arrow,1); // Depth =1 (Bitmap)
-    
-    gdk_pixbuf_render_threshold_alpha(pixbuf_mask, mask_bal[work_page],
-				      0, 0, 0, 0,
-				      w, h+h_arrow, 10);
-    
-    g_object_unref(G_OBJECT(pixbuf_mask));
-    
-    /*
-    gdk_pixbuf_get_from_drawable(pixbuf_mask,
-				 pixmap_mask,
-				 gdk_colormap_get_system(),
-				 0,0,0,0,
-				 w,h+h_arrow);
-    g_object_unref(G_OBJECT(pixmap_mask));
-    //pixbuf_mask=gdk_pixbuf_get_from_surface(surface,0,0,w,h+h_arrow);
-    //cairo_surface_destroy(surface);
-    */
-
-    /*
-    if (mask_bal[work_page]) {
-      g_object_unref(G_OBJECT(mask_bal[work_page]));
-    }
-
-    mask_bal[work_page] = gdk_pixmap_new(NULL,
-					 w,h+h_arrow,1); // Depth =1 (Bitmap)
-    
-    gdk_pixbuf_render_threshold_alpha(pixbuf_mask, mask_bal[work_page],
-				      0, 0, 0, 0,
-				      w, h+h_arrow, 0.5);
-    
-    g_object_unref(G_OBJECT(pixbuf_mask));
-    */
-    
+    make_mask(surface, work_page);
     // If having a mask, never clip
     // Anti-alias of cairo could cause discoloration
   }
@@ -829,24 +733,6 @@ void DrawBalloon2(typMascot *mascot, char **wn_iwp, int wn_max)
 
   mascot->bal_page=work_page;
 
- //  Balloon BG Draw  
-#ifdef USE_WIN32
-  if((mascot->flag_balfg)&&(mascot->alpha_bal!=100)){
-    /*
-    gdk_window_set_back_pixmap(gtk_widget_get_window(mascot->balloon_fg),
-			       pixmap_bal[mascot->bal_page],
-			       FALSE);
-    */
-  }
-#endif
-
-  /*
-  gdk_window_set_back_pixmap(gtk_widget_get_window(mascot->balloon_main),
-			     pixmap_bal[mascot->bal_page],
-			     FALSE);
-  */
- 
-
 #ifdef USE_WIN32
   if((mascot->flag_balfg)&&(mascot->alpha_bal!=100)){
     {
@@ -862,14 +748,6 @@ void DrawBalloon2(typMascot *mascot, char **wn_iwp, int wn_max)
 			h+h_arrow);
       g_free(allocation);
     }
-    /*
-    gdk_draw_drawable(gtk_widget_get_window(mascot->balloon_fg),
-		      mascot->balloon_fg->style->fg_gc[GTK_WIDGET_STATE(mascot->balloon_fg)],
-		      pixmap_bal[mascot->bal_page],
-		      0,0,0,0,
-		      w,
-		      h+h_arrow);
-    */
   }
 #endif
 
@@ -886,14 +764,7 @@ void DrawBalloon2(typMascot *mascot, char **wn_iwp, int wn_max)
 		      h+h_arrow);
     g_free(allocation);
   }
-  /*
-  gdk_draw_drawable(gtk_widget_get_window(mascot->dw_balloon),
-		    mascot->balloon_main->style->fg_gc[GTK_WIDGET_STATE(mascot->balloon_main)],
-		    pixmap_bal[mascot->bal_page],
-		    0,0,0,0,
-		    w,
-		    h+h_arrow);
-  */
+
   // Resize of Balloon (calling dw_bal_expose)
 #ifdef USE_WIN32
     if((mascot->flag_balfg)&&(mascot->alpha_bal!=100)){
@@ -939,6 +810,54 @@ void DrawBalloon2(typMascot *mascot, char **wn_iwp, int wn_max)
 
 }
 
+
+void make_mask(cairo_surface_t *surface, gint work_page){
+  unsigned char *data, *p_ret;
+  gint stride, width, height, sz, i, j, pos;
+  GdkPixbuf *pixbuf_mask;
+    
+  data=cairo_image_surface_get_data(surface);
+  stride=cairo_image_surface_get_stride(surface);
+  width=cairo_image_surface_get_width(surface);
+  height=cairo_image_surface_get_height(surface);
+  sz=stride/width;
+
+  pixbuf_mask=gdk_pixbuf_new(GDK_COLORSPACE_RGB, TRUE, 8, width, height);
+  p_ret = gdk_pixbuf_get_pixels(pixbuf_mask);
+
+  for(i=0; i<height; i++){
+    for(j=0; j<width; j++){
+      pos=(width*i+j)*sz;
+      if(data[pos]>50){
+	p_ret[pos]  =0xFF;
+	p_ret[pos+1]=0xFF;
+	p_ret[pos+2]=0xFF;
+	p_ret[pos+3]=0xFF;
+      }
+      else{
+	p_ret[pos]  =0x00;
+	p_ret[pos+1]=0x00;
+	p_ret[pos+2]=0x00;
+	p_ret[pos+3]=0x00;
+      }
+    }
+  }
+  
+  cairo_surface_destroy(surface);
+  
+  if (mask_bal[work_page]) {
+    g_object_unref(G_OBJECT(mask_bal[work_page]));
+  }
+
+  mask_bal[work_page] = gdk_pixmap_new(NULL,
+				       width, height,1); // Depth =1 (Bitmap)
+  
+  gdk_pixbuf_render_threshold_alpha(pixbuf_mask, mask_bal[work_page],
+				    0, 0, 0, 0,
+				    width, height, 10);
+    
+  g_object_unref(G_OBJECT(pixbuf_mask));
+}
 
 // Balloonのpixmap bufferへの描画
 void DoBalloon(typMascot *mascot)
