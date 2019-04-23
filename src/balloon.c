@@ -663,7 +663,7 @@ void DrawBalloon2(typMascot *mascot, char **wn_iwp, int wn_max)
 
   if(shape_flag){
     unsigned char *data;
-    gint i, j, stride;
+    gint i, j, stride, sz, width, height;
     gdouble lpix;
     
     cairo_append_path(cr_mask,cairo_copy_path(cr));
@@ -673,10 +673,13 @@ void DrawBalloon2(typMascot *mascot, char **wn_iwp, int wn_max)
 
     data=cairo_image_surface_get_data(surface);
     stride=cairo_image_surface_get_stride(surface);
+    width=cairo_image_surface_get_width(height);
+    height=cairo_image_surface_get_height(surface);
+    sz=stride/width;
 
     for(i=0; i< h+h_arrow; i++){
       for(j=0; j< w; j++){
-	if((gdouble)data[(w*i+j)*stride]>0.5){
+	if(data[(w*i+j)*stride]>10){
 	  printf("o");
 	}
 	else{
@@ -685,6 +688,7 @@ void DrawBalloon2(typMascot *mascot, char **wn_iwp, int wn_max)
       }
       printf("\n");
     }
+    printf("\n");
     fflush(stderr);
     
     cairo_surface_destroy(surface);
