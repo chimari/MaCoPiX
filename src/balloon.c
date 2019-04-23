@@ -673,7 +673,7 @@ void DrawBalloon2(typMascot *mascot, char **wn_iwp, int wn_max)
 
     data=cairo_image_surface_get_data(surface);
     stride=cairo_image_surface_get_stride(surface);
-    width=cairo_image_surface_get_width(height);
+    width=cairo_image_surface_get_width(surface);
     height=cairo_image_surface_get_height(surface);
     sz=stride/width;
 
@@ -695,10 +695,7 @@ void DrawBalloon2(typMascot *mascot, char **wn_iwp, int wn_max)
 	  p_ret[(w*i+j)*sz+3]=0x00;
 	}
       }
-      printf("\n");
     }
-    printf("\n");
-    fflush(stderr);
     
     cairo_surface_destroy(surface);
 
@@ -706,9 +703,12 @@ void DrawBalloon2(typMascot *mascot, char **wn_iwp, int wn_max)
       g_object_unref(G_OBJECT(mask_bal[work_page]));
     }
     
+    mask_bal[work_page] = gdk_pixmap_new(NULL,
+					 w,h+h_arrow,1); // Depth =1 (Bitmap)
+    
     gdk_pixbuf_render_threshold_alpha(pixbuf_mask, mask_bal[work_page],
 				      0, 0, 0, 0,
-				      w, h+h_arrow, 0.5);
+				      w, h+h_arrow, 10);
     
     g_object_unref(G_OBJECT(pixbuf_mask));
     
