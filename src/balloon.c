@@ -662,7 +662,7 @@ void DrawBalloon2(typMascot *mascot, char **wn_iwp, int wn_max)
   cairo_line_to(cr, bd,  bd+dy);
 
   if(shape_flag){
-    unsigned char *data;
+    unsigned char *data, *p_ret;
     gint i, j, stride, sz, width, height;
     gdouble lpix;
     
@@ -677,13 +677,22 @@ void DrawBalloon2(typMascot *mascot, char **wn_iwp, int wn_max)
     height=cairo_image_surface_get_height(surface);
     sz=stride/width;
 
+    pixbuf_mask=gdk_pixbuf_new(GDK_COLORSPACE_RGB, TRUE, 8, width, height);
+    p_ret = gdk_pixbuf_get_pixels(pixbuf_mask);
+
     for(i=0; i< h+h_arrow; i++){
       for(j=0; j< w; j++){
-	if(data[(w*i+j)*stride]>10){
-	  printf("o");
+	if(data[(w*i+j)*sz]>10){
+	  p_ret[(w*i+j)*sz]  =0xFF;
+	  p_ret[(w*i+j)*sz+1]=0xFF;
+	  p_ret[(w*i+j)*sz+2]=0xFF;
+	  p_ret[(w*i+j)*sz+3]=0xFF;
 	}
 	else{
-	  printf(".");
+	  p_ret[(w*i+j)*sz]  =0x00;
+	  p_ret[(w*i+j)*sz+1]=0x00;
+	  p_ret[(w*i+j)*sz+2]=0x00;
+	  p_ret[(w*i+j)*sz+3]=0x00;
 	}
       }
       printf("\n");
@@ -692,6 +701,16 @@ void DrawBalloon2(typMascot *mascot, char **wn_iwp, int wn_max)
     fflush(stderr);
     
     cairo_surface_destroy(surface);
+
+    if (mask_bal[work_page]) {
+      g_object_unref(G_OBJECT(mask_bal[work_page]));
+    }
+    
+    gdk_pixbuf_render_threshold_alpha(pixbuf_mask, mask_bal[work_page],
+				      0, 0, 0, 0,
+				      w, h+h_arrow, 0.5);
+    
+    g_object_unref(G_OBJECT(pixbuf_mask));
     
     /*
     gdk_pixbuf_get_from_drawable(pixbuf_mask,
@@ -887,7 +906,6 @@ void DrawBalloon2(typMascot *mascot, char **wn_iwp, int wn_max)
   //ResizeMoveBalloon (mascot,mascot->x, mascot->y, w,h+h_arrow);
 
   if(shape_flag){
-    /*
 #ifdef USE_WIN32
     if((mascot->flag_balfg)&&(mascot->alpha_bal!=100)){
       gdk_window_shape_combine_mask( gtk_widget_get_window(mascot->balloon_fg),
@@ -899,7 +917,6 @@ void DrawBalloon2(typMascot *mascot, char **wn_iwp, int wn_max)
     gdk_window_shape_combine_mask( gtk_widget_get_window(mascot->balloon_main),
 				   mask_bal[mascot->bal_page],
 				   0,0);
-    */
   }
 
  
