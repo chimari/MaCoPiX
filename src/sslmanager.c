@@ -179,7 +179,7 @@ gint ssl_manager_verify_cert	(typMascot *mascot)
   {
     HWND   hWnd;
     
-    SetWindowPos(GDK_WINDOW_HWND(gtk_widget_get_window(main),HWND_TOPMOST,0,0,0,0,
+    SetWindowPos(GDK_WINDOW_HWND(gtk_widget_get_window(main)),HWND_TOPMOST,0,0,0,0,
 		 SWP_SHOWWINDOW|SWP_NOMOVE|SWP_NOSIZE);
   }
 #else

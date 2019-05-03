@@ -139,7 +139,7 @@ gboolean TestLoadPixmaps(typMascot *mascot, gchar *filename, gint i_pix)
     mascot->sprites[i_pix].mask=NULL;
   }
 #ifdef USE_WIN32
-  if(mascot->sprites[i_pix].pixamp_sdw) {
+  if(mascot->sprites[i_pix].pixmap_sdw) {
     g_object_unref(G_OBJECT(mascot->sprites[i_pix].pixmap_sdw));
     mascot->sprites[i_pix].pixmap_sdw=NULL;
   }

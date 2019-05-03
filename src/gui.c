@@ -7900,6 +7900,7 @@ void create_config_dialog(void)
       if(Mascot->flag_clk_cairo){
 	gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(check),TRUE);
       }
+      gtk_widget_set_sensitive(check,FALSE);
       my_signal_connect (check, "toggled",cc_get_toggle,
 			 &tmp_mascot.flag_clk_cairo);
 
@@ -11668,7 +11669,7 @@ void create_cons_dialog(typMascot *mascot,
   cdata->flag_ow=FALSE;
   cdata->flag_auto=FALSE;
 
-  button=gtkut_menu_item_new_with_icon(_("Cancel"),
+  button=gtkut_button_new_with_icon(_("Cancel"),
 #ifdef USE_GTK3
 				    "process-stop"
 #else
@@ -11679,7 +11680,7 @@ void create_cons_dialog(typMascot *mascot,
 		     GTK_FILL,GTK_SHRINK,0,0);
   my_signal_connect(button,"clicked",noow_cons, (gpointer)cdata);
 
-  button=gtkut_menu_item_new_with_icon(_("OK"),
+  button=gtkut_button_new_with_icon(_("OK"),
 #ifdef USE_GTK3
 				    "emblem-default"
 #else
@@ -11877,7 +11878,7 @@ void create_smenu_dialog(typMascot *mascot, gboolean flag_popup)
     make_smenu_list(scrwin, smenu);
     
     
-    button=gtkut_menu_item_new_with_icon(_("Cancel"),
+    button=gtkut_button_new_with_icon(_("Cancel"),
 #ifdef USE_GTK3
 				      "process-stop"
 #else
@@ -11888,7 +11889,7 @@ void create_smenu_dialog(typMascot *mascot, gboolean flag_popup)
 		       GTK_FILL,GTK_SHRINK,0,0);
     my_signal_connect(button,"clicked",close_smenu,GTK_WIDGET(main));
     
-    button=gtkut_menu_item_new_with_icon(_("OK"),
+    button=gtkut_button_new_with_icon(_("OK"),
 #ifdef USE_GTK3
 				      "emblem-default"
 #else
