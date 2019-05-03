@@ -340,7 +340,6 @@ void DrawPanelClock2(typMascot *mascot)
     // If having a mask, never clip
     // Anti-alias of cairo could cause discoloration
 #endif // USE_GTK3
-    cairo_surface_destroy(surface_mask);
   }
   else{
     cairo_fill_preserve(cr);
@@ -507,6 +506,7 @@ void DrawPanelClock2(typMascot *mascot)
 				     0,0);
 
     cairo_region_destroy(region_mask);
+    cairo_surface_destroy(surface_mask);
 #else            ////////////////////// GTK2 ////////////////////////////////////
 #ifdef USE_WIN32
     if((mascot->flag_clkfg)&&(mascot->alpha_clk!=100)){

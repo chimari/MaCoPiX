@@ -285,7 +285,6 @@ void DrawBalloon2(typMascot *mascot, char **wn_iwp, int wn_max)
     // If having a mask, never clip
     // Anti-alias of cairo could cause discoloration
 #endif // USE_GTK3
-    cairo_surface_destroy(surface_mask);
   }
   else{  
     cairo_clip_preserve (cr);
@@ -445,7 +444,8 @@ void DrawBalloon2(typMascot *mascot, char **wn_iwp, int wn_max)
 				     0,0);
 
     cairo_region_destroy(region_mask);
-    gtk_widget_queue_draw(mascot->dw_balloon);
+    cairo_surface_destroy(surface_mask);
+    gtk_widget_queuea_draw(mascot->dw_balloon);
 #else            ////////////////////// GTK2 ////////////////////////////////////
 #ifdef USE_WIN32
     if((mascot->flag_balfg)&&(mascot->alpha_bal!=100)){
