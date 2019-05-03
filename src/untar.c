@@ -169,26 +169,32 @@ gchar* untar_menu(typMascot *mascot, gchar *tarfile)
 
 
 void untar_fail(gchar* tarfile){
-#ifdef GTK_MSG
-  popup_message(POPUP_TIMEOUT*2,
+  popup_message(Mascot->win_main,
+#ifdef USE_GTK3
+		"dialog-error", 
+#else
+		GTK_STOCK_DIALOG_ERROR,
+#endif
+		
+		-1,
 		_("Error: File cannot be opened."),
 		" ",
 		to_utf8(tarfile),
 		NULL);
-#else
-  g_print (_("Cannot Open %s\n"),to_utf8(tarfile));
-#endif
 }
 
 void menu_fail(gchar* tarfile){
-#ifdef GTK_MSG
-  popup_message(POPUP_TIMEOUT*2,
+  popup_message(Mascot->win_main,
+#ifdef USE_GTK3
+		"dialog-error", 
+#else
+		GTK_STOCK_DIALOG_ERROR,
+#endif
+		
+		-1,
 		_("Error: A Menu File is not found in"),
 		" ",
 		to_utf8(tarfile),
 		NULL);
-#else
-  g_print (_("A Menu Files is not found in %s\n"),to_utf8(tarfile));
-#endif
 }
 

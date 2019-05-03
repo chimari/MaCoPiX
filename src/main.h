@@ -124,9 +124,9 @@
 #include "configfile.h"
 #include "intl.h"
 #include "libpop.h"
+#include "sockmsg.h"
 #include "gtkut.h"
 
-#include "sockmsg.h"
 
 #if HAVE_SYS_UTSNAME_H
 #include <sys/utsname.h>
@@ -139,6 +139,12 @@
 #ifdef USE_SSL
 #include<fcntl.h>
 #include "ssl.h"
+#endif
+
+#ifndef USE_GTK3
+#ifdef __GTK_STATUS_ICON_H__
+#define USE_GTK_STATUS_ICON 1
+#endif
 #endif
 
 
@@ -723,7 +729,10 @@ struct _typMascot{
 #ifdef USE_BIFF
   GtkWidget *biff_pix, *dw_biff;
 #endif
-  GtkWidget *PopupMenu; 
+  GtkWidget *PopupMenu;
+#ifdef USE_GTK3
+  GdkSeat *seat;
+#endif
   
   char *file;
   char *rcfile;
@@ -774,7 +783,7 @@ struct _typMascot{
   gint balwidth;
   gint balheight;
   //GtkWidget *w_drawing;
-#ifdef USE_GTK3
+#ifdef USE_GTK3   /////////////// GTK3 ///////////////
   GdkRGBA *def_colclk;
   GdkRGBA *def_colclksd;
   GdkRGBA *def_colclkbg;
@@ -789,7 +798,7 @@ struct _typMascot{
   GdkRGBA *colbal;
   GdkRGBA *colbalbg;
   GdkRGBA *colbalbd;
-#else
+#else             /////////////// GTK2 ///////////////
   GdkGC *gc_main[2];
   GdkGC *gc_mainsd[2];
   GdkGC *gc_clk[2];
@@ -943,7 +952,7 @@ struct _typMascot{
   gchar    *menu_code;  
   ProgressData *pdata;
 //#if GTK_CHECK_VERSION(2, 10, 0)
-#ifdef __GTK_STATUS_ICON_H__
+#ifdef USE_GTK_STATUS_ICON
   GtkStatusIcon *tray_icon;
   gboolean tray_icon_flag;
 #endif
@@ -979,6 +988,11 @@ typMascot *Mascot;
 
 ///////////   Proto types   //////////
 // main.c
+#ifdef USE_GTK3
+void css_change_col();
+void css_change_font();
+void css_change_pbar_height();
+#endif
 gchar* FullPathMascotFile();
 gchar* FullPathPixmapFile();
 gchar *FullPathSoundFile();
@@ -1082,7 +1096,7 @@ void create_config_dialog();
 void create_cons_dialog();
 void create_smenu_dialog();
 void gui_arg_init();
-void popup_message(gint , ...);
+void popup_message(GtkWidget *parent, gchar* stock_id,gint delay, ...);
 void popup_progress();
 void destroy_progress();
 void unlink_all();
@@ -1127,6 +1141,9 @@ void LoadBiffPixmap();
 #endif
 gboolean TestLoadPixmaps();
 void ReInitGC();
+#ifndef USE_GTK3
+GdkBitmap * make_mask_from_surface();
+#endif
 
 // pop.c
 int popReadLine(char *ptr, int size, guint ssl_mode);

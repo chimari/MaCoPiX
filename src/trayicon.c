@@ -50,10 +50,7 @@
 
 
 //#if GTK_CHECK_VERSION(2, 10, 0)
-#ifdef __GTK_STATUS_ICON_H__
-
-#include "macopix_icon.h"
-
+#ifdef USE_GTK_STATUS_ICON
 
 
 static void trayicon_popup_menu();
@@ -162,12 +159,12 @@ void trayicon_set_tooltip(typMascot *mascot)
   if (mascot->name) {
     default_tooltip = FALSE;
     text=g_strdup_printf("MaCoPiX : %s",mascot->name);
-    gtk_status_icon_set_tooltip(mascot->tray_icon, text);
+    gtk_status_icon_set_tooltip_text(mascot->tray_icon, text);
     g_free(text);
   } else if (!default_tooltip) {
     default_tooltip = TRUE;
-    gtk_status_icon_set_tooltip(mascot->tray_icon,
-				"MaCoPiX");
+    gtk_status_icon_set_tooltip_text(mascot->tray_icon,
+				     "MaCoPiX");
   }
 }
 

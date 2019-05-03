@@ -53,6 +53,55 @@ void usage();
 void print_common_dir();
 #endif
 
+// CSS for Gtk+3
+#ifdef USE_GTK3
+void css_change_col(GtkWidget *widget, gchar *color){
+  GtkStyleContext *style_context;
+  GtkCssProvider *provider = gtk_css_provider_new ();
+  gchar tmp[64];
+  style_context = gtk_widget_get_style_context(widget);
+  gtk_style_context_add_provider(style_context, GTK_STYLE_PROVIDER(provider), GTK_STYLE_PROVIDER_PRIORITY_APPLICATION);
+  if(gtk_minor_version>=20)  {
+    g_snprintf(tmp, sizeof tmp, "button, label { color: %s; }", color);
+  } else {
+    g_snprintf(tmp, sizeof tmp, "GtkButton, GtkLabel { color: %s; }", color);
+  }
+  gtk_css_provider_load_from_data(GTK_CSS_PROVIDER(provider), tmp, -1, NULL);
+  g_object_unref (provider);
+}
+
+void css_change_font(GtkWidget *widget, gchar *font){
+  GtkStyleContext *style_context;
+  GtkCssProvider *provider = gtk_css_provider_new ();
+  gchar tmp[64];
+  style_context = gtk_widget_get_style_context(widget);
+  gtk_style_context_add_provider(style_context, GTK_STYLE_PROVIDER(provider), GTK_STYLE_PROVIDER_PRIORITY_APPLICATION);
+  if(gtk_minor_version>=20)  {
+    g_snprintf(tmp, sizeof tmp, "drawing_area, label { font: %s; }", font);
+  } else {
+    g_snprintf(tmp, sizeof tmp, "GtkDrawingArea, GtkLabel { font: %s; }", font);
+  }
+  gtk_css_provider_load_from_data(GTK_CSS_PROVIDER(provider), tmp, -1, NULL);
+  g_object_unref (provider);
+}
+
+void css_change_pbar_height(GtkWidget *widget, gint height){
+  GtkStyleContext *style_context;
+  GtkCssProvider *provider = gtk_css_provider_new ();
+  gchar tmp[64];
+  style_context = gtk_widget_get_style_context(widget);
+  gtk_style_context_add_provider(style_context, GTK_STYLE_PROVIDER(provider), GTK_STYLE_PROVIDER_PRIORITY_APPLICATION);
+  if(gtk_minor_version>=20)  {
+    g_snprintf(tmp, sizeof tmp, "progress, trough { min-height: %dpx; }", height);
+  } else {
+    g_snprintf(tmp, sizeof tmp, "GtkProgressBar, trough { min-height: %dpx; }", height);
+  }
+  gtk_css_provider_load_from_data(GTK_CSS_PROVIDER(provider), tmp, -1, NULL);
+  g_object_unref (provider);
+}
+#endif
+
+
 void exit_w_msg(gchar *s){
   fprintf(stderr,"%s\n",s);
   exit(1);
@@ -252,15 +301,17 @@ void ReadMenu(typMascot *mascot, gint offset_i_cat, gchar *merge_file)
 
   // みつからない
   if(m_place==0){
-#ifdef GTK_MSG
-    popup_message(POPUP_TIMEOUT*2,
+    popup_message(mascot->win_main,
+#ifdef USE_GTK3
+		  "dialog-error", 
+#else
+		  GTK_STOCK_DIALOG_ERROR,
+#endif
+		  -1,
 		  _("Cannot Find Menu File."),
 		  " ",
 		  my_basename(to_utf8(mascot->menu_file)),
 		  NULL);
-#else
-    g_print(_("Cannot Find Menu File %s\n"),my_basename(mascot->menu_file));
-#endif
     exit(1);
   }
 
@@ -371,13 +422,15 @@ void ReadMenu(typMascot *mascot, gint offset_i_cat, gchar *merge_file)
 	  if(!xmms_cfg_read_string(cfgfile, f_tmp0, tmp0, &dummy)){
 	    if(i_tgt==0){
 	      if(i_cat==0){
-#ifdef GTK_MSG
-		popup_message(POPUP_TIMEOUT*2,
+		popup_message(mascot->win_main,
+#ifdef USE_GTK3
+			      "dialog-error", 
+#else
+			      GTK_STOCK_DIALOG_ERROR,
+#endif
+			      -1,
 			      _(" Cannot read the Menu File correctly!!"),
 			      NULL);
-#else
-		g_print(_(" Cannot read the Menu File correctly!!\n"));
-#endif
 		exit(1);
 	      }
 	      flag_end=TRUE;
@@ -416,13 +469,15 @@ void ReadMenu(typMascot *mascot, gint offset_i_cat, gchar *merge_file)
 				 &mascot->menu_tgt[i_cat][i_tgt])){
 	  if(i_tgt==0){
 	    if(i_cat==0){
-#ifdef GTK_MSG
-	      popup_message(POPUP_TIMEOUT*2,
+	      popup_message(mascot->win_main,
+#ifdef USE_GTK3
+			    "dialog-error", 
+#else
+			    GTK_STOCK_DIALOG_ERROR,
+#endif
+			    -1,
 			    _(" Cannot read the Menu File correctly!!"),
 			    NULL);
-#else
-	      g_print(_(" Cannot read the Menu File correctly!!\n"));
-#endif
 	      exit(1);
 	    }
 	    flag_end=TRUE;
@@ -946,7 +1001,7 @@ void ReadRC(typMascot *mascot, gboolean def_flag)
 			  &mascot->tar_command))
       mascot->tar_command=g_strdup(MENU_EXTRACT_GTAR_COMMAND);
 #endif
-#ifdef __GTK_STATUS_ICON_H__
+#ifdef USE_GTK_STATUS_ICON
     if(!xmms_cfg_read_boolean(cfgfile, field_tmp, "tray_icon_flag",
 			      &mascot->tray_icon_flag))
       mascot->tray_icon_flag=TRUE;
@@ -1291,7 +1346,7 @@ void ReadRC(typMascot *mascot, gboolean def_flag)
 #ifdef USE_GTAR
     mascot->tar_command=g_strdup(MENU_EXTRACT_GTAR_COMMAND);
 #endif
-#ifdef __GTK_STATUS_ICON_H__
+#ifdef USE_GTK_STATUS_ICON
     mascot->tray_icon_flag=TRUE;
 #endif
 
@@ -1414,7 +1469,7 @@ void SaveRC(typMascot *mascot,  gboolean def_flag)
     xmms_cfg_write_string(cfgfile, field_tmp, "tar_command",mascot->tar_command);
   else     xmms_cfg_remove_key(cfgfile,field_tmp, "tar_command");
 #endif
-#ifdef __GTK_STATUS_ICON_H__
+#ifdef USE_GTK_STATUS_ICON
   xmms_cfg_write_boolean(cfgfile, field_tmp, "tray_icon_flag",mascot->tray_icon_flag);
 #endif
 
@@ -1859,16 +1914,17 @@ void ReadMascot(typMascot *mascot, gboolean def_flag)
   }
 
   if(place==0){
-#ifdef GTK_MSG
-    popup_message(POPUP_TIMEOUT*2,
+    popup_message(mascot->win_main,
+#ifdef USE_GTK3
+		  "dialog-error", 
+#else
+		  GTK_STOCK_DIALOG_ERROR,
+#endif
+		  -1,
 		  _("Cannot Find Mascot File."),
 		  " ",
 		  my_basename(to_utf8(mascot->file)),
 		  NULL);
-#else
-    g_print(_("Cannot Find Mascot File %s\n"),
-	    my_basename(to_utf8(mascot->file)));
-#endif
     exit(1);
   }
 
@@ -2593,15 +2649,17 @@ void MascotInstall(typMascot *mascot, gchar *mascotfile)
   }
 
   if(place==0){
-#ifdef GTK_MSG
-    popup_message(POPUP_TIMEOUT*2,
+    popup_message(mascot->win_main,
+#ifdef USE_GTK3
+		  "dialog-error", 
+#else
+		  GTK_STOCK_DIALOG_ERROR,
+#endif
+		  -1,
 		  _("Cannot Find Mascot File."),
 		  " ",
 		  to_utf8(mascot->file),
 		  NULL);
-#else
-    g_print(_("Cannot Find Mascot File %s\n"),mascotfile);
-#endif
     exit(1);
   }
 
@@ -2710,15 +2768,17 @@ void MascotInstall(typMascot *mascot, gchar *mascotfile)
 
 	      
 	    if(p_place==0){
-#ifdef GTK_MSG
-	      popup_message(POPUP_TIMEOUT*2,
+	      popup_message(mascot->win_main,
+#ifdef USE_GTK3
+			    "dialog-error", 
+#else
+			    GTK_STOCK_DIALOG_ERROR,
+#endif
+			    -1,
 			    _("Cannot Find Image."),
 			    " ",
 			    to_utf8(pixfile),
 			    NULL);
-#else
-	      g_print(_("Cannot Find Image %s\n"),pixfile);
-#endif
 	      exit(1);
 	    }
   
@@ -2815,16 +2875,17 @@ gchar * FullPathMascotFile(typMascot *mascot, gchar *mascotfile)
 #endif
 
   if(place==0){
-#ifdef GTK_MSG
-    popup_message(POPUP_TIMEOUT*2,
+    popup_message(mascot->win_main,
+#ifdef USE_GTK3
+		  "dialog-error", 
+#else
+		  GTK_STOCK_DIALOG_ERROR,
+#endif
+		  -1,
 		  _("Cannot Find Mascot File."),
 		  " ",
 		  to_utf8(mascotfile),
 		  NULL);
-#else
-    g_print(_("Cannot Find Mascot File %s\n"),
-	    to_utf8(mascotfile));
-#endif
     exit(1);
   }
 
@@ -2996,15 +3057,17 @@ gchar *FullPathPixmapFile(typMascot *mascot, gchar *pixfile)
 
 	      
   if(p_place==0){
-#ifdef GTK_MSG
-    popup_message(POPUP_TIMEOUT*2,
+    popup_message(mascot->win_main,
+#ifdef USE_GTK3
+		  "dialog-error", 
+#else
+		  GTK_STOCK_DIALOG_ERROR,
+#endif
+		  -1,
 		  _("Cannot Find Image."),
 		  " ",
 		  to_utf8(pixfile),
 		  NULL);
-#else
-    g_print(_("Cannot Find Image %s\n"),to_utf8(pixfile));
-#endif
     exit(1);
   }
 
@@ -3152,15 +3215,17 @@ gchar *FullPathSoundFile(typMascot *mascot, gchar *wavfile, gboolean i_fl){
 
 	      
   if(s_place==0){
-#ifdef GTK_MSG
-    popup_message(POPUP_TIMEOUT*2,
+    popup_message(mascot->win_main,
+#ifdef USE_GTK3
+		  "dialog-warning", 
+#else
+		  GTK_STOCK_DIALOG_WARNING,
+#endif
+		  POPUP_TIMEOUT,
 		  _("Cannot Find Sound File."),
 		  " ",
 		  to_utf8(wavfile),
 		  NULL);
-#else
-    g_print(_("Cannot Find Sound File %s\n"),to_utf8(wavfile));
-#endif
     exit(1);
   }
 

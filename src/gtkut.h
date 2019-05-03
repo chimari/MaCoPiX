@@ -7,6 +7,8 @@ GtkWidget * gtkut_vbox_new();
 GtkWidget * gtkut_table_new();
 void gtkut_table_attach();
 void gtkut_table_attach_defaults();
+GtkWidget * gtkut_button_new_with_icon();
+GtkWidget * gtkut_toggle_button_new_with_icon();
 #ifdef USE_GTK3
 GtkWidget * gtkut_button_new_from_icon_name();
 GtkWidget * gtkut_toggle_button_new_from_icon_name();
@@ -17,3 +19,22 @@ GtkWidget * gtkut_toggle_button_new_from_stock();
 #endif
 GtkWidget * gtkut_button_new_from_pixbuf();
 GtkWidget * gtkut_toggle_button_new_from_pixbuf();
+void gtkut_pos();
+GtkWidget * gtkut_menu_item_new_with_icon();
+void gdkut_flush();
+GtkWidget * gtkut_hscale_new();
+GtkWidget * gtkut_arrow_new();
+
+enum{
+  POS_START,
+  POS_CENTER,
+  POS_END
+};
+
+typedef enum{
+  MY_ARROW_LEFT,
+  MY_ARROW_RIGHT,
+  MY_ARROW_UP,
+  MY_ARROW_DOWN
+} MyArrowDirect;
+

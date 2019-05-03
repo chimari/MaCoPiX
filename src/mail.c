@@ -203,17 +203,17 @@ gboolean MailChecker(gpointer gdata){
 
   if(mascot->flag_menu) return(TRUE);
 
-  gdk_flush();
+  gdkut_flush(mascot);
 
   ext_play(mascot,mascot->mail.polling);  
   mail_check(mascot);
 
-  gdk_flush();
+  gdkut_flush(mascot);
 
   if((mascot->mail.type!=MAIL_POP3)&&(mascot->mail.type!=MAIL_APOP))
     display_biff_balloon(mascot);
 
-  gdk_flush();
+  gdkut_flush(mascot);
   return(TRUE);
 }
 
@@ -252,12 +252,17 @@ void make_biff_pix(typMascot *mascot){
   gdk_window_set_override_redirect(gtk_widget_get_window(mascot->biff_pix),TRUE);
 #endif
 
-  my_signal_connect(mascot->biff_pix, "expose_event",
-		    expose_biff_pix, (gpointer)mascot);
   my_signal_connect(mascot->dw_biff, "configure_event",
 		    dw_configure_biff_pix, (gpointer)mascot);
+#ifdef USE_GTK3
+  my_signal_connect(mascot->dw_biff, "draw",
+		    dw_expose_biff_pix, (gpointer)mascot);
+#else
   my_signal_connect(mascot->dw_biff, "expose_event",
 		    dw_expose_biff_pix, (gpointer)mascot);
+  my_signal_connect(mascot->biff_pix, "expose_event",
+		    expose_biff_pix, (gpointer)mascot);
+#endif
   my_signal_connect(ebox, "button_press_event",
 		    biff_drag_begin, (gpointer)mascot);
   my_signal_connect(ebox, "button_release_event",
@@ -1188,14 +1193,9 @@ void pop3_data_read(typMascot *mascot)
       if(close(pop3_fd[0])==-1) fprintf(stderr,"pipe close error\n");
       fclose( fp );
     }
-    //if(close(pop3_fd[0])==-1) fprintf(stderr,"pipe close error\n");
 
-    //gdk_flush();
-    //display_biff_balloon(mascot);
-    //gdk_flush();
     mascot->mail.pop_child_fl=FALSE;
     mascot->mail.pop_readed=TRUE;
-
 
     pop_debug_print("Parent: status = %d\n",mascot->mail.status);
     pop_debug_print("Parent: pop3 fs status = %d\n",mascot->mail.pop3_fs_status);
@@ -1386,11 +1386,7 @@ void pop3_data_read_new(typMascot *mascot)
       if(close(pop3_fd[0])==-1) fprintf(stderr,"pipe close error\n");
       fclose( fp );
     }
-    //if(close(pop3_fd[0])==-1) fprintf(stderr,"pipe close error\n");
 
-    //gdk_flush();
-    //display_biff_balloon(mascot);
-    //gdk_flush();
     mascot->mail.pop_child_fl=FALSE;
     mascot->mail.pop_readed=TRUE;
 
@@ -2274,10 +2270,10 @@ void make_fs_max(GtkWidget *widget, typMascot *mascot){
 	      mascot->mail.count);
     }
   }
-  label=gtk_label_new(tmp_fs_max);
-  gtk_misc_set_alignment (GTK_MISC (label), 1.0, 0);
-  gtk_table_attach (GTK_TABLE (widget), label, 0, 5, 1, 2,
-		    GTK_FILL, GTK_SHRINK , 0, 0);
+  label=gtkut_label_new(tmp_fs_max);
+  gtkut_pos(label, POS_END, POS_START);
+  gtkut_table_attach (widget, label, 0, 5, 1, 2,
+		      GTK_FILL, GTK_SHRINK , 0, 0);
 }
 
 
@@ -2309,8 +2305,8 @@ void create_biff_dialog(typMascot *mascot)
   biff_main = gtk_window_new(GTK_WINDOW_TOPLEVEL);
   text_buffer = gtk_text_buffer_new(NULL);
 
-  gtk_widget_set_usize (biff_main, mascot->mail.win_width, 
-  			mascot->mail.win_height);
+  gtk_widget_set_size_request (biff_main, mascot->mail.win_width, 
+			       mascot->mail.win_height);
   if(mascot->mail.type==MAIL_POP3|MAIL_APOP){
     tmp=g_strconcat(_("MaCoPiX : Arrived mail list"),"  [",
 		    mascot->mail.pop_server,"]",NULL);
@@ -2325,7 +2321,7 @@ void create_biff_dialog(typMascot *mascot)
   gtk_container_set_border_width (GTK_CONTAINER (biff_main), 5);
   
   // 6x3のテーブル
-  biff_tbl = gtk_table_new (6, 3, FALSE);
+  biff_tbl = gtkut_table_new (6, 3, FALSE, 0, 0, 0);
   gtk_container_add (GTK_CONTAINER (biff_main), biff_tbl);
 
   biff_scroll = gtk_scrolled_window_new(NULL, NULL);
@@ -2338,7 +2334,7 @@ void create_biff_dialog(typMascot *mascot)
 
   gtk_container_add(GTK_CONTAINER(biff_scroll), biff_text);
 
-  gtk_table_attach_defaults (GTK_TABLE (biff_tbl), biff_scroll, 0, 5, 0, 1);
+  gtkut_table_attach_defaults (biff_tbl, biff_scroll, 0, 5, 0, 1);
 
 
   switch(mascot->mail.type){
@@ -2427,36 +2423,42 @@ void create_biff_dialog(typMascot *mascot)
 			       &end_iter,0.0, FALSE,0.0, 0.0); 
 
   
-  button=gtkut_button_new_from_stock(_("Start Mailer"),GTK_STOCK_EXECUTE);
-  gtk_table_attach(GTK_TABLE(biff_tbl), button, 0, 1, 2, 3,
-		   GTK_FILL,GTK_SHRINK,0,0);
+  button=gtkut_button_new_with_icon(_("Start Mailer"),
+#ifdef USE_GTK3
+				    "mail-read"
+#else
+				    GTK_STOCK_EXECUTE
+#endif				     
+				    );
+  gtkut_table_attach(biff_tbl, button, 0, 1, 2, 3,
+		     GTK_FILL,GTK_SHRINK,0,0);
   my_signal_connect(button,"clicked",mailer_start, GTK_WIDGET(biff_main));
 
 
-  button=gtkut_button_new_from_stock(_("Close"),GTK_STOCK_CLOSE);
-  gtk_table_attach(GTK_TABLE(biff_tbl), button, 4, 5, 2, 3,
-		   GTK_FILL,GTK_SHRINK,0,0);
+  button=gtkut_button_new_with_icon(_("Close"),
+#ifdef USE_GTK3
+				    "window-close"
+#else
+				    GTK_STOCK_CLOSE
+#endif				     
+				    );
+  gtkut_table_attach(biff_tbl, button, 4, 5, 2, 3,
+		     GTK_FILL,GTK_SHRINK,0,0);
   my_signal_connect(button,"clicked",close_biff, GTK_WIDGET(biff_main));
   
   gtk_widget_show_all(biff_main);
   
-  gdk_flush();
+  gdkut_flush(mascot);
 }
 
 
 static void close_biff(GtkWidget *w, GtkWidget *dialog)
 {
-  //gdk_pointer_ungrab(GDK_CURRENT_TIME);
-
-  //Mascot->mail.win_width=dialog->allocation.width;
-  //Mascot->mail.win_height=dialog->allocation.height;
-
   while (my_main_iteration(FALSE));
   gtk_widget_destroy(GTK_WIDGET(dialog));
   while (my_main_iteration(FALSE));
 
   Mascot->flag_menu=FALSE;
-  gdk_flush();
 }
 
 
@@ -2470,7 +2472,6 @@ static void mailer_start(GtkWidget *w, GtkWidget *dialog)
   Mascot->flag_menu=FALSE;
 
   ext_play(Mascot,Mascot->mail.mailer);
-  gdk_flush();
 }
 
 

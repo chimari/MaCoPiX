@@ -135,13 +135,25 @@ GtkWidget* gtkut_image_menu_item_new_with_label(GtkWidget *icon,
 #endif
 
 
+GtkWidget* gtkut_button_new_with_icon(gchar *txt,
+				      const gchar *stock_or_icon_name){
+  GtkWidget *w;
+#ifdef USE_GTK3
+  w=gtkut_button_new_from_icon_name(txt, stock_or_icon_name);
+#else
+  w=gtkut_button_new_from_stock(txt, stock_or_icon_name);
+#endif
+  return(w);
+}
+
 #ifdef USE_GTK3
 GtkWidget* gtkut_button_new_from_icon_name(gchar *txt,
-					   const gchar *stock){
+					   const gchar *stock)
 #else
 GtkWidget* gtkut_button_new_from_stock(gchar *txt,
-				       const gchar *stock){
+				       const gchar *stock)
 #endif
+{
   GtkWidget *button;
   GtkWidget *box;
   GtkWidget *image;
@@ -185,14 +197,27 @@ GtkWidget* gtkut_button_new_from_stock(gchar *txt,
   gtk_widget_show(button);
   return(button);
 }
- 
+
+GtkWidget* gtkut_toggle_button_new_with_icon(gchar *txt,
+					     const gchar *stock_or_icon_name)
+{
+  GtkWidget* w;
+#ifdef USE_GTK3
+  w = gtkut_toggle_button_new_from_icon_name(txt, stock_or_icon_name);
+#else
+  w = gtkut_toggle_button_new_from_stock(txt, stock_or_icon_name);
+#endif
+  return(w);
+}
+
 #ifdef USE_GTK3
 GtkWidget* gtkut_toggle_button_new_from_icon_name(gchar *txt,
-						   const gchar *stock){
+						   const gchar *stock)
 #else
 GtkWidget* gtkut_toggle_button_new_from_stock(gchar *txt,
-					      const gchar *stock){
+					      const gchar *stock)
 #endif
+{
   GtkWidget *button;
   GtkWidget *box;
   GtkWidget *image;
@@ -283,9 +308,9 @@ GtkWidget* gtkut_button_new_from_pixbuf(gchar *txt,
   return(button);
 }
 
-
- GtkWidget* gtkut_toggle_button_new_from_pixbuf(gchar *txt,
-					      GdkPixbuf *pixbuf){
+ 
+GtkWidget* gtkut_toggle_button_new_from_pixbuf(gchar *txt,
+					       GdkPixbuf *pixbuf){
   GtkWidget *button;
   GtkWidget *box;
   GtkWidget *image;
@@ -331,3 +356,144 @@ GtkWidget* gtkut_button_new_from_pixbuf(gchar *txt,
   return(button);
 }
 
+
+void gtkut_pos(GtkWidget *w, gint hpos, gint vpos){
+#ifdef USE_GTK3
+  switch(hpos){
+  case POS_START:
+    gtk_widget_set_halign(w, GTK_ALIGN_START);
+    break;
+  case POS_CENTER:
+    gtk_widget_set_halign(w, GTK_ALIGN_CENTER);
+    break;
+  case POS_END:
+    gtk_widget_set_halign(w, GTK_ALIGN_END);
+    break;
+  }
+  switch(vpos){
+  case POS_START:
+    gtk_widget_set_valign(w, GTK_ALIGN_START);
+    break;
+  case POS_CENTER:
+    gtk_widget_set_valign(w, GTK_ALIGN_CENTER);
+    break;
+  case POS_END:
+    gtk_widget_set_valign(w, GTK_ALIGN_END);
+    break;
+  }
+#else
+  gdouble h, v;
+
+  switch(hpos){
+  case POS_START:
+    h=0.0;
+    break;
+  case POS_CENTER:
+    h=0.5;
+    break;
+  case POS_END:
+    h=1.0;
+    break;
+  }
+  switch(vpos){
+  case POS_START:
+    v-0.0;
+    break;
+  case POS_CENTER:
+    v=0.5;
+    break;
+  case POS_END:
+    v=1.0;
+    break;
+  }
+  
+  gtk_misc_set_alignment (GTK_MISC (w), h, v);
+#endif
+}
+
+
+GtkWidget * gtkut_menu_item_new_with_icon(const gchar *stock_or_icon_name,
+					  GtkIconSize size,
+					  const gchar *txt)
+{
+  GtkWidget *image, *menu_item;
+#ifdef USE_GTK3
+  image=gtk_image_new_from_icon_name (stock_or_icon_name, size);
+  menu_item =gtkut_image_menu_item_new_with_label (image, txt);
+#else
+  image=gtk_image_new_from_stock (stock_or_icon_name, size);
+  menu_item =gtk_image_menu_item_new_with_label (txt);
+  gtk_image_menu_item_set_image(GTK_IMAGE_MENU_ITEM(menu_item),image);
+#endif
+
+  return(menu_item);
+}
+
+
+void gdkut_flush(typMascot *mascot){
+#ifdef USE_GTK3
+  gdk_display_flush(gtk_widget_get_display(mascot->win_main));
+#else
+  gdk_flush();
+#endif
+}
+
+
+GtkWidget * gtkut_hscale_new(GtkAdjustment *adj){
+  GtkWidget *w;
+  
+#ifdef USE_GTK3
+  w =  gtk_scale_new (GTK_ORIENTATION_HORIZONTAL, GTK_ADJUSTMENT(adj));
+  gtk_widget_set_hexpand(w,TRUE);
+#else
+  w =  gtk_hscale_new (GTK_ADJUSTMENT(adj));
+#endif
+
+  return(w);
+}
+
+
+GtkWidget * gtkut_arrow_new(MyArrowDirect direct){
+  GtkWidget *w;
+#ifdef USE_GTK3
+  GtkWidget *image;
+
+  w=gtkut_hbox_new(FALSE,0);
+  gtk_container_set_border_width(GTK_CONTAINER(w),0);
+  
+  switch(direct){
+  case MY_ARROW_LEFT:
+    image = gtk_image_new_from_icon_name ("go-previous", GTK_ICON_SIZE_MENU);
+    break;
+  case MY_ARROW_RIGHT:
+    image = gtk_image_new_from_icon_name ("go-next", GTK_ICON_SIZE_MENU);
+    break;
+  case MY_ARROW_UP:
+    image = gtk_image_new_from_icon_name ("go-up", GTK_ICON_SIZE_MENU);
+    break;
+  case MY_ARROW_DOWN:
+    image = gtk_image_new_from_icon_name ("go-down", GTK_ICON_SIZE_MENU);
+    break;
+  }
+  gtk_widget_show(image);
+  gtk_box_pack_start(GTK_BOX(w),image, FALSE,FALSE,2);
+  
+#else
+  switch(direct){
+  case MY_ARROW_LEFT:
+    w = gtk_arrow_new(GTK_ARROW_LEFT,GTK_SHADOW_IN);
+    break;
+  case MY_ARROW_RIGHT:
+    w = gtk_arrow_new(GTK_ARROW_RIGHT,GTK_SHADOW_IN);
+    break;
+  case MY_ARROW_UP:
+    w = gtk_arrow_new(GTK_ARROW_UP,GTK_SHADOW_IN);
+    break;
+  case MY_ARROW_DOWN:
+    w = gtk_arrow_new(GTK_ARROW_DOWN,GTK_SHADOW_IN);
+    break;
+  }  
+#endif
+
+  return(w);
+}

@@ -765,11 +765,14 @@ GdkGC *MPCreatePen(GdkPixmap *pixmap, GdkColor *color)
  
 
 // マウスボタンをおしたときのイベントCallback
+void drag_begin(GtkWidget * widget, GdkEventButton * event, gpointer gdata)
+{
+  typMascot *mascot;
+  GdkModifierType modmask;
 #ifdef USE_GTK3
-void drag_begin(GtkWidget * widget, GdkEventButton * event, gpointer gdata)
-{
-  typMascot *mascot;
-  GdkModifierType modmask;
+  GdkDisplay *display = gtk_widget_get_display (widget);
+  GdkEvent *c_eve=gtk_get_current_event();
+#endif
 
   mascot=(typMascot *)gdata; 
 
@@ -780,129 +783,53 @@ void drag_begin(GtkWidget * widget, GdkEventButton * event, gpointer gdata)
     gdk_window_set_cursor(gtk_widget_get_window(widget),mascot->cursor.push);
     window_x = event->x;
     window_y = event->y;
-    gdk_window_get_device_position(NULL, event->device, &start_x, &start_y, &modmask);
-    gdk_seat_grab(gtk_widget_get_window(widget),
-		  event->device,
-		  FALSE, GDK_BUTTON_MOTION_MASK | GDK_BUTTON_RELEASE_MASK,
-		  NULL, NULL, GDK_CURRENT_TIME);
-    
-    gdk_display_flush(gdk_display_get_default());
-  }
-  else if(event->button == 3){
-    gtk_menu_popup (GTK_MENU(mascot->PopupMenu), NULL, NULL, NULL, NULL, 
-		    event->button, event->time);
-  }
 
-}
+#ifdef USE_GTK3
+    gdk_window_get_device_position(gtk_widget_get_window(widget),
+				   event->device, &start_x,&start_y, &modmask);
+    mascot->seat = gdk_display_get_default_seat (display);
+    gdk_seat_grab (mascot->seat, gtk_widget_get_window(widget),
+		   GDK_SEAT_CAPABILITY_POINTER,
+		   TRUE, NULL, c_eve, NULL, NULL);
 #else
-void drag_begin(GtkWidget * widget, GdkEventButton * event, gpointer gdata)
-{
-  typMascot *mascot;
-  GdkModifierType modmask;
-
-  mascot=(typMascot *)gdata; 
-
-  if(mascot->flag_menu) return;
-  
-  if (event->button == 1) {
-    mascot->drag = TRUE;
-    gdk_window_set_cursor(gtk_widget_get_window(widget),mascot->cursor.push);
-    window_x = event->x;
-    window_y = event->y;
-
     gdk_window_get_pointer(NULL, &start_x, &start_y, &modmask);
     gdk_pointer_grab(gtk_widget_get_window(widget), 
     		     FALSE, GDK_BUTTON_MOTION_MASK | GDK_BUTTON_RELEASE_MASK,
     		     NULL, NULL, GDK_CURRENT_TIME);
+#endif
   }
   else if(event->button == 3){
+#ifdef USE_GTK3
+    gtk_menu_popup_at_pointer (GTK_MENU(mascot->PopupMenu), c_eve);
+#else
     gtk_menu_popup (GTK_MENU(mascot->PopupMenu), NULL, NULL, NULL, NULL, 
 		    event->button, event->time);
+#endif
   }
 
 }
-#endif
 
 
 // マウスボタンをはなしたときのイベントCallback
+void drag_end(GtkWidget * widget, GdkEventButton * event, gpointer gdata)
+{
+  typMascot *mascot;
+  GdkModifierType modmask;
+  gint end_x,end_y;
+  int i_frm;
+
+  mascot=(typMascot *)gdata; 
+
+  raise_all(mascot);
+  
+  if (mascot->drag){
+    mascot->drag = FALSE;
 #ifdef USE_GTK3
-void drag_end(GtkWidget * widget, GdkEventButton * event, gpointer gdata)
-{
-  typMascot *mascot;
-  GdkModifierType modmask;
-  gint end_x,end_y;
-  int i_frm;
-  GdkSeat    *seat;
-  GdkDevice  *device;
-  GdkDisplay *display;
-
-  display = gtk_widget_get_display (widget);
-  seat = gdk_display_get_default_seat (display);
-  device = gdk_seat_get_pointer (seat);
-
-  mascot=(typMascot *)gdata; 
-
-  raise_all(mascot);
-  
-  if (mascot->drag){
-    mascot->drag = FALSE;
+    gdk_window_get_device_position(gtk_widget_get_window(widget),
+				   event->device, &end_x,&end_y, &modmask);
+#else    
     gdk_window_get_pointer(NULL, &end_x, &end_y, &modmask);
-    if((end_x==start_x)&&(end_y==start_y)&&
-       (mascot->click_total!=0)&&(flag_balloon==FALSE)){
-      /////// クリックアニメ ///////
-      for(i_frm=0;i_frm<mascot->frame_num[mascot->anime_ptn];i_frm++){
-	// ブロックループのキャンセル
-	mascot->frame_loop[mascot->anime_ptn][i_frm].seq=0;
-      }
-      mascot->anime_ptn=weight_click(mascot);
-      mascot->anime_frm=-1;
-      mascot->anime_seq=-1;
-      mascot->anime_seqend=
-	RANDOM(mascot->frame_max[mascot->anime_ptn][mascot->anime_frm]
-	       -mascot->frame_min[mascot->anime_ptn][mascot->anime_frm]+1)
-	+mascot->frame_min[mascot->anime_ptn][mascot->anime_frm];
-
-      sound_play(mascot,mascot->click_sound[mascot->anime_ptn]);
-
-      if(mascot->click_word[mascot->anime_ptn]) {
-	mascot->balseq=0;
-	mascot->bal_mode=BALLOON_NORMAL;
-	DoBalloon(mascot); 
-	flag_balloon=TRUE;
-      }
-
-#ifdef USE_SOCKMSG
-      // Duetアニメ
-      if(mascot->duet_use_click){
-	mascot->duet_seq=mascot->duet_delay[mascot->anime_ptn];
-	mascot->duet_mode=DUET_CLICK;
-      }
 #endif
-
-      // flag_anime=TRUE;
-    }
-      
-
-  }
-  gdk_window_set_cursor(gtk_widget_get_window(widget),mascot->cursor.normal);
-  gdk_pointer_ungrab(GDK_CURRENT_TIME);
-  gdk_display_flush(gdk_display_get_default());
-}
-#else
-void drag_end(GtkWidget * widget, GdkEventButton * event, gpointer gdata)
-{
-  typMascot *mascot;
-  GdkModifierType modmask;
-  gint end_x,end_y;
-  int i_frm;
-
-  mascot=(typMascot *)gdata; 
-
-  raise_all(mascot);
-  
-  if (mascot->drag){
-    mascot->drag = FALSE;
-    gdk_window_get_pointer(NULL, &end_x, &end_y, &modmask);
     if((end_x==start_x)&&(end_y==start_y)&&
        (mascot->click_total!=0)&&(flag_balloon==FALSE)){
       /////// クリックアニメ ///////
@@ -941,16 +868,24 @@ void drag_end(GtkWidget * widget, GdkEventButton * event, gpointer gdata)
 
   }
   gdk_window_set_cursor(gtk_widget_get_window(widget),mascot->cursor.normal);
+#ifdef USE_GTK3	    
+  gdk_seat_ungrab(mascot->seat);
+  gdk_display_flush(gdk_display_get_default());
+#else	    
   gdk_pointer_ungrab(GDK_CURRENT_TIME);
   gdk_flush();
+#endif	    
 }
-#endif
 
 // 時計  マウスボタンをおしたときのイベントCallback
 void clk_drag_begin(GtkWidget * widget, GdkEventButton * event, gpointer gdata)
 {
   typMascot *mascot;
   GdkModifierType modmask;
+#ifdef USE_GTK3
+  GdkDisplay *display = gtk_widget_get_display (widget);
+  GdkEvent *c_eve=gtk_get_current_event();
+#endif
 
   mascot=(typMascot *)gdata; 
 
@@ -960,13 +895,25 @@ void clk_drag_begin(GtkWidget * widget, GdkEventButton * event, gpointer gdata)
     mascot->clk_drag = TRUE;
     clk_window_x = event->x;
     clk_window_y = event->y;
+#ifdef USE_GTK3
+    gdk_window_get_device_position(NULL,
+				   event->device,
+				   &clk_start_x,
+				   &clk_start_y, NULL);
+#else
     gdk_window_get_pointer(NULL, &clk_start_x, &clk_start_y, &modmask);
+#endif
+
+#ifdef USE_GTK3	    
+    mascot->seat = gdk_display_get_default_seat (display);
+    gdk_seat_grab (mascot->seat, gtk_widget_get_window(widget),
+		   GDK_SEAT_CAPABILITY_POINTER,
+		   TRUE, NULL, c_eve, NULL, NULL);
+    gdk_display_flush(gdk_display_get_default());
+#else	    
     gdk_pointer_grab(gtk_widget_get_window(widget), 
 		     FALSE, GDK_BUTTON_MOTION_MASK | GDK_BUTTON_RELEASE_MASK,
 		     NULL, NULL, GDK_CURRENT_TIME);
-#ifdef USE_GTK3	    
-    gdk_display_flush(gdk_display_get_default());
-#else	    
     gdk_flush();
 #endif	    
   }
@@ -988,14 +935,23 @@ void clk_drag_end(GtkWidget * widget, GdkEventButton * event, gpointer gdata)
   
   if (mascot->clk_drag){
     mascot->clk_drag = FALSE;
+#ifdef USE_GTK3
+    gdk_window_get_device_position(NULL,
+				   event->device,
+				   &end_x,
+				   &end_y, NULL);
+#else
     gdk_window_get_pointer(NULL, &end_x, &end_y, &modmask);
+#endif
   }
   
   gdk_window_set_cursor(gtk_widget_get_window(widget),mascot->cursor.clk);
-  gdk_pointer_ungrab(GDK_CURRENT_TIME);
+
 #ifdef USE_GTK3	    
+  gdk_seat_ungrab(mascot->seat);
   gdk_display_flush(gdk_display_get_default());
 #else	    
+  gdk_pointer_ungrab(GDK_CURRENT_TIME);
   gdk_flush();
 #endif	    
 }
@@ -1007,6 +963,10 @@ void biff_drag_begin(GtkWidget * widget, GdkEventButton * event, gpointer gdata)
 {
   typMascot *mascot;
   GdkModifierType modmask;
+#ifdef USE_GTK3
+  GdkDisplay *display = gtk_widget_get_display (widget);
+  GdkEvent *c_eve=gtk_get_current_event();
+#endif
 
   mascot=(typMascot *)gdata; 
 
@@ -1016,13 +976,25 @@ void biff_drag_begin(GtkWidget * widget, GdkEventButton * event, gpointer gdata)
     mascot->mail.drag = TRUE;
     biff_window_x = event->x;
     biff_window_y = event->y;
+#ifdef USE_GTK3
+    gdk_window_get_device_position(NULL,
+				   event->device,
+				   &biff_start_x,
+				   &biff_start_y, NULL);
+#else
     gdk_window_get_pointer(NULL, &biff_start_x, &biff_start_y, &modmask);
+#endif
+
+#ifdef USE_GTK3	    
+    mascot->seat = gdk_display_get_default_seat (display);
+    gdk_seat_grab (mascot->seat, gtk_widget_get_window(widget),
+		   GDK_SEAT_CAPABILITY_POINTER,
+		   TRUE, NULL, c_eve, NULL, NULL);
+    gdk_display_flush(gdk_display_get_default());
+#else	    
     gdk_pointer_grab(gtk_widget_get_window(widget), 
 		     FALSE, GDK_BUTTON_MOTION_MASK | GDK_BUTTON_RELEASE_MASK,
 		     NULL, NULL, GDK_CURRENT_TIME);
-#ifdef USE_GTK3	    
-    gdk_display_flush(gdk_display_get_default());
-#else	    
     gdk_flush();
 #endif	    
   }
@@ -1044,7 +1016,14 @@ void biff_drag_end(GtkWidget * widget, GdkEventButton * event, gpointer gdata)
   
   if (mascot->mail.drag){
     mascot->mail.drag = FALSE;
+#ifdef USE_GTK3
+    gdk_window_get_device_position(NULL,
+				   event->device,
+				   &end_x,
+				   &end_y, NULL);
+#else
     gdk_window_get_pointer(NULL, &end_x, &end_y, &modmask);
+#endif
     if((end_x==biff_start_x)&&(end_y==biff_start_y)){
       // From Subject Win 起動
       create_biff_dialog(mascot);
@@ -1056,10 +1035,12 @@ void biff_drag_end(GtkWidget * widget, GdkEventButton * event, gpointer gdata)
   }
   
   gdk_window_set_cursor(gtk_widget_get_window(widget),mascot->cursor.biff);
-  gdk_pointer_ungrab(GDK_CURRENT_TIME);
+
 #ifdef USE_GTK3	    
+  gdk_seat_ungrab(mascot->seat);
   gdk_display_flush(gdk_display_get_default());
 #else	    
+  gdk_pointer_ungrab(GDK_CURRENT_TIME);
   gdk_flush();
 #endif	    
 }
@@ -1077,26 +1058,8 @@ gint dw_configure_main(GtkWidget *widget, GdkEventConfigure *event,
   printf("Configure: \n");
 #endif
 
-  //DrawMascot0(mascot);
-  {
-    GtkAllocation *allocation=g_new(GtkAllocation, 1);
-    GtkStyle *style=gtk_widget_get_style(widget);
-    gtk_widget_get_allocation(widget,allocation);
-    
-    gdk_draw_drawable(gtk_widget_get_window(widget),
-		      style->fg_gc[gtk_widget_get_state(widget)],
-		      pixmap_main[mascot->pixmap_page],
-		      0,0,0,0,
-		      allocation->width,
-		      allocation->height);
-    g_free(allocation);
-  }
-  /*
-  gdk_window_set_back_pixmap(gtk_widget_get_window(mascot->win_main),
-  			     pixmap_main[mascot->pixmap_page],
-  			     FALSE);
-  */
-
+  DrawMascot(mascot);
+  
 #ifdef DEBUG
   printf("End of Configure: \n");
 #endif
@@ -1167,38 +1130,22 @@ gint dw_init_main(GtkWidget *widget, GdkEventConfigure *event,
 #endif
   }
 #endif // USE_GTK3
-  
+
   for(i_work=0;i_work<2;i_work++){
+#ifdef USE_GTK3
+    if(pixbuf_main[i_work]) g_object_unref(G_OBJECT(pixbuf_main[i_work]));
+    pixbuf_main[i_work]=gdk_pixbuf_copy(mascot->sprites[mascot->frame_pix[0][0]].pixbuf);
+    gtk_widget_queue_draw(widget);
+#else
     gdk_draw_drawable(pixmap_main[i_work],
 		      mascot->gc_main[i_work],
 		      mascot->sprites[mascot->frame_pix[0][0]].pixmap,
 		      0, 0,
 		      0, 0,
 		      mascot->width, mascot->height);
+#endif
   }
   
-  //DrawMascot0(mascot);
-  /*
-  {
-    GtkAllocation *allocation=g_new(GtkAllocation, 1);
-    GtkStyle *style=gtk_widget_get_style(widget);
-    gtk_widget_get_allocation(widget,allocation);
-    
-    gdk_draw_drawable(gtk_widget_get_window(widget),
-		      style->fg_gc[gtk_widget_get_state(widget)],
-		      pixmap_main[mascot->pixmap_page],
-		      0,0,0,0,
-		      allocation->width,
-		      allocation->height);
-    g_free(allocation);
-  }
-  */
-  /*
-  gdk_window_set_back_pixmap(gtk_widget_get_window(mascot->win_main),
-			     pixmap_main[mascot->pixmap_page],
-			     FALSE);
-  */
-
 #ifdef USE_WIN32  // Get Handle of Task-Bar
   hWndTaskBar = FindWindow("Shell_TrayWnd", NULL);
 #endif  
@@ -1346,8 +1293,9 @@ gint dw_configure_balloon(GtkWidget *widget, cairo_t *cr, gpointer userdata){
   typMascot *mascot;
   mascot=(typMascot *)userdata;
   
-  //gdk_cairo_set_source_pixbuf(cr, pixbuf_clk[mascot->clk_page], 0, 0);
-  //cairo_paint(cr);
+  gdk_cairo_set_source_pixbuf(cr, pixbuf_bal[mascot->bal_page], 0, 0);
+  cairo_paint(cr);
+  
   return(FALSE);
 }
 #else
@@ -1390,13 +1338,13 @@ gint dw_configure_bal(GtkWidget *widget, GdkEventConfigure *event,
 // Main (Mascot) が重なりを受けた場合の処理
 // WorkしていないBuffer中のPixmapの描画を行う。
 #ifdef USE_GTK3
-gint dw_expose_main(GtkWidget *widget, cairo_t *cr, gpointer userdata){
+gint dw_expose_main(GtkWidget *widget, cairo_t *cr, gpointer gdata){
   typMascot *mascot;
-  mascot=(typMascot *)userdata;
+  mascot=(typMascot *)gdata;
   
-  //if(!pixbuf_fcbk) draw_fc_cairo(widget,hg);
   gdk_cairo_set_source_pixbuf(cr, pixbuf_main[mascot->pixmap_page], 0, 0);
   cairo_paint(cr);
+  
   return(FALSE);
 }
 #else
@@ -1423,7 +1371,6 @@ gint dw_expose_main(GtkWidget *widget, GdkEventExpose *event,  gpointer gdata)
   return FALSE;
 }
 
-#endif
 
 gint expose_main(GtkWidget *widget, GdkEventExpose *event,  gpointer gdata)
 {
@@ -1442,9 +1389,21 @@ gint expose_main(GtkWidget *widget, GdkEventExpose *event,  gpointer gdata)
   
   return FALSE;
 }
-
+#endif
 
 #ifdef USE_WIN32
+#ifdef USE_GTK3
+gint dw_expose_sdw(GtkWidget *widget, cairo_t *cr,  gpointer gdata)
+{
+  typMascot *mascot;
+  mascot=(typMascot *)gdata;
+  
+  gdk_cairo_set_source_pixbuf(cr, pixbuf_sdw[mascot->pixmap_page], 0, 0);
+  cairo_paint(cr);
+  
+  return(FALSE);
+}
+#else
 gint dw_expose_sdw(GtkWidget *widget, GdkEventExpose *event,  gpointer gdata)
 {
   typMascot *mascot;
@@ -1463,9 +1422,23 @@ gint dw_expose_sdw(GtkWidget *widget, GdkEventExpose *event,  gpointer gdata)
   return FALSE;
 }
 #endif
+#endif
+
 
 #ifdef USE_BIFF
 // Biff Pixmap が重なりを受けた場合の処理
+#ifdef USE_GTK3
+gint dw_expose_biff_pix(GtkWidget *widget, cairo_t *cr,  gpointer gdata)
+{
+  typMascot *mascot;
+  mascot=(typMascot *)gdata;
+
+  gdk_cairo_set_source_pixbuf(cr, mascot->mail.pixbuf, 0, 0);
+  cairo_paint(cr);
+  
+  return(FALSE);
+}
+#else
 gint dw_expose_biff_pix(GtkWidget *widget, GdkEventExpose *event,  gpointer gdata)
 {
   typMascot *mascot;
@@ -1483,7 +1456,6 @@ gint dw_expose_biff_pix(GtkWidget *widget, GdkEventExpose *event,  gpointer gdat
 
   return FALSE;
 }
-#endif
 
 gint expose_biff_pix(GtkWidget *widget, GdkEventExpose *event,  gpointer gdata)
 {
@@ -1502,10 +1474,24 @@ gint expose_biff_pix(GtkWidget *widget, GdkEventExpose *event,  gpointer gdata)
   
   return FALSE;
 }
+#endif
+#endif
 
 
 // Clock Panel が重なりを受けた場合の処理
 // WorkしていないBuffer中のPixmapの描画を行う。
+#ifdef USE_GTK3
+gint dw_expose_clk(GtkWidget *widget, cairo_t *cr,  gpointer gdata)
+{
+  typMascot *mascot;
+  mascot=(typMascot *)gdata;
+
+  gdk_cairo_set_source_pixbuf(cr, pixbuf_clk[mascot->clk_page], 0, 0);
+  cairo_paint(cr);
+  
+  return(FALSE);
+}
+#else
 gint dw_expose_clk(GtkWidget *widget, GdkEventExpose *event,  gpointer gdata)
 {
   typMascot *mascot;
@@ -1525,7 +1511,6 @@ gint dw_expose_clk(GtkWidget *widget, GdkEventExpose *event,  gpointer gdata)
   return FALSE;
 }
 
-
 gint expose_clk(GtkWidget *widget, GdkEventExpose *event,  gpointer gdata)
 {
   cairo_t *cr = gdk_cairo_create(gtk_widget_get_window(widget));
@@ -1543,11 +1528,24 @@ gint expose_clk(GtkWidget *widget, GdkEventExpose *event,  gpointer gdata)
   
   return FALSE;
 }
+#endif
 
 
 // Balloon が重なりを受けた場合の処理
 // WorkしていないBuffer中のPixmapの描画を行う。
 // 1.6.1で実質削除 drawballoonのなかで back_pixmapを指定するのみとした。
+#ifdef USE_GTK3
+gint dw_expose_bal(GtkWidget *widget, cairo_t *cr,  gpointer gdata)
+{
+  typMascot *mascot;
+  mascot=(typMascot *)gdata;
+
+  gdk_cairo_set_source_pixbuf(cr, pixbuf_bal[mascot->bal_page], 0, 0);
+  cairo_paint(cr);
+  
+  return(FALSE);
+}
+#else
 gint dw_expose_bal(GtkWidget *widget, GdkEventExpose *event,  gpointer gdata)
 {
   typMascot *mascot;
@@ -1581,8 +1579,7 @@ gint expose_bal(GtkWidget *widget, GdkEventExpose *event,  gpointer gdata)
   
   return FALSE;
 }
-
-
+#endif
 
 // ドラッグによる移動
 gboolean window_motion(GtkWidget * widget, GdkEventMotion * event, gpointer gdata)
@@ -1594,7 +1591,14 @@ gboolean window_motion(GtkWidget * widget, GdkEventMotion * event, gpointer gdat
     gint mx, my, newx, newy;
     GdkModifierType modmask;
 
+#ifdef USE_GTK3
+    gdk_window_get_device_position(NULL,
+				   event->device,
+				   &mx,
+				   &my, NULL);
+#else
     gdk_window_get_pointer(NULL, &mx, &my, &modmask);
+#endif
     
     if(mascot->move==MOVE_FIX){
       gdk_window_set_cursor(gtk_widget_get_window(widget),mascot->cursor.drag_f);
@@ -1631,7 +1635,13 @@ gboolean window_motion(GtkWidget * widget, GdkEventMotion * event, gpointer gdat
     }
   }
 
+  
+#ifdef USE_GTK3
+  gdk_window_get_device_position(gtk_widget_get_window(widget),
+				 event->device, NULL,NULL,NULL);
+#else
   gdk_window_get_pointer(gtk_widget_get_window(widget), NULL, NULL, NULL);
+#endif
   return(FALSE);
 }   
 
@@ -1647,7 +1657,12 @@ void clk_window_motion(GtkWidget * widget, GdkEventMotion * event, gpointer gdat
     GdkModifierType modmask;
     
     gdk_window_set_cursor(gtk_widget_get_window(widget),mascot->cursor.drag_f);
+#ifdef USE_GTK3
+    gdk_window_get_device_position(NULL,
+				   event->device, &mx, &my ,NULL);
+#else
     gdk_window_get_pointer(NULL, &mx, &my, &modmask);
+#endif
     newx = mx - clk_window_x;
     newy = my - clk_window_y;
 
@@ -1668,19 +1683,27 @@ void biff_window_motion(GtkWidget * widget, GdkEventMotion * event, gpointer gda
   if (mascot->mail.drag){
     gint mx, my, newx, newy;
     GdkModifierType modmask;
+    GtkAllocation *allocation=g_new(GtkAllocation, 1);
+    gtk_widget_get_allocation(mascot->biff_pix,allocation);
     
     gdk_window_set_cursor(gtk_widget_get_window(widget),mascot->cursor.drag_f);
+#ifdef USE_GTK3
+    gdk_window_get_device_position(NULL,
+				   event->device, &mx, &my ,NULL);
+#else
     gdk_window_get_pointer(NULL, &mx, &my, &modmask);
+#endif
     newx = mx - biff_window_x;
     newy = my - biff_window_y;
     if(mascot->mail.pix_pos==MAIL_PIX_LEFT){
-      mascot->mail.pix_x = newx - mascot->x + widget->allocation.width/2;
+      mascot->mail.pix_x = newx - mascot->x + allocation->width/2;
     }
     else{
       mascot->mail.pix_x = newx - mascot->x - mascot->width 
-	+ widget->allocation.width/2;
+	+ allocation->width/2;
     }
-      mascot->mail.pix_y = newy - mascot->y;
+    g_free(allocation);
+    mascot->mail.pix_y = newy - mascot->y;
     MoveBiffPix(mascot, mascot->x, mascot->y);
   }
 }   
@@ -1696,12 +1719,16 @@ void focus_in(GtkWidget * widget, GdkEventMotion * event)
 #endif	    
 }
 
-void focus_out(GtkWidget * widget, GdkEventMotion * event)
+void focus_out(GtkWidget * widget, GdkEventMotion * event, gpointer gdata)
 {
-  gdk_pointer_ungrab(GDK_CURRENT_TIME);
+  typMascot *mascot;
+  mascot=(typMascot *)gdata;
+  
 #ifdef USE_GTK3	    
+  gdk_seat_ungrab(mascot->seat);
   gdk_display_flush(gdk_display_get_default());
 #else	    
+  gdk_pointer_ungrab(GDK_CURRENT_TIME);
   gdk_flush();
 #endif	    
 }
@@ -1982,10 +2009,11 @@ void clock_update(typMascot *mascot, gboolean force_flag){
 	      flag_balloon=TRUE;
 	    }
 	  }
-      	  gdk_pointer_ungrab(GDK_CURRENT_TIME);
 #ifdef USE_GTK3	    
+	  gdk_seat_ungrab(mascot->seat);
 	  gdk_display_flush(gdk_display_get_default());
 #else	    
+	  gdk_pointer_ungrab(GDK_CURRENT_TIME);
 	  gdk_flush();
 #endif	    
 	  break;
@@ -2358,13 +2386,15 @@ gint Get_Window_Bar_Size(dpy, top)
   } prop = { NULL };
   gulong nitems;
   gulong bytes_after; 
-  int error, result;
+  int error=0, result;
   gint bar_size;
   GdkWMDecoration decor=0;
 
   bar_size=0;
 
+#ifndef USE_GTK3
   gdk_error_trap_push ();
+#endif
   type = None;
 
   atom=XInternAtom(dpy,"_NET_FRAME_EXTENTS", False);
@@ -2374,7 +2404,9 @@ gint Get_Window_Bar_Size(dpy, top)
 			    XA_CARDINAL,
 			    &type, &format, &nitems,
 			    &bytes_after, &prop.prop_ch);
+#ifndef USE_GTK3
   error = gdk_error_trap_pop ();
+#endif
 
   if (error || result != Success){
     return(bar_size);
@@ -2618,7 +2650,7 @@ void make_mascot(typMascot *mascot){
 #endif
 
 
-#ifdef __GTK_STATUS_ICON_H__
+#ifdef USE_GTK_STATUS_ICON
   trayicon_create(mascot);
   if(mascot->tray_icon_flag){
     trayicon_show(mascot);
@@ -2689,7 +2721,7 @@ void make_mascot(typMascot *mascot){
 #endif  // USE_GTK3
 
   my_signal_connect(ebox, "focus_in_event",focus_in, NULL);
-  my_signal_connect(ebox, "focus_out_event",focus_out, NULL);
+  my_signal_connect(ebox, "focus_out_event",focus_out, (gpointer)mascot);
   my_signal_connect(ebox, "button_press_event",drag_begin,
 		    (gpointer)mascot);
   my_signal_connect(ebox, "button_release_event",drag_end,
@@ -2715,10 +2747,15 @@ void make_mascot(typMascot *mascot){
   my_signal_connect(mascot->dw_sdw, "configure_event",dw_configure_sdw,
   		    (gpointer)mascot);
   // 重なった場合の再描画関連
+#ifdef USE_GTK3
+  my_signal_connect(mascot->dw_sdw, "draw",dw_expose_sdw,
+  		    (gpointer)mascot);
+#else
   my_signal_connect(mascot->dw_sdw, "expose_event",dw_expose_sdw,
   		    (gpointer)mascot);
   my_signal_connect(mascot->win_sdw, "expose_event",expose_main,
   		    (gpointer)mascot);
+#endif
 #endif
   
 }

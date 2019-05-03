@@ -129,14 +129,14 @@ gint ssl_manager_verify_cert	(typMascot *mascot)
 
   gtk_widget_realize(main);
 
-  vbox = gtk_vbox_new(FALSE, 0);
+  vbox = gtkut_vbox_new(FALSE, 0);
   gtk_container_add (GTK_CONTAINER (main), vbox);
 
-  label = gtk_label_new(message);
+  label = gtkut_label_new(message);
   g_free(message);
   gtk_box_pack_start(GTK_BOX(vbox),label,FALSE,FALSE,0);
 
-  label = gtk_label_new("");
+  label = gtkut_label_new("");
   gtk_box_pack_start(GTK_BOX(vbox),label,FALSE,FALSE,0);
 
   check = gtk_check_button_new_with_label(_("Skip this verification after this."));
@@ -148,17 +148,29 @@ gint ssl_manager_verify_cert	(typMascot *mascot)
 		     &mascot->mail.ssl_cert_skip);
 
 
-  hbox = gtk_hbox_new(FALSE, 5);
+  hbox = gtkut_hbox_new(FALSE, 5);
   gtk_box_pack_start(GTK_BOX(vbox),hbox,FALSE,FALSE,0);
 
-  label = gtk_label_new("");
+  label = gtkut_label_new("");
   gtk_box_pack_start(GTK_BOX(hbox),label,TRUE,TRUE,0);
   
-  button=gtkut_button_new_from_stock(_("OK"),GTK_STOCK_OK);
+  button=gtkut_button_new_with_icon(_("OK"),
+#ifdef USE_GTK3
+				    "emblem-default"
+#else
+				    GTK_STOCK_OK
+#endif
+				    );
   gtk_box_pack_start(GTK_BOX(hbox),button,FALSE,FALSE,0);
   my_signal_connect(button,"clicked",cc_true, &result);
 
-  button=gtkut_button_new_from_stock(_("Cancel"),GTK_STOCK_CANCEL);
+  button=gtkut_button_new_with_icon(_("Cancel"),
+#ifdef USE_GTK3
+				    "process-stop"
+#else
+				    GTK_STOCK_CANCEL
+#endif
+				    );
   gtk_box_pack_start(GTK_BOX(hbox),button,FALSE,FALSE,0);
   my_signal_connect(button,"clicked",gtk_main_quit, NULL);
 
@@ -167,18 +179,15 @@ gint ssl_manager_verify_cert	(typMascot *mascot)
   {
     HWND   hWnd;
     
-    SetWindowPos(GDK_WINDOW_HWND(main->window),HWND_TOPMOST,0,0,0,0,
+    SetWindowPos(GDK_WINDOW_HWND(gtk_widget_get_window(main),HWND_TOPMOST,0,0,0,0,
 		 SWP_SHOWWINDOW|SWP_NOMOVE|SWP_NOSIZE);
   }
 #else
-  gdk_window_raise(main->window);
+  gdk_window_raise(gtk_widget_get_window(main));
 #endif
-  gdk_flush();
-
   gtk_main();
 
   gtk_widget_destroy(main);
-  gdk_flush();
 
   mascot->flag_menu=FALSE;
   if(result){

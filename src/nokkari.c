@@ -531,8 +531,21 @@ void NkrRead(typMascot *mascot)
 
     // Pixmapデータ
     for(i_pix=0;i_pix<MAX_PIXMAP;i_pix++){
+#ifdef USE_GTK3
+      if(mascot->sprites[i_pix].pixbuf){
+	g_object_unref(G_OBJECT(mascot->sprites[i_pix].pixbuf));
+      }
+      mascot->sprites[i_pix].pixbuf=NULL;
+#else
+      if(mascot->sprites[i_pix].pixmap){
+	g_object_unref(G_OBJECT(mascot->sprites[i_pix].pixmap));
+      }
       mascot->sprites[i_pix].pixmap=NULL;
+      if(mascot->sprites[i_pix].mask){
+	g_object_unref(G_OBJECT(mascot->sprites[i_pix].mask));
+      }
       mascot->sprites[i_pix].mask=NULL;
+#endif
       sprintf(tmp, "File%d", i_pix+1);
       if(!xmms_cfg_read_string(cfgfile, "Pat", tmp, &tmp1)){
       	mascot->sprites[i_pix].filename=NULL;
@@ -559,7 +572,7 @@ void NkrRead(typMascot *mascot)
 	  g_object_unref(G_OBJECT(pixbuf2));
 	  g_free(tmp_open);
 
-	  mascot->sprites[i_pix].filename=
+	   mascot->sprites[i_pix].filename=
 	    (gchar *)FullPathPixmapFile(mascot, filename0);
 	}
 	else{
@@ -845,7 +858,7 @@ void create_nkr_dialog(typMascot *mascot)
   gtk_container_set_border_width (GTK_CONTAINER (nkr_main), 5);
   
   // 6x3のテーブル
-  nkr_tbl = gtk_table_new (6, 3, FALSE);
+  nkr_tbl = gtkut_table_new (6, 3, FALSE, 0, 0, 0);
   gtk_container_add (GTK_CONTAINER (nkr_main), nkr_tbl);
 
   nkr_scroll = gtk_scrolled_window_new(NULL, NULL);
@@ -857,10 +870,10 @@ void create_nkr_dialog(typMascot *mascot)
   gtk_text_view_set_cursor_visible (GTK_TEXT_VIEW (nkr_text), FALSE);
 
   gtk_container_add(GTK_CONTAINER(nkr_scroll), nkr_text);
-  gtk_widget_set_usize (nkr_scroll, NKR_WIN_WIDTH, NKR_WIN_HEIGHT);
+  gtk_widget_set_size_request (nkr_scroll, NKR_WIN_WIDTH, NKR_WIN_HEIGHT);
 
-  gtk_table_attach (GTK_TABLE (nkr_tbl), nkr_scroll, 0, 5, 0, 1,
-		    GTK_FILL, GTK_EXPAND | GTK_SHRINK | GTK_FILL, 0, 0);
+  gtkut_table_attach (nkr_tbl, nkr_scroll, 0, 5, 0, 1,
+		      GTK_FILL, GTK_EXPAND | GTK_SHRINK | GTK_FILL, 0, 0);
 
   if(nkr_msg){
     nkr_msg=g_strconcat(nkr_msg,
@@ -875,14 +888,18 @@ void create_nkr_dialog(typMascot *mascot)
   gtk_text_buffer_insert (text_buffer, &start_iter, nkr_msg, -1);
  
 
-  button=gtkut_button_new_from_stock(_("OK"),GTK_STOCK_OK);
-  gtk_table_attach(GTK_TABLE(nkr_tbl), button, 4, 5, 2, 3,
-		   GTK_FILL,GTK_SHRINK,0,0);
+  button=gtkut_button_new_with_icon(_("OK"),
+#ifdef USE_GTK3
+				    "emblem-default"
+#else
+				    GTK_STOCK_OK
+#endif
+				    );
+  gtkut_table_attach(nkr_tbl, button, 4, 5, 2, 3,
+		     GTK_FILL,GTK_SHRINK,0,0);
   my_signal_connect(button,"clicked",close_nkr, GTK_WIDGET(nkr_main));
   
   gtk_widget_show_all(nkr_main);
-  
-  gdk_flush();
 }
 
 
@@ -895,5 +912,4 @@ static void close_nkr(GtkWidget *w, GtkWidget *dialog)
   while (my_main_iteration(FALSE));
  
   Mascot->flag_menu=FALSE;
-  gdk_flush();
 }

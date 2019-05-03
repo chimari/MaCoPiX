@@ -26,17 +26,17 @@
 
 #include "main.h"
 
+#ifndef USE_GTK3
 GdkBitmap *mask_clk[2]={NULL,NULL};;
+#endif
 
 // from gui.c
 
-void DrawPanelClock();
 void DrawPanelClock2();
 
 //GtkWidget * make_clock(typMascot *mascot){
 void  make_clock(typMascot *mascot){
   GtkWidget *ebox;
-  
   mascot->clock_main = gtk_window_new(GTK_WINDOW_POPUP);
   gtk_window_set_accept_focus(GTK_WINDOW(mascot->clock_main),FALSE);
   gtk_widget_set_app_paintable(mascot->clock_main, TRUE);
@@ -66,10 +66,15 @@ void  make_clock(typMascot *mascot){
 #endif
   my_signal_connect(mascot->dw_clock, "configure_event",
   		    dw_configure_clk, (gpointer)mascot);
+#ifdef USE_GTK3
+  my_signal_connect(mascot->dw_clock, "draw",dw_expose_clk,
+  		    (gpointer)mascot);
+#else
   my_signal_connect(mascot->dw_clock, "expose_event",
   		    dw_expose_clk, (gpointer)mascot);
   my_signal_connect(mascot->clock_main, "expose_event",
   		    expose_clk, (gpointer)mascot);
+#endif
   my_signal_connect(ebox, "button_press_event",
   		    clk_drag_begin, (gpointer)mascot);
   my_signal_connect(ebox, "button_release_event",
@@ -105,416 +110,16 @@ void make_clock_fg(typMascot *mascot){
   gdk_window_set_decorations(gtk_widget_get_window(mascot->clock_fg), 0);
 
   
+#ifndef USE_GTK3
   my_signal_connect(mascot->clock_fg, "expose_event",
   		    expose_clk, (gpointer)mascot);
-  /*
-  my_signal_connect(mascot->clock_fg, "expose_event",
-  		    dw_expose_clk, (gpointer)mascot);
-  my_signal_connect(mascot->clock_fg, "button_press_event",
-		    clk_drag_begin, (gpointer)mascot);
-  my_signal_connect(mascot->clock_fg, "button_release_event",
-		    clk_drag_end, (gpointer)mascot);
-  my_signal_connect(mascot->clock_fg, "motion_notify_event",
-		    clk_window_motion, (gpointer)mascot);
-  */
+#endif
+  
   gdk_window_resize (gtk_widget_get_window(mascot->clock_fg), 1, 1);
   gtk_widget_set_size_request (mascot->dw_clkfg, 1, 1);
   //dw_configure_clk(mascot->clock_fg, "configure_event",(gpointer)mascot);
 }
 #endif
-
-
-// パネル時計のpixmap bufferへの描画
-void DrawPanelClock(typMascot *mascot)
-{
-  gint clk_width,clk_height;
-  gint work_page;
-  PangoLayout *pango_text;
-  gint new_w, new_h;
-  GdkGCValues gcv;
-
-  work_page=mascot->clk_page;
-  work_page^=1;
-
-  pango_text=gtk_widget_create_pango_layout(mascot->clock_main,
-					    mascot->digit);
-  pango_layout_get_pixel_size(pango_text,&clk_width,&clk_height);
-
-
-  switch(mascot->clktype){
-  case CLOCK_TYPE_12S:
-  case CLOCK_TYPE_12M:
-    clk_width+=clk_height/3;
-    break;
-  }
-
-  
-  if (pixmap_clk[work_page]) {
-    g_object_unref(G_OBJECT(pixmap_clk[work_page]));
-  } 
-  
-  new_w=clk_width+(mascot->clktext_x+mascot->wclkbd)*2;
-  new_h=clk_height+(mascot->clktext_y+mascot->wclkbd)*2;
-
-  pixmap_clk[work_page] = gdk_pixmap_new(gtk_widget_get_window(mascot->clock_main),
-					 new_w,
-					 new_h,
-					 -1);
-  
-  if(mascot->flag_clkrd){
-    if (mask_clk[work_page]) {
-      g_object_unref(G_OBJECT(mask_clk[work_page]));
-    } 
-    
-    mask_clk[work_page] = gdk_pixmap_new(gtk_widget_get_window(mascot->clock_main),
-					 new_w,new_h,1); // Depth =1 (Bitmap)
-    
-    if(mascot->gc_clkmask[work_page]){
-      gdk_gc_unref(mascot->gc_clkmask[work_page]);
-    }
-    mascot->gc_clkmask[work_page]=gdk_gc_new(mask_clk[work_page]);
-    // いったんマスクをforegroundでクリアする
-    gdk_draw_rectangle(mask_clk[work_page],mascot->gc_clkmask[work_page],
-		       TRUE,
-		       0,0,
-		       new_w,new_h);
-    // マスクはforeground色の部分が消されるので, 残したい部分は
-    // background色で描画する
-    gdk_gc_get_values(mascot->gc_clkmask[work_page], &gcv);
-    gdk_gc_set_foreground(mascot->gc_clkmask[work_page], &gcv.background);
-    gdk_gc_set_background(mascot->gc_clkmask[work_page], &gcv.foreground);
-
-
-    // **** pixmapへのBUFFERING
-    // Mask (Borderと同じ)
-#ifdef USE_WIN32
-    gdk_draw_arc(mask_clk[work_page],mascot->gc_clkmask[work_page],
-		 TRUE,
-		 0,0,
-		 mascot->clktext_x*2,mascot->clktext_y*2,
-		 0,5760*4);
-    gdk_draw_arc(mask_clk[work_page],mascot->gc_clkmask[work_page],
-		 TRUE,
-		 (new_w+2)-mascot->clktext_x*2-1,0,
-		 mascot->clktext_x*2,mascot->clktext_y*2,
-		 0,5760*4);
-    gdk_draw_arc(mask_clk[work_page],mascot->gc_clkmask[work_page],
-		 TRUE,
-		 0,(new_h+2)-mascot->clktext_y*2-1,
-		 mascot->clktext_x*2,mascot->clktext_y*2,
-		 0,5760*4);
-    gdk_draw_arc(mask_clk[work_page],mascot->gc_clkmask[work_page],
-		 TRUE,
-		 (new_w+2)-mascot->clktext_x*2-1,
-		 (new_h+2)-mascot->clktext_y*2-1,
-		 mascot->clktext_x*2,mascot->clktext_y*2,
-		 0,5760*4);
-#else
-    gdk_draw_arc(mask_clk[work_page],mascot->gc_clkmask[work_page],
-		 TRUE,
-		 0,0,
-		 mascot->clktext_x*2,mascot->clktext_y*2,
-		 5760,5760);
-    gdk_draw_arc(mask_clk[work_page],mascot->gc_clkmask[work_page],
-		 TRUE,
-		 new_w-mascot->clktext_x*2-1,0,
-		 mascot->clktext_x*2,mascot->clktext_y*2,
-		 0,5760);
-    gdk_draw_arc(mask_clk[work_page],mascot->gc_clkmask[work_page],
-		 TRUE,
-		 0,new_h-mascot->clktext_y*2-1,
-		 mascot->clktext_x*2,mascot->clktext_y*2,
-		 5760*2,5760);
-    gdk_draw_arc(mask_clk[work_page],mascot->gc_clkmask[work_page],
-		 TRUE,
-		 new_w-mascot->clktext_x*2-1,new_h-mascot->clktext_y*2-1,
-		 mascot->clktext_x*2,mascot->clktext_y*2,
-		 5760*3,5760);
-#endif
-    gdk_draw_rectangle(mask_clk[work_page],mascot->gc_clkmask[work_page],
-		       TRUE,
-		       0,mascot->clktext_y,
-		       new_w,new_h-mascot->clktext_y*2);
-    gdk_draw_rectangle(mask_clk[work_page],mascot->gc_clkmask[work_page],
-		       TRUE,
-		       mascot->clktext_x,0,
-		       new_w-mascot->clktext_x*2,new_h);
-    
-    
-    
-    // border
-    if(mascot->wclkbd>0){
-#ifdef USE_WIN32
-      gdk_draw_arc(pixmap_clk[work_page],mascot->gc_clkbd[work_page],
-		   TRUE,
-		   0,0,
-		   mascot->clktext_x*2,mascot->clktext_y*2,
-		   0,5760*4);
-      gdk_draw_arc(pixmap_clk[work_page],mascot->gc_clkbd[work_page],
-		   TRUE,
-		   (new_w+2)-mascot->clktext_x*2-1,0,
-		   mascot->clktext_x*2,mascot->clktext_y*2,
-		   0,5760*4);
-      gdk_draw_arc(pixmap_clk[work_page],mascot->gc_clkbd[work_page],
-		   TRUE,
-		   0,(new_h+2)-mascot->clktext_y*2-1,
-		   mascot->clktext_x*2,mascot->clktext_y*2,
-		   0,5760*4);
-      gdk_draw_arc(pixmap_clk[work_page],mascot->gc_clkbd[work_page],
-		   TRUE,
-		   (new_w+2)-mascot->clktext_x*2-1,(new_h+2)-mascot->clktext_y*2-1,
-		   mascot->clktext_x*2,mascot->clktext_y*2,
-		   0,5760*4);
-#else
-      gdk_draw_arc(pixmap_clk[work_page],mascot->gc_clkbd[work_page],
-		   TRUE,
-		   0,0,
-		   mascot->clktext_x*2,mascot->clktext_y*2,
-		   5760,5760);
-      gdk_draw_arc(pixmap_clk[work_page],mascot->gc_clkbd[work_page],
-		   TRUE,
-		   new_w-mascot->clktext_x*2-1,0,
-		   mascot->clktext_x*2,mascot->clktext_y*2,
-		   0,5760);
-      gdk_draw_arc(pixmap_clk[work_page],mascot->gc_clkbd[work_page],
-		   TRUE,
-		   0,new_h-mascot->clktext_y*2-1,
-		   mascot->clktext_x*2,mascot->clktext_y*2,
-		   5760*2,5760);
-      gdk_draw_arc(pixmap_clk[work_page],mascot->gc_clkbd[work_page],
-		   TRUE,
-		   new_w-mascot->clktext_x*2-1,(new_h+2)-mascot->clktext_y*2-1,
-		   mascot->clktext_x*2,mascot->clktext_y*2,
-		   5760*3,5760);
-#endif
-      gdk_draw_rectangle(pixmap_clk[work_page],mascot->gc_clkbd[work_page],
-			 TRUE,
-			 0,mascot->clktext_y,
-			 new_w,new_h-mascot->clktext_y*2);
-      gdk_draw_rectangle(pixmap_clk[work_page],mascot->gc_clkbd[work_page],
-			 TRUE,
-			 mascot->clktext_x,0,
-			 new_w-mascot->clktext_x*2,new_h);
-      
-      
-    }
-    
-    // background
-#ifdef USE_WIN32
-    gdk_draw_arc(pixmap_clk[work_page],mascot->gc_clkbg[work_page],
-		 TRUE,
-		 mascot->wclkbd,mascot->wclkbd,
-		 mascot->clktext_x*2,mascot->clktext_y*2,
-		 0,5760*4);
-    gdk_draw_arc(pixmap_clk[work_page],mascot->gc_clkbg[work_page],
-		 TRUE,
-		 (new_w+2)-mascot->clktext_x*2-mascot->wclkbd-1,
-		 mascot->wclkbd,
-		 mascot->clktext_x*2,mascot->clktext_y*2,
-		 0,5760*4);
-    gdk_draw_arc(pixmap_clk[work_page],mascot->gc_clkbg[work_page],
-		 TRUE,
-		 mascot->wclkbd,
-		 (new_h+2)-mascot->clktext_y*2-mascot->wclkbd-1,
-		 mascot->clktext_x*2,mascot->clktext_y*2,
-		 0,5760*4);
-    gdk_draw_arc(pixmap_clk[work_page],mascot->gc_clkbg[work_page],
-		 TRUE,
-		 (new_w+2)-mascot->clktext_x*2-mascot->wclkbd-1,
-		 (new_h+2)-mascot->clktext_y*2-mascot->wclkbd-1,
-		 mascot->clktext_x*2,mascot->clktext_y*2,
-		 0,5760*4);
-#else
-    gdk_draw_arc(pixmap_clk[work_page],mascot->gc_clkbg[work_page],
-		 TRUE,
-		 mascot->wclkbd,mascot->wclkbd,
-		 mascot->clktext_x*2,mascot->clktext_y*2,
-		 5760,5760);
-    gdk_draw_arc(pixmap_clk[work_page],mascot->gc_clkbg[work_page],
-		 TRUE,
-		 new_w-mascot->clktext_x*2-mascot->wclkbd-1,
-		 mascot->wclkbd,
-		 mascot->clktext_x*2,mascot->clktext_y*2,
-		 0,5760);
-    gdk_draw_arc(pixmap_clk[work_page],mascot->gc_clkbg[work_page],
-		 TRUE,
-		 mascot->wclkbd,
-		 new_h-mascot->clktext_y*2-mascot->wclkbd-1,
-		 mascot->clktext_x*2,mascot->clktext_y*2,
-		 5760*2,5760);
-    gdk_draw_arc(pixmap_clk[work_page],mascot->gc_clkbg[work_page],
-		 TRUE,
-		 new_w-mascot->clktext_x*2-mascot->wclkbd-1,
-		 new_h-mascot->clktext_y*2-mascot->wclkbd-1,
-		 mascot->clktext_x*2,mascot->clktext_y*2,
-		 5760*3,5760);
-#endif
-    gdk_draw_rectangle(pixmap_clk[work_page],mascot->gc_clkbg[work_page],
-		       TRUE,
-		       mascot->wclkbd,
-		       mascot->wclkbd+mascot->clktext_y,
-		       new_w-mascot->wclkbd*2,
-		       new_h-mascot->clktext_y*2-mascot->wclkbd*2);
-    gdk_draw_rectangle(pixmap_clk[work_page],mascot->gc_clkbg[work_page],
-		       TRUE,
-		       mascot->wclkbd+mascot->clktext_x,
-		       mascot->wclkbd,
-		       new_w-mascot->clktext_x*2-mascot->wclkbd*2,
-		       new_h-mascot->wclkbd*2);
-    
-    
-  }
-  else{
-    
-   // **** pixmapへのBUFFERING
-   // border
-    gdk_draw_rectangle(pixmap_clk[work_page],mascot->gc_clkbd[work_page],
-		       TRUE,
-		       0,0,
-		       new_w,
-		       new_h);
-    // background
-    gdk_draw_rectangle(pixmap_clk[work_page],mascot->gc_clkbg[work_page],
-		       TRUE,
-		       mascot->wclkbd,mascot->wclkbd,
-		       new_w-mascot->wclkbd*2,
-		       new_h-mascot->wclkbd*2);
-  }
-  
-  
-  
-  // digital clock
-  if(mascot->flag_clksd){
-    gdk_draw_layout(pixmap_clk[work_page],
-		    mascot->gc_clksd[work_page],
-		    mascot->clktext_x+mascot->wclkbd+mascot->clksd_x,
-		    mascot->clktext_y+mascot->wclkbd+mascot->clksd_y,
-		    pango_text);
-  }
-
-  gdk_draw_layout(pixmap_clk[work_page],
-		  mascot->gc_clk[work_page],
-		  mascot->clktext_x+mascot->wclkbd,
-		  mascot->clktext_y+mascot->wclkbd,
-		  pango_text);
-  
-  switch(mascot->clktype){
-  case CLOCK_TYPE_12S:
-  case CLOCK_TYPE_12M:
-    // digital clock
-    if(mascot->flag_clksd){
-      if(mascot->clk_pm){
-	gdk_draw_arc(pixmap_clk[work_page],mascot->gc_clksd[work_page],
-		     TRUE,
-		     clk_width+mascot->clktext_x+mascot->wclkbd+mascot->clksd_x-clk_height/3,
-		     mascot->clktext_y+mascot->wclkbd+mascot->clksd_y+clk_height*2/3,
-		     clk_height/3,clk_height/3,
-		     0,(360*64));
-      }
-      else{
-	gdk_draw_arc(pixmap_clk[work_page],mascot->gc_clksd[work_page],
-		     TRUE,
-		     clk_width+mascot->clktext_x+mascot->wclkbd+mascot->clksd_x-clk_height/3,
-		     mascot->clktext_y+mascot->wclkbd+mascot->clksd_y,
-		     clk_height/3,clk_height/3,
-		     0,(360*64));
-      }
-    }
-    
-    if(mascot->clk_pm){
-      gdk_draw_arc(pixmap_clk[work_page],mascot->gc_clk[work_page],
-		   TRUE,
-		   clk_width+mascot->clktext_x+mascot->wclkbd-clk_height/3,
-		   mascot->clktext_y+mascot->wclkbd+clk_height*2/3,
-		   clk_height/3,clk_height/3,
-		   0,(360*64));
-    }
-    else{
-      gdk_draw_arc(pixmap_clk[work_page],mascot->gc_clk[work_page],
-		   TRUE,
-		   clk_width+mascot->clktext_x+mascot->wclkbd-clk_height/3,
-		   mascot->clktext_y+mascot->wclkbd,
-		   clk_height/3,clk_height/3,
-		   0,(360*64));
-    }
-    
-    break;
-  }
-  
-  mascot->clk_page=work_page;
-  gdk_flush();
-  
-#ifdef USE_WIN32
-  if((mascot->flag_clkfg)&&(mascot->alpha_clk!=100)){
-    gdk_window_set_back_pixmap(gtk_widget_get_window(mascot->clock_fg),
-			       pixmap_clk[mascot->clk_page],
-			       FALSE);
-  }
-#endif
-  {
-    GtkAllocation *allocation=g_new(GtkAllocation, 1);
-    GtkStyle *style=gtk_widget_get_style(mascot->dw_clock);
-    gtk_widget_get_allocation(mascot->dw_clock,allocation);
-
-    gdk_draw_drawable(gtk_widget_get_window(mascot->dw_clock),
-		      style->fg_gc[gtk_widget_get_state(mascot->dw_clock)],
-		      pixmap_clk[mascot->clk_page],
-		      0,0,0,0,
-		      allocation->width,
-		      allocation->height);
-    g_free(allocation);
-  }
-  /*
-  gdk_window_set_back_pixmap(gtk_widget_get_window(mascot->clock_main),
-			     pixmap_clk[mascot->clk_page],
-			     FALSE);
-  */
-  
-#ifdef USE_WIN32
-  if((mascot->flag_clkfg)&&(mascot->alpha_clk!=100)){
-    gdk_window_resize (gtk_widget_get_window(mascot->clock_fg),new_w,new_h);
-    gtk_widget_set_size_request (mascot->dw_clkfg, new_w,new_h);
-  }
-#endif
-  gdk_window_resize (gtk_widget_get_window(mascot->clock_main), new_w, new_h);
-  gtk_widget_set_size_request (mascot->dw_clock, new_w,new_h);
-
-  if(mascot->flag_clkrd){
-#ifdef USE_WIN32
-    if((mascot->flag_clkfg)&&(mascot->alpha_clk!=100)){
-      gdk_window_shape_combine_mask( gtk_widget_get_window(mascot->clock_fg),
-				     mask_clk[mascot->clk_page],
-				     0,0);
-    }
-#endif
-    
-    gdk_window_shape_combine_mask( gtk_widget_get_window(mascot->clock_main),
-				   mask_clk[mascot->clk_page],
-				   0,0);
-  }
-
-#ifdef USE_WIN32
-  gdk_draw_drawable(gtk_widget_get_window(mascot->clock_fg),
-		    mascot->clock_fg->style->fg_gc[GTK_WIDGET_STATE(mascot->clock_main)],
-		    pixmap_clk[mascot->clk_page],
-		    0,0,0,0,
-		    new_w,
-		    new_h);
-#endif
-
-  gdk_draw_drawable(gtk_widget_get_window(mascot->dw_clock),
-		    mascot->dw_clock->style->fg_gc[GTK_WIDGET_STATE(mascot->clock_main)],
-		    pixmap_clk[mascot->clk_page],
-		    0,0,0,0,
-		    new_w,
-		    new_h);
-
-  g_object_unref(G_OBJECT(pango_text));
-  
-  while (my_main_iteration(FALSE));
-  gdk_flush();
-  
-}
 
 
 // パネル時計のpixmap bufferへの描画
@@ -525,13 +130,17 @@ void DrawPanelClock2(typMascot *mascot)
   gint new_w, new_h;
   cairo_t *cr;
   cairo_t *cr_mask;
+  cairo_surface_t *surface_mask;
   gdouble M_PI=3.14159265;
   gdouble dx,dy;
   cairo_text_extents_t extents;
   PangoLayout *pango_text;
   gdouble ampmsize=0;
   gboolean shape_flag=FALSE;
-
+#ifdef USE_GTK3
+  cairo_surface_t *surface;
+  cairo_region_t *region_mask;
+#endif
 
   work_page=mascot->clk_page;
   work_page^=1;
@@ -545,14 +154,24 @@ void DrawPanelClock2(typMascot *mascot)
   }
 
 #ifdef __PANGOCAIRO_H__
+#ifdef USE_GTK3
+    css_change_font(mascot->dw_clock,mascot->fontclk);
+#else
   gtk_widget_modify_font(mascot->dw_clock,mascot->fontclk);
+#endif
   pango_text=gtk_widget_create_pango_layout(mascot->dw_clock,
 					    mascot->digit);
   pango_layout_get_pixel_size(pango_text,&clk_width,&clk_height);
 #endif
 
+#ifdef USE_GTK3
+  surface = cairo_image_surface_create(CAIRO_FORMAT_ARGB32,
+				       1000, 1000);
+  cr = cairo_create(surface);
+#else
   cr = gdk_cairo_create(gtk_widget_get_window(mascot->clock_main));
- 
+#endif
+  
   cairo_select_font_face (cr, 
 			  mascot->fontclk_pc.family,
 			  mascot->fontclk_pc.slant,
@@ -575,37 +194,52 @@ void DrawPanelClock2(typMascot *mascot)
   }
 
   cairo_destroy(cr);
-
-  
-  if (pixmap_clk[work_page]) {
-    g_object_unref(G_OBJECT(pixmap_clk[work_page]));
-  } 
+#ifdef USE_GTK3
+    cairo_surface_destroy(surface);
+#endif
   
   new_w=clk_width+(mascot->clktext_x+mascot->wclkbd)*2;
   new_h=clk_height+(mascot->clktext_y+mascot->wclkbd)*2;
 
+  
+#ifdef USE_GTK3  ////////////////////// GTK3 ////////////////////////////////////
+  if(shape_flag){
+    surface_mask = cairo_image_surface_create(CAIRO_FORMAT_ARGB32,
+					      new_w,new_h);
+    cr_mask = cairo_create(surface_mask); 
+    cairo_set_source_rgba (cr_mask, 0, 0, 0, 0); // transparent
+    cairo_rectangle(cr_mask, 0, 0, new_w,new_h);
+    cairo_fill(cr_mask);
+    cairo_paint (cr_mask);
+    cairo_set_source_rgba (cr_mask, 1, 1, 1, 1); // opaque white
+  }
+
+  surface = cairo_image_surface_create(CAIRO_FORMAT_ARGB32,
+				       new_w,new_h);
+  cr = cairo_create(surface);
+#else     ////////////////////// GTK2 ////////////////////////////////////
+  if (pixmap_clk[work_page]) {
+    g_object_unref(G_OBJECT(pixmap_clk[work_page]));
+  } 
+  
   pixmap_clk[work_page] = gdk_pixmap_new(gtk_widget_get_window(mascot->clock_main),
 					 new_w,
 					 new_h,
 					 -1);
 
   if(shape_flag){
-    if (mask_clk[work_page]) {
-      g_object_unref(G_OBJECT(mask_clk[work_page]));
-    } 
-    
-    mask_clk[work_page] = gdk_pixmap_new(gtk_widget_get_window(mascot->clock_main),
-					 new_w,new_h,1); // Depth =1 (Bitmap)
-    
-    cr_mask = gdk_cairo_create(mask_clk[work_page]);
-    cairo_set_operator (cr_mask, CAIRO_OPERATOR_CLEAR);
+    surface_mask = cairo_image_surface_create(CAIRO_FORMAT_RGB24,
+					      new_w,new_h);
+    cr_mask = cairo_create(surface_mask); 
+    cairo_set_source_rgb (cr_mask, 0, 0, 0); // opaque black
+    cairo_rectangle(cr_mask, 0, 0, new_w,new_h);
+    cairo_fill(cr_mask);
     cairo_paint (cr_mask);
-    cairo_set_operator (cr_mask, CAIRO_OPERATOR_SOURCE);
     cairo_set_source_rgb (cr_mask, 1, 1, 1); // opaque white
-  }
-  
+  } 
   
   cr = gdk_cairo_create(pixmap_clk[work_page]);
+#endif 
   
   if((mascot->flag_composite==COMPOSITE_TRUE)
      ||((mascot->force_composite)&&(mascot->flag_composite==COMPOSITE_UNKNOWN)))
@@ -692,16 +326,27 @@ void DrawPanelClock2(typMascot *mascot)
 
   if(shape_flag){
     cairo_append_path(cr_mask,cairo_copy_path(cr));
-    cairo_fill(cr_mask);
+    cairo_clip_preserve (cr_mask);
+    cairo_paint(cr_mask);
+    cairo_destroy(cr_mask);
+#ifdef USE_GTK3  ////////////////////// GTK3 ////////////////////////////////////
+    region_mask = gdk_cairo_region_create_from_surface(surface_mask);
+#else            ////////////////////// GTK2 ////////////////////////////////////
+    if (mask_clk[work_page]) {
+      g_object_unref(G_OBJECT(mask_clk[work_page]));
+    }
+
+    mask_clk[work_page] = make_mask_from_surface(surface_mask);
     // If having a mask, never clip
     // Anti-alias of cairo could cause discoloration
+#endif // USE_GTK3
+    cairo_surface_destroy(surface_mask);
   }
   else{
-    cairo_clip_preserve (cr);
     cairo_fill_preserve(cr);
   }
 
-
+  ///// BACKGROUND /////
   if(mascot->wclkbd>0){
     cairo_set_source_rgba (cr, 
 			   (gdouble)mascot->colclkbd->red/0xFFFF,
@@ -801,9 +446,20 @@ void DrawPanelClock2(typMascot *mascot)
     break;
   }
 
-    
+  cairo_destroy(cr);
+   
+
+#ifdef USE_GTK3  ////////////////////// GTK3 ////////////////////////////////////
+  if (pixbuf_clk[work_page]) {
+    g_object_unref(G_OBJECT(pixbuf_clk[work_page]));
+  } 
+  pixbuf_clk[work_page] = gdk_pixbuf_get_from_surface(surface, 0, 0, new_w, new_h);
+  cairo_surface_destroy(surface);
+
   mascot->clk_page=work_page;
-  gdk_flush();
+  
+#else            ////////////////////// GTK2 ////////////////////////////////////
+  mascot->clk_page=work_page;
   
 #ifdef USE_WIN32
   if((mascot->flag_clkfg)&&(mascot->alpha_clk!=100)){
@@ -825,12 +481,8 @@ void DrawPanelClock2(typMascot *mascot)
 		      allocation->height);
     g_free(allocation);
   }
-  /*
-  gdk_window_set_back_pixmap(gtk_widget_get_window(mascot->clock_main),
-  			     pixmap_clk[mascot->clk_page],
-  			     FALSE);
-  */
-  
+#endif // USE_GTK3
+
 #ifdef USE_WIN32
   if((mascot->flag_clkfg)&&(mascot->alpha_clk!=100)){
     gdk_window_resize (gtk_widget_get_window(mascot->clock_fg), new_w, new_h);
@@ -841,6 +493,21 @@ void DrawPanelClock2(typMascot *mascot)
   gtk_widget_set_size_request (mascot->dw_clock, new_w,new_h);
 
   if(shape_flag){
+#ifdef USE_GTK3  ////////////////////// GTK3 ////////////////////////////////////
+#ifdef USE_WIN32
+    if((mascot->flag_clkfg)&&(mascot->alpha_clk!=100)){
+      gdk_window_shape_combine_region( gtk_widget_get_window(mascot->clock_fg),
+				       region_mask,
+				       0,0);
+    }
+#endif
+
+    gdk_window_shape_combine_region( gtk_widget_get_window(mascot->clock_main),
+				     region_mask,
+				     0,0);
+
+    cairo_region_destroy(region_mask);
+#else            ////////////////////// GTK2 ////////////////////////////////////
 #ifdef USE_WIN32
     if((mascot->flag_clkfg)&&(mascot->alpha_clk!=100)){
       gdk_window_shape_combine_mask( gtk_widget_get_window(mascot->clock_fg),
@@ -852,9 +519,15 @@ void DrawPanelClock2(typMascot *mascot)
     gdk_window_shape_combine_mask( gtk_widget_get_window(mascot->clock_main),
 				   mask_clk[mascot->clk_page],
 				   0,0);
-    cairo_destroy(cr_mask);
+#endif // USE_GTK3
   }
 
+#ifdef USE_GTK3  ////////////////////// GTK3 ////////////////////////////////////
+#ifdef USE_WIN32
+  gtk_widget_queue_draw(mascot->dw_clkfg);
+#endif
+  gtk_widget_queue_draw(mascot->dw_clock);
+#else            ////////////////////// GTK2 ////////////////////////////////////
 #ifdef USE_WIN32
   gdk_draw_drawable(gtk_widget_get_window(mascot->clock_fg),
 		    mascot->clock_fg->style->fg_gc[GTK_WIDGET_STATE(mascot->clock_main)],
@@ -869,23 +542,20 @@ void DrawPanelClock2(typMascot *mascot)
 		    0,0,0,0,
 		    new_w,
 		    new_h);
+#endif // USE_GTK3
   
-  cairo_destroy(cr);
   
 #ifdef __PANGOCAIRO_H__
   g_object_unref(G_OBJECT(pango_text));
 #endif
   
-  while(my_main_iteration(FALSE));
-  gdk_flush();
+  //while(my_main_iteration(FALSE));
+  gdkut_flush(mascot);
   
 }
 
 void DrawPanelClock0(typMascot *mascot){
   //  if(((mascot->flag_clk_cairo)&&(mascot->flag_composite!=COMPOSITE_FALSE))
   //     ||(!mascot->flag_clkrd))
-  if(mascot->flag_clk_cairo)
-    DrawPanelClock2(mascot);
-  else
-    DrawPanelClock(mascot);
+  DrawPanelClock2(mascot);
 }
