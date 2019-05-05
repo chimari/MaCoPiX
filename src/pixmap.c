@@ -266,7 +266,7 @@ gboolean TestLoadPixmaps(typMascot *mascot, gchar *filename, gint i_pix)
 	cairo_set_operator (cr, CAIRO_OPERATOR_OVER);
 	gdk_cairo_region(cr, region);
 	cairo_set_source_rgba(cr, 1, 1, 1, 1);
-	cairo_paint_(cr);
+	cairo_paint(cr);
 	cairo_region_destroy(region);
 
 	cairo_destroy(cr);
@@ -654,7 +654,7 @@ void LoadPixmaps(GtkWidget *widget, //GtkWidget *draw,
 	  cairo_set_operator (cr, CAIRO_OPERATOR_OVER);
 	  gdk_cairo_region(cr, region);
 	  cairo_set_source_rgba(cr, 1, 1, 1, 1);
-	  cairo_paint_(cr);
+	  cairo_paint(cr);
 	  cairo_region_destroy(region);
 	  
 	  cairo_destroy(cr);
@@ -1440,7 +1440,7 @@ gint DrawMascotTemp(typMascot *mascot, gint i_pix)
 
 #ifdef USE_WIN32
   if((mascot->sdw_flag)&&(mascot->sdw_height>0)){
-    pixmap_sdw[work_page] = gdk_pixbuf_copy(mascot->sprites[i_pix].pixbuf_sdw);
+    pixbuf_sdw[work_page] = gdk_pixbuf_copy(mascot->sprites[i_pix].pixbuf_sdw);
     gtk_widget_queue_draw(mascot->dw_sdw);
   }
 #endif

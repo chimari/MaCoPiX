@@ -801,12 +801,17 @@ void make_balloon_fg(typMascot *mascot){
   gdk_window_set_decorations(gtk_widget_get_window(mascot->balloon_fg), 0);
   gtk_window_set_resizable(GTK_WINDOW(mascot->balloon_fg),TRUE);
   
+  my_signal_connect(mascot->dw_balfg, "configure_event",
+  		    dw_configure_bal, (gpointer)mascot);
+#ifdef USE_GTK3
+  my_signal_connect(mascot->dw_balfg, "draw",dw_expose_bal,
+  		    (gpointer)mascot);
+#else
   my_signal_connect(mascot->balloon_fg, "expose_event",
 		    expose_bal, (gpointer)mascot);
-  my_signal_connect(mascot->dw_balfg, "configure_event",
-		    dw_configure_bal, (gpointer)mascot);
   my_signal_connect(mascot->dw_balfg, "expose_event",
 		    dw_expose_bal, (gpointer)mascot);
+#endif
 
   gtk_window_resize (GTK_WINDOW(mascot->balloon_fg),1,1);
   gtk_widget_set_size_request (mascot->dw_balfg,1,1);
