@@ -78,7 +78,7 @@ gboolean TestLoadPixmaps(typMascot *mascot, gchar *filename, gint i_pix)
   pixbuf = gdk_pixbuf_new_from_file(tmp_open, NULL);
   g_free(tmp_open);
   if(!pixbuf) return(FALSE);
-  
+
   w = gdk_pixbuf_get_width(pixbuf)*((gfloat)(mascot->magnify)/100);
   h = gdk_pixbuf_get_height(pixbuf)*((gfloat)(mascot->magnify)/100);
 
@@ -429,8 +429,8 @@ void LoadPixmaps(GtkWidget *widget, //GtkWidget *draw,
   gchar *tmp_open;
   cairo_t *cr;
 #ifdef USE_GTK3
-  cairo_surface_t *surface;
-  cairo_region_t *region;
+  cairo_surface_t *surface, *surface_sdw;
+  cairo_region_t *region, *region_sdw;
 #endif
 
 
@@ -539,7 +539,7 @@ void LoadPixmaps(GtkWidget *widget, //GtkWidget *draw,
 
     pixbuf2=gdk_pixbuf_scale_simple(pixbuf,w,h,ipstyle);
 
-#ifdef USE_GTK3
+#ifdef USE_GTK3   //////////////////  GTK3  ///////////////////
     if(flag_img_cairo_go){
       if(mascot->sdw_flag){
 	w= w + mascot->sdw_x_int;
@@ -579,7 +579,8 @@ void LoadPixmaps(GtkWidget *widget, //GtkWidget *draw,
 
 	cairo_set_operator (cr, CAIRO_OPERATOR_OVER);
 	gdk_cairo_region(cr, region);
-	cairo_set_source_rgba(cr, 1, 1, 1, 1);
+	cairo_set_source_rgba(cr, 0, 0, 0, 1);
+	cairo_clip(cr);
 	cairo_paint_with_alpha (cr, (gdouble)(mascot->sdw_alpha)/100);
 	cairo_region_destroy(region);
 
@@ -612,6 +613,7 @@ void LoadPixmaps(GtkWidget *widget, //GtkWidget *draw,
       //cairo_paint (cr);
 
       cairo_destroy (cr);
+      sprites[i].pixbuf = gdk_pixbuf_get_from_surface(surface, 0, 0, w, h);
     }
     else{// for Win32 and non-composited Gtk+2.8 or later
       sprites[i].pixbuf = gdk_pixbuf_copy(pixbuf2);
@@ -658,6 +660,7 @@ void LoadPixmaps(GtkWidget *widget, //GtkWidget *draw,
 	  cairo_destroy(cr);
 	  
 	  sprites[i].pixbuf_sdw = gdk_pixbuf_get_from_surface(surface, 0, 0, w, h_sdw);
+	  cairo_surface_destroy(surface);
 	}
       }
 #endif   
@@ -902,7 +905,14 @@ void LoadPixmaps(GtkWidget *widget, //GtkWidget *draw,
     }
   }
 
-#ifndef USE_GTK3
+#ifdef USE_GTK3
+  css_change_font(mascot->dw_balloon,mascot->fontbal_pc);
+  css_change_font(mascot->dw_clock,mascot->fontclk_pc);
+#ifdef USE_WIN32
+  css_change_font(mascot->dw_balfg,mascot->fontbal_pc);
+  css_change_font(mascot->dw_clkfg,mascot->fontclk_pc);
+#endif
+#else
   gtk_widget_modify_font(mascot->clock_main,mascot->fontclk);
   gtk_widget_modify_font(mascot->balloon_main,mascot->fontbal);
 #endif
@@ -932,6 +942,7 @@ void LoadPixmaps(GtkWidget *widget, //GtkWidget *draw,
   }
 
   cairo_region_destroy(region);
+  cairo_surface_destroy(surface);
   
 #else  /////////////  GTK2  ////////////////
   if(flag_img_cairo_go){
@@ -1053,6 +1064,7 @@ void LoadBiffPixmap(GtkWidget *widget, typMascot *mascot){
   else{
     mascot->mail.pixbuf = gdk_pixbuf_copy(pixbuf2);
   }
+  
 # else ////////////////  GTK2  /////////////////  
   if(flag_img_cairo_go){
     mascot->mail.pixmap = gdk_pixmap_new(gtk_widget_get_window(mascot->biff_pix),
@@ -1088,7 +1100,6 @@ void LoadBiffPixmap(GtkWidget *widget, typMascot *mascot){
 			     mascot->mail.pixmap,
 			     FALSE);
   */
-  
   
   gtk_widget_realize(mascot->dw_biff);
   gtk_window_resize (GTK_WINDOW(widget), w, h);
@@ -1646,7 +1657,7 @@ gint DrawMascotWithDigit(typMascot *mascot){
   cairo_paint(cr);
   
   if(flag_img_cairo_go){
-#ifdef __PANGOCAIRO_H__
+#ifdef USE_PANGOCAIRO
     pango_text=gtk_widget_create_pango_layout(mascot->clock_main,
 					      mascot->digit);
     pango_layout_get_pixel_size(pango_text,&clk_width,&clk_height);
@@ -1657,7 +1668,7 @@ gint DrawMascotWithDigit(typMascot *mascot){
 			    mascot->fontclk_pc.weight);
 
     cairo_set_font_size (cr, mascot->fontclk_pc.pointsize*96.0/72.0);
-#ifndef __PANGOCAIRO_H__
+#ifndef USE_PANGOCAIRO
     cairo_text_extents (cr, mascot->digit, &extents);
     clk_width=(gint)(extents.x_advance);
     clk_height=(gint)(-extents.y_bearing);
@@ -1671,7 +1682,7 @@ gint DrawMascotWithDigit(typMascot *mascot){
 			     (gdouble)mascot->colclksd->green/0xFFFF,
 			     (gdouble)mascot->colclksd->blue/0xFFFF,
 			     (gdouble)mascot->alpclksd/0xFFFF); /* transparent */
-#ifdef __PANGOCAIRO_H__
+#ifdef USE_PANGOCAIRO
       cairo_move_to(cr,
 		    mascot->clktext_x+mascot->clksd_x,
 		    mascot->clktext_y+mascot->clksd_y);
@@ -1711,7 +1722,7 @@ gint DrawMascotWithDigit(typMascot *mascot){
 			   (gdouble)mascot->colclk->green/0xFFFF,
 			   (gdouble)mascot->colclk->blue/0xFFFF,
 			   (gdouble)mascot->alpclk/0xFFFF); /* transparent */
-#ifdef __PANGOCAIRO_H__
+#ifdef USE_PANGOCAIRO
     cairo_move_to(cr,
 		  mascot->clktext_x,
 		  mascot->clktext_y);
@@ -1852,7 +1863,7 @@ gint DrawMascotWithDigit(typMascot *mascot){
 		    mascot->width, mascot->height);
   
   if(flag_img_cairo_go){
-#ifdef __PANGOCAIRO_H__
+#ifdef USE_PANGOCAIRO
     pango_text=gtk_widget_create_pango_layout(mascot->clock_main,
 					      mascot->digit);
     pango_layout_get_pixel_size(pango_text,&clk_width,&clk_height);
@@ -1865,7 +1876,7 @@ gint DrawMascotWithDigit(typMascot *mascot){
 			    mascot->fontclk_pc.weight);
 
     cairo_set_font_size (cr, mascot->fontclk_pc.pointsize*96.0/72.0);
-#ifndef __PANGOCAIRO_H__
+#ifndef USE_PANGOCAIRO
     cairo_text_extents (cr, mascot->digit, &extents);
     clk_width=(gint)(extents.x_advance);
     clk_height=(gint)(-extents.y_bearing);
@@ -1879,7 +1890,7 @@ gint DrawMascotWithDigit(typMascot *mascot){
 			     (gdouble)mascot->colclksd->green/0xFFFF,
 			     (gdouble)mascot->colclksd->blue/0xFFFF,
 			     (gdouble)mascot->alpclksd/0xFFFF); /* transparent */
-#ifdef __PANGOCAIRO_H__
+#ifdef USE_PANGOCAIRO
       cairo_move_to(cr,
 		    mascot->clktext_x+mascot->clksd_x,
 		    mascot->clktext_y+mascot->clksd_y);
@@ -1919,7 +1930,7 @@ gint DrawMascotWithDigit(typMascot *mascot){
 			   (gdouble)mascot->colclk->green/0xFFFF,
 			   (gdouble)mascot->colclk->blue/0xFFFF,
 			   (gdouble)mascot->alpclk/0xFFFF); /* transparent */
-#ifdef __PANGOCAIRO_H__
+#ifdef USE_PANGOCAIRO
     cairo_move_to(cr,
 		  mascot->clktext_x,
 		  mascot->clktext_y);
@@ -2063,7 +2074,7 @@ gint DrawMascotWithDigit(typMascot *mascot){
   
 
   
-#ifdef __PANGOCAIRO_H__
+#ifdef USE_PANGOCAIRO
   g_object_unref(G_OBJECT(pango_text));
 #endif
   if(flag_img_cairo_go) cairo_destroy(cr);

@@ -253,7 +253,7 @@ void make_biff_pix(typMascot *mascot){
 #endif
 
   my_signal_connect(mascot->dw_biff, "configure_event",
-		    dw_configure_biff_pix, (gpointer)mascot);
+  		    dw_configure_biff_pix, (gpointer)mascot);
 #ifdef USE_GTK3
   my_signal_connect(mascot->dw_biff, "draw",
 		    dw_expose_biff_pix, (gpointer)mascot);

@@ -402,7 +402,11 @@ echo "##########################################################################
 if test x"${use_win32}" = "xyes"; then
 echo " $PACKAGE $VERSION build for Win32 "
 fi
-echo " $PACKAGE $VERSION  with Gtk+2.x "
+if test x"${use_gtk3}" = "xyes"; then
+echo " $PACKAGE $VERSION  with Gtk+3 "
+else
+echo " $PACKAGE $VERSION  with Gtk+2 "
+fi
 echo ""
 if test $ac_cv_enable_ssl = yes; then
 if test "x$use_gnutls" != "xyes"; then

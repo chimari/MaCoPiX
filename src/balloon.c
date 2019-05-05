@@ -54,7 +54,7 @@ void DrawBalloon2(typMascot *mascot, char **wn_iwp, int wn_max)
   cairo_t *cr_mask;
   gdouble M_PI=3.14159265;
   gdouble dx,dy,bd;
-#ifndef __PANGOCAIRO_H__
+#ifndef USE_PANGOCAIRO
   cairo_text_extents_t extents;
 #endif
   cairo_surface_t *surface_mask;
@@ -79,9 +79,9 @@ void DrawBalloon2(typMascot *mascot, char **wn_iwp, int wn_max)
   bal_height=0;
   bal_width=0;
   for(i_wn=0;i_wn<wn_max;i_wn++){
-#ifdef __PANGOCAIRO_H__
+#ifdef USE_PANGOCAIRO
 #ifdef USE_GTK3
-    css_change_font(mascot->dw_balloon,mascot->fontbal);
+    css_change_font(mascot->dw_balloon,mascot->fontbal_pc);
 #else
     gtk_widget_modify_font(mascot->dw_balloon,mascot->fontbal);
 #endif
@@ -91,7 +91,7 @@ void DrawBalloon2(typMascot *mascot, char **wn_iwp, int wn_max)
 #else
 #ifdef USE_GTK3
     surface = cairo_image_surface_create(CAIRO_FORMAT_ARGB32,
-					 1000, 1000);
+					 1, 1);
     cr = cairo_create(surface);
 #else
     cr = gdk_cairo_create(gtk_widget_get_window(mascot->dw_balloon));
@@ -340,7 +340,7 @@ void DrawBalloon2(typMascot *mascot, char **wn_iwp, int wn_max)
 			 (gdouble)mascot->colbal->blue/0xFFFF,
 			 (gdouble)mascot->alpbal/0xFFFF); /* transparent */
 
-#ifndef __PANGOCAIRO_H__
+#ifndef USE_PANGOCAIRO
   cairo_select_font_face (cr, 
 			  mascot->fontbal_pc.family,
 			  mascot->fontbal_pc.slant,
@@ -351,7 +351,7 @@ void DrawBalloon2(typMascot *mascot, char **wn_iwp, int wn_max)
 
 
   for(i_wn=0;i_wn<wn_max;i_wn++){
-#ifdef __PANGOCAIRO_H__
+#ifdef USE_PANGOCAIRO
     pango_text=gtk_widget_create_pango_layout(mascot->dw_balloon,
 					      wn_iwp[i_wn]);
 
@@ -428,8 +428,8 @@ void DrawBalloon2(typMascot *mascot, char **wn_iwp, int wn_max)
   gdk_window_resize (gtk_widget_get_window(mascot->balloon_main),w,h+h_arrow);
   //ResizeMoveBalloon (mascot,mascot->x, mascot->y, w,h+h_arrow);
 
-  if(shape_flag){
 #ifdef USE_GTK3  ////////////////////// GTK3 ////////////////////////////////////
+  if(shape_flag){
 #ifdef USE_WIN32
     if((mascot->flag_balfg)&&(mascot->alpha_bal!=100)){
       gdk_window_shape_combine_region( gtk_widget_get_window(mascot->balloon_fg),
@@ -445,8 +445,10 @@ void DrawBalloon2(typMascot *mascot, char **wn_iwp, int wn_max)
 
     cairo_region_destroy(region_mask);
     cairo_surface_destroy(surface_mask);
-    gtk_widget_queuea_draw(mascot->dw_balloon);
+  }
+  gtk_widget_queue_draw(mascot->dw_balloon);
 #else            ////////////////////// GTK2 ////////////////////////////////////
+  if(shape_flag){
 #ifdef USE_WIN32
     if((mascot->flag_balfg)&&(mascot->alpha_bal!=100)){
       gdk_window_shape_combine_mask( gtk_widget_get_window(mascot->balloon_fg),
@@ -458,15 +460,15 @@ void DrawBalloon2(typMascot *mascot, char **wn_iwp, int wn_max)
     gdk_window_shape_combine_mask( gtk_widget_get_window(mascot->balloon_main),
 				   mask_bal[mascot->bal_page],
 				   0,0);
-#endif // USE_GTK3
   }
+#endif // USE_GTK3
  
   //  End of Balloon Draw  
 
   MoveBalloon(mascot,mascot->x,mascot->y);
   map_balloon(mascot, TRUE);
 
-#ifdef __PANGOCAIRO_H__
+#ifdef USE_PANGOCAIRO
   if(pango_text)
     g_object_unref(G_OBJECT(pango_text));
 #endif
@@ -761,8 +763,8 @@ void make_balloon(typMascot *mascot){
   gdk_window_set_override_redirect(gtk_widget_get_window(mascot->balloon_main),TRUE);
 #endif
 
-  //my_signal_connect(mascot->dw_balloon, "configure_event",
-  //		    dw_configure_bal, (gpointer)mascot);
+  my_signal_connect(mascot->dw_balloon, "configure_event",
+  		    dw_configure_bal, (gpointer)mascot);
 #ifdef USE_GTK3
   my_signal_connect(mascot->dw_balloon, "draw",dw_expose_bal,
   		    (gpointer)mascot);

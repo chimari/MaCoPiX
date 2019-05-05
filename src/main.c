@@ -58,34 +58,49 @@ void print_common_dir();
 void css_change_col(GtkWidget *widget, gchar *color){
   GtkStyleContext *style_context;
   GtkCssProvider *provider = gtk_css_provider_new ();
-  gchar tmp[64];
+  gchar *tmp;
   style_context = gtk_widget_get_style_context(widget);
   gtk_style_context_add_provider(style_context, GTK_STYLE_PROVIDER(provider), GTK_STYLE_PROVIDER_PRIORITY_APPLICATION);
   if(gtk_minor_version>=20)  {
-    g_snprintf(tmp, sizeof tmp, "button, label { color: %s; }", color);
+    tmp=g_strdup_printf("button, label { color: %s; }", color);
   } else {
-    g_snprintf(tmp, sizeof tmp, "GtkButton, GtkLabel { color: %s; }", color);
+    tmp=g_strdup_printf("GtkButton, GtkLabel { color: %s; }", color);
   }
   gtk_css_provider_load_from_data(GTK_CSS_PROVIDER(provider), tmp, -1, NULL);
   g_object_unref (provider);
+  g_free(tmp);
 }
 
-void css_change_font(GtkWidget *widget, gchar *font){
+void css_change_font(GtkWidget *widget,  myPangoCairo mpc){
   GtkStyleContext *style_context;
   GtkCssProvider *provider = gtk_css_provider_new ();
-  gchar tmp[64];
+  gchar *name, *tmp;
   style_context = gtk_widget_get_style_context(widget);
   gtk_style_context_add_provider(style_context, GTK_STYLE_PROVIDER(provider), GTK_STYLE_PROVIDER_PRIORITY_APPLICATION);
   if(gtk_minor_version>=20)  {
-    g_snprintf(tmp, sizeof tmp, "drawing_area, label { font: %s; }", font);
+    name=g_strdup("drawing_area");
   } else {
-    g_snprintf(tmp, sizeof tmp, "GtkDrawingArea, GtkLabel { font: %s; }", font);
+    name=g_strdup("GtkDrawingArea");
   }
+
+  tmp=g_strdup_printf("%s { font-family: %s; }", name, mpc.family);
   gtk_css_provider_load_from_data(GTK_CSS_PROVIDER(provider), tmp, -1, NULL);
+  g_free(tmp);
+
+  tmp=g_strdup_printf("%s { font-weight: %s; }", name,
+		      (mpc.weight==CAIRO_FONT_WEIGHT_BOLD) ? "bold" : "normal");
+  gtk_css_provider_load_from_data(GTK_CSS_PROVIDER(provider), tmp, -1, NULL);
+  g_free(tmp);
+
+  tmp=g_strdup_printf("%s { font-size: %.0lfpx; }", name,
+		      mpc.pointsize);
+  gtk_css_provider_load_from_data(GTK_CSS_PROVIDER(provider), tmp, -1, NULL);
+  g_free(tmp);
+  
   g_object_unref (provider);
 }
 
-void css_change_pbar_height(GtkWidget *widget, gint height){
+void css_change_pbar_height(GtkWidget *widget,  gint height){
   GtkStyleContext *style_context;
   GtkCssProvider *provider = gtk_css_provider_new ();
   gchar tmp[64];
@@ -4622,8 +4637,7 @@ int main(int argc, char **argv)
 #endif
 
   InitComposite(Mascot);
-  LoadPixmaps(Mascot->win_main, Mascot, Mascot->sprites);
-  
+  LoadPixmaps(Mascot->win_main, Mascot, Mascot->sprites);  
 
   Mascot->flag_ow=FALSE;
 
@@ -4649,7 +4663,6 @@ int main(int argc, char **argv)
   else{
     MoveMascot(Mascot,-Mascot->height-100,-Mascot->width-100);
   }
-    
 
   gdk_window_set_cursor(gtk_widget_get_window(Mascot->win_main),
 			Mascot->cursor.normal);
@@ -4668,7 +4681,7 @@ int main(int argc, char **argv)
   gtk_widget_show_all(Mascot->clock_fg);
 #endif
   gtk_widget_show_all(Mascot->clock_main);
-
+    
   if(Mascot->clkmode!=CLOCK_PANEL){
     map_clock(Mascot, FALSE);
   }

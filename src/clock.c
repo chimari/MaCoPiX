@@ -153,9 +153,9 @@ void DrawPanelClock2(typMascot *mascot)
     }
   }
 
-#ifdef __PANGOCAIRO_H__
+#ifdef USE_PANGOCAIRO
 #ifdef USE_GTK3
-    css_change_font(mascot->dw_clock,mascot->fontclk);
+  //css_change_font(mascot->dw_clock,mascot->fontclk);
 #else
   gtk_widget_modify_font(mascot->dw_clock,mascot->fontclk);
 #endif
@@ -178,7 +178,7 @@ void DrawPanelClock2(typMascot *mascot)
 			  mascot->fontclk_pc.weight);
   cairo_set_font_size (cr, 
 		       mascot->fontclk_pc.pointsize*GetCurrentResolution()/72.0);
-#ifndef __PANGOCAIRO_H__
+#ifndef USE_PANGOCAIRO
   cairo_text_extents (cr, mascot->digit, &extents);
   clk_width=(gint)(extents.x_advance);
   clk_height=(gint)(extents.height);
@@ -368,7 +368,7 @@ void DrawPanelClock2(typMascot *mascot)
 			   (gdouble)mascot->colclksd->green/0xFFFF,
 			   (gdouble)mascot->colclksd->blue/0xFFFF,
 			   (gdouble)mascot->alpclksd/0xFFFF); /* transparent */
-#ifdef __PANGOCAIRO_H__
+#ifdef USE_PANGOCAIRO
     cairo_move_to(cr,
 		  mascot->wclkbd+mascot->clktext_x+mascot->clksd_x,
 		  mascot->wclkbd+mascot->clktext_y+mascot->clksd_y);
@@ -410,7 +410,7 @@ void DrawPanelClock2(typMascot *mascot)
 			 (gdouble)mascot->colclk->green/0xFFFF,
 			 (gdouble)mascot->colclk->blue/0xFFFF,
 			 (gdouble)mascot->alpclk/0xFFFF); /* transparent */
-#ifdef __PANGOCAIRO_H__
+#ifdef USE_PANGOCAIRO
   cairo_move_to(cr,
 		mascot->wclkbd+mascot->clktext_x,
 		mascot->wclkbd+mascot->clktext_y);
@@ -524,7 +524,9 @@ void DrawPanelClock2(typMascot *mascot)
 
 #ifdef USE_GTK3  ////////////////////// GTK3 ////////////////////////////////////
 #ifdef USE_WIN32
-  gtk_widget_queue_draw(mascot->dw_clkfg);
+  if((mascot->flag_clkfg)&&(mascot->alpha_clk!=100)){
+      gtk_widget_queue_draw(mascot->dw_clkfg);
+  }
 #endif
   gtk_widget_queue_draw(mascot->dw_clock);
 #else            ////////////////////// GTK2 ////////////////////////////////////
@@ -545,7 +547,7 @@ void DrawPanelClock2(typMascot *mascot)
 #endif // USE_GTK3
   
   
-#ifdef __PANGOCAIRO_H__
+#ifdef USE_PANGOCAIRO
   g_object_unref(G_OBJECT(pango_text));
 #endif
   

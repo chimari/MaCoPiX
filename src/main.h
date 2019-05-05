@@ -147,6 +147,8 @@
 #endif
 #endif
 
+#undef USE_PANGOCAIRO
+
 
 // Homepage URL
 #define DEFAULT_URL "http://rosegray.sakura.ne.jp/"

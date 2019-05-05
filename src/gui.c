@@ -7554,12 +7554,12 @@ void create_config_dialog(void)
       gtkut_table_attach(table, frame, 0, 1, 2, 3,
 			 GTK_FILL|GTK_EXPAND,GTK_SHRINK,0,0);
       
-      table1 = gtkut_table_new (3, 1, FALSE, 0, 0, 5);
+      table1 = gtkut_table_new (4, 1, FALSE, 0, 0, 5);
       gtk_container_add (GTK_CONTAINER (frame), table1);
       
       check = gtk_check_button_new_with_label(_("Use exception"));
-      gtkut_table_attach(table1, check, 0, 2, 0, 1,
-			 GTK_EXPAND | GTK_FILL,
+      gtkut_table_attach(table1, check, 0, 1, 0, 1,
+			 GTK_SHRINK,
 			 GTK_EXPAND | GTK_FILL,0,0);
       if(Mascot->mail.spam_check){
 	gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(check),TRUE);
@@ -7567,11 +7567,16 @@ void create_config_dialog(void)
       my_signal_connect (check, "toggled",cc_get_toggle,
 			 &tmp_mascot.mail.spam_check);
       
+      label = gtkut_label_new ("        ");
+      gtkut_pos(label, POS_END, POS_CENTER);
+      gtkut_table_attach(table1, label, 1, 2, 0, 1, 
+			 GTK_SHRINK,
+			 GTK_EXPAND | GTK_FILL,0,0);
       
       label = gtkut_label_new (_("Mark in Header"));
       gtkut_pos(label, POS_END, POS_CENTER);
-      gtkut_table_attach(table1, label, 1, 2, 0, 1, 
-			 GTK_EXPAND | GTK_FILL,
+      gtkut_table_attach(table1, label, 2, 3, 0, 1, 
+			 GTK_SHRINK,
 			 GTK_EXPAND | GTK_FILL,0,0);
       
       
@@ -7598,9 +7603,9 @@ void create_config_dialog(void)
 	
 	combo = gtk_combo_box_new_with_model_and_entry(GTK_TREE_MODEL(store));
 	gtkut_table_attach (table1, combo,
-			    2, 3, 0, 1,
-			    GTK_EXPAND | GTK_FILL,
-			    GTK_EXPAND | GTK_FILL,0,0);
+			    3, 4, 0, 1,
+			    GTK_FILL|GTK_EXPAND,
+			    GTK_SHRINK,0,0);
 	
 	g_object_unref(store);
 	
@@ -7676,7 +7681,7 @@ void create_config_dialog(void)
       frame = gtkut_frame_new (_("Mascot Magnification"));
       gtk_container_set_border_width (GTK_CONTAINER (frame), 5);
       gtkut_table_attach(table, frame, 0, 1, 0, 1,
-			 GTK_FILL|GTK_EXPAND,GTK_SHRINK,0,0);
+			 GTK_SHRINK,GTK_SHRINK,0,0);
 	
       table1 = gtkut_table_new (2, 2, FALSE, 5, 5, 5);
       gtk_container_add (GTK_CONTAINER (frame), table1);
@@ -7693,7 +7698,8 @@ void create_config_dialog(void)
       scale =  gtkut_hscale_new (GTK_ADJUSTMENT(adj));
       gtk_scale_set_digits (GTK_SCALE (scale), 0);
       gtk_scale_set_draw_value (GTK_SCALE (scale), TRUE);
-      gtkut_table_attach_defaults(table1, scale, 1, 2, 0, 1);
+      gtkut_table_attach(table1, scale, 1, 2, 0, 1,
+			 GTK_FILL|GTK_EXPAND,GTK_SHRINK,0,0);
 
       label = gtkut_label_new (_("Interpolation Style"));
       gtkut_pos(label, POS_START, POS_CENTER);
@@ -7728,7 +7734,8 @@ void create_config_dialog(void)
 	if(Mascot->ip_style==MAG_IP_HYPER) iter_set=iter;
 	
 	combo = gtk_combo_box_new_with_model(GTK_TREE_MODEL(store));
-	gtkut_table_attach_defaults(table1, combo, 1, 2, 1, 2);
+	gtkut_table_attach(table1, combo, 1, 2, 1, 2,
+			   GTK_FILL|GTK_EXPAND,GTK_SHRINK,0,0);
 	g_object_unref(store);
 	
 	renderer = gtk_cell_renderer_text_new();
@@ -7940,16 +7947,16 @@ void create_config_dialog(void)
       gtkut_table_attach(table, frame, 0, 1, 0, 1,
 			 GTK_FILL,GTK_SHRINK,0,0);
 
-      table1=gtkut_table_new(4,2,FALSE, 0, 5, 5);
+      table1=gtkut_table_new(4,2,TRUE, 0, 5, 5);
       gtk_container_add (GTK_CONTAINER (frame), table1);
 
       hbox = gtkut_hbox_new(FALSE,0);
-      gtkut_table_attach_defaults(table1, hbox, 0, 4, 0, 1);
+      gtkut_table_attach(table1, hbox, 0, 4, 0, 1,
+			 GTK_FILL, GTK_SHRINK,0,0);
 	
       label = gtkut_label_new (_("Fontset"));
       gtk_box_pack_start(GTK_BOX(hbox), label,FALSE, FALSE, 0);
 
-#ifdef __GTK_FONT_BUTTON_H__
       button = gtk_font_button_new_with_font(Mascot->deffontname_clk);
       gtk_box_pack_start(GTK_BOX(hbox), button,TRUE, TRUE, 0);
       gtk_font_button_set_show_style(GTK_FONT_BUTTON(button),TRUE);
@@ -7957,26 +7964,10 @@ void create_config_dialog(void)
       gtk_font_button_set_use_size(GTK_FONT_BUTTON(button),TRUE);
       my_signal_connect(button,"font-set",ChangeFontButton, 
       			(gpointer *)CONF_DEF_FONT_CLK);
-#else
-      entry_deffontname_clk = gtk_entry_new ();
-      gtk_box_pack_start(GTK_BOX(hbox), entry_deffontname_clk,TRUE, TRUE, 0);
-      gtk_entry_set_text(GTK_ENTRY(entry_deffontname_clk),
-			 Mascot->deffontname_clk);
-
-      button=gtkut_button_new_with_icon(NULL,
-#ifdef USE_GTK3				       
-					"font-generic"
-#else
-					GTK_STOCK_SELECT_FONT
-#endif
-					);
-      gtk_box_pack_start(GTK_BOX(hbox), button,FALSE, FALSE, 0);
-      my_signal_connect(button,"clicked",create_font_selection_dialog, 
-			(gpointer *)CONF_DEF_FONT_CLK);
-#endif
 
       hbox = gtkut_hbox_new(FALSE,0);
-      gtkut_table_attach_defaults(table1, hbox, 0, 1, 1, 2);
+      gtkut_table_attach(table1, hbox, 0, 1, 1, 2,
+			 GTK_FILL, GTK_SHRINK,0,0);
       label = gtkut_label_new (_("Text"));
       gtk_box_pack_start(GTK_BOX(hbox), label,FALSE, FALSE, 0);
       gtkut_pos(label, POS_END, POS_CENTER);
@@ -7994,7 +7985,9 @@ void create_config_dialog(void)
       			(gpointer *)CONF_DEF_COLOR_CLK);
 
       hbox = gtkut_hbox_new(FALSE,0);
-      gtkut_table_attach_defaults(table1, hbox, 1, 2, 1, 2);
+      gtkut_table_attach(table1, hbox, 1, 2, 1, 2,
+			 GTK_FILL, GTK_SHRINK,0,0);
+				  
       label = gtkut_label_new (_("BG"));
       gtk_box_pack_start(GTK_BOX(hbox), label,FALSE, FALSE, 0);
       gtkut_pos(label, POS_END, POS_CENTER);
@@ -8014,7 +8007,8 @@ void create_config_dialog(void)
       			(gpointer *)CONF_DEF_COLOR_CLKBG);
 
       hbox = gtkut_hbox_new(FALSE,0);
-      gtkut_table_attach_defaults(table1, hbox, 2, 3, 1, 2);
+      gtkut_table_attach(table1, hbox, 2, 3, 1, 2,
+			 GTK_FILL, GTK_SHRINK,0,0);
       label = gtkut_label_new (_("Border"));
       gtk_box_pack_start(GTK_BOX(hbox), label,FALSE, FALSE, 0);
       gtkut_pos(label, POS_END, POS_CENTER);
@@ -8032,7 +8026,8 @@ void create_config_dialog(void)
       			(gpointer *)CONF_DEF_COLOR_CLKBD);
 
       hbox = gtkut_hbox_new(FALSE,0);
-      gtkut_table_attach_defaults(table1, hbox, 3, 4, 1, 2);
+      gtkut_table_attach(table1, hbox, 3, 4, 1, 2,
+			 GTK_FILL, GTK_SHRINK,0,0);
       label = gtkut_label_new (_("Shadow"));
       gtk_box_pack_start(GTK_BOX(hbox), label,FALSE, FALSE, 0);
       gtkut_pos(label, POS_END, POS_CENTER);

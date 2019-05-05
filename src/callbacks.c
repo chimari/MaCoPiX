@@ -56,7 +56,6 @@ HWND hWnd_active;
 HWND hWndTaskBar;
 #endif
 
-
 // Prototype of functions in this file
 int weight_random();
 int weight_click();
@@ -442,7 +441,7 @@ int MoveToFocus(typMascot *mascot, gboolean force_fl)
 	  if(parent == rootwin){
 	    if(win_bar_size==0){
 	      win_bar_size
-		=Get_Window_Bar_Size(GDK_WINDOW_XDISPLAY(gtk_widget_get_window(mascot->win_main)),
+		+=Get_Window_Bar_Size(GDK_WINDOW_XDISPLAY(gtk_widget_get_window(mascot->win_main)),
 				     wf);
 	    }
 
@@ -462,10 +461,13 @@ int MoveToFocus(typMascot *mascot, gboolean force_fl)
 	    break; // For Enlightenment
 	  }
 
-	  if(win_bar_size==0){
+  	  if(win_bar_size==0){
+	    //printf("aho0\n");
 	    win_bar_size
-	      =Get_Window_Bar_Size(GDK_WINDOW_XDISPLAY(gtk_widget_get_window(mascot->win_main)),
+	      +=Get_Window_Bar_Size(GDK_WINDOW_XDISPLAY(gtk_widget_get_window(mascot->win_main)),
 				   wf);
+	    //printf("%d bar_size=%d\n", (int)wf, win_bar_size);
+	    //printf("aho1\n\n");
 	  }
 	  
 	  if(mascot->bar_offset!=0){
@@ -493,7 +495,6 @@ int MoveToFocus(typMascot *mascot, gboolean force_fl)
 	    return(0);
 	  }
 	  
-
 	}
 
 	if(errflag ==0){
@@ -529,7 +530,10 @@ int MoveToFocus(typMascot *mascot, gboolean force_fl)
 	y=y-win_bar_size;
       }
 
-      if((mascot->bar_offset!=0)&&(win_bar_size!=0)){
+      if (win_bar_size<0){
+ 	sy=y-win_bar_size;  // for Windows w/ GTK3 GtkHeadBar
+      }
+      else if((mascot->bar_offset!=0)&&(win_bar_size!=0)){
 	sy=y-mascot->bar_offset;
       }
       else{
@@ -575,7 +579,7 @@ int MoveToFocus(typMascot *mascot, gboolean force_fl)
 
       sx=rx-wx;
       sy=ry-wy-mascot->bar_size;
-      }
+    }
 #endif
 
     // sx, sy は現在のフォーカスWindowの左上(含タイトルバー)の絶対位置
@@ -785,7 +789,7 @@ void drag_begin(GtkWidget * widget, GdkEventButton * event, gpointer gdata)
     window_y = event->y;
 
 #ifdef USE_GTK3
-    gdk_window_get_device_position(gtk_widget_get_window(widget),
+    gdk_window_get_device_position(gdk_get_default_root_window (),
 				   event->device, &start_x,&start_y, &modmask);
     mascot->seat = gdk_display_get_default_seat (display);
     gdk_seat_grab (mascot->seat, gtk_widget_get_window(widget),
@@ -825,7 +829,7 @@ void drag_end(GtkWidget * widget, GdkEventButton * event, gpointer gdata)
   if (mascot->drag){
     mascot->drag = FALSE;
 #ifdef USE_GTK3
-    gdk_window_get_device_position(gtk_widget_get_window(widget),
+    gdk_window_get_device_position(gdk_get_default_root_window (),
 				   event->device, &end_x,&end_y, &modmask);
 #else    
     gdk_window_get_pointer(NULL, &end_x, &end_y, &modmask);
@@ -896,7 +900,7 @@ void clk_drag_begin(GtkWidget * widget, GdkEventButton * event, gpointer gdata)
     clk_window_x = event->x;
     clk_window_y = event->y;
 #ifdef USE_GTK3
-    gdk_window_get_device_position(NULL,
+    gdk_window_get_device_position(gdk_get_default_root_window (),
 				   event->device,
 				   &clk_start_x,
 				   &clk_start_y, NULL);
@@ -936,7 +940,7 @@ void clk_drag_end(GtkWidget * widget, GdkEventButton * event, gpointer gdata)
   if (mascot->clk_drag){
     mascot->clk_drag = FALSE;
 #ifdef USE_GTK3
-    gdk_window_get_device_position(NULL,
+    gdk_window_get_device_position(gdk_get_default_root_window (),
 				   event->device,
 				   &end_x,
 				   &end_y, NULL);
@@ -977,7 +981,7 @@ void biff_drag_begin(GtkWidget * widget, GdkEventButton * event, gpointer gdata)
     biff_window_x = event->x;
     biff_window_y = event->y;
 #ifdef USE_GTK3
-    gdk_window_get_device_position(NULL,
+    gdk_window_get_device_position(gdk_get_default_root_window (),
 				   event->device,
 				   &biff_start_x,
 				   &biff_start_y, NULL);
@@ -1017,7 +1021,7 @@ void biff_drag_end(GtkWidget * widget, GdkEventButton * event, gpointer gdata)
   if (mascot->mail.drag){
     mascot->mail.drag = FALSE;
 #ifdef USE_GTK3
-    gdk_window_get_device_position(NULL,
+    gdk_window_get_device_position(gdk_get_default_root_window (),
 				   event->device,
 				   &end_x,
 				   &end_y, NULL);
@@ -1067,6 +1071,18 @@ gint dw_configure_main(GtkWidget *widget, GdkEventConfigure *event,
 }
 
 #ifdef USE_WIN32
+#ifdef USE_GTK3
+gint dw_configure_sdw(GtkWidget *widget, cairo_t *cr, gpointer userdata){
+  typMascot *mascot;
+  mascot=(typMascot *)userdata;
+
+  if(pixbuf_sdw[mascot->pixmap_page]){
+    gdk_cairo_set_source_pixbuf(cr, pixbuf_sdw[mascot->pixmap_page], 0, 0);
+    cairo_paint(cr);
+  }
+  return(FALSE);
+}
+#else
 gint dw_configure_sdw(GtkWidget *widget, GdkEventConfigure *event,
 		      gpointer gdata)
 {
@@ -1087,14 +1103,10 @@ gint dw_configure_sdw(GtkWidget *widget, GdkEventConfigure *event,
 			allocation->height);
       g_free(allocation);
     }
-    /*
-    gdk_window_set_back_pixmap(gtk_widget_get_window(mascot->win_sdw),
-			       pixmap_sdw[mascot->pixmap_page],
-			       FALSE);
-    */
   }
   return FALSE;
 }
+#endif
 #endif
 
 gint dw_init_main(GtkWidget *widget, GdkEventConfigure *event,
@@ -1161,12 +1173,14 @@ gint dw_init_main(GtkWidget *widget, GdkEventConfigure *event,
 #ifdef USE_BIFF
 // Biff Pixmap  Windowの生成・変形にともなうCallback
 #ifdef USE_GTK3
-gint dw_configure_biff_pix(GtkWidget *widget, cairo_t *cr, gpointer userdata){
+gint dw_configure_biff_pix(GtkWidget *widget, GdkEventConfigure *event,
+			   gpointer userdata){
   typMascot *mascot;
   mascot=(typMascot *)userdata;
-  
-  gdk_cairo_set_source_pixbuf(cr, mascot->mail.pixbuf, 0, 0);
-  cairo_paint(cr);
+  if(mascot->mail.pixbuf){
+    //gdk_cairo_set_source_pixbuf(cr, mascot->mail.pixbuf, 0, 0);
+    //cairo_paint(cr);
+  }
   return(FALSE);
 }
 #else
@@ -1193,12 +1207,14 @@ gint dw_configure_biff_pix(GtkWidget *widget, GdkEventConfigure *event,
 
 // Clock Panelの生成・変形にともなうCallback
 #ifdef USE_GTK3
-gint dw_configure_clk(GtkWidget *widget, cairo_t *cr, gpointer userdata){
+gint dw_configure_clk(GtkWidget *widget, GdkEventConfigure *event, gpointer userdata){
   typMascot *mascot;
   mascot=(typMascot *)userdata;
-  
-  gdk_cairo_set_source_pixbuf(cr, pixbuf_clk[mascot->clk_page], 0, 0);
-  cairo_paint(cr);
+
+  if(pixbuf_clk[mascot->clk_page]){
+    //gdk_cairo_set_source_pixbuf(cr, pixbuf_clk[mascot->clk_page], 0, 0);
+    //cairo_paint(cr);
+  }
   return(FALSE);
 }
 #else
@@ -1289,12 +1305,14 @@ gint dw_configure_clk(GtkWidget *widget, GdkEventConfigure *event,
 
 // Balloon Windowの生成・変形にともなうCallback
 #ifdef USE_GTK3
-gint dw_configure_balloon(GtkWidget *widget, cairo_t *cr, gpointer userdata){
+gint dw_configure_bal(GtkWidget *widget, GdkEventConfigure *event, gpointer userdata){
   typMascot *mascot;
   mascot=(typMascot *)userdata;
   
-  gdk_cairo_set_source_pixbuf(cr, pixbuf_bal[mascot->bal_page], 0, 0);
-  cairo_paint(cr);
+  if(pixbuf_bal[mascot->bal_page]){
+    //gdk_cairo_set_source_pixbuf(cr, pixbuf_bal[mascot->bal_page], 0, 0);
+    //cairo_paint(cr);
+  }
   
   return(FALSE);
 }
@@ -1592,7 +1610,7 @@ gboolean window_motion(GtkWidget * widget, GdkEventMotion * event, gpointer gdat
     GdkModifierType modmask;
 
 #ifdef USE_GTK3
-    gdk_window_get_device_position(NULL,
+    gdk_window_get_device_position(gdk_get_default_root_window (),
 				   event->device,
 				   &mx,
 				   &my, NULL);
@@ -1637,8 +1655,8 @@ gboolean window_motion(GtkWidget * widget, GdkEventMotion * event, gpointer gdat
 
   
 #ifdef USE_GTK3
-  gdk_window_get_device_position(gtk_widget_get_window(widget),
-				 event->device, NULL,NULL,NULL);
+  gdk_window_get_device_position(gdk_get_default_root_window (),
+  				 event->device, NULL,NULL,NULL);
 #else
   gdk_window_get_pointer(gtk_widget_get_window(widget), NULL, NULL, NULL);
 #endif
@@ -1658,7 +1676,7 @@ void clk_window_motion(GtkWidget * widget, GdkEventMotion * event, gpointer gdat
     
     gdk_window_set_cursor(gtk_widget_get_window(widget),mascot->cursor.drag_f);
 #ifdef USE_GTK3
-    gdk_window_get_device_position(NULL,
+    gdk_window_get_device_position(gdk_get_default_root_window (),
 				   event->device, &mx, &my ,NULL);
 #else
     gdk_window_get_pointer(NULL, &mx, &my, &modmask);
@@ -1688,7 +1706,7 @@ void biff_window_motion(GtkWidget * widget, GdkEventMotion * event, gpointer gda
     
     gdk_window_set_cursor(gtk_widget_get_window(widget),mascot->cursor.drag_f);
 #ifdef USE_GTK3
-    gdk_window_get_device_position(NULL,
+    gdk_window_get_device_position(gdk_get_default_root_window (),
 				   event->device, &mx, &my ,NULL);
 #else
     gdk_window_get_pointer(NULL, &mx, &my, &modmask);
@@ -1923,8 +1941,8 @@ gboolean time_update(gpointer gdata)
       DrawMascotWithDigit(mascot);
     }
     else{
-      DrawMascot(mascot);
-    }
+      DrawMascot(mascot); 
+   }
 
 #ifdef DEBUG
     printf("Draw finish %d\n",work_page);
@@ -2416,7 +2434,28 @@ gint Get_Window_Bar_Size(dpy, top)
     bar_size=prop.prop[2];
   }
 
+  if (prop.prop_ch)
+    XFree (prop.prop_ch);
 
+  atom=XInternAtom(dpy,"_NET_WM_OPAQUE_REGION", False); // for Windows w/ GTK3 GtkHeadBar
+  result=XGetWindowProperty(dpy, top,
+			    atom,
+			    0,  G_MAXLONG,  FALSE,
+			    XA_CARDINAL,
+			    &type, &format, &nitems,
+			    &bytes_after, &prop.prop_ch);
+#ifndef USE_GTK3
+  error = gdk_error_trap_pop ();
+#endif
+
+  if (error || result != Success){
+    return(bar_size);
+  }
+
+  if(nitems==8){
+    bar_size-=prop.prop[1];
+  }
+  
   if (prop.prop_ch)
     XFree (prop.prop_ch);
 
