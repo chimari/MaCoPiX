@@ -1,4 +1,4 @@
-///  MaCoPiX = Mascot Construnctive Pilot for X
+//  MaCoPiX = Mascot Construnctive Pilot for X
 //                                (ActX / Gtk+ Evolution)
 //    A unified desktop mascot program
 //    for UNIX / X Window System with Gdk Environment
@@ -39,10 +39,12 @@ gboolean FlagInstalledMenu;
 
 // Prototype of functions in this file
 #ifdef USE_GTK3
+void  my_mascot_write_color();
 gdouble my_mascot_read_color();
 gboolean my_def_color_check();
 gboolean my_color_equal();
 #else
+void  my_mascot_write_color();
 gint my_mascot_read_color();
 gboolean my_def_color_check();
 gboolean my_color_equal();
@@ -71,7 +73,7 @@ void print_common_dir();
   GdkRGBA init_colclksd = {(gdouble)COLOR_CLKSD_R/(gdouble)0xFFFF,
 			   (gdouble)COLOR_CLKSD_G/(gdouble)0xFFFF,
 			   (gdouble)COLOR_CLKSD_B/(gdouble)0xFFFF,
-			   (gdouble)CAIRO_DEF_ALPHA_SDW/(gdouble)0xFFFF};
+			   (gdouble)CAIRO_DEf_F_ALPHA_SDW/(gdouble)0xFFFF};
   GdkRGBA init_colclkbg = {(gdouble)COLOR_CLKBG_R/(gdouble)0xFFFF,
 			   (gdouble)COLOR_CLKBG_G/(gdouble)0xFFFF,
 			   (gdouble)COLOR_CLKBG_B/(gdouble)0xFFFF,
@@ -105,6 +107,31 @@ void print_common_dir();
 #endif 
 
 #ifdef USE_GTK3
+void  my_mascot_write_color(ConfigFile * cfg, gchar * section,
+			    gchar *key_r, gchar *key_g,
+			    gchar *key_b, gchar *key_p,
+			    GdkRGBA *col, GdkRGBA *def_col,
+			    gint alpha, gint def_alpha){
+  if(gdk_rgba_equal(col, def_col)){
+    xmms_cfg_remove_key(cfg, section, key_r);
+    xmms_cfg_remove_key(cfg, section, key_g);
+    xmms_cfg_remove_key(cfg, section, key_b);
+  }
+  else{
+    xmms_cfg_write_int(cfg, section, key_r,
+		       (gint)(col->red*(gdouble)0xFFFF));
+    xmms_cfg_write_int(cfg, section, key_g,
+		       (gint)(col->green*(gdouble)0xFFFF));
+    xmms_cfg_write_int(cfg, section, key_b,
+		       (gint)(col->blue*(gdouble)0xFFFF));
+  }
+  if(alpha==def_alpha)
+    xmms_cfg_remove_key(cfg, section, key_p);
+  else
+    xmms_cfg_write_int(cfg, section, key_p, alpha);
+}
+
+
 gdouble my_mascot_read_color(ConfigFile * cfg, gchar * section, gchar * key, gdouble def_val){
   gint col_tmp;
   gdouble ret;
@@ -133,6 +160,27 @@ gboolean my_color_equal(GdkRGBA *col1,  GdkRGBA *col2){
   return(gdk_rgba_equal(col1, col2));
 }
 #else
+void  my_mascot_write_color(ConfigFile * cfg, gchar * section,
+			    gchar *key_r, gchar *key_g,
+			    gchar *key_b, gchar *key_p,
+			    GdkColor *col, GdkColor *def_col,
+			    gint alpha, gint def_alpha){
+  if(gdk_color_equal(col, def_col)){
+    xmms_cfg_remove_key(cfg, section, key_r);
+    xmms_cfg_remove_key(cfg, section, key_g);
+    xmms_cfg_remove_key(cfg, section, key_b);
+  }
+  else{
+    xmms_cfg_write_int(cfg, section, key_r, col->red);
+    xmms_cfg_write_int(cfg, section, key_g, col->green);
+    xmms_cfg_write_int(cfg, section, key_b, col->blue);
+  }
+  if(alpha==def_alpha)
+    xmms_cfg_remove_key(cfg, section, key_p);
+  else
+    xmms_cfg_write_int(cfg, section, key_p, alpha);
+}
+
 gint my_mascot_read_color(ConfigFile * cfg, gchar * section, gchar * key, gint def_val){
   gint col_tmp;
   if(!xmms_cfg_read_int(cfg, section, key, &col_tmp)){
@@ -1137,7 +1185,7 @@ void ReadRC(typMascot *mascot, gboolean def_flag)
     if(def_flag)  field_tmp=g_strdup("Default-BalloonColor");
     else          field_tmp=g_strdup("BalloonColor");
 
-    mascot->def_colbal->red  =my_mascot_read_color(cfgfile, field_tmp, "text_r", init_colbal.red);
+    mascot->def_colbal->red  =my_mascot_read_color(cfgfile, field_tmp, "text_r", COLOR_BAL_R);
     mascot->def_colbal->green=my_mascot_read_color(cfgfile, field_tmp, "text_g", init_colbal.green);
     mascot->def_colbal->blue =my_mascot_read_color(cfgfile, field_tmp, "text_b", init_colbal.blue);
     if(!xmms_cfg_read_int(cfgfile, field_tmp, "text_p", &col_tmp))
@@ -1538,129 +1586,44 @@ void SaveRC(typMascot *mascot,  gboolean def_flag)
   if(def_flag) field_tmp=g_strdup("Default-ClockColor");
   else         field_tmp=g_strdup("ClockColor");
 
-  if((  mascot->def_colclk->red  ==COLOR_CLK_R)
-     &&(mascot->def_colclk->green==COLOR_CLK_G)
-     &&(mascot->def_colclk->blue ==COLOR_CLK_B)){
-    xmms_cfg_remove_key(cfgfile,field_tmp, "text_r");
-    xmms_cfg_remove_key(cfgfile,field_tmp, "text_g");
-    xmms_cfg_remove_key(cfgfile,field_tmp, "text_b");
-  }
-  else{
-    xmms_cfg_write_int(cfgfile, field_tmp, "text_r",mascot->def_colclk->red);
-    xmms_cfg_write_int(cfgfile, field_tmp, "text_g",mascot->def_colclk->green);
-    xmms_cfg_write_int(cfgfile, field_tmp, "text_b",mascot->def_colclk->blue);
-  }
-  if(mascot->def_alpclk==CAIRO_DEF_ALPHA_OTHER)
-    xmms_cfg_remove_key(cfgfile,field_tmp, "text_p");
-  else
-    xmms_cfg_write_int(cfgfile, field_tmp, "text_p",mascot->def_alpclk);
+  my_mascot_write_color(cfgfile, field_tmp,
+			"text_r", "text_g", "text_b", "text_p",
+			mascot->def_colclk, &init_colclk,
+			mascot->def_alpclk, CAIRO_DEF_ALPHA_OTHER);
 
-  if((  mascot->def_colclksd->red  ==COLOR_CLKSD_R)
-     &&(mascot->def_colclksd->green==COLOR_CLKSD_G)
-     &&(mascot->def_colclksd->blue ==COLOR_CLKSD_B)){
-    xmms_cfg_remove_key(cfgfile,field_tmp, "shadow_r");
-    xmms_cfg_remove_key(cfgfile,field_tmp, "shadow_g");
-    xmms_cfg_remove_key(cfgfile,field_tmp, "shadow_b");
-  }
-  else{
-    xmms_cfg_write_int(cfgfile, field_tmp, "shadow_r",mascot->def_colclksd->red);
-    xmms_cfg_write_int(cfgfile, field_tmp, "shadow_g",mascot->def_colclksd->green);
-    xmms_cfg_write_int(cfgfile, field_tmp, "shadow_b",mascot->def_colclksd->blue);
-  }
-  if(mascot->def_alpclk==CAIRO_DEF_ALPHA_SDW)
-    xmms_cfg_remove_key(cfgfile,field_tmp, "shadow_p");
-  else
-    xmms_cfg_write_int(cfgfile, field_tmp, "shadow_p",mascot->def_alpclksd);
+  my_mascot_write_color(cfgfile, field_tmp,
+			"shadow_r", "shadow_g", "shadow_b", "shadow_p",
+			mascot->def_colclksd, &init_colclksd,
+			mascot->def_alpclksd, CAIRO_DEF_ALPHA_SDW);
 
-  if((  mascot->def_colclkbg->red  ==COLOR_CLKBG_R)
-     &&(mascot->def_colclkbg->green==COLOR_CLKBG_G)
-     &&(mascot->def_colclkbg->blue ==COLOR_CLKBG_B)){
-    xmms_cfg_remove_key(cfgfile,field_tmp, "bg_r");
-    xmms_cfg_remove_key(cfgfile,field_tmp, "bg_g");
-    xmms_cfg_remove_key(cfgfile,field_tmp, "bg_b");
-  }
-  else{
-    xmms_cfg_write_int(cfgfile, field_tmp, "bg_r",mascot->def_colclkbg->red);
-    xmms_cfg_write_int(cfgfile, field_tmp, "bg_g",mascot->def_colclkbg->green);
-    xmms_cfg_write_int(cfgfile, field_tmp, "bg_b",mascot->def_colclkbg->blue);
-  }
-  if(mascot->def_alpclk==CAIRO_DEF_ALPHA_CLK)
-    xmms_cfg_remove_key(cfgfile,field_tmp, "bg_p");
-  else
-    xmms_cfg_write_int(cfgfile, field_tmp, "bg_p",mascot->def_alpclkbg);
+  my_mascot_write_color(cfgfile, field_tmp,
+			"bg_r", "bg_g", "bg_b", "bg_p",
+			mascot->def_colclkbg, &init_colclkbg,
+			mascot->def_alpclkbg, CAIRO_DEF_ALPHA_CLK);
 
-  if((  mascot->def_colclkbd->red  ==COLOR_CLKBD_R)
-     &&(mascot->def_colclkbd->green==COLOR_CLKBD_G)
-     &&(mascot->def_colclkbd->blue ==COLOR_CLKBD_B)){
-    xmms_cfg_remove_key(cfgfile,field_tmp, "border_r");
-    xmms_cfg_remove_key(cfgfile,field_tmp, "border_g");
-    xmms_cfg_remove_key(cfgfile,field_tmp, "border_b");
-  }
-  else{
-    xmms_cfg_write_int(cfgfile, field_tmp, "border_r",mascot->def_colclkbd->red);
-    xmms_cfg_write_int(cfgfile, field_tmp, "border_g",mascot->def_colclkbd->green);
-    xmms_cfg_write_int(cfgfile, field_tmp, "border_b",mascot->def_colclkbd->blue);
-  }
-  if(mascot->def_alpclk==CAIRO_DEF_ALPHA_OTHER)
-    xmms_cfg_remove_key(cfgfile,field_tmp, "border_p");
-  else
-    xmms_cfg_write_int(cfgfile, field_tmp, "border_p",mascot->def_alpclkbd);
-
+  my_mascot_write_color(cfgfile, field_tmp,
+			"border_r", "border_g", "border_b", "border_p",
+			mascot->def_colclkbd, &init_colclkbd,
+			mascot->def_alpclkbd, CAIRO_DEF_ALPHA_OTHER);
 
   // Color for Balloon
   if(def_flag) field_tmp=g_strdup("Default-BalloonColor");
   else         field_tmp=g_strdup("BalloonColor");
 
-  if((  mascot->def_colbal->red  ==COLOR_BAL_R)
-     &&(mascot->def_colbal->green==COLOR_BAL_G)
-     &&(mascot->def_colbal->blue ==COLOR_BAL_B)){
-    xmms_cfg_remove_key(cfgfile,field_tmp, "text_r");
-    xmms_cfg_remove_key(cfgfile,field_tmp, "text_g");
-    xmms_cfg_remove_key(cfgfile,field_tmp, "text_b");
-  }
-  else{
-    xmms_cfg_write_int(cfgfile, field_tmp, "text_r",mascot->def_colbal->red);
-    xmms_cfg_write_int(cfgfile, field_tmp, "text_g",mascot->def_colbal->green);
-    xmms_cfg_write_int(cfgfile, field_tmp, "text_b",mascot->def_colbal->blue);
-  }
-  if(mascot->def_alpclk==CAIRO_DEF_ALPHA_OTHER)
-    xmms_cfg_remove_key(cfgfile,field_tmp, "text_p");
-  else
-    xmms_cfg_write_int(cfgfile, field_tmp, "text_p",mascot->def_alpbal);
+  my_mascot_write_color(cfgfile, field_tmp,
+			"text_r", "text_g", "text_b", "text_p",
+			mascot->def_colbal, &init_colbal,
+			mascot->def_alpbal, CAIRO_DEF_ALPHA_OTHER);
 
-  if((  mascot->def_colbalbg->red  ==COLOR_BALBG_R)
-     &&(mascot->def_colbalbg->green==COLOR_BALBG_G)
-     &&(mascot->def_colbalbg->blue ==COLOR_BALBG_B)){
-    xmms_cfg_remove_key(cfgfile,field_tmp, "bg_r");
-    xmms_cfg_remove_key(cfgfile,field_tmp, "bg_g");
-    xmms_cfg_remove_key(cfgfile,field_tmp, "bg_b");
-  }
-  else{
-    xmms_cfg_write_int(cfgfile, field_tmp, "bg_r",mascot->def_colbalbg->red);
-    xmms_cfg_write_int(cfgfile, field_tmp, "bg_g",mascot->def_colbalbg->green);
-    xmms_cfg_write_int(cfgfile, field_tmp, "bg_b",mascot->def_colbalbg->blue);
-  }
-  if(mascot->def_alpclk==CAIRO_DEF_ALPHA_BAL)
-    xmms_cfg_remove_key(cfgfile,field_tmp, "bg_p");
-  else
-    xmms_cfg_write_int(cfgfile, field_tmp, "bg_p",mascot->def_alpbalbg);
+  my_mascot_write_color(cfgfile, field_tmp,
+			"bg_r", "bg_g", "bg_b", "bg_p",
+			mascot->def_colbalbg, &init_colbalbg,
+			mascot->def_alpbalbg, CAIRO_DEF_ALPHA_BAL);
 
-  if((  mascot->def_colbalbd->red  ==COLOR_BALBD_R)
-     &&(mascot->def_colbalbd->green==COLOR_BALBD_G)
-     &&(mascot->def_colbalbd->blue ==COLOR_BALBD_B)){
-    xmms_cfg_remove_key(cfgfile,field_tmp, "border_r");
-    xmms_cfg_remove_key(cfgfile,field_tmp, "border_g");
-    xmms_cfg_remove_key(cfgfile,field_tmp, "border_b");
-  }
-  else{
-    xmms_cfg_write_int(cfgfile, field_tmp, "border_r",mascot->def_colbalbd->red);
-    xmms_cfg_write_int(cfgfile, field_tmp, "border_g",mascot->def_colbalbd->green);
-    xmms_cfg_write_int(cfgfile, field_tmp, "border_b",mascot->def_colbalbd->blue);
-  }
-  if(mascot->def_alpclk==CAIRO_DEF_ALPHA_OTHER)
-    xmms_cfg_remove_key(cfgfile,field_tmp, "border_p");
-  else
-    xmms_cfg_write_int(cfgfile, field_tmp, "border_p",mascot->def_alpbalbd);
+  my_mascot_write_color(cfgfile, field_tmp,
+			"border_r", "border_g", "border_b", "border_p",
+			mascot->def_colbalbd, &init_colbalbd,
+			mascot->def_alpbalbd, CAIRO_DEF_ALPHA_OTHER);
 
   // Focus Movement etc.
 
@@ -2314,15 +2277,13 @@ void ReadMascot(typMascot *mascot, gboolean def_flag)
     
 #ifdef USE_GTK3
     mascot->colbalbg->alpha=(gdouble)mascot->alpbalbg/(gdouble)0xFFFF;
-    mascot->colbalbd->alpha=1;
 
     if((!flag_def_col) &&
        (my_def_color_check(mascot->colbalbg,
 			   COLOR_BALBG_R, COLOR_BALBG_G, COLOR_BALBG_B, CAIRO_DEF_ALPHA_BAL))){
-      gdk_rgba_free(mascot->def_colbalbg);
       mascot->colbalbg=gdk_rgba_copy(mascot->def_colbalbg);
       mascot->alpbalbg =mascot->def_alpbalbg;
-      mascot->colbalbg->alpha=1;
+      printf("aho\n"); fflush(stdout);
     }
 #else
     if((!flag_def_col) &&
@@ -3501,143 +3462,44 @@ void SaveMascot(typMascot *mascot, gboolean def_flag)
   // Color for Clock
   f_tmp=g_strdup((def_flag) ? "Default-ClockColor" : "ClockColor");
 
-  if((  mascot->colclk->red  ==mascot->def_colclk->red)
-     &&(mascot->colclk->green==mascot->def_colclk->green)
-     &&(mascot->colclk->blue ==mascot->def_colclk->blue)){
-    xmms_cfg_remove_key(cfgfile,f_tmp, "text_r");
-    xmms_cfg_remove_key(cfgfile,f_tmp, "text_g");
-    xmms_cfg_remove_key(cfgfile,f_tmp, "text_b");
-  }
-  else{
-    xmms_cfg_write_int(cfgfile, f_tmp, "text_r",mascot->colclk->red);
-    xmms_cfg_write_int(cfgfile, f_tmp, "text_g",mascot->colclk->green);
-    xmms_cfg_write_int(cfgfile, f_tmp, "text_b",mascot->colclk->blue);
-  }
-  if(mascot->alpclk  ==mascot->def_alpclk){
-    xmms_cfg_remove_key(cfgfile,f_tmp, "text_p");
-  }
-  else{
-    xmms_cfg_write_int(cfgfile, f_tmp, "text_p",mascot->alpclk);
-  }
+  my_mascot_write_color(cfgfile, f_tmp,
+			"text_r", "text_g", "text_b", "text_p",
+			mascot->colclk, mascot->def_colclk,
+			mascot->alpclk, mascot->def_alpclk);
 
-  if((  mascot->colclksd->red  ==mascot->def_colclksd->red)
-     &&(mascot->colclksd->green==mascot->def_colclksd->green)
-     &&(mascot->colclksd->blue ==mascot->def_colclksd->blue)){
-    xmms_cfg_remove_key(cfgfile,f_tmp, "shadow_r");
-    xmms_cfg_remove_key(cfgfile,f_tmp, "shadow_g");
-    xmms_cfg_remove_key(cfgfile,f_tmp, "shadow_b");
-  }
-  else{
-    xmms_cfg_write_int(cfgfile, f_tmp, "shadow_r",mascot->colclksd->red);
-    xmms_cfg_write_int(cfgfile, f_tmp, "shadow_g",mascot->colclksd->green);
-    xmms_cfg_write_int(cfgfile, f_tmp, "shadow_b",mascot->colclksd->blue);
-  }
-  if(mascot->alpclksd  ==mascot->def_alpclksd){
-    xmms_cfg_remove_key(cfgfile,f_tmp, "shadow_p");
-  }
-  else{
-    xmms_cfg_write_int(cfgfile, f_tmp, "shadow_p",mascot->alpclksd);
-  }
+  my_mascot_write_color(cfgfile, f_tmp,
+			"shadow_r", "shadow_g", "shadow_b", "shadow_p",
+			mascot->colclksd, mascot->def_colclksd,
+			mascot->alpclksd, mascot->def_alpclksd);
 
-  if((  mascot->colclkbg->red  ==mascot->def_colclkbg->red)
-     &&(mascot->colclkbg->green==mascot->def_colclkbg->green)
-     &&(mascot->colclkbg->blue ==mascot->def_colclkbg->blue)){
-    xmms_cfg_remove_key(cfgfile,f_tmp, "bg_r");
-    xmms_cfg_remove_key(cfgfile,f_tmp, "bg_g");
-    xmms_cfg_remove_key(cfgfile,f_tmp, "bg_b");
-  }
-  else{
-    xmms_cfg_write_int(cfgfile, f_tmp, "bg_r",mascot->colclkbg->red);
-    xmms_cfg_write_int(cfgfile, f_tmp, "bg_g",mascot->colclkbg->green);
-    xmms_cfg_write_int(cfgfile, f_tmp, "bg_b",mascot->colclkbg->blue);
-  }
-  if(mascot->alpclkbg  ==mascot->def_alpclkbg){
-    xmms_cfg_remove_key(cfgfile,f_tmp, "bg_p");
-  }
-  else{
-    xmms_cfg_write_int(cfgfile, f_tmp, "bg_p",mascot->alpclkbg);
-  }
+  my_mascot_write_color(cfgfile, f_tmp,
+			"bg_r", "bg_g", "bg_b", "bg_p",
+			mascot->colclkbg, mascot->def_colclkbg,
+			mascot->alpclkbg, mascot->def_alpclkbg);
 
-  if((  mascot->colclkbd->red  ==mascot->def_colclkbd->red)
-     &&(mascot->colclkbd->green==mascot->def_colclkbd->green)
-     &&(mascot->colclkbd->blue ==mascot->def_colclkbd->blue)){
-    xmms_cfg_remove_key(cfgfile,f_tmp, "border_r");
-    xmms_cfg_remove_key(cfgfile,f_tmp, "border_g");
-    xmms_cfg_remove_key(cfgfile,f_tmp, "border_b");
-  }
-  else{
-    xmms_cfg_write_int(cfgfile, f_tmp, "border_r",mascot->colclkbd->red);
-    xmms_cfg_write_int(cfgfile, f_tmp, "border_g",mascot->colclkbd->green);
-    xmms_cfg_write_int(cfgfile, f_tmp, "border_b",mascot->colclkbd->blue);
-  }
-  if(mascot->alpclkbd  ==mascot->def_alpclkbd){
-    xmms_cfg_remove_key(cfgfile,f_tmp, "border_p");
-  }
-  else{
-    xmms_cfg_write_int(cfgfile, f_tmp, "border_p",mascot->alpclkbd);
-  }
+  my_mascot_write_color(cfgfile, f_tmp,
+			"border_r", "border_g", "border_b", "border_p",
+			mascot->colclkbd, mascot->def_colclkbd,
+			mascot->alpclkbd, mascot->def_alpclkbd);
 
 
   // Color for Balloon
   f_tmp=g_strdup((def_flag) ? "Default-BalloonColor" : "BalloonColor");
 
-  if((  mascot->colbal->red  ==mascot->def_colbal->red)
-     &&(mascot->colbal->green==mascot->def_colbal->green)
-     &&(mascot->colbal->blue ==mascot->def_colbal->blue)){
-    xmms_cfg_remove_key(cfgfile,f_tmp, "text_r");
-    xmms_cfg_remove_key(cfgfile,f_tmp, "text_g");
-    xmms_cfg_remove_key(cfgfile,f_tmp, "text_b");
-  }
-  else{
-    xmms_cfg_write_int(cfgfile, f_tmp, "text_r",mascot->colbal->red);
-    xmms_cfg_write_int(cfgfile, f_tmp, "text_g",mascot->colbal->green);
-    xmms_cfg_write_int(cfgfile, f_tmp, "text_b",mascot->colbal->blue);
-  }
-  if(mascot->alpbal  ==mascot->def_alpbal){
-    xmms_cfg_remove_key(cfgfile,f_tmp, "text_p");
-  }
-  else{
-    xmms_cfg_write_int(cfgfile, f_tmp, "text_p",mascot->alpbal);
-  }
+  my_mascot_write_color(cfgfile, f_tmp,
+			"text_r", "text_g", "text_b", "text_p",
+			mascot->colbal, mascot->def_colbal,
+			mascot->alpbal, mascot->def_alpbal);
+  
+  my_mascot_write_color(cfgfile, f_tmp,
+			"bg_r", "bg_g", "bg_b", "bg_p",
+			mascot->colbalbg, mascot->def_colbalbg,
+			mascot->alpbalbg, mascot->def_alpbalbg);
 
-  if((  mascot->colbalbg->red  ==mascot->def_colbalbg->red)
-     &&(mascot->colbalbg->green==mascot->def_colbalbg->green)
-     &&(mascot->colbalbg->blue ==mascot->def_colbalbg->blue)){
-    xmms_cfg_remove_key(cfgfile,f_tmp, "bg_r");
-    xmms_cfg_remove_key(cfgfile,f_tmp, "bg_g");
-    xmms_cfg_remove_key(cfgfile,f_tmp, "bg_b");
-  }
-  else{
-    xmms_cfg_write_int(cfgfile, f_tmp, "bg_r",mascot->colbalbg->red);
-    xmms_cfg_write_int(cfgfile, f_tmp, "bg_g",mascot->colbalbg->green);
-    xmms_cfg_write_int(cfgfile, f_tmp, "bg_b",mascot->colbalbg->blue);
-  }
-  if(mascot->alpbalbg  ==mascot->def_alpbalbg){
-    xmms_cfg_remove_key(cfgfile,f_tmp, "bg_p");
-  }
-  else{
-    xmms_cfg_write_int(cfgfile, f_tmp, "bg_p",mascot->alpbalbg);
-  }
-
-  if((  mascot->colbalbd->red  ==mascot->def_colbalbd->red)
-     &&(mascot->colbalbd->green==mascot->def_colbalbd->green)
-     &&(mascot->colbalbd->blue ==mascot->def_colbalbd->blue)){
-    xmms_cfg_remove_key(cfgfile,f_tmp, "border_r");
-    xmms_cfg_remove_key(cfgfile,f_tmp, "border_g");
-    xmms_cfg_remove_key(cfgfile,f_tmp, "border_b");
-  }
-  else{
-    xmms_cfg_write_int(cfgfile, f_tmp, "border_r",mascot->colbalbd->red);
-    xmms_cfg_write_int(cfgfile, f_tmp, "border_g",mascot->colbalbd->green);
-    xmms_cfg_write_int(cfgfile, f_tmp, "border_b",mascot->colbalbd->blue);
-  }
-  if(mascot->alpbalbd  ==mascot->def_alpbalbd){
-    xmms_cfg_remove_key(cfgfile,f_tmp, "border_p");
-  }
-  else{
-    xmms_cfg_write_int(cfgfile, f_tmp, "border_p",mascot->alpbalbd);
-  }
-
+  my_mascot_write_color(cfgfile, f_tmp,
+			"border_r", "border_g", "border_b", "border_p",
+			mascot->colbalbd, mascot->def_colbalbd,
+			mascot->alpbalbd, mascot->def_alpbalbd);
 
 #ifdef USE_BIFF
   // Biff¥Ç¡¼¥¿

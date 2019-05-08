@@ -177,7 +177,7 @@ void DrawPanelClock2(typMascot *mascot)
 			  mascot->fontclk_pc.slant,
 			  mascot->fontclk_pc.weight);
   cairo_set_font_size (cr, 
-		       mascot->fontclk_pc.pointsize*GetCurrentResolution()/72.0);
+		       mascot->fontclk_pc.pointsize);
 #ifndef USE_PANGOCAIRO
   cairo_text_extents (cr, mascot->digit, &extents);
   clk_width=(gint)(extents.x_advance);
@@ -257,7 +257,7 @@ void DrawPanelClock2(typMascot *mascot)
 			  mascot->fontclk_pc.slant,
 			  mascot->fontclk_pc.weight);
   cairo_set_font_size (cr, 
-		       mascot->fontclk_pc.pointsize*GetCurrentResolution()/72.0);
+		       mascot->fontclk_pc.pointsize);
 
   cairo_set_operator (cr, CAIRO_OPERATOR_OVER);
 

@@ -101,7 +101,7 @@ void DrawBalloon2(typMascot *mascot, char **wn_iwp, int wn_max)
 			    mascot->fontbal_pc.slant,
 			    mascot->fontbal_pc.weight);
     cairo_set_font_size (cr, 
-			 mascot->fontbal_pc.pointsize*GetCurrentResolution()/72.0);
+			 mascot->fontbal_pc.pointsize);
     cairo_text_extents (cr, wn_iwp[i_wn], &extents);
     tmp_w=(gint)(extents.x_advance);
     tmp_h=(gint)(extents.height);
@@ -328,7 +328,7 @@ void DrawBalloon2(typMascot *mascot, char **wn_iwp, int wn_max)
 			  mascot->fontbal_pc.slant,
 			  mascot->fontbal_pc.weight);
   cairo_set_font_size (cr, 
-		       mascot->fontbal_pc.pointsize*GetCurrentResolution()/72.0);
+		       mascot->fontbal_pc.pointsize);
 #endif
 
 

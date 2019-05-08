@@ -8196,7 +8196,7 @@ void create_config_dialog(void)
       label = gtkut_label_new (_("Clock [%]"));
       gtkut_pos(label, POS_START, POS_END);
       gtkut_table_attach(table1, label, 0, 1, 4, 5,
-			 GTK_SHRINk,GTK_SHRINK,0,0);
+			 GTK_SHRINK,GTK_SHRINK,0,0);
 #endif
 
       
