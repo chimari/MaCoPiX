@@ -93,6 +93,19 @@ void gtkut_table_attach(GtkWidget *table,
 #ifdef USE_GTK3      
   gtk_grid_attach(GTK_GRID(table), child,
 		  left_attach, top_attach, right_attach-left_attach, bottom_attach-top_attach);
+  if(xoptions == GTK_SHRINK){
+    gtk_widget_set_hexpand(child,FALSE);
+  }
+  else{
+    gtk_widget_set_hexpand(child,TRUE);
+  }
+  
+  if(yoptions == GTK_SHRINK){
+    gtk_widget_set_vexpand(child,FALSE);
+  }
+  else{
+    gtk_widget_set_vexpand(child,TRUE);
+  }
 #else
   gtk_table_attach(GTK_TABLE(table), child,
 		   left_attach, right_attach, top_attach, bottom_attach,
@@ -432,7 +445,7 @@ GtkWidget * gtkut_menu_item_new_with_icon(const gchar *stock_or_icon_name,
 
 void gdkut_flush(typMascot *mascot){
 #ifdef USE_GTK3
-  gdk_display_flush(gtk_widget_get_display(mascot->win_main));
+  //gdk_display_flush(gtk_widget_get_display(mascot->win_main));
 #else
   gdk_flush();
 #endif
@@ -497,3 +510,22 @@ GtkWidget * gtkut_arrow_new(MyArrowDirect direct){
 
   return(w);
 }
+
+
+#ifdef USE_GTK3
+void my_cairo_set_source_rgba(cairo_t *cr, GdkRGBA *col, gdouble alpha){
+  cairo_set_source_rgba (cr, 
+			 col->red,
+			 col->green,
+			 col->blue,
+			 alpha);
+}
+#else
+void my_cairo_set_source_rgba(cairo_t *cr, GdkColor *col, gdouble alpha){
+  cairo_set_source_rgba (cr, 
+			 (gdouble)col->red/(gdouble)0xFFFF,
+			 (gdouble)col->green/(gdouble)0xFFFF,
+			 (gdouble)col->blue/(gdouble)0xFFFF,
+			 alpha);
+}
+#endif

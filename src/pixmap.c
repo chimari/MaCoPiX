@@ -73,7 +73,6 @@ gboolean TestLoadPixmaps(typMascot *mascot, gchar *filename, gint i_pix)
   cairo_region_t *region;
 #endif
 
-  
   tmp_open=to_utf8(filename);
   pixbuf = gdk_pixbuf_new_from_file(tmp_open, NULL);
   g_free(tmp_open);
@@ -191,7 +190,8 @@ gboolean TestLoadPixmaps(typMascot *mascot, gchar *filename, gint i_pix)
 
       cairo_set_operator (cr, CAIRO_OPERATOR_OVER);
       gdk_cairo_region(cr, region);
-      cairo_set_source_rgba(cr, 1, 1, 1, 1);
+      cairo_set_source_rgba(cr, 0, 0, 0, 1);
+      cairo_clip(cr);
       cairo_paint_with_alpha (cr, (gdouble)(mascot->sdw_alpha)/100);
       cairo_region_destroy(region);
 
@@ -206,7 +206,6 @@ gboolean TestLoadPixmaps(typMascot *mascot, gchar *filename, gint i_pix)
 	cairo_rectangle(cr, 0, 0, w, 
 		      h-mascot->yoff*(gfloat)(mascot->magnify)/100-mascot->sdw_y_int);
 	cairo_fill(cr);
-	
 	cairo_restore(cr);
       }      
       
@@ -660,7 +659,6 @@ void LoadPixmaps(GtkWidget *widget, //GtkWidget *draw,
 	  cairo_destroy(cr);
 	  
 	  sprites[i].pixbuf_sdw = gdk_pixbuf_get_from_surface(surface, 0, 0, w, h_sdw);
-	  cairo_surface_destroy(surface);
 	}
       }
 #endif   
@@ -1094,12 +1092,8 @@ void LoadBiffPixmap(GtkWidget *widget, typMascot *mascot){
   
   g_object_unref(G_OBJECT(pixbuf));
   g_object_unref(G_OBJECT(pixbuf2));
+
   // 初回フレーム用マスク切出し
-  /*
-  gdk_window_set_back_pixmap(widget->window,
-			     mascot->mail.pixmap,
-			     FALSE);
-  */
   
   gtk_widget_realize(mascot->dw_biff);
   gtk_window_resize (GTK_WINDOW(widget), w, h);
@@ -1418,21 +1412,11 @@ gint DrawMascotTemp(typMascot *mascot, gint i_pix)
     g_object_unref(G_OBJECT(pixbuf_main[work_page]));
   } 
   
-  //pixmap_main[work_page] = gdk_pixmap_new(gtk_widget_get_window(mascot->win_main),
-  //					  mascot->width,
-  //					  mascot->height,
-  //					  -1);
-
 #ifdef USE_WIN32
   if((mascot->sdw_flag)&&(mascot->sdw_height>0)){
     if (pixbuf_sdw[work_page]) {
       g_object_unref(G_OBJECT(pixbuf_sdw[work_page]));
-    } 
-    
-    //pixmap_sdw[work_page] = gdk_pixmap_new(gtk_widget_get_window(mascot->win_sdw),
-    //					   mascot->width,
-    //					   mascot->sdw_height,
-    //					   -1);
+    }     
   }
 #endif
 

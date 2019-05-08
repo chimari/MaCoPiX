@@ -263,19 +263,12 @@ void DrawPanelClock2(typMascot *mascot)
 
 #ifdef USE_WIN32  
   //BG should be opaque to BG only translucency for Win32
-  cairo_set_source_rgba (cr, 
-			 (gdouble)mascot->colclkbg->red/0xFFFF,
-			 (gdouble)mascot->colclkbg->green/0xFFFF,
-			 (gdouble)mascot->colclkbg->blue/0xFFFF,
-			 1); /* opaque BG */
+  my_cairo_set_source_rgba (cr, mascot->colclkbg, 1); /* opaque BG */
   cairo_rectangle(cr, 0, 0, new_w, new_h);
   cairo_fill(cr);
 #else
-  cairo_set_source_rgba (cr, 
-			 (gdouble)mascot->colclkbg->red/0xFFFF,
-			 (gdouble)mascot->colclkbg->green/0xFFFF,
-			 (gdouble)mascot->colclkbg->blue/0xFFFF,
-			 (gdouble)mascot->alpclkbg/0xFFFF); /* transparent */
+  my_cairo_set_source_rgba (cr, mascot->colclkbg, (gdouble)mascot->alpclkbg/(gdouble)0xFFFF); /* transparent */
+			 
   if(shape_flag){
     cairo_rectangle(cr, 0, 0, new_w, new_h);
     cairo_fill(cr);
@@ -347,11 +340,8 @@ void DrawPanelClock2(typMascot *mascot)
 
   ///// BACKGROUND /////
   if(mascot->wclkbd>0){
-    cairo_set_source_rgba (cr, 
-			   (gdouble)mascot->colclkbd->red/0xFFFF,
-			   (gdouble)mascot->colclkbd->green/0xFFFF,
-			   (gdouble)mascot->colclkbd->blue/0xFFFF,
-			   (gdouble)mascot->alpclkbd/0xFFFF); /* transparent */
+    my_cairo_set_source_rgba (cr, mascot->colclkbd, (gdouble)mascot->alpclkbd/(gdouble)0xFFFF); /* transparent */
+			   
     cairo_set_line_width(cr,(gdouble)mascot->wclkbd *2);
     cairo_stroke(cr);
   }
@@ -363,11 +353,8 @@ void DrawPanelClock2(typMascot *mascot)
     
     
   if(mascot->flag_clksd){
-    cairo_set_source_rgba (cr, 
-			   (gdouble)mascot->colclksd->red/0xFFFF,
-			   (gdouble)mascot->colclksd->green/0xFFFF,
-			   (gdouble)mascot->colclksd->blue/0xFFFF,
-			   (gdouble)mascot->alpclksd/0xFFFF); /* transparent */
+    my_cairo_set_source_rgba (cr, mascot->colclksd, (gdouble)mascot->alpclksd/(gdouble)0xFFFF); /* transparent */
+			   
 #ifdef USE_PANGOCAIRO
     cairo_move_to(cr,
 		  mascot->wclkbd+mascot->clktext_x+mascot->clksd_x,
@@ -405,11 +392,8 @@ void DrawPanelClock2(typMascot *mascot)
   }
   
   
-  cairo_set_source_rgba (cr, 
-			 (gdouble)mascot->colclk->red/0xFFFF,
-			 (gdouble)mascot->colclk->green/0xFFFF,
-			 (gdouble)mascot->colclk->blue/0xFFFF,
-			 (gdouble)mascot->alpclk/0xFFFF); /* transparent */
+  my_cairo_set_source_rgba (cr, mascot->colclk, (gdouble)mascot->alpclk/(gdouble)0xFFFF); /* transparent */
+			 
 #ifdef USE_PANGOCAIRO
   cairo_move_to(cr,
 		mascot->wclkbd+mascot->clktext_x,

@@ -24,6 +24,7 @@ GtkWidget * gtkut_menu_item_new_with_icon();
 void gdkut_flush();
 GtkWidget * gtkut_hscale_new();
 GtkWidget * gtkut_arrow_new();
+void my_cairo_set_source_rgba();
 
 enum{
   POS_START,

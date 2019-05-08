@@ -38,6 +38,15 @@
 gboolean FlagInstalledMenu;
 
 // Prototype of functions in this file
+#ifdef USE_GTK3
+gdouble my_mascot_read_color();
+gboolean my_def_color_check();
+gboolean my_color_equal();
+#else
+gint my_mascot_read_color();
+gboolean my_def_color_check();
+gboolean my_color_equal();
+#endif
 void exit_w_msg();
 void ReadMenu();
 gboolean ScanMenu2();
@@ -51,6 +60,102 @@ void get_rc_option();
 void usage();
 #ifdef USE_COMMON
 void print_common_dir();
+#endif
+
+
+#ifdef USE_GTK3
+  GdkRGBA init_colclk = {(gdouble)COLOR_CLK_R/(gdouble)0xFFFF,
+			 (gdouble)COLOR_CLK_G/(gdouble)0xFFFF,
+			 (gdouble)COLOR_CLK_B/(gdouble)0xFFFF,
+			 (gdouble)CAIRO_DEF_ALPHA_OTHER/(gdouble)0xFFFF};
+  GdkRGBA init_colclksd = {(gdouble)COLOR_CLKSD_R/(gdouble)0xFFFF,
+			   (gdouble)COLOR_CLKSD_G/(gdouble)0xFFFF,
+			   (gdouble)COLOR_CLKSD_B/(gdouble)0xFFFF,
+			   (gdouble)CAIRO_DEF_ALPHA_SDW/(gdouble)0xFFFF};
+  GdkRGBA init_colclkbg = {(gdouble)COLOR_CLKBG_R/(gdouble)0xFFFF,
+			   (gdouble)COLOR_CLKBG_G/(gdouble)0xFFFF,
+			   (gdouble)COLOR_CLKBG_B/(gdouble)0xFFFF,
+			   (gdouble)CAIRO_DEF_ALPHA_CLK/(gdouble)0xFFFF};
+  GdkRGBA init_colclkbd = {(gdouble)COLOR_CLKBD_R/(gdouble)0xFFFF,
+			   (gdouble)COLOR_CLKBD_G/(gdouble)0xFFFF,
+			   (gdouble)COLOR_CLKBD_B/(gdouble)0xFFFF,
+			   (gdouble)CAIRO_DEF_ALPHA_OTHER/(gdouble)0xFFFF};
+  
+  GdkRGBA init_colbal = {(gdouble)COLOR_BAL_R/(gdouble)0xFFFF,
+			 (gdouble)COLOR_BAL_G/(gdouble)0xFFFF,
+			 (gdouble)COLOR_BAL_B/(gdouble)0xFFFF,
+			 (gdouble)CAIRO_DEF_ALPHA_OTHER/(gdouble)0xFFFF};
+  GdkRGBA init_colbalbg = {(gdouble)COLOR_BALBG_R/(gdouble)0xFFFF,
+			   (gdouble)COLOR_BALBG_G/(gdouble)0xFFFF,
+			   (gdouble)COLOR_BALBG_B/(gdouble)0xFFFF,
+			   (gdouble)CAIRO_DEF_ALPHA_BAL/(gdouble)0xFFFF};
+  GdkRGBA init_colbalbd = {(gdouble)COLOR_BALBD_R/(gdouble)0xFFFF,
+			   (gdouble)COLOR_BALBD_G/(gdouble)0xFFFF,
+			   (gdouble)COLOR_BALBD_B/(gdouble)0xFFFF,
+			   (gdouble)CAIRO_DEF_ALPHA_OTHER/(gdouble)0xFFFF}; 
+#else
+  GdkColor init_colclk = {0, COLOR_CLK_R, COLOR_CLK_G, COLOR_CLK_B};
+  GdkColor init_colclksd = {0, COLOR_CLKSD_R, COLOR_CLKSD_G, COLOR_CLKSD_B};
+  GdkColor init_colclkbg = {0, COLOR_CLKBG_R, COLOR_CLKBG_G, COLOR_CLKBG_B};
+  GdkColor init_colclkbd = {0, COLOR_CLKBD_R, COLOR_CLKBD_G, COLOR_CLKBD_B};
+  
+  GdkColor init_colbal = {0, COLOR_BAL_R, COLOR_BAL_G, COLOR_BAL_B};
+  GdkColor init_colbalbg = {0, COLOR_BALBG_R, COLOR_BALBG_G, COLOR_BALBG_B};
+  GdkColor init_colbalbd = {0, COLOR_BALBD_R, COLOR_BALBD_G, COLOR_BALBD_B};
+#endif 
+
+#ifdef USE_GTK3
+gdouble my_mascot_read_color(ConfigFile * cfg, gchar * section, gchar * key, gdouble def_val){
+  gint col_tmp;
+  gdouble ret;
+  if(xmms_cfg_read_int(cfg, section, key, &col_tmp)){
+    ret=(gdouble)col_tmp/(gdouble)0xFFFF;
+  }
+  else{
+    ret=def_val;
+  }
+  return(ret);
+}
+
+gboolean my_def_color_check(GdkRGBA *col, gint r, gint g, gint b, gint a){
+  if((col->red  == r) &&
+     (col->green == g) &&
+     (col->blue == b) &&
+     (col->alpha == a)){
+    return(TRUE);
+  }
+  else{
+    return(FALSE);
+  }
+}
+
+gboolean my_color_equal(GdkRGBA *col1,  GdkRGBA *col2){
+  return(gdk_rgba_equal(col1, col2));
+}
+#else
+gint my_mascot_read_color(ConfigFile * cfg, gchar * section, gchar * key, gint def_val){
+  gint col_tmp;
+  if(!xmms_cfg_read_int(cfg, section, key, &col_tmp)){
+    col_tmp=def_val;
+  }
+  return(col_tmp);
+}
+
+gboolean my_def_color_check(GdkColor *col, gint alpha, gint r, gint g , gint b, gint a){
+  if((col->red  == r)
+     &&(col->green == g)
+     &&(col->blue == b)
+     &&(alpha == a)){
+    return(TRUE);
+  }
+  else{
+    return(FALSE);
+  }
+}
+
+gboolean my_color_equal(GdkColor *col1,  GdkColor *col2){
+  return(gdk_color_equal(col1, col2));
+}
 #endif
 
 // CSS for Gtk+3
@@ -809,36 +914,6 @@ void SaveMenu(typMascot *mascot)
 void InitDefCol(typMascot* mascot){
   // Default Color for GUI
 #ifdef USE_GTK3
-  GdkRGBA init_colclk = {(gdouble)COLOR_CLK_R/(gdouble)0xFFFF,
-			 (gdouble)COLOR_CLK_G/(gdouble)0xFFFF,
-			 (gdouble)COLOR_CLK_B/(gdouble)0xFFFF,
-			 (gdouble)CAIRO_DEF_ALPHA_OTHER/(gdouble)0xFFFF};
-  GdkRGBA init_colclksd = {(gdouble)COLOR_CLKSD_R/(gdouble)0xFFFF,
-			   (gdouble)COLOR_CLKSD_G/(gdouble)0xFFFF,
-			   (gdouble)COLOR_CLKSD_B/(gdouble)0xFFFF,
-			   (gdouble)CAIRO_DEF_ALPHA_SDW/(gdouble)0xFFFF};
-  GdkRGBA init_colclkbg = {(gdouble)COLOR_CLKBG_R/(gdouble)0xFFFF,
-			   (gdouble)COLOR_CLKBG_G/(gdouble)0xFFFF,
-			   (gdouble)COLOR_CLKBG_B/(gdouble)0xFFFF,
-			   (gdouble)CAIRO_DEF_ALPHA_CLK/(gdouble)0xFFFF};
-  GdkRGBA init_colclkbd = {(gdouble)COLOR_CLKBD_R/(gdouble)0xFFFF,
-			   (gdouble)COLOR_CLKBD_G/(gdouble)0xFFFF,
-			   (gdouble)COLOR_CLKBD_B/(gdouble)0xFFFF,
-			   (gdouble)CAIRO_DEF_ALPHA_OTHER/(gdouble)0xFFFF};
-  
-  GdkRGBA init_colbal = {(gdouble)COLOR_BAL_R/(gdouble)0xFFFF,
-			 (gdouble)COLOR_BAL_G/(gdouble)0xFFFF,
-			 (gdouble)COLOR_BAL_B/(gdouble)0xFFFF,
-			 (gdouble)CAIRO_DEF_ALPHA_OTHER/(gdouble)0xFFFF};
-  GdkRGBA init_colbalbg = {(gdouble)COLOR_BALBG_R/(gdouble)0xFFFF,
-			   (gdouble)COLOR_BALBG_G/(gdouble)0xFFFF,
-			   (gdouble)COLOR_BALBG_B/(gdouble)0xFFFF,
-			   (gdouble)CAIRO_DEF_ALPHA_BAL/(gdouble)0xFFFF};
-  GdkRGBA init_colbalbd = {(gdouble)COLOR_BALBD_R/(gdouble)0xFFFF,
-			   (gdouble)COLOR_BALBD_G/(gdouble)0xFFFF,
-			   (gdouble)COLOR_BALBD_B/(gdouble)0xFFFF,
-			   (gdouble)CAIRO_DEF_ALPHA_OTHER/(gdouble)0xFFFF};
-  
   mascot->def_colclk=g_malloc0(sizeof(GdkRGBA));
   mascot->def_colclksd=g_malloc0(sizeof(GdkRGBA));
   mascot->def_colclkbg=g_malloc0(sizeof(GdkRGBA));
@@ -856,15 +931,6 @@ void InitDefCol(typMascot* mascot){
   mascot->def_colbalbg=gdk_rgba_copy(&init_colbalbg);
   mascot->def_colbalbd=gdk_rgba_copy(&init_colbalbd);
 #else
-  GdkColor init_colclk = {0, COLOR_CLK_R, COLOR_CLK_G, COLOR_CLK_B};
-  GdkColor init_colclksd = {0, COLOR_CLKSD_R, COLOR_CLKSD_G, COLOR_CLKSD_B};
-  GdkColor init_colclkbg = {0, COLOR_CLKBG_R, COLOR_CLKBG_G, COLOR_CLKBG_B};
-  GdkColor init_colclkbd = {0, COLOR_CLKBD_R, COLOR_CLKBD_G, COLOR_CLKBD_B};
-  
-  GdkColor init_colbal = {0, COLOR_BAL_R, COLOR_BAL_G, COLOR_BAL_B};
-  GdkColor init_colbalbg = {0, COLOR_BALBG_R, COLOR_BALBG_G, COLOR_BALBG_B};
-  GdkColor init_colbalbd = {0, COLOR_BALBD_R, COLOR_BALBD_G, COLOR_BALBD_B};
-
   mascot->def_colclk=g_malloc0(sizeof(GdkColor));
   mascot->def_colclksd=g_malloc0(sizeof(GdkColor));
   mascot->def_colclkbg=g_malloc0(sizeof(GdkColor));
@@ -1026,100 +1092,80 @@ void ReadRC(typMascot *mascot, gboolean def_flag)
     if(def_flag)  field_tmp=g_strdup("Default-ClockColor");
     else          field_tmp=g_strdup("ClockColor");
 
-    if(!xmms_cfg_read_int(cfgfile, field_tmp, "text_r", &col_tmp))
-      col_tmp=COLOR_CLK_R;
-    mascot->def_colclk->red=col_tmp;
-    if(!xmms_cfg_read_int(cfgfile, field_tmp, "text_g", &col_tmp))
-      col_tmp=COLOR_CLK_G;
-    mascot->def_colclk->green=col_tmp;
-    if(!xmms_cfg_read_int(cfgfile, field_tmp, "text_b", &col_tmp))
-      col_tmp=COLOR_CLK_B;
-    mascot->def_colclk->blue=col_tmp;
+    mascot->def_colclk->red  =my_mascot_read_color(cfgfile, field_tmp, "text_r", init_colclk.red);
+    mascot->def_colclk->green=my_mascot_read_color(cfgfile, field_tmp, "text_g", init_colclk.green);
+    mascot->def_colclk->blue =my_mascot_read_color(cfgfile, field_tmp, "text_b", init_colclk.blue);
     if(!xmms_cfg_read_int(cfgfile, field_tmp, "text_p", &col_tmp))
       col_tmp=CAIRO_DEF_ALPHA_OTHER;
     mascot->def_alpclk=col_tmp;
+#ifdef  USE_GTK3
+    mascot->def_colclk->alpha=(gdouble)mascot->def_alpclk/(gdouble)0xFFFF;
+#endif
 
-    if(!xmms_cfg_read_int(cfgfile, field_tmp, "shadow_r", &col_tmp))
-      col_tmp=COLOR_CLKSD_R;
-    mascot->def_colclksd->red=col_tmp;
-    if(!xmms_cfg_read_int(cfgfile, field_tmp, "shadow_g", &col_tmp))
-      col_tmp=COLOR_CLKSD_G;
-    mascot->def_colclksd->green=col_tmp;
-    if(!xmms_cfg_read_int(cfgfile, field_tmp, "shadow_b", &col_tmp))
-      col_tmp=COLOR_CLKSD_B;
-    mascot->def_colclksd->blue=col_tmp;
+    mascot->def_colclksd->red  =my_mascot_read_color(cfgfile, field_tmp, "shadow_r", init_colclksd.red);
+    mascot->def_colclksd->green=my_mascot_read_color(cfgfile, field_tmp, "shadow_g", init_colclksd.green);
+    mascot->def_colclksd->blue =my_mascot_read_color(cfgfile, field_tmp, "shadow_b", init_colclksd.blue);
     if(!xmms_cfg_read_int(cfgfile, field_tmp, "shadow_p", &col_tmp))
       col_tmp=CAIRO_DEF_ALPHA_SDW;
     mascot->def_alpclksd=col_tmp;
+#ifdef  USE_GTK3
+    mascot->def_colclksd->alpha=(gdouble)mascot->def_alpclksd/(gdouble)0xFFFF;
+#endif
 
-    if(!xmms_cfg_read_int(cfgfile, field_tmp, "bg_r", &col_tmp))
-      col_tmp=COLOR_CLKBG_R;
-    mascot->def_colclkbg->red=col_tmp;
-    if(!xmms_cfg_read_int(cfgfile, field_tmp, "bg_g", &col_tmp))
-      col_tmp=COLOR_CLKBG_G;
-    mascot->def_colclkbg->green=col_tmp;
-    if(!xmms_cfg_read_int(cfgfile, field_tmp, "bg_b", &col_tmp))
-      col_tmp=COLOR_CLKBG_B;
-    mascot->def_colclkbg->blue=col_tmp;
+    mascot->def_colclkbg->red  =my_mascot_read_color(cfgfile, field_tmp, "bg_r", init_colclkbg.red);
+    mascot->def_colclkbg->green=my_mascot_read_color(cfgfile, field_tmp, "bg_g", init_colclkbg.green);
+    mascot->def_colclkbg->blue =my_mascot_read_color(cfgfile, field_tmp, "bg_b", init_colclkbg.blue);
     if(!xmms_cfg_read_int(cfgfile, field_tmp, "bg_p", &col_tmp))
       col_tmp=CAIRO_DEF_ALPHA_CLK;
     mascot->def_alpclkbg=col_tmp;
+#ifdef  USE_GTK3
+    mascot->def_colclkbg->alpha=(gdouble)mascot->def_alpclkbg/(gdouble)0xFFFF;
+#endif
 
-    if(!xmms_cfg_read_int(cfgfile, field_tmp, "border_r", &col_tmp))
-      col_tmp=COLOR_CLKBD_R;
-    mascot->def_colclkbd->red=col_tmp;
-    if(!xmms_cfg_read_int(cfgfile, field_tmp, "border_g", &col_tmp))
-      col_tmp=COLOR_CLKBD_G;
-    mascot->def_colclkbd->green=col_tmp;
-    if(!xmms_cfg_read_int(cfgfile, field_tmp, "border_b", &col_tmp))
-      col_tmp=COLOR_CLKBD_B;
-    mascot->def_colclkbd->blue=col_tmp;
+    mascot->def_colclkbd->red  =my_mascot_read_color(cfgfile, field_tmp, "border_r", init_colclkbd.red);
+    mascot->def_colclkbd->green=my_mascot_read_color(cfgfile, field_tmp, "border_g", init_colclkbd.green);
+    mascot->def_colclkbd->blue =my_mascot_read_color(cfgfile, field_tmp, "border_b", init_colclkbd.blue);
     if(!xmms_cfg_read_int(cfgfile, field_tmp, "border_p", &col_tmp))
       col_tmp=CAIRO_DEF_ALPHA_OTHER;
     mascot->def_alpclkbd=col_tmp;
+#ifdef  USE_GTK3
+    mascot->def_colclkbd->alpha=(gdouble)mascot->def_alpclkbd/(gdouble)0xFFFF;
+#endif
+
 
     // Color for Balloon
     if(def_flag)  field_tmp=g_strdup("Default-BalloonColor");
     else          field_tmp=g_strdup("BalloonColor");
 
-    if(!xmms_cfg_read_int(cfgfile, field_tmp, "text_r", &col_tmp))
-      col_tmp=COLOR_BAL_R;
-    mascot->def_colbal->red=(guint)col_tmp;
-    if(!xmms_cfg_read_int(cfgfile, field_tmp, "text_g", &col_tmp))
-      col_tmp=COLOR_BAL_G;
-    mascot->def_colbal->green=(guint)col_tmp;
-    if(!xmms_cfg_read_int(cfgfile, field_tmp, "text_b", &col_tmp))
-      col_tmp=COLOR_BAL_B;
-    mascot->def_colbal->blue=(guint)col_tmp;
+    mascot->def_colbal->red  =my_mascot_read_color(cfgfile, field_tmp, "text_r", init_colbal.red);
+    mascot->def_colbal->green=my_mascot_read_color(cfgfile, field_tmp, "text_g", init_colbal.green);
+    mascot->def_colbal->blue =my_mascot_read_color(cfgfile, field_tmp, "text_b", init_colbal.blue);
     if(!xmms_cfg_read_int(cfgfile, field_tmp, "text_p", &col_tmp))
       col_tmp=CAIRO_DEF_ALPHA_OTHER;
     mascot->def_alpbal=col_tmp;
-       
-    if(!xmms_cfg_read_int(cfgfile, field_tmp, "bg_r", &col_tmp))
-      col_tmp=COLOR_BALBG_R;
-    mascot->def_colbalbg->red=(guint)col_tmp;
-    if(!xmms_cfg_read_int(cfgfile, field_tmp, "bg_g", &col_tmp))
-      col_tmp=COLOR_BALBG_G;
-    mascot->def_colbalbg->green=(guint)col_tmp;
-    if(!xmms_cfg_read_int(cfgfile, field_tmp, "bg_b", &col_tmp))
-      col_tmp=COLOR_BALBG_B;
-    mascot->def_colbalbg->blue=(guint)col_tmp;
+#ifdef  USE_GTK3
+    mascot->def_colbal->alpha=(gdouble)mascot->def_alpbal/(gdouble)0xFFFF;
+#endif
+
+    mascot->def_colbalbg->red  =my_mascot_read_color(cfgfile, field_tmp, "bg_r", init_colbalbg.red);
+    mascot->def_colbalbg->green=my_mascot_read_color(cfgfile, field_tmp, "bg_g", init_colbalbg.green);
+    mascot->def_colbalbg->blue =my_mascot_read_color(cfgfile, field_tmp, "bg_b", init_colbalbg.blue);
     if(!xmms_cfg_read_int(cfgfile, field_tmp, "bg_p", &col_tmp))
       col_tmp=CAIRO_DEF_ALPHA_BAL;
     mascot->def_alpbalbg=col_tmp;
-
-    if(!xmms_cfg_read_int(cfgfile, field_tmp, "border_r", &col_tmp))
-      col_tmp=COLOR_BALBD_R;
-    mascot->def_colbalbd->red=(guint)col_tmp;
-    if(!xmms_cfg_read_int(cfgfile, field_tmp, "border_g", &col_tmp))
-      col_tmp=COLOR_BALBD_G;
-    mascot->def_colbalbd->green=(guint)col_tmp;
-    if(!xmms_cfg_read_int(cfgfile, field_tmp, "border_b", &col_tmp))
-      col_tmp=COLOR_BALBD_B;
-    mascot->def_colbalbd->blue=(guint)col_tmp;
+#ifdef  USE_GTK3
+    mascot->def_colbalbg->alpha=(gdouble)mascot->def_alpbalbg/(gdouble)0xFFFF;
+#endif
+    
+    mascot->def_colbalbd->red  =my_mascot_read_color(cfgfile, field_tmp, "border_r", init_colbalbd.red);
+    mascot->def_colbalbd->green=my_mascot_read_color(cfgfile, field_tmp, "border_g", init_colbalbd.green);
+    mascot->def_colbalbd->blue =my_mascot_read_color(cfgfile, field_tmp, "border_b", init_colbalbd.blue);
     if(!xmms_cfg_read_int(cfgfile, field_tmp, "border_p", &col_tmp))
       col_tmp=CAIRO_DEF_ALPHA_OTHER;
     mascot->def_alpbalbd=col_tmp;
+#ifdef  USE_GTK3
+    mascot->def_colbalbd->alpha=(gdouble)mascot->def_alpbalbd/(gdouble)0xFFFF;
+#endif
 
 
     // Focus Movement etc.
@@ -2121,102 +2167,109 @@ void ReadMascot(typMascot *mascot, gboolean def_flag)
     if(def_flag)  f_tmp0=g_strdup("Default-ClockColor");
     else          f_tmp0=g_strdup("ClockColor");
 
-    if(!xmms_cfg_read_int(cfgfile, f_tmp0, "text_r", &col_tmp))
-      col_tmp=mascot->def_colclk->red;
-    mascot->colclk->red=col_tmp;
-    if(!xmms_cfg_read_int(cfgfile, f_tmp0, "text_g", &col_tmp))
-      col_tmp=mascot->def_colclk->green;
-    mascot->colclk->green=col_tmp;
-    if(!xmms_cfg_read_int(cfgfile, f_tmp0, "text_b", &col_tmp))
-      col_tmp=mascot->def_colclk->blue;
-    mascot->colclk->blue=col_tmp;
+    mascot->colclk->red  =my_mascot_read_color(cfgfile, f_tmp0, "text_r", mascot->def_colclk->red);
+    mascot->colclk->green=my_mascot_read_color(cfgfile, f_tmp0, "text_g", mascot->def_colclk->green);
+    mascot->colclk->blue =my_mascot_read_color(cfgfile, f_tmp0, "text_b", mascot->def_colclk->blue);
     if(!xmms_cfg_read_int(cfgfile, f_tmp0, "text_p", &col_tmp))
       col_tmp=mascot->def_alpclk;
     mascot->alpclk=col_tmp;
-    if((!flag_def_col)
-	    &&(mascot->colclk->red  ==COLOR_CLK_R)
-	    &&(mascot->colclk->green==COLOR_CLK_G)
-	    &&(mascot->colclk->blue ==COLOR_CLK_B)
-	    &&(mascot->alpclk ==CAIRO_DEF_ALPHA_OTHER)
-       ){
-      mascot->colclk->red  =mascot->def_colclk->red;
-      mascot->colclk->green=mascot->def_colclk->green;
-      mascot->colclk->blue =mascot->def_colclk->blue;
+    
+#ifdef  USE_GTK3
+    mascot->colclk->alpha=(gdouble)mascot->alpclk/(gdouble)0xFFFF;
+
+    if((!flag_def_col) &&
+       (my_def_color_check(mascot->colclk,
+			   COLOR_CLK_R, COLOR_CLK_G, COLOR_CLK_B, CAIRO_DEF_ALPHA_OTHER))){
+      gdk_rgba_free(mascot->def_colclk);
+      mascot->colclk=gdk_rgba_copy(mascot->def_colclk);
       mascot->alpclk =mascot->def_alpclk;
     }
+#else
+    if((!flag_def_col) &&
+       (my_def_color_check(mascot->colclk, mascot->alpclk,
+			   COLOR_CLK_R, COLOR_CLK_G, COLOR_CLK_B, CAIRO_DEF_ALPHA_OTHER))){
+      mascot->colclk=gdk_color_copy(mascot->def_colclk);
+      mascot->alpclk =mascot->def_alpclk;
+    }
+#endif
 
-
-    if(!xmms_cfg_read_int(cfgfile, f_tmp0, "shadow_r", &col_tmp))
-      col_tmp=mascot->def_colclksd->red;
-    mascot->colclksd->red=col_tmp;
-    if(!xmms_cfg_read_int(cfgfile, f_tmp0, "shadow_g", &col_tmp))
-      col_tmp=mascot->def_colclksd->green;
-    mascot->colclksd->green=col_tmp;
-    if(!xmms_cfg_read_int(cfgfile, f_tmp0, "shadow_b", &col_tmp))
-      col_tmp=mascot->def_colclksd->blue;
-    mascot->colclksd->blue=col_tmp;
-    if(!xmms_cfg_read_int(cfgfile, f_tmp0, "sahdow_p", &col_tmp))
+    mascot->colclksd->red  =my_mascot_read_color(cfgfile, f_tmp0, "shadow_r", mascot->def_colclksd->red);
+    mascot->colclksd->green=my_mascot_read_color(cfgfile, f_tmp0, "shadow_g", mascot->def_colclksd->green);
+    mascot->colclksd->blue =my_mascot_read_color(cfgfile, f_tmp0, "shadow_b", mascot->def_colclksd->blue);
+    if(!xmms_cfg_read_int(cfgfile, f_tmp0, "shadow_p", &col_tmp))
       col_tmp=mascot->def_alpclksd;
     mascot->alpclksd=col_tmp;
-    if((!flag_def_col)
-	    &&(mascot->colclksd->red  ==COLOR_CLKSD_R)
-	    &&(mascot->colclksd->green==COLOR_CLKSD_G)
-	    &&(mascot->colclksd->blue ==COLOR_CLKSD_B)
-	    &&(mascot->alpclksd ==CAIRO_DEF_ALPHA_SDW)
-       ){
-      mascot->colclksd->red  =mascot->def_colclksd->red;
-      mascot->colclksd->green=mascot->def_colclksd->green;
-      mascot->colclksd->blue =mascot->def_colclksd->blue;
+    
+#ifdef  USE_GTK3
+    mascot->colclksd->alpha=(gdouble)mascot->alpclksd/(gdouble)0xFFFF;
+
+    if((!flag_def_col) &&
+       (my_def_color_check(mascot->colclksd,
+			   COLOR_CLKSD_R, COLOR_CLKSD_G, COLOR_CLKSD_B, CAIRO_DEF_ALPHA_SDW))){
+      gdk_rgba_free(mascot->def_colclksd);
+      mascot->colclksd=gdk_rgba_copy(mascot->def_colclksd);
       mascot->alpclksd =mascot->def_alpclksd;
     }
+#else
+    if((!flag_def_col) &&
+       (my_def_color_check(mascot->colclksd, mascot->alpclksd,
+			   COLOR_CLKSD_R, COLOR_CLKSD_G, COLOR_CLKSD_B, CAIRO_DEF_ALPHA_SDW))){
+      mascot->colclksd=gdk_color_copy(mascot->def_colclksd);
+      mascot->alpclksd =mascot->def_alpclksd;
+    }
+#endif
 
-    if(!xmms_cfg_read_int(cfgfile, f_tmp0, "bg_r", &col_tmp))
-      col_tmp=mascot->def_colclkbg->red;
-    mascot->colclkbg->red=col_tmp;
-    if(!xmms_cfg_read_int(cfgfile, f_tmp0, "bg_g", &col_tmp))
-      col_tmp=mascot->def_colclkbg->green;
-    mascot->colclkbg->green=col_tmp;
-    if(!xmms_cfg_read_int(cfgfile, f_tmp0, "bg_b", &col_tmp))
-      col_tmp=mascot->def_colclkbg->blue;
-    mascot->colclkbg->blue=col_tmp;
+    mascot->colclkbg->red  =my_mascot_read_color(cfgfile, f_tmp0, "bg_r", mascot->def_colclkbg->red);
+    mascot->colclkbg->green=my_mascot_read_color(cfgfile, f_tmp0, "bg_g", mascot->def_colclkbg->green);
+    mascot->colclkbg->blue =my_mascot_read_color(cfgfile, f_tmp0, "bg_b", mascot->def_colclkbg->blue);
     if(!xmms_cfg_read_int(cfgfile, f_tmp0, "bg_p", &col_tmp))
       col_tmp=mascot->def_alpclkbg;
     mascot->alpclkbg=col_tmp;
-    if((!flag_def_col)
-	    &&(mascot->colclkbg->red  ==COLOR_CLKBG_R)
-	    &&(mascot->colclkbg->green==COLOR_CLKBG_G)
-	    &&(mascot->colclkbg->blue ==COLOR_CLKBG_B)
-	    &&(mascot->alpclkbg ==CAIRO_DEF_ALPHA_CLK)
-	){
-      mascot->colclkbg->red  =mascot->def_colclkbg->red;
-      mascot->colclkbg->green=mascot->def_colclkbg->green;
-      mascot->colclkbg->blue =mascot->def_colclkbg->blue;
+    
+#ifdef  USE_GTK3
+    mascot->colclkbg->alpha=(gdouble)mascot->alpclkbg/(gdouble)0xFFFF;
+
+    if((!flag_def_col) &&
+       (my_def_color_check(mascot->colclkbg,
+			   COLOR_CLKBG_R, COLOR_CLKBG_G, COLOR_CLKBG_B, CAIRO_DEF_ALPHA_CLK))){
+      gdk_rgba_free(mascot->def_colclkbg);
+      mascot->colclkbg=gdk_rgba_copy(mascot->def_colclkbg);
       mascot->alpclkbg =mascot->def_alpclkbg;
     }
+#else
+    if((!flag_def_col) &&
+       (my_def_color_check(mascot->colclkbg, mascot->alpclkbg,
+			   COLOR_CLKBG_R, COLOR_CLKBG_G, COLOR_CLKBG_B, CAIRO_DEF_ALPHA_CLK))){
+      mascot->colclkbg=gdk_color_copy(mascot->def_colclkbg);
+      mascot->alpclkbg =mascot->def_alpclkbg;
+    }
+#endif
 
-    if(!xmms_cfg_read_int(cfgfile, f_tmp0, "border_r", &col_tmp))
-      col_tmp=mascot->def_colclkbd->red;
-    mascot->colclkbd->red=col_tmp;
-    if(!xmms_cfg_read_int(cfgfile, f_tmp0, "border_g", &col_tmp))
-      col_tmp=mascot->def_colclkbd->green;
-    mascot->colclkbd->green=col_tmp;
-    if(!xmms_cfg_read_int(cfgfile, f_tmp0, "border_b", &col_tmp))
-      col_tmp=mascot->def_colclkbd->blue;
-    mascot->colclkbd->blue=col_tmp;
+    mascot->colclkbd->red  =my_mascot_read_color(cfgfile, f_tmp0, "border_r", mascot->def_colclkbd->red);
+    mascot->colclkbd->green=my_mascot_read_color(cfgfile, f_tmp0, "border_g", mascot->def_colclkbd->green);
+    mascot->colclkbd->blue =my_mascot_read_color(cfgfile, f_tmp0, "border_b", mascot->def_colclkbd->blue);
     if(!xmms_cfg_read_int(cfgfile, f_tmp0, "border_p", &col_tmp))
       col_tmp=mascot->def_alpclkbd;
     mascot->alpclkbd=col_tmp;
-    if((!flag_def_col)
-	    &&(mascot->colclkbd->red  ==COLOR_CLKBD_R)
-	    &&(mascot->colclkbd->green==COLOR_CLKBD_G)
-	    &&(mascot->colclkbd->blue ==COLOR_CLKBD_B)
-	    &&(mascot->alpclkbd ==CAIRO_DEF_ALPHA_OTHER)
-       ){
-      mascot->colclkbd->red  =mascot->def_colclkbd->red;
-      mascot->colclkbd->green=mascot->def_colclkbd->green;
-      mascot->colclkbd->blue =mascot->def_colclkbd->blue;
+    
+#ifdef  USE_GTK3
+    mascot->colclkbd->alpha=(gdouble)mascot->alpclkbd/(gdouble)0xFFFF;
+
+    if((!flag_def_col) &&
+       (my_def_color_check(mascot->colclkbd,
+			   COLOR_CLKBD_R, COLOR_CLKBD_G, COLOR_CLKBD_B, CAIRO_DEF_ALPHA_OTHER))){
+      gdk_rgba_free(mascot->def_colclkbd);
+      mascot->colclkbd=gdk_rgba_copy(mascot->def_colclkbd);
       mascot->alpclkbd =mascot->def_alpclkbd;
     }
+#else
+    if((!flag_def_col) &&
+       (my_def_color_check(mascot->colclkbd, mascot->alpclkbd,
+			   COLOR_CLKBD_R, COLOR_CLKBD_G, COLOR_CLKBD_B, CAIRO_DEF_ALPHA_OTHER))){
+      mascot->colclkbd=gdk_color_copy(mascot->def_colclkbd);
+      mascot->alpclkbd =mascot->def_alpclkbd;
+    }
+#endif
 
 
     // Color for Balloon
@@ -2224,79 +2277,91 @@ void ReadMascot(typMascot *mascot, gboolean def_flag)
     if(def_flag)  f_tmp0=g_strdup("Default-BalloonColor");
     else          f_tmp0=g_strdup("BalloonColor");
 
-    if(!xmms_cfg_read_int(cfgfile, f_tmp0, "text_r", &col_tmp))
-      col_tmp=mascot->def_colbal->red;
-    mascot->colbal->red=(guint)col_tmp;
-    if(!xmms_cfg_read_int(cfgfile, f_tmp0, "text_g", &col_tmp))
-      col_tmp=mascot->def_colbal->green;
-    mascot->colbal->green=(guint)col_tmp;
-    if(!xmms_cfg_read_int(cfgfile, f_tmp0, "text_b", &col_tmp))
-      col_tmp=mascot->def_colbal->blue;
-    mascot->colbal->blue=(guint)col_tmp;
+    mascot->colbal->red  =my_mascot_read_color(cfgfile, f_tmp0, "text_r", mascot->def_colbal->red);
+    mascot->colbal->green=my_mascot_read_color(cfgfile, f_tmp0, "text_g", mascot->def_colbal->green);
+    mascot->colbal->blue =my_mascot_read_color(cfgfile, f_tmp0, "text_b", mascot->def_colbal->blue);
     if(!xmms_cfg_read_int(cfgfile, f_tmp0, "text_p", &col_tmp))
       col_tmp=mascot->def_alpbal;
     mascot->alpbal=col_tmp;
-    if((!flag_def_col)
-	    &&(mascot->colbal->red  ==COLOR_BAL_R)
-	    &&(mascot->colbal->green==COLOR_BAL_G)
-	    &&(mascot->colbal->blue ==COLOR_BAL_B)
-	    &&(mascot->alpbal ==CAIRO_DEF_ALPHA_OTHER)
-       ){
-      mascot->colbal->red  =mascot->def_colbal->red;
-      mascot->colbal->green=mascot->def_colbal->green;
-      mascot->colbal->blue =mascot->def_colbal->blue;
+    
+#ifdef USE_GTK3
+    mascot->colbal->alpha=(gdouble)mascot->alpbal/(gdouble)0xFFFF;
+    mascot->colbal->alpha=1;
+
+    if((!flag_def_col) &&
+       (my_def_color_check(mascot->colbal,
+			   COLOR_BAL_R, COLOR_BAL_G, COLOR_BAL_B, CAIRO_DEF_ALPHA_OTHER))){
+      gdk_rgba_free(mascot->def_colbal);
+      mascot->colbal=gdk_rgba_copy(mascot->def_colbal);
+      mascot->alpbal =mascot->def_alpbal;
+      mascot->colbal->alpha=1;
+    }
+#else
+    if((!flag_def_col) &&
+       (my_def_color_check(mascot->colbal, mascot->alpbal,
+			   COLOR_BAL_R, COLOR_BAL_G, COLOR_BAL_B, CAIRO_DEF_ALPHA_OTHER))){
+      mascot->colbal=gdk_color_copy(mascot->def_colbal);
       mascot->alpbal =mascot->def_alpbal;
     }
+#endif
        
-    if(!xmms_cfg_read_int(cfgfile, f_tmp0, "bg_r", &col_tmp))
-      col_tmp=mascot->def_colbalbg->red;
-    mascot->colbalbg->red=(guint)col_tmp;
-    if(!xmms_cfg_read_int(cfgfile, f_tmp0, "bg_g", &col_tmp))
-      col_tmp=mascot->def_colbalbg->green;
-    mascot->colbalbg->green=(guint)col_tmp;
-    if(!xmms_cfg_read_int(cfgfile, f_tmp0, "bg_b", &col_tmp))
-      col_tmp=mascot->def_colbalbg->blue;
-    mascot->colbalbg->blue=(guint)col_tmp;
+    mascot->colbalbg->red  =my_mascot_read_color(cfgfile, f_tmp0, "bg_r", mascot->def_colbalbg->red);
+    mascot->colbalbg->green=my_mascot_read_color(cfgfile, f_tmp0, "bg_g", mascot->def_colbalbg->green);
+    mascot->colbalbg->blue =my_mascot_read_color(cfgfile, f_tmp0, "bg_b", mascot->def_colbalbg->blue);
     if(!xmms_cfg_read_int(cfgfile, f_tmp0, "bg_p", &col_tmp))
       col_tmp=mascot->def_alpbalbg;
     mascot->alpbalbg=col_tmp;
-    if((!flag_def_col)
-	    &&(mascot->colbalbg->red  ==COLOR_BALBG_R)
-	    &&(mascot->colbalbg->green==COLOR_BALBG_G)
-	    &&(mascot->colbalbg->blue ==COLOR_BALBG_B)
-	    &&(mascot->alpbalbg ==CAIRO_DEF_ALPHA_BAL)
-       ){
-      mascot->colbalbg->red  =mascot->def_colbalbg->red;
-      mascot->colbalbg->green=mascot->def_colbalbg->green;
-      mascot->colbalbg->blue =mascot->def_colbalbg->blue;
+    
+#ifdef USE_GTK3
+    mascot->colbalbg->alpha=(gdouble)mascot->alpbalbg/(gdouble)0xFFFF;
+    mascot->colbalbd->alpha=1;
+
+    if((!flag_def_col) &&
+       (my_def_color_check(mascot->colbalbg,
+			   COLOR_BALBG_R, COLOR_BALBG_G, COLOR_BALBG_B, CAIRO_DEF_ALPHA_BAL))){
+      gdk_rgba_free(mascot->def_colbalbg);
+      mascot->colbalbg=gdk_rgba_copy(mascot->def_colbalbg);
+      mascot->alpbalbg =mascot->def_alpbalbg;
+      mascot->colbalbg->alpha=1;
+    }
+#else
+    if((!flag_def_col) &&
+       (my_def_color_check(mascot->colbalbg, mascot->alpbalbg,
+			   COLOR_BALBG_R, COLOR_BALBG_G, COLOR_BALBG_B, CAIRO_DEF_ALPHA_BAL))){
+      mascot->colbalbg=gdk_color_copy(mascot->def_colbalbg);
       mascot->alpbalbg =mascot->def_alpbalbg;
     }
+#endif
 
-    if(!xmms_cfg_read_int(cfgfile, f_tmp0, "border_r", &col_tmp))
-      col_tmp=mascot->def_colbalbd->red;
-    mascot->colbalbd->red=(guint)col_tmp;
-    if(!xmms_cfg_read_int(cfgfile, f_tmp0, "border_g", &col_tmp))
-      col_tmp=mascot->def_colbalbd->green;
-    mascot->colbalbd->green=(guint)col_tmp;
-    if(!xmms_cfg_read_int(cfgfile, f_tmp0, "border_b", &col_tmp))
-      col_tmp=mascot->def_colbalbd->blue;
-    mascot->colbalbd->blue=(guint)col_tmp;
+    mascot->colbalbd->red  =my_mascot_read_color(cfgfile, f_tmp0, "border_r", mascot->def_colbalbd->red);
+    mascot->colbalbd->green=my_mascot_read_color(cfgfile, f_tmp0, "border_g", mascot->def_colbalbd->green);
+    mascot->colbalbd->blue =my_mascot_read_color(cfgfile, f_tmp0, "border_b", mascot->def_colbalbd->blue);
     if(!xmms_cfg_read_int(cfgfile, f_tmp0, "border_p", &col_tmp))
       col_tmp=mascot->def_alpbalbd;
     mascot->alpbalbd=col_tmp;
-    if((!flag_def_col)
-	    &&(mascot->colbalbd->red  ==COLOR_BALBD_R)
-	    &&(mascot->colbalbd->green==COLOR_BALBD_G)
-	    &&(mascot->colbalbd->blue ==COLOR_BALBD_B)
-	    &&(mascot->alpbalbd ==CAIRO_DEF_ALPHA_OTHER)
-       ){
-      mascot->colbalbd->red  =mascot->def_colbalbd->red;
-      mascot->colbalbd->green=mascot->def_colbalbd->green;
-      mascot->colbalbd->blue =mascot->def_colbalbd->blue;
+    
+#ifdef USE_GTK3
+    mascot->colbalbd->alpha=(gdouble)mascot->alpbalbd/(gdouble)0xFFFF;
+    mascot->colbalbd->alpha=1;
+    
+    if((!flag_def_col) &&
+       (my_def_color_check(mascot->colbalbd,
+			   COLOR_BALBD_R, COLOR_BALBD_G, COLOR_BALBD_B, CAIRO_DEF_ALPHA_OTHER))){
+      gdk_rgba_free(mascot->def_colbalbd);
+      mascot->colbalbd=gdk_rgba_copy(mascot->def_colbalbd);
+      mascot->alpbalbd =mascot->def_alpbalbd;
+      mascot->colbalbd->alpha=1;
+    }
+#else
+    if((!flag_def_col) &&
+       (my_def_color_check(mascot->colbalbd, mascot->alpbalbd,
+			   COLOR_BALBD_R, COLOR_BALBD_G, COLOR_BALBD_B, CAIRO_DEF_ALPHA_OTHER))){
+      mascot->colbalbd=gdk_color_copy(mascot->def_colbalbd);
       mascot->alpbalbd =mascot->def_alpbalbd;
     }
+#endif
 
-
+    
 #ifdef USE_BIFF
     // Biff用データ
     if(f_tmp0) g_free(f_tmp0);

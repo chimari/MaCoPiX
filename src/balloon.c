@@ -177,7 +177,7 @@ void DrawBalloon2(typMascot *mascot, char **wn_iwp, int wn_max)
   }
 
   cr = gdk_cairo_create(pixmap_bal[work_page]);
-#endif // USE_GTK3
+#endif // USE_GTK3   ////////////////////// ////////////////////////////////////
   
   if(shape_flag){
     cairo_set_source_rgb (cr, 1, 1, 1); // opaque white
@@ -193,11 +193,7 @@ void DrawBalloon2(typMascot *mascot, char **wn_iwp, int wn_max)
   
 #ifdef USE_WIN32  
   //BG should be opaque to BG only translucency for Win32
-  cairo_set_source_rgba (cr, 
-			 (gdouble)mascot->colbalbd->red/0xFFFF,
-			 (gdouble)mascot->colbalbd->green/0xFFFF,
-			 (gdouble)mascot->colbalbd->blue/0xFFFF,
-			 1); /* opaque BG */
+  my_cairo_set_source_rgba (cr, mascot->colbalbd, 1); /* opaque BG */
 
   cairo_rectangle(cr, 0, 0, w, h+h_arrow);
   cairo_fill(cr);
@@ -284,7 +280,7 @@ void DrawBalloon2(typMascot *mascot, char **wn_iwp, int wn_max)
     mask_bal[work_page] = make_mask_from_surface(surface_mask);
     // If having a mask, never clip
     // Anti-alias of cairo could cause discoloration
-#endif // USE_GTK3
+#endif // USE_GTK3 ///////////////////////////////////////////////////////////
   }
   else{  
     cairo_clip_preserve (cr);
@@ -300,21 +296,14 @@ void DrawBalloon2(typMascot *mascot, char **wn_iwp, int wn_max)
   ///// BACKGROUND /////
 #ifdef USE_WIN32  
   //BG should be opaque to BG only translucency for Win32
-  cairo_set_source_rgba (cr, 
-			 (gdouble)mascot->colbalbg->red/0xFFFF,
-			 (gdouble)mascot->colbalbg->green/0xFFFF,
-			 (gdouble)mascot->colbalbg->blue/0xFFFF,
-			 1); /* opaque BG */
+  my_cairo_set_source_rgba (cr, mascot->colbalbg, 1); /* opaque BG */
   cairo_fill_preserve(cr);
   cairo_paint (cr);
 #else
   //Even for X, to get clear shape and border,
   //Full area of the balloon window should be painted with BG color
-  cairo_set_source_rgba (cr, 
-			 (gdouble)mascot->colbalbg->red/0xFFFF,
-			 (gdouble)mascot->colbalbg->green/0xFFFF,
-			 (gdouble)mascot->colbalbg->blue/0xFFFF,
-			 (gdouble)mascot->alpbalbg/0xFFFF); /* transparent */
+  my_cairo_set_source_rgba (cr, mascot->colbalbg, (gdouble)mascot->alpbalbg/(gdouble)0xFFFF); /* transparent */
+
   //if(shape_flag){
   cairo_fill_preserve(cr);
   cairo_paint (cr);
@@ -324,21 +313,14 @@ void DrawBalloon2(typMascot *mascot, char **wn_iwp, int wn_max)
 
   ///// BORDER //////
   if(mascot->wbalbd>0){
-    cairo_set_source_rgba (cr, 
-			   (gdouble)mascot->colbalbd->red/0xFFFF,
-			   (gdouble)mascot->colbalbd->green/0xFFFF,
-			   (gdouble)mascot->colbalbd->blue/0xFFFF,
-			   (gdouble)mascot->alpbalbd/0xFFFF); /* transparent */
+    my_cairo_set_source_rgba (cr, mascot->colbalbd, (gdouble)mascot->alpbalbd/(gdouble)0xFFFF); /* transparent */
     cairo_set_line_width(cr,(gdouble)mascot->wbalbd *2);
     cairo_stroke(cr);
   }
 
   // Balloon Text
-  cairo_set_source_rgba (cr, 
-			 (gdouble)mascot->colbal->red/0xFFFF,
-			 (gdouble)mascot->colbal->green/0xFFFF,
-			 (gdouble)mascot->colbal->blue/0xFFFF,
-			 (gdouble)mascot->alpbal/0xFFFF); /* transparent */
+  my_cairo_set_source_rgba (cr, mascot->colbal, (gdouble)mascot->alpbal/(gdouble)0xFFFF); /* transparent */
+			 
 
 #ifndef USE_PANGOCAIRO
   cairo_select_font_face (cr, 

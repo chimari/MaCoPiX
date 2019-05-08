@@ -2008,9 +2008,10 @@ void TestAnime(GtkWidget *w, gint gdata)
   // アニメ
   while(i_frm<tmp_mascot.frame_num[i_ptn]){
     TestLoadPixmaps(&tmp_mascot,
-    	    tmp_pixfile[tmp_mascot.frame_pix[i_ptn][i_frm]],
-    	    tmp_mascot.frame_pix[i_ptn][i_frm]);
-    
+		    tmp_pixfile[tmp_mascot.frame_pix[i_ptn][i_frm]],
+    		    tmp_mascot.frame_pix[i_ptn][i_frm]);
+    while (my_main_iteration(FALSE));
+
     seqend=RANDOM(tmp_mascot.frame_max[i_ptn][i_frm]
 		  -tmp_mascot.frame_min[i_ptn][i_frm]+1)
       +tmp_mascot.frame_min[i_ptn][i_frm];
@@ -6490,7 +6491,7 @@ void create_config_dialog(void)
 #endif				     
 				    );
   gtkut_table_attach(conf_tbl, button, 4, 5, 1, 2,
-		     GTK_FILL,GTK_FILL,0,0);
+		     GTK_SHRINK,GTK_SHRINK,0,0);
 
 
   my_signal_connect(button,"clicked",close_conf, GTK_WIDGET(conf_main));
@@ -6503,7 +6504,7 @@ void create_config_dialog(void)
 #endif				     
 				    );
   gtkut_table_attach(conf_tbl, button, 5, 6, 1, 2,
-		     GTK_FILL,GTK_FILL,0,0);
+		     GTK_SHRINK,GTK_SHRINK,0,0);
   my_signal_connect(button,"clicked",conf_change, GTK_WIDGET(conf_main));
   
   // ノートブックの生成
@@ -6630,7 +6631,7 @@ void create_config_dialog(void)
       label = gtkut_label_new (_("Absolute[pix]"));
       gtkut_pos(label, POS_START, POS_END);
       gtkut_table_attach(table3, label, 1, 2, 0, 1,
-			 GTK_SHRINK,GTK_FILL,0,0);
+			 GTK_SHRINK,GTK_SHRINK,0,0);
       adj = (GtkAdjustment *)gtk_adjustment_new 
 	((gfloat)Mascot->offset,
 	 -Mascot->width_root, Mascot->width_root,
@@ -6645,7 +6646,7 @@ void create_config_dialog(void)
       label = gtkut_label_new (_("Relative[%]"));
       gtkut_pos(label, POS_START, POS_END);
       gtkut_table_attach (table3, label, 1, 2, 1, 2,
-			  GTK_FILL,GTK_FILL,0,0);
+			  GTK_SHRINK,GTK_SHRINK,0,0);
       adj = (GtkAdjustment *)gtk_adjustment_new 
 	((gfloat)Mascot->offsetp, 0, 100, 1.0, 10.0, 0.0);
       my_signal_connect (adj, "value_changed",cc_get_adj,&tmp_mascot.offsetp);
@@ -7075,14 +7076,14 @@ void create_config_dialog(void)
 
       frame = gtkut_frame_new (_("Time Signal"));
       gtkut_table_attach(table, frame, 0, 1, 0, 1,
-			 GTK_FILL,GTK_FILL,0,0);
+			 GTK_FILL,GTK_SHRINK,0,0);
 	
       table1 = gtkut_table_new (3, 2, FALSE, 0, 0, 5);
       gtk_container_add (GTK_CONTAINER (frame), table1);
 
       check = gtk_check_button_new_with_label(_("Use Signal"));
       gtkut_table_attach(table1, check, 0, 2, 0, 1,
-			 GTK_FILL|GTK_EXPAND, GTK_SHRINK, 0, 0);
+			 GTK_SHRINK, GTK_SHRINK, 0, 0);
       if(Mascot->signal.flag){
 	gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(check),TRUE);
       }
@@ -7145,8 +7146,7 @@ void create_config_dialog(void)
       my_signal_connect (entry,"changed",cc_get_entry,&tmp_mascot.signal.com);
       gtkut_table_attach (table1, entry,
 			  1, 3, 1, 2,
-			  GTK_EXPAND | GTK_FILL,
-			  GTK_EXPAND | GTK_FILL,0,0);
+			  GTK_EXPAND|GTK_FILL, GTK_SHRINK,0,0);
       if(Mascot->signal.com){
 	gtk_entry_set_text(GTK_ENTRY(entry), Mascot->signal.com);
       }
@@ -7681,7 +7681,7 @@ void create_config_dialog(void)
       frame = gtkut_frame_new (_("Mascot Magnification"));
       gtk_container_set_border_width (GTK_CONTAINER (frame), 5);
       gtkut_table_attach(table, frame, 0, 1, 0, 1,
-			 GTK_SHRINK,GTK_SHRINK,0,0);
+			 GTK_FILL,GTK_SHRINK,0,0);
 	
       table1 = gtkut_table_new (2, 2, FALSE, 5, 5, 5);
       gtk_container_add (GTK_CONTAINER (frame), table1);
@@ -7753,7 +7753,7 @@ void create_config_dialog(void)
       frame = gtkut_frame_new (_("Graphic lib. for Image Rendering (Cairo enables trancelucency w/composited desktop)"));
       gtk_container_set_border_width (GTK_CONTAINER (frame), 5);
       gtkut_table_attach(table, frame, 0, 1, 1, 2,
-			 GTK_FILL,GTK_FILL,0,0);
+			 GTK_FILL,GTK_SHRINK,0,0);
 
       vbox = gtkut_vbox_new(FALSE,5);
       gtk_container_set_border_width (GTK_CONTAINER (vbox), 5);
@@ -7945,14 +7945,14 @@ void create_config_dialog(void)
       frame = gtkut_frame_new (_("Default for Clock"));
       gtk_container_set_border_width (GTK_CONTAINER (frame), 5);
       gtkut_table_attach(table, frame, 0, 1, 0, 1,
-			 GTK_FILL,GTK_SHRINK,0,0);
+			 GTK_FILL|GTK_EXPAND,GTK_SHRINK,0,0);
 
-      table1=gtkut_table_new(4,2,TRUE, 0, 5, 5);
+      table1=gtkut_table_new(4,2, FALSE, 0, 5, 5);
       gtk_container_add (GTK_CONTAINER (frame), table1);
 
       hbox = gtkut_hbox_new(FALSE,0);
       gtkut_table_attach(table1, hbox, 0, 4, 0, 1,
-			 GTK_FILL, GTK_SHRINK,0,0);
+			 GTK_FILL|GTK_EXPAND, GTK_SHRINK,0,0);
 	
       label = gtkut_label_new (_("Fontset"));
       gtk_box_pack_start(GTK_BOX(hbox), label,FALSE, FALSE, 0);
@@ -7974,6 +7974,7 @@ void create_config_dialog(void)
 
 #ifdef USE_GTK3
       button = gtk_color_button_new_with_rgba(Mascot->def_colclk);
+      gtk_color_chooser_set_use_alpha(GTK_COLOR_CHOOSER(button),TRUE);
 #else
       button = gtk_color_button_new_with_color(Mascot->def_colclk);
       gtk_color_button_set_use_alpha(GTK_COLOR_BUTTON(button),TRUE);
@@ -7994,6 +7995,9 @@ void create_config_dialog(void)
 
 #ifdef USE_GTK3
       button = gtk_color_button_new_with_rgba(Mascot->def_colclkbg);
+#ifndef USE_WIN32
+      gtk_color_chooser_set_use_alpha(GTK_COLOR_CHOOSER(button),TRUE);
+#endif
 #else
       button = gtk_color_button_new_with_color(Mascot->def_colclkbg);
 #ifndef USE_WIN32
@@ -8015,6 +8019,7 @@ void create_config_dialog(void)
 
 #ifdef USE_GTK3
       button = gtk_color_button_new_with_rgba(Mascot->def_colclkbd);
+      gtk_color_chooser_set_use_alpha(GTK_COLOR_CHOOSER(button),TRUE);
 #else
       button = gtk_color_button_new_with_color(Mascot->def_colclkbd);
       gtk_color_button_set_use_alpha(GTK_COLOR_BUTTON(button),TRUE);
@@ -8034,6 +8039,7 @@ void create_config_dialog(void)
 
 #ifdef USE_GTK3
       button = gtk_color_button_new_with_rgba(Mascot->def_colclksd);
+      gtk_color_chooser_set_use_alpha(GTK_COLOR_CHOOSER(button),TRUE);
 #else
       button = gtk_color_button_new_with_color(Mascot->def_colclksd);
       gtk_color_button_set_use_alpha(GTK_COLOR_BUTTON(button),TRUE);
@@ -8093,6 +8099,7 @@ void create_config_dialog(void)
 
 #ifdef USE_GTK3
       button = gtk_color_button_new_with_rgba(Mascot->def_colbal);
+      gtk_color_chooser_set_use_alpha(GTK_COLOR_CHOOSER(button),TRUE);
 #else
       button = gtk_color_button_new_with_color(Mascot->def_colbal);
       gtk_color_button_set_use_alpha(GTK_COLOR_BUTTON(button),TRUE);
@@ -8131,11 +8138,12 @@ void create_config_dialog(void)
 
 #ifdef USE_GTK3
       button = gtk_color_button_new_with_rgba(Mascot->def_colbalbd);
+      gtk_color_chooser_set_use_alpha(GTK_COLOR_CHOOSER(button),TRUE);
 #else
       button = gtk_color_button_new_with_color(Mascot->def_colbalbd);
       gtk_color_button_set_use_alpha(GTK_COLOR_BUTTON(button),TRUE);
       gtk_color_button_set_alpha(GTK_COLOR_BUTTON(button),
-				 Mascot->def_alpbalbd);
+			 Mascot->def_alpbalbd);
 #endif
       gtk_box_pack_start(GTK_BOX(hbox), button,FALSE, FALSE, 0);
       my_signal_connect(button,"color-set",ChangeColorButton, 
@@ -8149,7 +8157,7 @@ void create_config_dialog(void)
 #endif
       gtk_container_set_border_width (GTK_CONTAINER (frame), 5);
       gtkut_table_attach(table, frame, 0, 1, 2, 3,
-			 GTK_FILL,GTK_FILL,0,0);
+			 GTK_FILL,GTK_SHRINK,0,0);
 
       table1 = gtkut_table_new (4, 5, FALSE, 5, 5, 5);
       gtk_container_add (GTK_CONTAINER (frame), table1);
@@ -8157,8 +8165,7 @@ void create_config_dialog(void)
 
       check = gtk_check_button_new_with_label(_("Take precedence default opacities over mascot settings"));
       gtkut_table_attach(table1, check, 0, 2, 0, 1,
-			 GTK_EXPAND | GTK_FILL,
-			 GTK_EXPAND | GTK_FILL,0,0);
+			 GTK_EXPAND|GTK_FILL, GTK_SHRINK,0,0);
       if(Mascot->force_def_alpha){
 	gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(check),TRUE);
       }
@@ -8172,24 +8179,24 @@ void create_config_dialog(void)
       label = gtkut_label_new (_("Mascot [%]"));
       gtkut_pos(label, POS_START, POS_END);
       gtkut_table_attach(table1, label, 0, 1, 1, 2,
-			 GTK_FILL,GTK_SHRINK,0,0);
+			 GTK_SHRINK,GTK_SHRINK,0,0);
 #ifdef USE_BIFF
       label = gtkut_label_new (_("Biff Image [%]"));
       gtkut_pos(label, POS_START, POS_END);
       gtkut_table_attach(table1, label, 0, 1, 2, 3,
-			 GTK_FILL,GTK_SHRINK,0,0);
+			 GTK_SHRINK,GTK_SHRINK,0,0);
 #endif
 
 #ifdef USE_WIN32
       label = gtkut_label_new (_("Balloon [%]"));
       gtkut_pos(label, POS_START, POS_END);
       gtkut_table_attach(table1, label, 0, 1, 3, 4,
-			 GTK_FILL,GTK_SHRINK,0,0);
+			 GTK_SHRINK,GTK_SHRINK,0,0);
 
       label = gtkut_label_new (_("Clock [%]"));
       gtkut_pos(label, POS_START, POS_END);
       gtkut_table_attach(table1, label, 0, 1, 4, 5,
-			 GTK_FILL,GTK_SHRINK,0,0);
+			 GTK_SHRINk,GTK_SHRINK,0,0);
 #endif
 
       
@@ -8200,7 +8207,8 @@ void create_config_dialog(void)
       scale =  gtkut_hscale_new (GTK_ADJUSTMENT(adj));
       gtk_scale_set_digits (GTK_SCALE (scale), 0);
       gtk_scale_set_draw_value (GTK_SCALE (scale), TRUE);
-      gtkut_table_attach_defaults(table1, scale, 1, 2, 1, 2);
+      gtkut_table_attach(table1, scale, 1, 2, 1, 2,
+			 GTK_EXPAND|GTK_FILL,GTK_SHRINK,0,0);
 #ifndef USE_WIN32
       if(Mascot->flag_composite==COMPOSITE_FALSE)
 	gtk_widget_set_sensitive(scale,FALSE);
@@ -8214,7 +8222,8 @@ void create_config_dialog(void)
       scale =  gtkut_hscale_new (GTK_ADJUSTMENT(adj));
       gtk_scale_set_digits (GTK_SCALE (scale), 0);
       gtk_scale_set_draw_value (GTK_SCALE (scale), TRUE);
-      gtkut_table_attach_defaults(table1, scale, 1, 2, 2, 3);
+      gtkut_table_attach(table1, scale, 1, 2, 2, 3,
+			 GTK_EXPAND|GTK_FILL,GTK_SHRINK,0,0);
 #ifndef USE_WIN32
       if(Mascot->flag_composite==COMPOSITE_FALSE)
 	gtk_widget_set_sensitive(scale,FALSE);
@@ -8229,7 +8238,8 @@ void create_config_dialog(void)
       scale =  gtkut_hscale_new (GTK_ADJUSTMENT(adj));
       gtk_scale_set_digits (GTK_SCALE (scale), 0);
       gtk_scale_set_draw_value (GTK_SCALE (scale), TRUE);
-      gtkut_table_attach_defaults(table1, scale, 1, 2, 3, 4);
+      gtkut_table_attach(table1, scale, 1, 2, 3, 4,
+			 GTK_EXPAND|GTK_FILL,GTK_SHRINK,0,0);
 
       adj = (GtkAdjustment *)gtk_adjustment_new 
 	((gfloat)Mascot->def_alpha_clk, 0, 100, 1.0, 10.0, 0.0);
@@ -8238,7 +8248,8 @@ void create_config_dialog(void)
       scale =  gtkut_hscale_new (GTK_ADJUSTMENT(adj));
       gtk_scale_set_digits (GTK_SCALE (scale), 0);
       gtk_scale_set_draw_value (GTK_SCALE (scale), TRUE);
-      gtkut_table_attach_defaults(table1, scale, 1, 2, 4, 5);
+      gtkut_table_attach(table1, scale, 1, 2, 4, 5,
+			 GTK_EXPAND|GTK_FILL,GTK_SHRINK,0,0);
 
 
       label = gtkut_label_new ("   ");
@@ -8292,7 +8303,7 @@ void create_config_dialog(void)
       frame = gtkut_frame_new (_("Duet Animation"));
       gtk_container_set_border_width (GTK_CONTAINER (frame), 5);
       gtkut_table_attach(table, frame, 0, 2, y_tbl, y_tbl+1,
-			 GTK_FILL,GTK_FILL,0,0);
+			 GTK_FILL,GTK_SHRINK,0,0);
       table1 = gtkut_table_new (2, 1, FALSE, 5, 5, 5);
       gtk_container_add (GTK_CONTAINER (frame), table1);
 
@@ -8320,7 +8331,7 @@ void create_config_dialog(void)
       frame = gtkut_frame_new (_("Socket Message"));
       gtk_container_set_border_width (GTK_CONTAINER (frame), 5);
       gtkut_table_attach(table, frame, 0, 2, y_tbl, y_tbl+1,
-			 GTK_FILL,GTK_FILL,0,0);
+			 GTK_FILL,GTK_SHRINK,0,0);
 
       table1 = gtkut_table_new (3, 1, FALSE, 5, 0, 5);
       gtk_container_add (GTK_CONTAINER (frame), table1);
@@ -8679,7 +8690,7 @@ void create_config_dialog(void)
       label = gtkut_label_new (_("Character Code"));
       gtkut_pos(label, POS_CENTER, POS_CENTER);
       gtkut_table_attach(table1, label, 0, 1, 1, 2,
-			 GTK_FILL,GTK_SHRINK,0,0);
+			 GTK_SHRINK,GTK_SHRINK,0,0);
 
       entry = gtk_entry_new ();
       if(tmp_mascot.menu_code){
@@ -8971,33 +8982,14 @@ void create_config_dialog(void)
       table1 = gtkut_table_new (2, 1, FALSE,0,0,5);
       gtk_container_add (GTK_CONTAINER (frame), table1);
 
-#ifdef __GTK_FONT_BUTTON_H__
       button = gtk_font_button_new_with_font(Mascot->fontname_clk);
-      gtkut_table_attach_defaults (table1,button,
-				   0, 2, 0, 1);
       gtk_font_button_set_show_style(GTK_FONT_BUTTON(button),TRUE);
       gtk_font_button_set_use_font(GTK_FONT_BUTTON(button),TRUE);
       gtk_font_button_set_use_size(GTK_FONT_BUTTON(button),TRUE);
       my_signal_connect(button,"font-set",ChangeFontButton, 
       			(gpointer *)CONF_FONT_CLK);
-#else
-      entry_fontname_clk = gtk_entry_new ();
-      gtkut_table_attach_defaults (table1, entry_fontname_clk,
-				 0, 1, 0, 1);
-      gtk_entry_set_text(GTK_ENTRY(entry_fontname_clk),Mascot->fontname_clk);
-
-      button=gtkut_button_new_with_icon(NULL,
-#ifdef USE_GTK3				       
-					"font-generic"
-#else
-					GTK_STOCK_SELECT_FONT
-#endif
-					);
-      gtkut_table_attach (table1, button, 1, 2, 0, 1, 
-			  GTK_SHRINK,GTK_SHRINK,0,0);
-      my_signal_connect(button,"clicked",create_font_selection_dialog, 
-			(gpointer *)CONF_FONT_CLK);
-#endif   
+      gtkut_table_attach (table1, button, 0, 2, 0, 1, 
+			  GTK_FILL|GTK_EXPAND,GTK_SHRINK,0,0);
 
       frame = gtkut_frame_new (_("Size/Position"));
       gtk_container_set_border_width (GTK_CONTAINER (frame), 5);
@@ -9014,10 +9006,12 @@ void create_config_dialog(void)
 #endif
 
       label = gtkut_label_new (_("Panel Position"));
-      gtkut_table_attach_defaults (table1, label, 0, 1,0, 1);
+      gtkut_table_attach (table1, label, 0, 1, 0, 1,
+			  GTK_SHRINK, GTK_SHRINK, 5, 5);
       gtkut_pos(label, POS_START, POS_CENTER);
       label = gtkut_label_new (_("X"));
-      gtkut_table_attach_defaults (table1, label, 1, 2, 0, 1);
+      gtkut_table_attach (table1, label, 1, 2, 0, 1,
+			  GTK_SHRINK, GTK_SHRINK, 5, 5);
       gtkut_pos(label, POS_START, POS_CENTER);
       adj = (GtkAdjustment *)gtk_adjustment_new 
 	((gfloat)Mascot->clk_x, -Mascot->width*3, Mascot->width*4, 1.0, 
@@ -9025,51 +9019,61 @@ void create_config_dialog(void)
       my_signal_connect (adj, "value_changed",cc_get_adj,&tmp_mascot.clk_x);
       spinner =  gtk_spin_button_new (adj, 0, 0);
       gtk_spin_button_set_wrap (GTK_SPIN_BUTTON (spinner), FALSE);
-      gtkut_table_attach_defaults (table1, spinner, 2, 3, 0, 1);
+      gtkut_table_attach (table1, spinner, 2, 3, 0, 1,
+			  GTK_SHRINK, GTK_SHRINK, 5, 5);
       label = gtkut_label_new (_("Y"));
       gtkut_pos(label, POS_START, POS_CENTER);
-      gtkut_table_attach_defaults (table1, label, 3, 4, 0, 1);
+      gtkut_table_attach (table1, label, 3, 4, 0, 1,
+			  GTK_SHRINK, GTK_SHRINK, 5, 5);
       adj = (GtkAdjustment *)gtk_adjustment_new 
 	((gfloat)Mascot->clk_y, -Mascot->height*2, Mascot->height*3, 1.0, 
 	 10.0, 0.0);
       my_signal_connect (adj, "value_changed",cc_get_adj,&tmp_mascot.clk_y);
       spinner =  gtk_spin_button_new (adj, 0, 0);
       gtk_spin_button_set_wrap (GTK_SPIN_BUTTON (spinner), FALSE);
-      gtkut_table_attach_defaults (table1, spinner, 4, 5, 0, 1);
+      gtkut_table_attach (table1, spinner, 4, 5, 0, 1,
+			  GTK_SHRINK, GTK_SHRINK, 5, 5);
 
       label = gtkut_label_new (_("Text Offset"));
-      gtkut_table_attach_defaults (table1, label, 0, 1,1, 2);
+      gtkut_table_attach (table1, label, 0, 1,1, 2,
+			  GTK_SHRINK, GTK_SHRINK, 5, 5);
       gtkut_pos(label, POS_START, POS_CENTER);
       label = gtkut_label_new (_("X"));
       gtkut_pos(label, POS_END, POS_CENTER);
-      gtkut_table_attach_defaults (table1, label, 1, 2, 1, 2);
+      gtkut_table_attach (table1, label, 1, 2, 1, 2,
+			  GTK_SHRINK, GTK_SHRINK, 5, 5);
       adj = (GtkAdjustment *)gtk_adjustment_new 
 	((gfloat)Mascot->clktext_x, 1, Mascot->width, 1.0, 10.0, 0.0);
       my_signal_connect (adj, "value_changed",cc_get_adj,
 			 &tmp_mascot.clktext_x);
       spinner =  gtk_spin_button_new (adj, 0, 0);
       gtk_spin_button_set_wrap (GTK_SPIN_BUTTON (spinner), FALSE);
-      gtkut_table_attach_defaults (table1, spinner, 2, 3, 1, 2);
+      gtkut_table_attach (table1, spinner, 2, 3, 1, 2,
+			  GTK_SHRINK, GTK_SHRINK, 5, 5);
       label = gtkut_label_new (_("Y"));
       gtkut_pos(label, POS_END, POS_CENTER);
-      gtkut_table_attach_defaults (table1, label, 3, 4, 1, 2);
+      gtkut_table_attach (table1, label, 3, 4, 1, 2,
+			  GTK_SHRINK, GTK_SHRINK, 5, 5);
       adj = (GtkAdjustment *)gtk_adjustment_new 
 	((gfloat)Mascot->clktext_y, 1, Mascot->height, 1.0, 10.0, 0.0);
       my_signal_connect (adj, "value_changed",cc_get_adj,
 			 &tmp_mascot.clktext_y);
       spinner =  gtk_spin_button_new (adj, 0, 0);
       gtk_spin_button_set_wrap (GTK_SPIN_BUTTON (spinner), FALSE);
-      gtkut_table_attach_defaults (table1, spinner, 4, 5, 1, 2);
+      gtkut_table_attach (table1, spinner, 4, 5, 1, 2,
+			  GTK_SHRINK, GTK_SHRINK, 5, 5);
 
       label = gtkut_label_new (_("Border Width"));
-      gtkut_table_attach_defaults (table1, label, 0, 1,2, 3);
+      gtkut_table_attach (table1, label, 0, 1,2, 3,
+			  GTK_SHRINK, GTK_SHRINK, 5, 5);
       gtkut_pos(label, POS_START, POS_CENTER);
       adj = (GtkAdjustment *)gtk_adjustment_new 
 	((gfloat)Mascot->wclkbd, 0, 10, 1.0, 1.0, 0.0);
       my_signal_connect (adj, "value_changed",cc_get_adj,
 			 &tmp_mascot.wclkbd);
       spinner =  gtk_spin_button_new (adj, 0, 0);
-      gtkut_table_attach_defaults (table1, spinner, 2, 3, 2, 3);
+      gtkut_table_attach (table1, spinner, 2, 3, 2, 3,
+			  GTK_SHRINK, GTK_SHRINK, 5, 5);
       gtk_spin_button_set_wrap (GTK_SPIN_BUTTON (spinner), FALSE);
 
 
@@ -9130,33 +9134,38 @@ void create_config_dialog(void)
       frame = gtkut_frame_new (_("Color"));
       gtk_container_set_border_width (GTK_CONTAINER (frame), 5);
       gtkut_table_attach(table, frame, 1, 2, 2, 4,
-			 GTK_FILL,GTK_FILL,0,0);
+			 GTK_FILL,GTK_SHRINK,0,0);
 	
       table1 = gtkut_table_new (2, 6, FALSE,0,0,5);
       gtk_container_add (GTK_CONTAINER (frame), table1);
 
       label = gtkut_label_new (_("Text"));
-      gtkut_table_attach_defaults (table1, label, 0, 1,0, 1);
+      gtkut_table_attach (table1, label, 0, 1,0, 1,
+			  GTK_SHRINK, GTK_SHRINK, 5, 5);
       gtkut_pos(label, POS_START, POS_CENTER);
 
 #ifdef USE_GTK3
       button = gtk_color_button_new_with_rgba(Mascot->colclk);
+      gtk_color_chooser_set_use_alpha(GTK_COLOR_CHOOSER(button),TRUE);
 #else
       button = gtk_color_button_new_with_color(Mascot->colclk);
       gtk_color_button_set_use_alpha(GTK_COLOR_BUTTON(button),TRUE);
       gtk_color_button_set_alpha(GTK_COLOR_BUTTON(button),
 				 Mascot->alpclk);
 #endif
-      gtkut_table_attach (table1, button,1,2,0,1,1,1,0,0);
+      gtkut_table_attach (table1, button,1,2,0,1,
+			  GTK_SHRINK, GTK_SHRINK, 5, 5);
       my_signal_connect(button,"color-set",ChangeColorButton, 
       			(gpointer *)CONF_COLOR_CLK);
 
       label = gtkut_label_new (_("BG"));
-      gtkut_table_attach_defaults (table1, label, 0, 1,1, 2);
+      gtkut_table_attach (table1, label, 0, 1,1, 2,
+			  GTK_SHRINK, GTK_SHRINK, 5, 5);
       gtkut_pos(label, POS_START, POS_CENTER);
 
 #ifdef USE_GTK3
       button = gtk_color_button_new_with_rgba(Mascot->colclkbg);
+      gtk_color_chooser_set_use_alpha(GTK_COLOR_CHOOSER(button),TRUE);
 #else
       button = gtk_color_button_new_with_color(Mascot->colclkbg);
 #ifndef USE_WIN32
@@ -9165,39 +9174,46 @@ void create_config_dialog(void)
 				 Mascot->alpclkbg);
 #endif
 #endif
-      gtkut_table_attach(table1, button,1,2,1,2,1,1,0,0);
+      gtkut_table_attach(table1, button,1,2,1,2,
+			 GTK_SHRINK, GTK_SHRINK, 5, 5);
       my_signal_connect(button,"color-set",ChangeColorButton, 
       			(gpointer *)CONF_COLOR_CLKBG);
 
       label = gtkut_label_new (_("Border"));
-      gtkut_table_attach_defaults (table1, label, 0, 1,2, 3);
+      gtkut_table_attach (table1, label, 0, 1,2, 3,
+ 			  GTK_SHRINK, GTK_SHRINK, 5, 5);
       gtkut_pos(label, POS_START, POS_CENTER);
-
+      
 #ifdef USE_GTK3
       button = gtk_color_button_new_with_rgba(Mascot->colclkbd);
+      gtk_color_chooser_set_use_alpha(GTK_COLOR_CHOOSER(button),TRUE);
 #else
       button = gtk_color_button_new_with_color(Mascot->colclkbd);
       gtk_color_button_set_use_alpha(GTK_COLOR_BUTTON(button),TRUE);
       gtk_color_button_set_alpha(GTK_COLOR_BUTTON(button),
 				 Mascot->alpclkbd);
 #endif
-      gtkut_table_attach(table1,button,1,2,2,3,1,1,0,0);
+      gtkut_table_attach(table1,button,1,2,2,3,
+			 GTK_SHRINK, GTK_SHRINK, 5, 5);
       my_signal_connect(button,"color-set",ChangeColorButton, 
       			(gpointer *)CONF_COLOR_CLKBD);
 
       label = gtkut_label_new (_("Shadow"));
-      gtkut_table_attach_defaults (table1, label, 0, 1,3, 4);
+      gtkut_table_attach (table1, label, 0, 1,3, 4,
+			 GTK_SHRINK, GTK_SHRINK, 5, 5);
       gtkut_pos(label, POS_START, POS_CENTER);
 
 #ifdef USE_GTK3
       button = gtk_color_button_new_with_rgba(Mascot->colclksd);
+      gtk_color_chooser_set_use_alpha(GTK_COLOR_CHOOSER(button),TRUE);
 #else
       button = gtk_color_button_new_with_color(Mascot->colclksd);
       gtk_color_button_set_use_alpha(GTK_COLOR_BUTTON(button),TRUE);
       gtk_color_button_set_alpha(GTK_COLOR_BUTTON(button),
 				 Mascot->alpclksd);
 #endif
-      gtkut_table_attach(table1,button,1,2,3,4,1,1,0,0);
+      gtkut_table_attach(table1,button,1,2,3,4,
+			 GTK_SHRINK, GTK_SHRINK, 5, 5);
       my_signal_connect(button,"color-set",ChangeColorButton, 
       			(gpointer *)CONF_COLOR_CLKSD);
 
@@ -9208,7 +9224,8 @@ void create_config_dialog(void)
 					GTK_STOCK_REFRESH
 #endif
 					);
-      gtkut_table_attach (table1, button,0,2,4,5,1,1,0,0);
+      gtkut_table_attach (table1, button,0,2,4,5,
+			  GTK_FILL|GTK_EXPAND, GTK_SHRINK, 5, 5);
       my_signal_connect(button,"clicked",change_colclk_default, NULL);
 
 #ifdef USE_WIN32
@@ -9309,7 +9326,7 @@ void create_config_dialog(void)
       frame = gtkut_frame_new (_("Size/Position"));
       gtk_container_set_border_width (GTK_CONTAINER (frame), 5);
       gtkut_table_attach(table, frame, 0, 1, 1, 2,
-			 GTK_FILL,GTK_FILL,0,0);
+			 GTK_FILL,GTK_SHRINK,0,0);
 	
       table1 = gtkut_table_new (6, 3, FALSE,5,0,5);
       gtk_container_add (GTK_CONTAINER (frame), table1);
@@ -9321,7 +9338,8 @@ void create_config_dialog(void)
 #endif
       
       label = gtkut_label_new (_("Text Offset"));
-      gtkut_table_attach_defaults (table1, label, 0, 1,0, 1);
+      gtkut_table_attach (table1, label, 0, 1,0, 1,
+			  GTK_SHRINK,GTK_SHRINK, 0, 0);
       gtkut_pos(label, POS_START, POS_CENTER);
 
       label = gtkut_label_new (_("X"));
@@ -9351,7 +9369,8 @@ void create_config_dialog(void)
 
 
       label = gtkut_label_new (_("Border Width"));
-      gtkut_table_attach_defaults (table1, label, 0, 1,1, 2);
+      gtkut_table_attach (table1, label, 0, 1,1, 2,
+			  GTK_SHRINK,GTK_SHRINK,0,0);
       gtkut_pos(label, POS_START, POS_CENTER);
       adj = (GtkAdjustment *)gtk_adjustment_new 
 	((gfloat)Mascot->wbalbd, 0, 10, 1.0, 1.0, 0.0);
@@ -9363,7 +9382,8 @@ void create_config_dialog(void)
       gtk_spin_button_set_wrap (GTK_SPIN_BUTTON (spinner), FALSE);
 
       label = gtkut_label_new (_("Default Position"));
-      gtkut_table_attach_defaults (table1, label,0,1,2, 3);
+      gtkut_table_attach (table1, label,0,1,2, 3,
+			  GTK_SHRINK,GTK_SHRINK,0,0);
       gtkut_pos(label, POS_START, POS_CENTER);
 
       {
@@ -9385,7 +9405,7 @@ void create_config_dialog(void)
 
 	combo = gtk_combo_box_new_with_model(GTK_TREE_MODEL(store));
 	gtkut_table_attach (table1, combo, 2, 6, 2, 3,
-			    GTK_SHRINK,GTK_SHRINK,0,0);
+			    GTK_FILL,GTK_SHRINK,0,0);
 	g_object_unref(store);
 	
 	renderer = gtk_cell_renderer_text_new();
@@ -9402,29 +9422,33 @@ void create_config_dialog(void)
       frame = gtkut_frame_new (_("Color"));
       gtk_container_set_border_width (GTK_CONTAINER (frame), 5);
       gtkut_table_attach(table, frame, 1, 2, 1, 2,
-			 GTK_FILL,GTK_FILL,0,0);
+			 GTK_FILL,GTK_SHRINK,0,0);
 	
       table1 = gtkut_table_new (2, 4, FALSE,0,0,5);
       gtk_container_add (GTK_CONTAINER (frame), table1);
 
       label = gtkut_label_new (_("Text"));
-      gtkut_table_attach_defaults (table1, label, 0, 1,0, 1);
+      gtkut_table_attach(table1, label, 0, 1,0, 1,
+			  GTK_SHRINK,GTK_SHRINK,0,0);
       gtkut_pos(label, POS_START, POS_CENTER);
 
 #ifdef USE_GTK3
       button = gtk_color_button_new_with_rgba(Mascot->colbal);
+      gtk_color_chooser_set_use_alpha(GTK_COLOR_CHOOSER(button),TRUE);
 #else
       button = gtk_color_button_new_with_color(Mascot->colbal);
       gtk_color_button_set_use_alpha(GTK_COLOR_BUTTON(button),TRUE);
       gtk_color_button_set_alpha(GTK_COLOR_BUTTON(button),
 				 Mascot->alpbal);
 #endif
-      gtkut_table_attach (table1, button,1,2,0,1,1,1,0,0);
+      gtkut_table_attach (table1, button,1,2,0,1,
+ 			  GTK_SHRINK,GTK_SHRINK,0,0);
       my_signal_connect(button,"color-set",ChangeColorButton, 
       			(gpointer *)CONF_COLOR_BAL);
 
       label = gtkut_label_new (_("BG"));
-      gtkut_table_attach_defaults (table1, label, 0, 1,1, 2);
+      gtkut_table_attach (table1, label, 0, 1,1, 2,
+ 			  GTK_SHRINK,GTK_SHRINK,0,0);
       gtkut_pos(label, POS_START, POS_CENTER);
 
 #ifdef USE_GTK3
@@ -9437,23 +9461,27 @@ void create_config_dialog(void)
 				 Mascot->alpbalbg);
 #endif
 #endif
-      gtkut_table_attach(table1, button,1,2,1,2,1,1,0,0);
+      gtkut_table_attach(table1, button,1,2,1,2,
+  			  GTK_SHRINK,GTK_SHRINK,0,0);
       my_signal_connect(button,"color-set",ChangeColorButton, 
       			(gpointer *)CONF_COLOR_BALBG);
 
       label = gtkut_label_new (_("Border"));
-      gtkut_table_attach_defaults (table1, label, 0, 1,2, 3);
+      gtkut_table_attach (table1, label, 0, 1,2, 3,
+  			  GTK_SHRINK,GTK_SHRINK,0,0);
       gtkut_pos(label, POS_START, POS_CENTER);
 
 #ifdef USE_GTK3
       button = gtk_color_button_new_with_rgba(Mascot->colbalbd);
+      gtk_color_chooser_set_use_alpha(GTK_COLOR_CHOOSER(button),TRUE);
 #else
       button = gtk_color_button_new_with_color(Mascot->colbalbd);
       gtk_color_button_set_use_alpha(GTK_COLOR_BUTTON(button),TRUE);
       gtk_color_button_set_alpha(GTK_COLOR_BUTTON(button),
 				 Mascot->alpbalbd);
 #endif
-      gtkut_table_attach(table1,button,1,2,2,3,1,1,0,0);
+      gtkut_table_attach(table1,button,1,2,2,3,
+			 GTK_SHRINK,GTK_SHRINK,0,0);
       my_signal_connect(button,"color-set",ChangeColorButton, 
       			(gpointer *)CONF_COLOR_BALBD);
 
@@ -9464,7 +9492,8 @@ void create_config_dialog(void)
 					GTK_STOCK_REFRESH
 #endif
 					);
-      gtkut_table_attach (table1, button,0,2,3,4,1,1,0,0);
+      gtkut_table_attach (table1, button,0,2,3,4,
+			 GTK_FILL,GTK_SHRINK,0,0);
       my_signal_connect(button,"clicked",change_colbal_default, NULL);
 
 #ifdef USE_WIN32
@@ -11672,7 +11701,7 @@ void create_cons_dialog(typMascot *mascot,
 #endif				     
 				    );
   gtkut_table_attach(cons_tbl, button, 4, 5, 2, 3,
-		     GTK_FILL,GTK_SHRINK,0,0);
+		     GTK_SHRINK,GTK_SHRINK,0,0);
   my_signal_connect(button,"clicked",noow_cons, (gpointer)cdata);
 
   button=gtkut_button_new_with_icon(_("OK"),
@@ -11683,7 +11712,7 @@ void create_cons_dialog(typMascot *mascot,
 #endif				     
 				    );
   gtkut_table_attach(cons_tbl, button, 5, 6, 2, 3,
-		     GTK_FILL,GTK_SHRINK,0,0);
+		     GTK_SHRINK,GTK_SHRINK,0,0);
   my_signal_connect(button,"clicked",ow_cons, (gpointer)cdata);
 
   
@@ -11881,7 +11910,7 @@ void create_smenu_dialog(typMascot *mascot, gboolean flag_popup)
 #endif				     
 				      );
     gtkut_table_attach(table, button, 2, 3, 1, 2,
-		       GTK_FILL,GTK_SHRINK,0,0);
+		       GTK_SHRINK,GTK_SHRINK,0,0);
     my_signal_connect(button,"clicked",close_smenu,GTK_WIDGET(main));
     
     button=gtkut_button_new_with_icon(_("OK"),
@@ -11892,7 +11921,7 @@ void create_smenu_dialog(typMascot *mascot, gboolean flag_popup)
 #endif				     
 				      );
     gtkut_table_attach(table, button, 3, 4, 1, 2,
-		       GTK_FILL,GTK_SHRINK,0,0);
+		       GTK_SHRINK,GTK_SHRINK,0,0);
     my_signal_connect(button,"clicked",gtk_main_quit, NULL);
 
     gtk_widget_show_all(main);

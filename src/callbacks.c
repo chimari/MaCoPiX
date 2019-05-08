@@ -1072,13 +1072,13 @@ gint dw_configure_main(GtkWidget *widget, GdkEventConfigure *event,
 
 #ifdef USE_WIN32
 #ifdef USE_GTK3
-gint dw_configure_sdw(GtkWidget *widget, cairo_t *cr, gpointer userdata){
+gint dw_configure_sdw(GtkWidget *widget, GdkEventConfigure *event, gpointer userdata){
   typMascot *mascot;
   mascot=(typMascot *)userdata;
 
   if(pixbuf_sdw[mascot->pixmap_page]){
-    gdk_cairo_set_source_pixbuf(cr, pixbuf_sdw[mascot->pixmap_page], 0, 0);
-    cairo_paint(cr);
+    //gdk_cairo_set_source_pixbuf(cr, pixbuf_sdw[mascot->pixmap_page], 0, 0);
+    //cairo_paint(cr);
   }
   return(FALSE);
 }
@@ -1305,7 +1305,8 @@ gint dw_configure_clk(GtkWidget *widget, GdkEventConfigure *event,
 
 // Balloon Windowの生成・変形にともなうCallback
 #ifdef USE_GTK3
-gint dw_configure_bal(GtkWidget *widget, GdkEventConfigure *event, gpointer userdata){
+gint dw_configure_bal(GtkWidget *widget, GdkEventConfigure *event,
+		      gpointer userdata){
   typMascot *mascot;
   mascot=(typMascot *)userdata;
   
@@ -1359,6 +1360,8 @@ gint dw_configure_bal(GtkWidget *widget, GdkEventConfigure *event,
 gint dw_expose_main(GtkWidget *widget, cairo_t *cr, gpointer gdata){
   typMascot *mascot;
   mascot=(typMascot *)gdata;
+
+  printf("Draw\n");
   
   gdk_cairo_set_source_pixbuf(cr, pixbuf_main[mascot->pixmap_page], 0, 0);
   cairo_paint(cr);
@@ -1952,7 +1955,7 @@ gboolean time_update(gpointer gdata)
   if(mascot->raise_force) raise_all(mascot);
     
 #ifdef USE_GTK3	    
-  gdk_display_flush(gdk_display_get_default());
+  //gdk_display_flush(gtk_widget_get_display(mascot->win_main));
 #else	    
   gdk_flush();
 #endif	    
@@ -2411,7 +2414,7 @@ gint Get_Window_Bar_Size(dpy, top)
   bar_size=0;
 
 #ifndef USE_GTK3
-  gdk_error_trap_push ();
+  //gdk_error_trap_push ();
 #endif
   type = None;
 
@@ -2423,7 +2426,7 @@ gint Get_Window_Bar_Size(dpy, top)
 			    &type, &format, &nitems,
 			    &bytes_after, &prop.prop_ch);
 #ifndef USE_GTK3
-  error = gdk_error_trap_pop ();
+  //error = gdk_error_trap_pop ();
 #endif
 
   if (error || result != Success){
@@ -2445,7 +2448,7 @@ gint Get_Window_Bar_Size(dpy, top)
 			    &type, &format, &nitems,
 			    &bytes_after, &prop.prop_ch);
 #ifndef USE_GTK3
-  error = gdk_error_trap_pop ();
+  // error = gdk_error_trap_pop ();
 #endif
 
   if (error || result != Success){
