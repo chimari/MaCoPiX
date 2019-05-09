@@ -526,6 +526,6 @@ void my_cairo_set_source_rgba(cairo_t *cr, GdkColor *col, gdouble alpha){
 			 (gdouble)col->red/(gdouble)0xFFFF,
 			 (gdouble)col->green/(gdouble)0xFFFF,
 			 (gdouble)col->blue/(gdouble)0xFFFF,
-			 alpha);
+			 (gdouble)alpha);
 }
 #endif

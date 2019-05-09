@@ -8655,7 +8655,7 @@ void create_config_dialog(void)
       gtk_box_pack_start(GTK_BOX(vbox), 
 			 button, TRUE, FALSE, 0);
       gtk_button_set_relief(GTK_BUTTON(button), GTK_RELIEF_NONE);
-      my_signal_connect(button,"clicked",uri_clicked, (gpointer)hg);
+      my_signal_connect(button,"clicked",uri_clicked, NULL);
 #ifdef USE_GTK3
       css_change_col(gtk_bin_get_child(GTK_BIN(button)),"blue");
 #else

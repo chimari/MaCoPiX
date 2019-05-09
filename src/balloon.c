@@ -296,8 +296,7 @@ void DrawBalloon2(typMascot *mascot, char **wn_iwp, int wn_max)
   ///// BACKGROUND /////
 #ifdef USE_WIN32  
   //BG should be opaque to BG only translucency for Win32
-  //my_cairo_set_source_rgba (cr, mascot->colbalbg, 1); /* opaque BG */
-  my_cairo_set_source_rgba (cr, mascot->colbalbg, (gdouble)mascot->alpbalbg/100.0); /* transparent */
+  my_cairo_set_source_rgba (cr, mascot->colbalbg, 1.0); /* opaque BG */
   cairo_fill_preserve(cr);
   cairo_paint (cr);
 #else
