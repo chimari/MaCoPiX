@@ -1361,8 +1361,6 @@ gint dw_expose_main(GtkWidget *widget, cairo_t *cr, gpointer gdata){
   typMascot *mascot;
   mascot=(typMascot *)gdata;
 
-  printf("Draw\n");
-  
   gdk_cairo_set_source_pixbuf(cr, pixbuf_main[mascot->pixmap_page], 0, 0);
   cairo_paint(cr);
   

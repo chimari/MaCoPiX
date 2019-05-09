@@ -177,7 +177,7 @@ void DrawPanelClock2(typMascot *mascot)
 			  mascot->fontclk_pc.slant,
 			  mascot->fontclk_pc.weight);
   cairo_set_font_size (cr, 
-		       mascot->fontclk_pc.pointsize);
+		       mascot->fontclk_pc.pointsize*96/72);
 #ifndef USE_PANGOCAIRO
   cairo_text_extents (cr, mascot->digit, &extents);
   clk_width=(gint)(extents.x_advance);
@@ -239,7 +239,7 @@ void DrawPanelClock2(typMascot *mascot)
   } 
   
   cr = gdk_cairo_create(pixmap_clk[work_page]);
-#endif 
+#endif  // USE_GTK3
   
   if((mascot->flag_composite==COMPOSITE_TRUE)
      ||((mascot->force_composite)&&(mascot->flag_composite==COMPOSITE_UNKNOWN)))
@@ -257,7 +257,7 @@ void DrawPanelClock2(typMascot *mascot)
 			  mascot->fontclk_pc.slant,
 			  mascot->fontclk_pc.weight);
   cairo_set_font_size (cr, 
-		       mascot->fontclk_pc.pointsize);
+		       mascot->fontclk_pc.pointsize*96/72);
 
   cairo_set_operator (cr, CAIRO_OPERATOR_OVER);
 
@@ -267,7 +267,7 @@ void DrawPanelClock2(typMascot *mascot)
   cairo_rectangle(cr, 0, 0, new_w, new_h);
   cairo_fill(cr);
 #else
-  my_cairo_set_source_rgba (cr, mascot->colclkbg, (gdouble)mascot->alpclkbg/(gdouble)0xFFFF); /* transparent */
+  my_cairo_set_source_rgba (cr, mascot->colclkbg, (gdouble)mascot->alpclkbg/100.0); /* transparent */
 			 
   if(shape_flag){
     cairo_rectangle(cr, 0, 0, new_w, new_h);
@@ -322,8 +322,10 @@ void DrawPanelClock2(typMascot *mascot)
     cairo_clip_preserve (cr_mask);
     cairo_paint(cr_mask);
     cairo_destroy(cr_mask);
+    
 #ifdef USE_GTK3  ////////////////////// GTK3 ////////////////////////////////////
     region_mask = gdk_cairo_region_create_from_surface(surface_mask);
+
 #else            ////////////////////// GTK2 ////////////////////////////////////
     if (mask_clk[work_page]) {
       g_object_unref(G_OBJECT(mask_clk[work_page]));
@@ -335,12 +337,19 @@ void DrawPanelClock2(typMascot *mascot)
 #endif // USE_GTK3
   }
   else{
+    cairo_clip_preserve (cr);
+  }
+
+#ifndef USE_WIN32
+  // Paint BG with alpha
+  if(!shape_flag){
     cairo_fill_preserve(cr);
   }
+#endif
 
   ///// BACKGROUND /////
   if(mascot->wclkbd>0){
-    my_cairo_set_source_rgba (cr, mascot->colclkbd, (gdouble)mascot->alpclkbd/(gdouble)0xFFFF); /* transparent */
+    my_cairo_set_source_rgba (cr, mascot->colclkbd, (gdouble)mascot->alpclkbd/100.0); /* transparent */
 			   
     cairo_set_line_width(cr,(gdouble)mascot->wclkbd *2);
     cairo_stroke(cr);
@@ -353,7 +362,7 @@ void DrawPanelClock2(typMascot *mascot)
     
     
   if(mascot->flag_clksd){
-    my_cairo_set_source_rgba (cr, mascot->colclksd, (gdouble)mascot->alpclksd/(gdouble)0xFFFF); /* transparent */
+    my_cairo_set_source_rgba (cr, mascot->colclksd, (gdouble)mascot->alpclksd/100.0); /* transparent */
 			   
 #ifdef USE_PANGOCAIRO
     cairo_move_to(cr,
@@ -392,7 +401,7 @@ void DrawPanelClock2(typMascot *mascot)
   }
   
   
-  my_cairo_set_source_rgba (cr, mascot->colclk, (gdouble)mascot->alpclk/(gdouble)0xFFFF); /* transparent */
+  my_cairo_set_source_rgba (cr, mascot->colclk, (gdouble)mascot->alpclk/100.0); /* transparent */
 			 
 #ifdef USE_PANGOCAIRO
   cairo_move_to(cr,

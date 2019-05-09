@@ -373,11 +373,12 @@ enum{   MENU_SELECT,
 #define DEF_ALPHA_BIFF 100
 #endif
 
-#ifdef USE_WIN32
 #define DEF_ALPHA_BAL 80
-#define DEF_ALPHA_CLK 50
-#endif
+#define DEF_ALPHA_CLK 60
+#define DEF_ALPHA_OTHER 100
+#define DEF_ALPHA_SDW 40
 
+/*
 #define CAIRO_DEF_ALPHA_OTHER 0xFFFF
 #define CAIRO_DEF_ALPHA_SDW 0xB000
 #ifdef USE_WIN32
@@ -388,6 +389,9 @@ enum{   MENU_SELECT,
 #define CAIRO_DEF_ALPHA_BAL 0xB000
 #endif
 
+#define CAIRO_SHADOW_ALPHA 40
+*/
+
 #ifdef USE_WIN32
 #define CAIRO_SHADOW_X 2.0
 #define CAIRO_SHADOW_Y 2.0
@@ -396,7 +400,6 @@ enum{   MENU_SELECT,
 #define CAIRO_SHADOW_Y 2.3
 #endif
 
-#define CAIRO_SHADOW_ALPHA 40
 
 
 //DEFAULT COLOR

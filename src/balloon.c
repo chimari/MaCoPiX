@@ -101,7 +101,7 @@ void DrawBalloon2(typMascot *mascot, char **wn_iwp, int wn_max)
 			    mascot->fontbal_pc.slant,
 			    mascot->fontbal_pc.weight);
     cairo_set_font_size (cr, 
-			 mascot->fontbal_pc.pointsize);
+			 mascot->fontbal_pc.pointsize*96/72);
     cairo_text_extents (cr, wn_iwp[i_wn], &extents);
     tmp_w=(gint)(extents.x_advance);
     tmp_h=(gint)(extents.height);
@@ -296,30 +296,31 @@ void DrawBalloon2(typMascot *mascot, char **wn_iwp, int wn_max)
   ///// BACKGROUND /////
 #ifdef USE_WIN32  
   //BG should be opaque to BG only translucency for Win32
-  my_cairo_set_source_rgba (cr, mascot->colbalbg, 1); /* opaque BG */
+  //my_cairo_set_source_rgba (cr, mascot->colbalbg, 1); /* opaque BG */
+  my_cairo_set_source_rgba (cr, mascot->colbalbg, (gdouble)mascot->alpbalbg/100.0); /* transparent */
   cairo_fill_preserve(cr);
   cairo_paint (cr);
 #else
   //Even for X, to get clear shape and border,
   //Full area of the balloon window should be painted with BG color
-  my_cairo_set_source_rgba (cr, mascot->colbalbg, (gdouble)mascot->alpbalbg/(gdouble)0xFFFF); /* transparent */
+  my_cairo_set_source_rgba (cr, mascot->colbalbg, (gdouble)mascot->alpbalbg/100.0); /* transparent */
 
   //if(shape_flag){
   cairo_fill_preserve(cr);
   cairo_paint (cr);
-    //}
+  //}
 #endif
   
 
   ///// BORDER //////
   if(mascot->wbalbd>0){
-    my_cairo_set_source_rgba (cr, mascot->colbalbd, (gdouble)mascot->alpbalbd/(gdouble)0xFFFF); /* transparent */
+    my_cairo_set_source_rgba (cr, mascot->colbalbd, (gdouble)mascot->alpbalbd/100.0); /* transparent */
     cairo_set_line_width(cr,(gdouble)mascot->wbalbd *2);
     cairo_stroke(cr);
   }
 
   // Balloon Text
-  my_cairo_set_source_rgba (cr, mascot->colbal, (gdouble)mascot->alpbal/(gdouble)0xFFFF); /* transparent */
+  my_cairo_set_source_rgba (cr, mascot->colbal, (gdouble)mascot->alpbal/100.0); /* transparent */
 			 
 
 #ifndef USE_PANGOCAIRO
@@ -328,7 +329,7 @@ void DrawBalloon2(typMascot *mascot, char **wn_iwp, int wn_max)
 			  mascot->fontbal_pc.slant,
 			  mascot->fontbal_pc.weight);
   cairo_set_font_size (cr, 
-		       mascot->fontbal_pc.pointsize);
+		       mascot->fontbal_pc.pointsize*96/72);
 #endif
 
 
@@ -769,8 +770,10 @@ void make_balloon_fg(typMascot *mascot){
   mascot->balloon_fg = gtk_window_new(GTK_WINDOW_POPUP);
   gtk_window_set_accept_focus(GTK_WINDOW(mascot->balloon_fg),FALSE);
   gtk_widget_set_app_paintable(mascot->balloon_fg, TRUE);
+#ifdef USE_GTK3
   gtk_window_set_wmclass(GTK_WINDOW(mascot->balloon_fg), "balloon", "MaCoPiX");
-
+#endif
+  
   ebox=gtk_event_box_new();
   gtk_container_add (GTK_CONTAINER (mascot->balloon_fg), ebox);
   

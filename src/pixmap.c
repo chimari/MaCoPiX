@@ -434,8 +434,7 @@ void LoadPixmaps(GtkWidget *widget, //GtkWidget *draw,
 
 
 #ifdef USE_WIN32
-  GdkWinChangeAlpha(gtk_widget_get_window(mascot->win_main),
-		    mascot->alpha_main);
+  GdkWinChangeAlpha(gtk_widget_get_window(mascot->win_main), mascot->alpha_main);
   GdkWinChangeAlpha(gtk_widget_get_window(mascot->win_sdw),  mascot->sdw_alpha);
 #ifdef USE_BIFF
   GdkWinChangeAlpha(gtk_widget_get_window(mascot->biff_pix), mascot->alpha_biff);
@@ -1665,7 +1664,7 @@ gint DrawMascotWithDigit(typMascot *mascot){
 			     (gdouble)mascot->colclksd->red/0xFFFF,
 			     (gdouble)mascot->colclksd->green/0xFFFF,
 			     (gdouble)mascot->colclksd->blue/0xFFFF,
-			     (gdouble)mascot->alpclksd/0xFFFF); /* transparent */
+			     (gdouble)mascot->alpclksd/100.0); /* transparent */
 #ifdef USE_PANGOCAIRO
       cairo_move_to(cr,
 		    mascot->clktext_x+mascot->clksd_x,
@@ -1705,7 +1704,7 @@ gint DrawMascotWithDigit(typMascot *mascot){
 			   (gdouble)mascot->colclk->red/0xFFFF,
 			   (gdouble)mascot->colclk->green/0xFFFF,
 			   (gdouble)mascot->colclk->blue/0xFFFF,
-			   (gdouble)mascot->alpclk/0xFFFF); /* transparent */
+			   (gdouble)mascot->alpclk/100.0); /* transparent */
 #ifdef USE_PANGOCAIRO
     cairo_move_to(cr,
 		  mascot->clktext_x,
@@ -1873,7 +1872,7 @@ gint DrawMascotWithDigit(typMascot *mascot){
 			     (gdouble)mascot->colclksd->red/0xFFFF,
 			     (gdouble)mascot->colclksd->green/0xFFFF,
 			     (gdouble)mascot->colclksd->blue/0xFFFF,
-			     (gdouble)mascot->alpclksd/0xFFFF); /* transparent */
+			     (gdouble)mascot->alpclksd/100.0); /* transparent */
 #ifdef USE_PANGOCAIRO
       cairo_move_to(cr,
 		    mascot->clktext_x+mascot->clksd_x,
@@ -1913,7 +1912,7 @@ gint DrawMascotWithDigit(typMascot *mascot){
 			   (gdouble)mascot->colclk->red/0xFFFF,
 			   (gdouble)mascot->colclk->green/0xFFFF,
 			   (gdouble)mascot->colclk->blue/0xFFFF,
-			   (gdouble)mascot->alpclk/0xFFFF); /* transparent */
+			   (gdouble)mascot->alpclk/100.0); /* transparent */
 #ifdef USE_PANGOCAIRO
     cairo_move_to(cr,
 		  mascot->clktext_x,
