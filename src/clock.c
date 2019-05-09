@@ -110,7 +110,14 @@ void make_clock_fg(typMascot *mascot){
   gdk_window_set_decorations(gtk_widget_get_window(mascot->clock_fg), 0);
 
   
-#ifndef USE_GTK3
+  my_signal_connect(mascot->dw_clkfg, "configure_event",
+  		    dw_configure_clk, (gpointer)mascot);
+#ifdef USE_GTK3
+  my_signal_connect(mascot->dw_clkfg, "draw",dw_expose_clk,
+  		    (gpointer)mascot);
+#else
+  my_signal_connect(mascot->dw_clkfg, "expose_event",
+  		    dw_expose_clk, (gpointer)mascot);
   my_signal_connect(mascot->clock_fg, "expose_event",
   		    expose_clk, (gpointer)mascot);
 #endif
@@ -263,7 +270,7 @@ void DrawPanelClock2(typMascot *mascot)
 
 #ifdef USE_WIN32  
   //BG should be opaque to BG only translucency for Win32
-  my_cairo_set_source_rgba (cr, mascot->colclkbg, 1); /* opaque BG */
+  my_cairo_set_source_rgba (cr, mascot->colclkbg, 1.0); /* opaque BG */
   cairo_rectangle(cr, 0, 0, new_w, new_h);
   cairo_fill(cr);
 #else
@@ -455,9 +462,17 @@ void DrawPanelClock2(typMascot *mascot)
   
 #ifdef USE_WIN32
   if((mascot->flag_clkfg)&&(mascot->alpha_clk!=100)){
-    gdk_window_set_back_pixmap(gtk_widget_get_window(mascot->clock_fg),
-			       pixmap_clk[mascot->clk_page],
-			       FALSE);
+    GtkAllocation *allocation=g_new(GtkAllocation, 1);
+    GtkStyle *style=gtk_widget_get_style(mascot->dw_clkfg);
+    gtk_widget_get_allocation(mascot->dw_clkfg,allocation);
+    
+    gdk_draw_drawable(gtk_widget_get_window(mascot->dw_clkfg),
+		      style->fg_gc[gtk_widget_get_state(mascot->dw_clkfg)],
+		      pixmap_clk[mascot->clk_page],
+		      0,0,0,0,
+		      allocation->width,
+		      allocation->height);
+    g_free(allocation);
   }
 #endif
   {

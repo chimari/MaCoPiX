@@ -180,10 +180,10 @@ void DrawBalloon2(typMascot *mascot, char **wn_iwp, int wn_max)
 #endif // USE_GTK3   ////////////////////// ////////////////////////////////////
   
   if(shape_flag){
-    cairo_set_source_rgb (cr, 1, 1, 1); // opaque white
+    cairo_set_source_rgb (cr, 1.0, 1.0, 1.0); // opaque white
   }
   else{
-    cairo_set_source_rgba (cr, 1, 1, 1, 0);
+    cairo_set_source_rgba (cr, 1.0, 1.0, 1.0, 0.0);
   }
   
   cairo_set_operator (cr, CAIRO_OPERATOR_SOURCE);
@@ -193,7 +193,7 @@ void DrawBalloon2(typMascot *mascot, char **wn_iwp, int wn_max)
   
 #ifdef USE_WIN32  
   //BG should be opaque to BG only translucency for Win32
-  my_cairo_set_source_rgba (cr, mascot->colbalbd, 1); /* opaque BG */
+  my_cairo_set_source_rgba (cr, mascot->colbalbd, 1.0); /* opaque BG */
 
   cairo_rectangle(cr, 0, 0, w, h+h_arrow);
   cairo_fill(cr);

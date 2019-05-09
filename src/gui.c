@@ -8651,10 +8651,17 @@ void create_config_dialog(void)
       hbox = gtkut_hbox_new(FALSE, 0);
       gtk_box_pack_start(GTK_BOX(vbox), hbox, FALSE, FALSE, 0);
 
-      button = gtk_button_new_with_label(DEFAULT_URL);
-      gtk_box_pack_start(GTK_BOX(hbox), button, TRUE, FALSE, 0);
+      button = gtk_button_new_with_label(" "DEFAULT_URL" ");
+      gtk_box_pack_start(GTK_BOX(vbox), 
+			 button, TRUE, FALSE, 0);
       gtk_button_set_relief(GTK_BUTTON(button), GTK_RELIEF_NONE);
-      my_signal_connect(button,"clicked",uri_clicked, NULL);
+      my_signal_connect(button,"clicked",uri_clicked, (gpointer)hg);
+#ifdef USE_GTK3
+      css_change_col(gtk_bin_get_child(GTK_BIN(button)),"blue");
+#else
+      gtk_widget_modify_fg(gtk_bin_get_child(GTK_BIN(button)),
+			   GTK_STATE_NORMAL,&color_blue);
+#endif
 #else
       label = gtkut_label_new (DEFAULT_URL);
       gtkut_pos(label, POS_CENTER, POS_CENTER);
@@ -11861,7 +11868,7 @@ void create_smenu_dialog(typMascot *mascot, gboolean flag_popup)
     gtkut_pos(label, POS_START, POS_CENTER);
     gtk_box_pack_start(GTK_BOX(vbox2),
 		       label,TRUE,TRUE,0);
-    label=gtkut_label_new(_("Or, drag & drop a mascot menu archive (*.tar.gz) directly"));
+    label=gtkut_label_new(_("Or, drag &amp; drop a mascot menu archive (*.tar.gz) directly"));
     gtkut_pos(label, POS_START, POS_CENTER);
     gtk_box_pack_start(GTK_BOX(vbox2),
 		       label,TRUE,TRUE,0);

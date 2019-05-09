@@ -448,6 +448,62 @@ enum{   MENU_SELECT,
 #define COLOR_BALBD_G 0x67d2
 #define COLOR_BALBD_B 0x53f4
 
+#ifdef USE_GTK3
+static GdkRGBA color_comment = {0.87, 0.00, 0.00, 1};
+static GdkRGBA color_focus =   {0.53, 0.27, 0.00, 1};
+static GdkRGBA color_calib =   {0.00, 0.53, 0.00, 1};
+static GdkRGBA color_black =   {0.00, 0.00, 0.00, 1};
+static GdkRGBA color_red   =   {1.00, 0.00, 0.00, 1};
+static GdkRGBA color_blue =    {0.00, 0.00, 1.00, 1};
+static GdkRGBA color_white =   {1.00, 1.00, 1.00, 1};
+static GdkRGBA color_gray1 =   {0.40, 0.40, 0.40, 1};
+static GdkRGBA color_gray2 =   {0.80, 0.80, 0.80, 1};
+static GdkRGBA color_pink =    {1.00, 0.40, 0.40, 1};
+static GdkRGBA color_pink2 =   {1.00, 0.80, 0.80, 1};
+static GdkRGBA color_pale =    {0.40, 0.40, 1.00, 1};
+static GdkRGBA color_pale2 =   {0.80, 0.80, 1.00, 1};
+static GdkRGBA color_orange =  {1.00, 0.80, 0.40, 1};
+static GdkRGBA color_orange2 = {1.00, 1.00, 0.80, 1};
+static GdkRGBA color_orange3 = {0.95, 0.45, 0.02, 1};
+static GdkRGBA color_green  =  {0.40, 0.80, 0.80, 1};
+static GdkRGBA color_green2 =  {0.80, 1.00, 0.80, 1};
+static GdkRGBA color_purple2 = {1.00, 0.80, 1.00, 1};
+static GdkRGBA color_com1 =    {0.00, 0.53, 0.00, 1};
+static GdkRGBA color_com2 =    {0.73, 0.53, 0.00, 1};
+static GdkRGBA color_com3 =    {0.87, 0.00, 0.00, 1};
+static GdkRGBA color_lblue =   {0.80, 0.80, 1.00, 1};
+static GdkRGBA color_lgreen =  {0.80, 1.00, 0.80, 1};
+static GdkRGBA color_lorange=  {1.00, 0.90, 0.70, 1};
+static GdkRGBA color_lred   =  {1.00, 0.80, 0.80, 1};
+#else
+static GdkColor color_comment = {0, 0xDDDD, 0x0000, 0x0000};
+static GdkColor color_focus = {0, 0x8888, 0x4444, 0x0000};
+static GdkColor color_calib = {0, 0x0000, 0x8888, 0x0000};
+static GdkColor color_black = {0, 0, 0, 0};
+static GdkColor color_red   = {0, 0xFFFF, 0, 0};
+static GdkColor color_blue = {0, 0, 0, 0xFFFF};
+static GdkColor color_white = {0, 0xFFFF, 0xFFFF, 0xFFFF};
+static GdkColor color_gray1 = {0, 0x6666, 0x6666, 0x6666};
+static GdkColor color_gray2 = {0, 0xBBBB, 0xBBBB, 0xBBBB};
+static GdkColor color_pink = {0, 0xFFFF, 0x6666, 0x6666};
+static GdkColor color_pink2 = {0, 0xFFFF, 0xCCCC, 0xCCCC};
+static GdkColor color_pale = {0, 0x6666, 0x6666, 0xFFFF};
+static GdkColor color_pale2 = {0, 0xCCCC, 0xCCCC, 0xFFFF};
+static GdkColor color_orange = {0, 0xFFFF, 0xCCCC, 0x6666};
+static GdkColor color_orange2 = {0, 0xFFFF, 0xFFFF, 0xCCCC};
+static GdkColor color_orange3 = {0, 0xFD00, 0x6A00, 0x0200};
+static GdkColor color_green = {0, 0x6666, 0xCCCC, 0x6666};
+static GdkColor color_green2 = {0, 0xCCCC, 0xFFFF, 0xCCCC};
+static GdkColor color_purple2 = {0, 0xFFFF, 0xCCCC, 0xFFFF};
+static GdkColor color_com1 = {0, 0x0000, 0x8888, 0x0000};
+static GdkColor color_com2 = {0, 0xBBBB, 0x8888, 0x0000};
+static GdkColor color_com3 = {0, 0xDDDD, 0x0000, 0x0000};
+static GdkColor color_lblue = {0, 0xBBBB, 0xBBBB, 0xFFFF};
+static GdkColor color_lgreen= {0, 0xBBBB, 0xFFFF, 0xBBBB};
+static GdkColor color_lorange={0, 0xFFFF, 0xCCCC, 0xAAAA};
+static GdkColor color_lred=   {0, 0xFFFF, 0xBBBB, 0xBBBB};
+#endif
+
 
 
 

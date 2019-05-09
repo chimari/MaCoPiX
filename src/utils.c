@@ -163,7 +163,6 @@ gchar* get_rc_dir(void){
 }
 
 #ifdef USE_WIN32
-// 
 gchar* WindowsVersion()
 {
   // Get OS Info for WinXP and 2000 or later
@@ -221,7 +220,48 @@ gchar* WindowsVersion()
     break;
 
   case 6:
-    windowsName = g_strdup("Windows Vista");
+    switch (osInfo.dwMinorVersion)
+      {
+      case 0:
+	if(osInfo.wProductType == VER_NT_WORKSTATION)
+	  windowsName = g_strdup("Windows Vista");
+	else
+	  windowsName = g_strdup("Windows Server 2008");
+	break;
+	
+      case 1:
+	if(osInfo.wProductType == VER_NT_WORKSTATION)
+	  windowsName = g_strdup("Windows 7");
+	else
+	  windowsName = g_strdup("Windows Server 2008 R2");
+	break;
+
+      case 2:
+	if(osInfo.wProductType == VER_NT_WORKSTATION)
+	  windowsName = g_strdup("Windows 8");
+	else
+	  windowsName = g_strdup("Windows Server 2012");
+	break;
+
+      case 3:
+	if(osInfo.wProductType == VER_NT_WORKSTATION)
+	  windowsName = g_strdup("Windows 8.1");
+	else
+	  windowsName = g_strdup("Windows Server 2012 R2");
+	break;
+      }
+    break;
+
+  case 10:
+    switch (osInfo.dwMinorVersion)
+      {
+      case 0:
+	if(osInfo.wProductType == VER_NT_WORKSTATION)
+	  windowsName = g_strdup("Windows 10");
+	else
+	  windowsName = g_strdup("Windows Server 2016");
+	break;
+      }	
     break;
   }
 
