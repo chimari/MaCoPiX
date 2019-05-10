@@ -172,14 +172,10 @@ gboolean TestLoadPixmaps(typMascot *mascot, gchar *filename, gint i_pix)
       cairo_save(cr);
       
       if(mascot->sdw_x<0){
-	gdk_cairo_set_source_pixbuf(cr,pixbuf2,
-				    0,
-				    mascot->sdw_y*(gdouble)(mascot->magnify)/100);
+	gdk_cairo_set_source_pixbuf(cr, pixbuf2, 0, mascot->sdw_y);
       }
       else{
-	gdk_cairo_set_source_pixbuf(cr,pixbuf2,
-				    mascot->sdw_x*(gdouble)(mascot->magnify)/100,
-				    mascot->sdw_y*(gdouble)(mascot->magnify)/100);
+	gdk_cairo_set_source_pixbuf(cr, pixbuf2,mascot->sdw_x, mascot->sdw_y);
       }
       cairo_paint(cr);
       region = gdk_cairo_region_create_from_surface(surface);
@@ -430,8 +426,12 @@ void LoadPixmaps(GtkWidget *widget, //GtkWidget *draw,
   gchar *tmp_open;
   cairo_t *cr;
 #ifdef USE_GTK3
-  cairo_surface_t *surface, *surface_sdw;
-  cairo_region_t *region, *region_sdw;
+  cairo_surface_t *surface;
+  cairo_region_t *region;
+#ifdef USE_WIN32  
+  cairo_surface_t *surface_sdw;
+  cairo_region_t  *region_sdw;
+#endif
 #endif
 
 
@@ -536,7 +536,6 @@ void LoadPixmaps(GtkWidget *widget, //GtkWidget *draw,
       ipstyle=GDK_INTERP_BILINEAR;
     }
     
-
     pixbuf2=gdk_pixbuf_scale_simple(pixbuf,w,h,ipstyle);
 
 #ifdef USE_GTK3   //////////////////  GTK3  ///////////////////
@@ -561,19 +560,15 @@ void LoadPixmaps(GtkWidget *widget, //GtkWidget *draw,
 	// Shadow
 	cairo_save(cr);
 	if(mascot->sdw_x<0){
-	  gdk_cairo_set_source_pixbuf(cr,pixbuf2,
-				      0,
-				      mascot->sdw_y*(gdouble)(mascot->magnify)/100);
+	  gdk_cairo_set_source_pixbuf(cr, pixbuf2, 0, mascot->sdw_y);
 	}
 	else{
-	  gdk_cairo_set_source_pixbuf(cr,pixbuf2,
-				      mascot->sdw_x*(gdouble)(mascot->magnify)/100,
-				      mascot->sdw_y*(gdouble)(mascot->magnify)/100);
+	  gdk_cairo_set_source_pixbuf(cr, pixbuf2, mascot->sdw_x, mascot->sdw_y);
 	}
 	cairo_paint(cr);
 	region = gdk_cairo_region_create_from_surface(surface);
 
-	cairo_set_source_rgba(cr, 0, 0, 0, 0.0);
+	cairo_set_source_rgba(cr, 0, 0, 0, 0);
 	cairo_set_operator (cr, CAIRO_OPERATOR_SOURCE);
 	cairo_rectangle(cr, 0, 0, w, h);
 	cairo_fill(cr);
@@ -618,8 +613,24 @@ void LoadPixmaps(GtkWidget *widget, //GtkWidget *draw,
       sprites[i].pixbuf = gdk_pixbuf_get_from_surface(surface, 0, 0, w, h);
     }
     else{// for Win32 and non-composited Gtk+2.8 or later
-      sprites[i].pixbuf = gdk_pixbuf_copy(pixbuf2);
 #ifdef USE_WIN32
+      surface = cairo_image_surface_create(CAIRO_FORMAT_ARGB32, w, h);
+      cr = cairo_create(surface);
+
+      cairo_set_source_rgba(cr, 0, 0, 0, 0);
+      cairo_set_operator (cr, CAIRO_OPERATOR_SOURCE);
+      cairo_rectangle(cr, 0, 0, w, h);
+      cairo_fill(cr);
+      cairo_paint(cr);
+      
+      gdk_cairo_set_source_pixbuf(cr, pixbuf2, 0, 0);
+      cairo_set_operator (cr, CAIRO_OPERATOR_OVER);
+      cairo_paint(cr);
+      region = gdk_cairo_region_create_from_surface(surface);
+      cairo_destroy(cr);
+      
+      sprites[i].pixbuf = gdk_pixbuf_get_from_surface(surface, 0, 0, w, h);
+      
       if(mascot->sdw_flag){
 	gint h_sdw, h0;
 	
@@ -632,8 +643,8 @@ void LoadPixmaps(GtkWidget *widget, //GtkWidget *draw,
 	    h_sdw=h;
 	    h0=0;
 	  }
-	  surface = cairo_image_surface_create(CAIRO_FORMAT_ARGB32, w, h_sdw);
-	  cr = cairo_create(surface);
+	  surface_sdw = cairo_image_surface_create(CAIRO_FORMAT_ARGB32, w, h_sdw);
+	  cr = cairo_create(surface_sdw);
 	  
 	  cairo_set_source_rgba(cr, 0, 0, 0, 0);
 	  cairo_set_operator (cr, CAIRO_OPERATOR_SOURCE);
@@ -645,25 +656,21 @@ void LoadPixmaps(GtkWidget *widget, //GtkWidget *draw,
 	  // Shadow
 	  gdk_cairo_set_source_pixbuf(cr, pixbuf2, 0, h0);
 	  cairo_paint(cr);
-	  region = gdk_cairo_region_create_from_surface(surface);
-	  
-	  cairo_set_source_rgba(cr, 0, 0, 0, 0);
-	  cairo_set_operator (cr, CAIRO_OPERATOR_SOURCE);
-	  cairo_rectangle(cr, 0, 0, w, h_sdw);
-	  cairo_fill(cr);
-	  cairo_paint(cr);
+	  region_sdw = gdk_cairo_region_create_from_surface(surface_sdw);
 	  
 	  cairo_set_operator (cr, CAIRO_OPERATOR_OVER);
-	  gdk_cairo_region(cr, region);
-	  cairo_set_source_rgba(cr, 1, 1, 1, 1);
+	  cairo_set_source_rgba(cr, 0, 0, 0, 1);
+	  gdk_cairo_region(cr, region_sdw);
+	  cairo_clip(cr);
 	  cairo_paint(cr);
-	  cairo_region_destroy(region);
 	  
 	  cairo_destroy(cr);
 	  
-	  sprites[i].pixbuf_sdw = gdk_pixbuf_get_from_surface(surface, 0, 0, w, h_sdw);
+	  sprites[i].pixbuf_sdw = gdk_pixbuf_get_from_surface(surface_sdw, 0, 0, w, h_sdw);
 	}
       }
+#else
+      sprites[i].pixbuf = gdk_pixbuf_copy(pixbuf2);
 #endif   
     }
 
@@ -798,7 +805,7 @@ void LoadPixmaps(GtkWidget *widget, //GtkWidget *draw,
       }
 #endif   
     }
-#endif // USE_GTK3
+#endif // USE_GTK3  ////////////////////////////////////////
     
     g_object_unref(G_OBJECT(pixbuf));
     g_object_unref(G_OBJECT(pixbuf2));
@@ -929,6 +936,18 @@ void LoadPixmaps(GtkWidget *widget, //GtkWidget *draw,
 
 
 #ifdef USE_GTK3   /////////////  GTK3  ////////////////
+#ifdef USE_WIN32
+  if(mascot->sdw_flag){
+    gdk_window_shape_combine_region(gtk_widget_get_window(mascot->sdw_main),
+				    region_sdw, 0, 0 );
+    cairo_region_destroy(region_sdw);
+    cairo_surface_destroy(surface_sdw);
+  }
+  gdk_window_shape_combine_region(gtk_widget_get_window(mascot->win_main),
+				  region, 0, 0 );
+  cairo_region_destroy(region);
+  cairo_surface_destroy(surface);
+#else
   region = get_cairo_region_from_pixbuf(mascot->sprites[mascot->frame_pix[0][0]].pixbuf,
 					mascot->width, mascot->height, 0, 0);
   if(flag_img_cairo_go){
@@ -944,6 +963,7 @@ void LoadPixmaps(GtkWidget *widget, //GtkWidget *draw,
 
   cairo_region_destroy(region);
   cairo_surface_destroy(surface);
+#endif
   
 #else  /////////////  GTK2  ////////////////
   if(flag_img_cairo_go){
