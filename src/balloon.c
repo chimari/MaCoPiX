@@ -154,6 +154,9 @@ void DrawBalloon2(typMascot *mascot, char **wn_iwp, int wn_max)
   surface = cairo_image_surface_create(CAIRO_FORMAT_ARGB32,
 				       w, h+h_arrow);
   cr = cairo_create(surface);
+  
+  cairo_set_source_rgba (cr, 1.0, 1.0, 1.0, 0.0);
+  
 #else     ////////////////////// GTK2 ////////////////////////////////////
   if (pixmap_bal[work_page]) {
       g_object_unref(G_OBJECT(pixmap_bal[work_page]));
@@ -177,14 +180,14 @@ void DrawBalloon2(typMascot *mascot, char **wn_iwp, int wn_max)
   }
 
   cr = gdk_cairo_create(pixmap_bal[work_page]);
-#endif // USE_GTK3   ////////////////////// ////////////////////////////////////
-  
+
   if(shape_flag){
     cairo_set_source_rgb (cr, 1.0, 1.0, 1.0); // opaque white
   }
   else{
     cairo_set_source_rgba (cr, 1.0, 1.0, 1.0, 0.0);
   }
+#endif // USE_GTK3   ////////////////////// ////////////////////////////////////
   
   cairo_set_operator (cr, CAIRO_OPERATOR_SOURCE);
   cairo_paint (cr);
@@ -414,10 +417,12 @@ void DrawBalloon2(typMascot *mascot, char **wn_iwp, int wn_max)
   if(shape_flag){
 #ifdef USE_WIN32
     if((mascot->flag_balfg)&&(mascot->alpha_bal!=100)){
+      cairo_region_t *region_fg=cairo_region_copy(region_mask);
       gdk_window_shape_combine_region( gtk_widget_get_window(mascot->balloon_fg),
-				       region_mask,
+				       region_fg,
 				       0,0);
       gtk_widget_queue_draw(mascot->dw_balfg);
+      cairo_region_destroy(region_fg);
     }
 #endif
     
@@ -769,7 +774,7 @@ void make_balloon_fg(typMascot *mascot){
   mascot->balloon_fg = gtk_window_new(GTK_WINDOW_POPUP);
   gtk_window_set_accept_focus(GTK_WINDOW(mascot->balloon_fg),FALSE);
   gtk_widget_set_app_paintable(mascot->balloon_fg, TRUE);
-#ifdef USE_GTK3
+#ifndef USE_GTK3
   gtk_window_set_wmclass(GTK_WINDOW(mascot->balloon_fg), "balloon", "MaCoPiX");
 #endif
   

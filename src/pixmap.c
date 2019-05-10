@@ -938,7 +938,7 @@ void LoadPixmaps(GtkWidget *widget, //GtkWidget *draw,
 #ifdef USE_GTK3   /////////////  GTK3  ////////////////
 #ifdef USE_WIN32
   if(mascot->sdw_flag){
-    gdk_window_shape_combine_region(gtk_widget_get_window(mascot->sdw_main),
+    gdk_window_shape_combine_region(gtk_widget_get_window(mascot->win_sdw),
 				    region_sdw, 0, 0 );
     cairo_region_destroy(region_sdw);
     cairo_surface_destroy(surface_sdw);
