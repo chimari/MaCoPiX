@@ -63,7 +63,7 @@ gboolean xmms_cfg_read_int(ConfigFile * cfg, gchar * section, gchar * key, gint 
 gboolean xmms_cfg_read_boolean(ConfigFile * cfg, gchar * section, gchar * key, gboolean * value);
 gboolean xmms_cfg_read_float(ConfigFile * cfg, gchar * section, gchar * key, gfloat * value);
 gboolean xmms_cfg_read_double(ConfigFile * cfg, gchar * section, gchar * key, gdouble * value);
-
+void xmms_cfg_write_double2(ConfigFile * cfg, gchar * section, gchar * key, gdouble value, gchar * format);
 void xmms_cfg_write_string(ConfigFile * cfg, gchar * section, gchar * key, gchar * value);
 void xmms_cfg_write_int(ConfigFile * cfg, gchar * section, gchar * key, gint value);
 void xmms_cfg_write_boolean(ConfigFile * cfg, gchar * section, gchar * key, gboolean value);

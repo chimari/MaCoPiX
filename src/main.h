@@ -1020,8 +1020,8 @@ struct _typMascot{
   gint flag_composite;
   gint force_composite;
   gint    sdw_flag;
-  gfloat  sdw_x;
-  gfloat  sdw_y;
+  gdouble  sdw_x;
+  gdouble  sdw_y;
   gint    sdw_alpha;
   gint sdw_x_int;
   gint sdw_y_int;

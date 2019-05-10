@@ -140,7 +140,7 @@ static void cc_ff_side();
 static void cc_sockmsg_type();
 #endif
 static void cc_get_adj();
-static void cc_get_float();
+static void cc_get_double();
 static void cc_get_entry();
 #ifdef USE_BIFF
 static void cc_mail_type();
@@ -1088,9 +1088,9 @@ static void cc_get_adj (GtkAdjustment *adj, gint * gdata)
   *gdata=(gint)gtk_adjustment_get_value(adj);
 }
 
-static void cc_get_float (GtkAdjustment *adj, gfloat * gdata)
+static void cc_get_double (GtkAdjustment *adj, gdouble * gdata)
 {
-  *gdata=(gfloat)gtk_adjustment_get_value(adj);
+  *gdata=gtk_adjustment_get_value(adj);
 }
 
 static void cc_get_entry (GtkWidget *widget, gchar **gdata)
@@ -2531,7 +2531,7 @@ static void create_del_image_dialog(GtkWidget *w, gpointer gdata)
   gtk_box_pack_start(GTK_BOX(hbox),label,TRUE,TRUE,0);
 
   adj = (GtkAdjustment *)gtk_adjustment_new 
-    ((gfloat)tmp_mascot.nPixmap-1, 0,(gfloat)tmp_mascot.nPixmap-1,
+    ((gdouble)tmp_mascot.nPixmap-1, 0,(gdouble)tmp_mascot.nPixmap-1,
      1.0, 1.0, 0.0);
   my_signal_connect (adj, "value_changed",cc_get_adj,&del_pix);
   spinner =  gtk_spin_button_new (adj, 0, 0);
@@ -2660,7 +2660,7 @@ static void create_add_pattern_dialog(GtkWidget *w, gpointer gdata)
   gtk_box_pack_start(GTK_BOX(hbox),label,TRUE,TRUE,0);
 
   adj = (GtkAdjustment *)gtk_adjustment_new 
-    ((gfloat)pattern_num, 1,(gfloat)pattern_num,1.0, 1.0, 0.0);
+    ((gdouble)pattern_num, 1,(gdouble)pattern_num,1.0, 1.0, 0.0);
   my_signal_connect (adj, "value_changed",cc_get_adj,&dest_ptn);
   spinner =  gtk_spin_button_new (adj, 0, 0);
   gtk_spin_button_set_wrap (GTK_SPIN_BUTTON (spinner), FALSE);
@@ -2809,8 +2809,8 @@ static void create_del_pattern_dialog(GtkWidget *w, gpointer gdata)
   gtk_box_pack_start(GTK_BOX(hbox),label,TRUE,TRUE,0);
 
   adj = (GtkAdjustment *)gtk_adjustment_new 
-    ((gfloat)gtk_notebook_get_current_page(GTK_NOTEBOOK(ptn_note)),
-     1,(gfloat)pattern_num-1,1.0, 1.0, 0.0);
+    ((gdouble)gtk_notebook_get_current_page(GTK_NOTEBOOK(ptn_note)),
+     1,(gdouble)pattern_num-1,1.0, 1.0, 0.0);
   my_signal_connect (adj, "value_changed",cc_get_adj,&dest_ptn);
   spinner =  gtk_spin_button_new (adj, 0, 0);
   gtk_spin_button_set_wrap (GTK_SPIN_BUTTON (spinner), FALSE);
@@ -2967,8 +2967,8 @@ static void create_copy_pattern_dialog(GtkWidget *w, gpointer gdata)
   gtk_box_pack_start(GTK_BOX(hbox),label,TRUE,TRUE,0);
 
   adj = (GtkAdjustment *)gtk_adjustment_new 
-    ((gfloat)gtk_notebook_get_current_page(GTK_NOTEBOOK(ptn_note)),
-     1,(gfloat)pattern_num-1,1.0, 1.0, 0.0);
+    ((gdouble)gtk_notebook_get_current_page(GTK_NOTEBOOK(ptn_note)),
+     1,(gdouble)pattern_num-1,1.0, 1.0, 0.0);
   my_signal_connect (adj, "value_changed",cc_get_adj,&from_ptn);
   spinner =  gtk_spin_button_new (adj, 0, 0);
   gtk_spin_button_set_wrap (GTK_SPIN_BUTTON (spinner), FALSE);
@@ -2978,7 +2978,7 @@ static void create_copy_pattern_dialog(GtkWidget *w, gpointer gdata)
   gtk_box_pack_start(GTK_BOX(hbox),label,TRUE,TRUE,0);
 
   adj = (GtkAdjustment *)gtk_adjustment_new 
-    ((gfloat)pattern_num-1, 1,(gfloat)pattern_num-1,1.0, 1.0, 0.0);
+    ((gdouble)pattern_num-1, 1,(gdouble)pattern_num-1,1.0, 1.0, 0.0);
   my_signal_connect (adj, "value_changed",cc_get_adj,&dest_ptn);
   spinner =  gtk_spin_button_new (adj, 0, 0);
   gtk_spin_button_set_wrap (GTK_SPIN_BUTTON (spinner), FALSE);
@@ -3111,8 +3111,8 @@ static void create_add_frame_dialog(GtkWidget *w, gint gdata)
   gtk_box_pack_start(GTK_BOX(hbox),label,TRUE,TRUE,0);
 
   adj = (GtkAdjustment *)gtk_adjustment_new 
-    ((gfloat)tmp_mascot.frame_num[i_ptn], 0,
-     (gfloat)tmp_mascot.frame_num[i_ptn],1.0, 1.0, 0.0);
+    ((gdouble)tmp_mascot.frame_num[i_ptn], 0,
+     (gdouble)tmp_mascot.frame_num[i_ptn],1.0, 1.0, 0.0);
   my_signal_connect (adj, "value_changed",cc_get_adj,&dest_frm);
   spinner =  gtk_spin_button_new (adj, 0, 0);
   gtk_spin_button_set_wrap (GTK_SPIN_BUTTON (spinner), FALSE);
@@ -3214,8 +3214,8 @@ static void create_del_frame_dialog(GtkWidget *w, gint gdata)
   gtk_box_pack_start(GTK_BOX(hbox),label,TRUE,TRUE,0);
 
   adj = (GtkAdjustment *)gtk_adjustment_new 
-    ((gfloat)tmp_mascot.frame_num[i_ptn]-1, 0,
-     (gfloat)tmp_mascot.frame_num[i_ptn]-1,1.0, 1.0, 0.0);
+    ((gdouble)tmp_mascot.frame_num[i_ptn]-1, 0,
+     (gdouble)tmp_mascot.frame_num[i_ptn]-1,1.0, 1.0, 0.0);
   my_signal_connect (adj, "value_changed",cc_get_adj,&dest_frm);
   spinner =  gtk_spin_button_new (adj, 0, 0);
   gtk_spin_button_set_wrap (GTK_SPIN_BUTTON (spinner), FALSE);
@@ -3505,7 +3505,7 @@ static void create_del_tgt_dialog(GtkWidget *w, gint gdata)
   gtk_box_pack_start(GTK_BOX(hbox),label,TRUE,TRUE,0);
 
   adj = (GtkAdjustment *)gtk_adjustment_new 
-    ((gfloat)dest_tgt, 0,(gfloat)dest_tgt,1.0, 1.0, 0.0);
+    ((gdouble)dest_tgt, 0,(gdouble)dest_tgt,1.0, 1.0, 0.0);
   my_signal_connect (adj, "value_changed",cc_get_adj,&dest_tgt);
   spinner =  gtk_spin_button_new (adj, 0, 0);
   gtk_spin_button_set_wrap (GTK_SPIN_BUTTON (spinner), FALSE);
@@ -3593,7 +3593,7 @@ static void create_add_cat_dialog(GtkWidget *w)
   gtk_box_pack_start(GTK_BOX(hbox),label,TRUE,TRUE,0);
 
   adj = (GtkAdjustment *)gtk_adjustment_new 
-    ((gfloat)tmp_mascot.menu_cat_max, 0,(gfloat)tmp_mascot.menu_cat_max,
+    ((gdouble)tmp_mascot.menu_cat_max, 0,(gdouble)tmp_mascot.menu_cat_max,
      1.0, 1.0, 0.0);
   my_signal_connect (adj, "value_changed",cc_get_adj,&dest_cat);
   spinner =  gtk_spin_button_new (adj, 0, 0);
@@ -3709,8 +3709,8 @@ static void create_del_cat_dialog(GtkWidget *w)
   gtk_box_pack_start(GTK_BOX(hbox),label,TRUE,TRUE,0);
 
   adj = (GtkAdjustment *)gtk_adjustment_new 
-    ((gfloat)gtk_notebook_get_current_page(GTK_NOTEBOOK(cat_note)),
-     0,(gfloat)tmp_mascot.menu_cat_max-1,
+    ((gdouble)gtk_notebook_get_current_page(GTK_NOTEBOOK(cat_note)),
+     0,(gdouble)tmp_mascot.menu_cat_max-1,
      1.0, 1.0, 0.0);
   my_signal_connect (adj, "value_changed",cc_get_adj,&dest_cat);
   spinner =  gtk_spin_button_new (adj, 0, 0);
@@ -6635,7 +6635,7 @@ void create_config_dialog(void)
       gtkut_table_attach(table3, label, 1, 2, 0, 1,
 			 GTK_SHRINK,GTK_SHRINK,0,0);
       adj = (GtkAdjustment *)gtk_adjustment_new 
-	((gfloat)Mascot->offset,
+	((gdouble)Mascot->offset,
 	 -Mascot->width_root, Mascot->width_root,
 	 1.0, 10.0, 0.0);
       my_signal_connect (adj, "value_changed",cc_get_adj,&tmp_mascot.offset);
@@ -6650,7 +6650,7 @@ void create_config_dialog(void)
       gtkut_table_attach (table3, label, 1, 2, 1, 2,
 			  GTK_SHRINK,GTK_SHRINK,0,0);
       adj = (GtkAdjustment *)gtk_adjustment_new 
-	((gfloat)Mascot->offsetp, 0, 100, 1.0, 10.0, 0.0);
+	((gdouble)Mascot->offsetp, 0, 100, 1.0, 10.0, 0.0);
       my_signal_connect (adj, "value_changed",cc_get_adj,&tmp_mascot.offsetp);
       scale =  gtkut_hscale_new (GTK_ADJUSTMENT(adj));
       gtk_scale_set_digits (GTK_SCALE (scale), 0);
@@ -6726,7 +6726,7 @@ void create_config_dialog(void)
       label = gtkut_label_new (_("Bar Size (Manual)"));
       gtkut_pos(label, POS_START, POS_CENTER);
       gtkut_table_attach_defaults (table2, label, 0, 1, 2, 3);
-      adj = (GtkAdjustment *)gtk_adjustment_new ((gfloat)Mascot->bar_size, 0.0, 50.0, 1.0, 1.0, 0.0);
+      adj = (GtkAdjustment *)gtk_adjustment_new ((gdouble)Mascot->bar_size, 0.0, 50.0, 1.0, 1.0, 0.0);
       my_signal_connect (adj, "value_changed",cc_get_adj,&tmp_mascot.bar_size);
       spinner_manual =  gtk_spin_button_new (adj, 0, 0);
       gtk_spin_button_set_wrap (GTK_SPIN_BUTTON (spinner_manual), FALSE);
@@ -6744,7 +6744,7 @@ void create_config_dialog(void)
       label = gtkut_label_new (_("Offset for Shaped Bar"));
       gtkut_pos(label, POS_START, POS_CENTER);
       gtkut_table_attach_defaults (table2, label, 0, 1, 3, 4);
-      adj = (GtkAdjustment *)gtk_adjustment_new ((gfloat)Mascot->bar_offset, -50, 50.0, 1.0, 1.0, 0.0);
+      adj = (GtkAdjustment *)gtk_adjustment_new ((gdouble)Mascot->bar_offset, -50, 50.0, 1.0, 1.0, 0.0);
       my_signal_connect (adj, "value_changed",cc_get_adj,
 			 &tmp_mascot.bar_offset);
       spinner =  gtk_spin_button_new (adj, 0, 0);
@@ -6786,7 +6786,7 @@ void create_config_dialog(void)
       gtkut_pos(label, POS_END, POS_CENTER);
       gtk_box_pack_start(GTK_BOX(vbox), label,FALSE, FALSE, 2);
       adj = (GtkAdjustment *)gtk_adjustment_new 
-	((gfloat)Mascot->home_x, 0,Mascot->width_root, 1.0, 1.0, 0.0);
+	((gdouble)Mascot->home_x, 0,Mascot->width_root, 1.0, 1.0, 0.0);
       my_signal_connect (adj, "value_changed",cc_get_adj,&tmp_mascot.home_x);
       spinner_home_x =  gtk_spin_button_new (adj, 0, 0);
       gtk_spin_button_set_wrap (GTK_SPIN_BUTTON (spinner_home_x), FALSE);
@@ -6800,7 +6800,7 @@ void create_config_dialog(void)
       gtkut_pos(label, POS_END, POS_CENTER);
       gtk_box_pack_start(GTK_BOX(vbox), label,FALSE, FALSE, 2);
       adj = (GtkAdjustment *)gtk_adjustment_new 
-	((gfloat)Mascot->home_y, 0, Mascot->height_root, 1.0, 1.0, 0.0);
+	((gdouble)Mascot->home_y, 0, Mascot->height_root, 1.0, 1.0, 0.0);
       my_signal_connect (adj, "value_changed",cc_get_adj,&tmp_mascot.home_y);
       spinner_home_y =  gtk_spin_button_new (adj, 0, 0);
       gtk_spin_button_set_wrap (GTK_SPIN_BUTTON (spinner_home_y), FALSE);
@@ -7400,7 +7400,7 @@ void create_config_dialog(void)
       gtk_box_pack_start(GTK_BOX(hbox), label,FALSE, FALSE, 5);
       
       adj_pop_port = (GtkAdjustment *)gtk_adjustment_new 
-	((gfloat)Mascot->mail.pop_port, 1, 65535, 1.0, 100.0, 0.0);
+	((gdouble)Mascot->mail.pop_port, 1, 65535, 1.0, 100.0, 0.0);
       my_signal_connect (adj_pop_port, "value_changed",cc_get_adj,
 			 &tmp_mascot.mail.pop_port);
       spinner =  gtk_spin_button_new (adj_pop_port, 0, 0);
@@ -7470,7 +7470,7 @@ void create_config_dialog(void)
       gtk_box_pack_start(GTK_BOX(hbox), label,FALSE, FALSE, 0);
       
       adj = (GtkAdjustment *)gtk_adjustment_new 
-	((gfloat)Mascot->mail.interval, 10, 3600, 10.0, 10.0, 0.0);
+	((gdouble)Mascot->mail.interval, 10, 3600, 10.0, 10.0, 0.0);
       my_signal_connect (adj, "value_changed",cc_get_adj,
 			 &tmp_mascot.mail.interval);
       spinner =  gtk_spin_button_new (adj, 0, 0);
@@ -7531,7 +7531,7 @@ void create_config_dialog(void)
       gtk_box_pack_start(GTK_BOX(hbox), label,FALSE, FALSE, 0);
       
       adj = (GtkAdjustment *)gtk_adjustment_new 
-	((gfloat)Mascot->mail.pop_max_fs, 10, 999, 10.0, 10.0, 0.0);
+	((gdouble)Mascot->mail.pop_max_fs, 10, 999, 10.0, 10.0, 0.0);
       my_signal_connect (adj, "value_changed",cc_get_adj,
 			 &tmp_mascot.mail.pop_max_fs);
       spinner =  gtk_spin_button_new (adj, 0, 0);
@@ -7642,7 +7642,7 @@ void create_config_dialog(void)
 	gtkut_pos(label, POS_START, POS_CENTER);
 	gtk_box_pack_start(GTK_BOX(hbox), label,FALSE, FALSE, 0);
 	adj = (GtkAdjustment *)gtk_adjustment_new 
-	  ((gfloat)Mascot->mail.win_width, 100, Mascot->width_root, 10.0, 10.0, 0.0);
+	  ((gdouble)Mascot->mail.win_width, 100, Mascot->width_root, 10.0, 10.0, 0.0);
 	my_signal_connect (adj, "value_changed",cc_get_adj,
 			   &tmp_mascot.mail.win_width);
 	scale =  gtkut_hscale_new (GTK_ADJUSTMENT(adj));
@@ -7654,7 +7654,7 @@ void create_config_dialog(void)
 	gtkut_pos(label, POS_START, POS_CENTER);
 	gtk_box_pack_start(GTK_BOX(hbox), label,FALSE, FALSE, 0);
 	adj = (GtkAdjustment *)gtk_adjustment_new 
-	  ((gfloat)Mascot->mail.win_height, 100, Mascot->height_root, 10.0, 10.0, 0.0);
+	  ((gdouble)Mascot->mail.win_height, 100, Mascot->height_root, 10.0, 10.0, 0.0);
 	my_signal_connect (adj, "value_changed",cc_get_adj,
 			   &tmp_mascot.mail.win_height);
 	scale =  gtkut_hscale_new (GTK_ADJUSTMENT(adj));
@@ -7694,7 +7694,7 @@ void create_config_dialog(void)
 			 GTK_SHRINK,GTK_SHRINK,0,0);
 
       adj = (GtkAdjustment *)gtk_adjustment_new 
-	((gfloat)Mascot->magnify, 10, 400, 1.0, 10.0, 0.0);
+	((gdouble)Mascot->magnify, 10, 400, 1.0, 10.0, 0.0);
       my_signal_connect (adj, "value_changed",cc_get_adj,
 			 &tmp_mascot.magnify);
       scale =  gtkut_hscale_new (GTK_ADJUSTMENT(adj));
@@ -7844,16 +7844,16 @@ void create_config_dialog(void)
 
 #ifdef USE_WIN32
 	adj = (GtkAdjustment *)gtk_adjustment_new 
-	  ((gfloat)Mascot->sdw_x, -5.0, 5.0, 1.0, 1.0, 0.0);
+	  ((gdouble)Mascot->sdw_x, -5.0, 5.0, 1.0, 1.0, 0.0);
 	spinner =  gtk_spin_button_new (adj, 0, 0);
 #else
 	adj = (GtkAdjustment *)gtk_adjustment_new 
-	  ((gfloat)Mascot->sdw_x, -5.0, 5.0, 0.1, 0.1, 0.0);
+	  ((gdouble)Mascot->sdw_x, -5.0, 5.0, 0.1, 0.1, 0.0);
 	spinner =  gtk_spin_button_new (adj, 1, 1);
 #endif
 	gtk_spin_button_set_wrap (GTK_SPIN_BUTTON (spinner), FALSE);
 	gtk_box_pack_start(GTK_BOX(hbox_sdw), spinner,FALSE, FALSE, 0);
-	my_signal_connect (adj, "value_changed",cc_get_float,
+	my_signal_connect (adj, "value_changed",cc_get_double,
 			   &tmp_mascot.sdw_x);
 
 	label = gtkut_label_new (_("Y"));
@@ -7871,7 +7871,7 @@ void create_config_dialog(void)
 #endif
 	gtk_spin_button_set_wrap (GTK_SPIN_BUTTON (spinner), FALSE);
 	gtk_box_pack_start(GTK_BOX(hbox_sdw), spinner,FALSE, FALSE, 0);
-	my_signal_connect (adj, "value_changed",cc_get_float,
+	my_signal_connect (adj, "value_changed",cc_get_double,
 			   &tmp_mascot.sdw_y);
 
 	hbox_sdw = gtkut_hbox_new(FALSE,5);
@@ -7883,7 +7883,7 @@ void create_config_dialog(void)
 	gtkut_pos(label, POS_END, POS_CENTER);
 
 	adj = (GtkAdjustment *)gtk_adjustment_new 
-	  ((gfloat)Mascot->sdw_alpha, 0, 100, 10.0, 10.0, 0.0);
+	  ((gdouble)Mascot->sdw_alpha, 0, 100, 10.0, 10.0, 0.0);
 	my_signal_connect (adj, "value_changed",cc_get_adj,
 			   &tmp_mascot.sdw_alpha);
 	scale =  gtkut_hscale_new (GTK_ADJUSTMENT(adj));
@@ -8206,7 +8206,7 @@ void create_config_dialog(void)
 
       
       adj = (GtkAdjustment *)gtk_adjustment_new 
-	((gfloat)Mascot->def_alpha_main, 0, 100, 1.0, 10.0, 0.0);
+	((gdouble)Mascot->def_alpha_main, 0, 100, 1.0, 10.0, 0.0);
       my_signal_connect (adj, "value_changed",cc_get_adj,
 			 &tmp_mascot.def_alpha_main);
       scale =  gtkut_hscale_new (GTK_ADJUSTMENT(adj));
@@ -8221,7 +8221,7 @@ void create_config_dialog(void)
 
 #ifdef USE_BIFF
       adj = (GtkAdjustment *)gtk_adjustment_new 
-	((gfloat)Mascot->def_alpha_biff, 0, 100, 1.0, 10.0, 0.0);
+	((gdouble)Mascot->def_alpha_biff, 0, 100, 1.0, 10.0, 0.0);
       my_signal_connect (adj, "value_changed",cc_get_adj,
 			 &tmp_mascot.def_alpha_biff);
       scale =  gtkut_hscale_new (GTK_ADJUSTMENT(adj));
@@ -8237,7 +8237,7 @@ void create_config_dialog(void)
 
 #ifdef USE_WIN32
       adj = (GtkAdjustment *)gtk_adjustment_new 
-	((gfloat)Mascot->def_alpha_bal, 0, 100, 1.0, 10.0, 0.0);
+	((gdouble)Mascot->def_alpha_bal, 0, 100, 1.0, 10.0, 0.0);
       my_signal_connect (adj, "value_changed",cc_get_adj,
 			 &tmp_mascot.def_alpha_bal);
       scale =  gtkut_hscale_new (GTK_ADJUSTMENT(adj));
@@ -8247,7 +8247,7 @@ void create_config_dialog(void)
 			 GTK_EXPAND|GTK_FILL,GTK_SHRINK,0,0);
 
       adj = (GtkAdjustment *)gtk_adjustment_new 
-	((gfloat)Mascot->def_alpha_clk, 0, 100, 1.0, 10.0, 0.0);
+	((gdouble)Mascot->def_alpha_clk, 0, 100, 1.0, 10.0, 0.0);
       my_signal_connect (adj, "value_changed",cc_get_adj,
 			 &tmp_mascot.def_alpha_clk);
       scale =  gtkut_hscale_new (GTK_ADJUSTMENT(adj));
@@ -8390,7 +8390,7 @@ void create_config_dialog(void)
       gtkut_pos(label, POS_END, POS_CENTER);
 
       adj = (GtkAdjustment *)gtk_adjustment_new 
-	((gfloat)Mascot->sockmsg_step, 0,10, 1.0, 1.0, 0.0);
+	((gdouble)Mascot->sockmsg_step, 0,10, 1.0, 1.0, 0.0);
       my_signal_connect (adj, "value_changed",cc_get_adj,
 			 &tmp_mascot.sockmsg_step);
       spinner =  gtk_spin_button_new (adj, 0, 0);
@@ -8406,7 +8406,7 @@ void create_config_dialog(void)
       gtkut_pos(label, POS_END, POS_CENTER);
 
       adj = (GtkAdjustment *)gtk_adjustment_new 
-	((gfloat)Mascot->sockmsg_expire_def, 100, 65535, 100.0, 1000.0, 0.0);
+	((gdouble)Mascot->sockmsg_expire_def, 100, 65535, 100.0, 1000.0, 0.0);
       my_signal_connect (adj, "value_changed",cc_get_adj,
 			 &tmp_mascot.sockmsg_expire_def);
       spinner =  gtk_spin_button_new (adj, 0, 0);
@@ -8819,7 +8819,7 @@ void create_config_dialog(void)
       gtkut_pos(label, POS_END, POS_CENTER);
       gtk_box_pack_start(GTK_BOX(vbox), label,FALSE, FALSE, 0);
       adj = (GtkAdjustment *)gtk_adjustment_new 
-	((gfloat)Mascot->xfix, 0,Mascot->width_root, 1.0, 1.0, 0.0);
+	((gdouble)Mascot->xfix, 0,Mascot->width_root, 1.0, 1.0, 0.0);
       my_signal_connect (adj, "value_changed",cc_get_adj,&tmp_mascot.xfix);
       spinner =  gtk_spin_button_new (adj, 0, 0);
       gtk_spin_button_set_wrap (GTK_SPIN_BUTTON (spinner), FALSE);
@@ -8832,7 +8832,7 @@ void create_config_dialog(void)
       gtkut_pos(label, POS_END, POS_CENTER);
       gtk_box_pack_start(GTK_BOX(vbox), label,FALSE, FALSE, 0);
       adj = (GtkAdjustment *)gtk_adjustment_new 
-	((gfloat)Mascot->yfix, 0, Mascot->height_root, 1.0, 1.0, 0.0);
+	((gdouble)Mascot->yfix, 0, Mascot->height_root, 1.0, 1.0, 0.0);
       my_signal_connect (adj, "value_changed",cc_get_adj,&tmp_mascot.yfix);
       spinner =  gtk_spin_button_new (adj, 0, 0);
       gtk_spin_button_set_wrap (GTK_SPIN_BUTTON (spinner), FALSE);
@@ -8856,7 +8856,7 @@ void create_config_dialog(void)
       gtkut_pos(label, POS_END, POS_CENTER);
       gtk_box_pack_start(GTK_BOX(vbox), label,FALSE, FALSE, 0);
       adj = (GtkAdjustment *)gtk_adjustment_new 
-	((gfloat)Mascot->xoff, 0,Mascot->width_root, 1.0, 1.0, 0.0);
+	((gdouble)Mascot->xoff, 0,Mascot->width_root, 1.0, 1.0, 0.0);
       my_signal_connect (adj, "value_changed",cc_get_adj,&tmp_mascot.xoff);
       spinner =  gtk_spin_button_new (adj, 0, 0);
       gtk_spin_button_set_wrap (GTK_SPIN_BUTTON (spinner), FALSE);
@@ -8869,7 +8869,7 @@ void create_config_dialog(void)
       gtkut_pos(label, POS_END, POS_CENTER);
       gtk_box_pack_start(GTK_BOX(vbox), label,FALSE, FALSE, 0);
       adj = (GtkAdjustment *)gtk_adjustment_new 
-	((gfloat)Mascot->yoff, 0, Mascot->height_root, 1.0, 1.0, 0.0);
+	((gdouble)Mascot->yoff, 0, Mascot->height_root, 1.0, 1.0, 0.0);
       my_signal_connect (adj, "value_changed",cc_get_adj,&tmp_mascot.yoff);
       spinner =  gtk_spin_button_new (adj, 0, 0);
       gtk_spin_button_set_wrap (GTK_SPIN_BUTTON (spinner), FALSE);
@@ -9026,7 +9026,7 @@ void create_config_dialog(void)
 			  GTK_SHRINK, GTK_SHRINK, 5, 5);
       gtkut_pos(label, POS_START, POS_CENTER);
       adj = (GtkAdjustment *)gtk_adjustment_new 
-	((gfloat)Mascot->clk_x, -Mascot->width*3, Mascot->width*4, 1.0, 
+	((gdouble)Mascot->clk_x, -Mascot->width*3, Mascot->width*4, 1.0, 
 	 10.0, 0.0);
       my_signal_connect (adj, "value_changed",cc_get_adj,&tmp_mascot.clk_x);
       spinner =  gtk_spin_button_new (adj, 0, 0);
@@ -9038,7 +9038,7 @@ void create_config_dialog(void)
       gtkut_table_attach (table1, label, 3, 4, 0, 1,
 			  GTK_SHRINK, GTK_SHRINK, 5, 5);
       adj = (GtkAdjustment *)gtk_adjustment_new 
-	((gfloat)Mascot->clk_y, -Mascot->height*2, Mascot->height*3, 1.0, 
+	((gdouble)Mascot->clk_y, -Mascot->height*2, Mascot->height*3, 1.0, 
 	 10.0, 0.0);
       my_signal_connect (adj, "value_changed",cc_get_adj,&tmp_mascot.clk_y);
       spinner =  gtk_spin_button_new (adj, 0, 0);
@@ -9055,7 +9055,7 @@ void create_config_dialog(void)
       gtkut_table_attach (table1, label, 1, 2, 1, 2,
 			  GTK_SHRINK, GTK_SHRINK, 5, 5);
       adj = (GtkAdjustment *)gtk_adjustment_new 
-	((gfloat)Mascot->clktext_x, 1, Mascot->width, 1.0, 10.0, 0.0);
+	((gdouble)Mascot->clktext_x, 1, Mascot->width, 1.0, 10.0, 0.0);
       my_signal_connect (adj, "value_changed",cc_get_adj,
 			 &tmp_mascot.clktext_x);
       spinner =  gtk_spin_button_new (adj, 0, 0);
@@ -9067,7 +9067,7 @@ void create_config_dialog(void)
       gtkut_table_attach (table1, label, 3, 4, 1, 2,
 			  GTK_SHRINK, GTK_SHRINK, 5, 5);
       adj = (GtkAdjustment *)gtk_adjustment_new 
-	((gfloat)Mascot->clktext_y, 1, Mascot->height, 1.0, 10.0, 0.0);
+	((gdouble)Mascot->clktext_y, 1, Mascot->height, 1.0, 10.0, 0.0);
       my_signal_connect (adj, "value_changed",cc_get_adj,
 			 &tmp_mascot.clktext_y);
       spinner =  gtk_spin_button_new (adj, 0, 0);
@@ -9080,7 +9080,7 @@ void create_config_dialog(void)
 			  GTK_SHRINK, GTK_SHRINK, 5, 5);
       gtkut_pos(label, POS_START, POS_CENTER);
       adj = (GtkAdjustment *)gtk_adjustment_new 
-	((gfloat)Mascot->wclkbd, 0, 10, 1.0, 1.0, 0.0);
+	((gdouble)Mascot->wclkbd, 0, 10, 1.0, 1.0, 0.0);
       my_signal_connect (adj, "value_changed",cc_get_adj,
 			 &tmp_mascot.wclkbd);
       spinner =  gtk_spin_button_new (adj, 0, 0);
@@ -9115,7 +9115,7 @@ void create_config_dialog(void)
       gtk_box_pack_start(GTK_BOX(hbox), label,FALSE, FALSE, 0);
       gtkut_pos(label, POS_END, POS_CENTER);
       adj = (GtkAdjustment *)gtk_adjustment_new 
-	((gfloat)Mascot->clksd_x, -5, 5, 1.0, 10.0, 0.0);
+	((gdouble)Mascot->clksd_x, -5, 5, 1.0, 10.0, 0.0);
       my_signal_connect (adj, "value_changed",cc_get_adj,
 			 &tmp_mascot.clksd_x);
       spinner =  gtk_spin_button_new (adj, 0, 0);
@@ -9124,7 +9124,7 @@ void create_config_dialog(void)
       label = gtkut_label_new (_("Y"));
       gtk_box_pack_start(GTK_BOX(hbox), label,FALSE, FALSE, 0);
       adj = (GtkAdjustment *)gtk_adjustment_new 
-	((gfloat)Mascot->clksd_y, -5, 5, 1.0, 10.0, 0.0);
+	((gdouble)Mascot->clksd_y, -5, 5, 1.0, 10.0, 0.0);
       my_signal_connect (adj, "value_changed",cc_get_adj,
 			 &tmp_mascot.clksd_y);
       spinner =  gtk_spin_button_new (adj, 0, 0);
@@ -9148,7 +9148,7 @@ void create_config_dialog(void)
       gtkut_table_attach(table, frame, 1, 2, 2, 4,
 			 GTK_FILL,GTK_SHRINK,0,0);
 	
-      table1 = gtkut_table_new (2, 6, FALSE,0,0,5);
+      table1 = gtkut_table_new (2, 6, FALSE,0,5,5);
       gtk_container_add (GTK_CONTAINER (frame), table1);
 
       label = gtkut_label_new (_("Text"));
@@ -9255,7 +9255,7 @@ void create_config_dialog(void)
 			 GTK_FILL,GTK_SHRINK,0,0);
       
       adj = (GtkAdjustment *)gtk_adjustment_new 
-	((gfloat)Mascot->alpha_clk, 0, 100, 1.0, 10.0, 0.0);
+	((gdouble)Mascot->alpha_clk, 0, 100, 1.0, 10.0, 0.0);
       my_signal_connect (adj, "value_changed",cc_get_adj,
 			 &tmp_mascot.alpha_clk);
       scale =  gtkut_hscale_new (GTK_ADJUSTMENT(adj));
@@ -9359,7 +9359,7 @@ void create_config_dialog(void)
       gtkut_table_attach (table1, label, 1, 2, 0, 1,
 			  GTK_SHRINK,GTK_SHRINK,0,0);
       adj = (GtkAdjustment *)gtk_adjustment_new 
-	((gfloat)Mascot->baltext_x, 0, 20, 1.0, 1.0, 0.0);
+	((gdouble)Mascot->baltext_x, 0, 20, 1.0, 1.0, 0.0);
       my_signal_connect (adj, "value_changed",cc_get_adj,
 			 &tmp_mascot.baltext_x);
       spinner =  gtk_spin_button_new (adj, 0, 0);
@@ -9371,7 +9371,7 @@ void create_config_dialog(void)
       gtkut_table_attach (table1, label, 3, 4, 0, 1,
 			  GTK_SHRINK,GTK_SHRINK,0,0);
       adj = (GtkAdjustment *)gtk_adjustment_new 
-	((gfloat)Mascot->baltext_y, 0, 20, 1.0, 1.0, 0.0);
+	((gdouble)Mascot->baltext_y, 0, 20, 1.0, 1.0, 0.0);
       my_signal_connect (adj, "value_changed",cc_get_adj,
 			 &tmp_mascot.baltext_y);
       spinner =  gtk_spin_button_new (adj, 0, 0);
@@ -9385,7 +9385,7 @@ void create_config_dialog(void)
 			  GTK_SHRINK,GTK_SHRINK,0,0);
       gtkut_pos(label, POS_START, POS_CENTER);
       adj = (GtkAdjustment *)gtk_adjustment_new 
-	((gfloat)Mascot->wbalbd, 0, 10, 1.0, 1.0, 0.0);
+	((gdouble)Mascot->wbalbd, 0, 10, 1.0, 1.0, 0.0);
       my_signal_connect (adj, "value_changed",cc_get_adj,
 			 &tmp_mascot.wbalbd);
       spinner =  gtk_spin_button_new (adj, 0, 0);
@@ -9436,7 +9436,7 @@ void create_config_dialog(void)
       gtkut_table_attach(table, frame, 1, 2, 1, 2,
 			 GTK_FILL,GTK_SHRINK,0,0);
 	
-      table1 = gtkut_table_new (2, 4, FALSE,0,0,5);
+      table1 = gtkut_table_new (2, 4, FALSE,0,5,5);
       gtk_container_add (GTK_CONTAINER (frame), table1);
 
       label = gtkut_label_new (_("Text"));
@@ -9526,7 +9526,7 @@ void create_config_dialog(void)
 			 GTK_FILL,GTK_SHRINK,0,0);
       
       adj = (GtkAdjustment *)gtk_adjustment_new 
-	((gfloat)Mascot->alpha_bal, 0, 100, 1.0, 10.0, 0.0);
+	((gdouble)Mascot->alpha_bal, 0, 100, 1.0, 10.0, 0.0);
       my_signal_connect (adj, "value_changed",cc_get_adj,
 			 &tmp_mascot.alpha_bal);
       scale =  gtkut_hscale_new (GTK_ADJUSTMENT(adj));
@@ -9656,7 +9656,7 @@ void create_config_dialog(void)
 			 GTK_FILL,GTK_SHRINK,0,0);
       
       adj = (GtkAdjustment *)gtk_adjustment_new 
-	((gfloat)Mascot->alpha_main, 0, 100, 1.0, 10.0, 0.0);
+	((gdouble)Mascot->alpha_main, 0, 100, 1.0, 10.0, 0.0);
       my_signal_connect (adj, "value_changed",cc_get_adj,
 			 &tmp_mascot.alpha_main);
       scale =  gtkut_hscale_new (GTK_ADJUSTMENT(adj));
@@ -9887,8 +9887,8 @@ void create_config_dialog(void)
       gtk_box_pack_start(GTK_BOX(hbox), label,FALSE, FALSE, 0);
       
       adj = (GtkAdjustment *)gtk_adjustment_new 
-	((gfloat)Mascot->mail.pix_x, (gfloat)(-Mascot->width),
-	 (gfloat)(Mascot->width), 1.0, 1.0, 0.0);
+	((gdouble)Mascot->mail.pix_x, (gdouble)(-Mascot->width),
+	 (gdouble)(Mascot->width), 1.0, 1.0, 0.0);
       my_signal_connect (adj, "value_changed",cc_get_adj,
 			 &tmp_mascot.mail.pix_x);
       spinner =  gtk_spin_button_new (adj, 0, 0);
@@ -9903,8 +9903,8 @@ void create_config_dialog(void)
       gtk_box_pack_start(GTK_BOX(hbox), label,FALSE, FALSE, 0);
       
       adj = (GtkAdjustment *)gtk_adjustment_new 
-	((gfloat)Mascot->mail.pix_y, (gfloat)(-Mascot->height),
-	 (gfloat)(Mascot->height), 1.0, 1.0, 0.0);
+	((gdouble)Mascot->mail.pix_y, (gdouble)(-Mascot->height),
+	 (gdouble)(Mascot->height), 1.0, 1.0, 0.0);
       my_signal_connect (adj, "value_changed",cc_get_adj,
 			 &tmp_mascot.mail.pix_y);
       spinner =  gtk_spin_button_new (adj, 0, 0);
@@ -9917,7 +9917,7 @@ void create_config_dialog(void)
 			 GTK_FILL,GTK_SHRINK,0,0);
       
       adj = (GtkAdjustment *)gtk_adjustment_new 
-	((gfloat)Mascot->alpha_biff, 0, 100, 1.0, 10.0, 0.0);
+	((gdouble)Mascot->alpha_biff, 0, 100, 1.0, 10.0, 0.0);
       my_signal_connect (adj, "value_changed",cc_get_adj,
 			 &tmp_mascot.alpha_biff);
       scale =  gtkut_hscale_new (GTK_ADJUSTMENT(adj));
@@ -10358,7 +10358,7 @@ void make_pattern_list(GtkWidget *ptn_note, int i_ptn)
       gtkut_pos(label, POS_START, POS_CENTER);
       gtk_box_pack_start(GTK_BOX(hbox), label,FALSE, FALSE, 0);
       adj = (GtkAdjustment *)gtk_adjustment_new 
-	((gfloat)tmp_mascot.random_weight[i_ptn], 0, 99, 1.0, 1.0, 0.0);
+	((gdouble)tmp_mascot.random_weight[i_ptn], 0, 99, 1.0, 1.0, 0.0);
       my_signal_connect (adj, "value_changed",cc_get_adj,
 			 &tmp_mascot.random_weight[i_ptn]);
       spinner =  gtk_spin_button_new (adj, 0, 0);
@@ -10370,7 +10370,7 @@ void make_pattern_list(GtkWidget *ptn_note, int i_ptn)
       gtkut_pos(label, POS_START, POS_CENTER);
       gtk_box_pack_start(GTK_BOX(hbox), label,FALSE, FALSE, 0);
       adj = (GtkAdjustment *)gtk_adjustment_new 
-	((gfloat)tmp_mascot.click_weight[i_ptn], 0, 99, 1.0, 1.0, 0.0);
+	((gdouble)tmp_mascot.click_weight[i_ptn], 0, 99, 1.0, 1.0, 0.0);
       my_signal_connect (adj, "value_changed",cc_get_adj,
 			 &tmp_mascot.click_weight[i_ptn]);
       spinner =  gtk_spin_button_new (adj, 0, 0);
@@ -10387,7 +10387,7 @@ void make_pattern_list(GtkWidget *ptn_note, int i_ptn)
       gtkut_pos(label, POS_START, POS_CENTER);
       gtk_box_pack_start(GTK_BOX(hbox), label,FALSE, FALSE, 0);
       adj = (GtkAdjustment *)gtk_adjustment_new 
-	((gfloat)tmp_mascot.bal_lxoff[i_ptn], -99, 99, 1.0, 1.0, 0.0);
+	((gdouble)tmp_mascot.bal_lxoff[i_ptn], -99, 99, 1.0, 1.0, 0.0);
       my_signal_connect (adj, "value_changed",cc_get_adj,
 			 &tmp_mascot.bal_lxoff[i_ptn]);
       spinner =  gtk_spin_button_new (adj, 0, 0);
@@ -10399,7 +10399,7 @@ void make_pattern_list(GtkWidget *ptn_note, int i_ptn)
       gtkut_pos(label, POS_START, POS_CENTER);
       gtk_box_pack_start(GTK_BOX(hbox), label,FALSE, FALSE, 0);
       adj = (GtkAdjustment *)gtk_adjustment_new 
-	((gfloat)tmp_mascot.bal_lyoff[i_ptn], -99, 99, 1.0, 1.0, 0.0);
+	((gdouble)tmp_mascot.bal_lyoff[i_ptn], -99, 99, 1.0, 1.0, 0.0);
       my_signal_connect (adj, "value_changed",cc_get_adj,
 			 &tmp_mascot.bal_lyoff[i_ptn]);
       spinner =  gtk_spin_button_new (adj, 0, 0);
@@ -10411,7 +10411,7 @@ void make_pattern_list(GtkWidget *ptn_note, int i_ptn)
       gtkut_pos(label, POS_START, POS_CENTER);
       gtk_box_pack_start(GTK_BOX(hbox), label,FALSE, FALSE, 0);
       adj = (GtkAdjustment *)gtk_adjustment_new 
-	((gfloat)tmp_mascot.bal_rxoff[i_ptn], -99, 99, 1.0, 1.0, 0.0);
+	((gdouble)tmp_mascot.bal_rxoff[i_ptn], -99, 99, 1.0, 1.0, 0.0);
       my_signal_connect (adj, "value_changed",cc_get_adj,
 			 &tmp_mascot.bal_rxoff[i_ptn]);
       spinner =  gtk_spin_button_new (adj, 0, 0);
@@ -10423,7 +10423,7 @@ void make_pattern_list(GtkWidget *ptn_note, int i_ptn)
       gtkut_pos(label, POS_START, POS_CENTER);
       gtk_box_pack_start(GTK_BOX(hbox), label,FALSE, FALSE, 0);
       adj = (GtkAdjustment *)gtk_adjustment_new 
-	((gfloat)tmp_mascot.bal_ryoff[i_ptn], -99, 99, 1.0, 1.0, 0.0);
+	((gdouble)tmp_mascot.bal_ryoff[i_ptn], -99, 99, 1.0, 1.0, 0.0);
       my_signal_connect (adj, "value_changed",cc_get_adj,
 			 &tmp_mascot.bal_ryoff[i_ptn]);
       spinner =  gtk_spin_button_new (adj, 0, 0);
@@ -10469,7 +10469,7 @@ void make_pattern_list(GtkWidget *ptn_note, int i_ptn)
       gtkut_pos(label, POS_START, POS_CENTER);
       gtk_box_pack_start(GTK_BOX(hbox), label,FALSE, FALSE, 0);
       adj = (GtkAdjustment *)gtk_adjustment_new 
-	((gfloat)tmp_mascot.duet_ptn[i_ptn], 1, MAX_ANIME_PATTERN-1,
+	((gdouble)tmp_mascot.duet_ptn[i_ptn], 1, MAX_ANIME_PATTERN-1,
 	 1.0, 1.0, 0.0);
       my_signal_connect (adj, "value_changed",cc_get_adj,
 			 &tmp_mascot.duet_ptn[i_ptn]);
@@ -10494,7 +10494,7 @@ void make_pattern_list(GtkWidget *ptn_note, int i_ptn)
       gtkut_pos(label, POS_START, POS_CENTER);
       gtk_box_pack_start(GTK_BOX(hbox), label,FALSE, FALSE, 0);
       adj = (GtkAdjustment *)gtk_adjustment_new 
-	((gfloat)tmp_mascot.duet_delay[i_ptn], 0, 99,
+	((gdouble)tmp_mascot.duet_delay[i_ptn], 0, 99,
 	 1.0, 1.0, 0.0);
       my_signal_connect (adj, "value_changed",cc_get_adj,
 			 &tmp_mascot.duet_delay[i_ptn]);
@@ -10760,8 +10760,8 @@ void make_frame_list(int i_ptn)
 
     // Image
     adj = (GtkAdjustment *)gtk_adjustment_new 
-      ((gfloat)tmp_mascot.frame_pix[i_ptn][i_frm], 0,
-       (gfloat)tmp_mascot.nPixmap-1, 1.0, 1.0, 0.0);
+      ((gdouble)tmp_mascot.frame_pix[i_ptn][i_frm], 0,
+       (gdouble)tmp_mascot.nPixmap-1, 1.0, 1.0, 0.0);
     my_signal_connect (adj, "value_changed",cc_get_adj,
 		       &tmp_mascot.frame_pix[i_ptn][i_frm]);
     spinner =  gtk_spin_button_new (adj, 0, 0);
@@ -10773,7 +10773,7 @@ void make_frame_list(int i_ptn)
 
     // Min
     adj = (GtkAdjustment *)gtk_adjustment_new 
-      ((gfloat)tmp_mascot.frame_min[i_ptn][i_frm], 1,999, 1.0, 1.0, 0.0);
+      ((gdouble)tmp_mascot.frame_min[i_ptn][i_frm], 1,999, 1.0, 1.0, 0.0);
     my_signal_connect (adj, "value_changed",cc_get_adj,
 		       &tmp_mascot.frame_min[i_ptn][i_frm]);
     spinner =  gtk_spin_button_new (adj, 0, 0);
@@ -10785,7 +10785,7 @@ void make_frame_list(int i_ptn)
   
     // Max
     adj = (GtkAdjustment *)gtk_adjustment_new 
-      ((gfloat)tmp_mascot.frame_max[i_ptn][i_frm], 1,999, 1.0, 1.0, 0.0);
+      ((gdouble)tmp_mascot.frame_max[i_ptn][i_frm], 1,999, 1.0, 1.0, 0.0);
     my_signal_connect (adj, "value_changed",cc_get_adj,
 		       &tmp_mascot.frame_max[i_ptn][i_frm]);
     spinner =  gtk_spin_button_new (adj, 0, 0);
@@ -10797,7 +10797,7 @@ void make_frame_list(int i_ptn)
   
     // Block Next
     adj = (GtkAdjustment *)gtk_adjustment_new 
-      ((gfloat)tmp_mascot.frame_loop[i_ptn][i_frm].next, -1,
+      ((gdouble)tmp_mascot.frame_loop[i_ptn][i_frm].next, -1,
        tmp_mascot.frame_num[i_ptn]-1, 1.0, 1.0, 0.0);
     my_signal_connect (adj, "value_changed",cc_get_adj,
 		       &tmp_mascot.frame_loop[i_ptn][i_frm].next);
@@ -10809,7 +10809,7 @@ void make_frame_list(int i_ptn)
 
     // Block Min
     adj = (GtkAdjustment *)gtk_adjustment_new 
-      ((gfloat)tmp_mascot.frame_loop[i_ptn][i_frm].min, 0,999, 1.0, 1.0, 0.0);
+      ((gdouble)tmp_mascot.frame_loop[i_ptn][i_frm].min, 0,999, 1.0, 1.0, 0.0);
     my_signal_connect (adj, "value_changed",cc_get_adj,
 		       &tmp_mascot.frame_loop[i_ptn][i_frm].min);
     spinner =  gtk_spin_button_new (adj, 0, 0);
@@ -10820,7 +10820,7 @@ void make_frame_list(int i_ptn)
   
     // Block Max
     adj = (GtkAdjustment *)gtk_adjustment_new 
-      ((gfloat)tmp_mascot.frame_loop[i_ptn][i_frm].max, 0,999, 1.0, 1.0, 0.0);
+      ((gdouble)tmp_mascot.frame_loop[i_ptn][i_frm].max, 0,999, 1.0, 1.0, 0.0);
     my_signal_connect (adj, "value_changed",cc_get_adj,
 		       &tmp_mascot.frame_loop[i_ptn][i_frm].max);
     spinner =  gtk_spin_button_new (adj, 0, 0);

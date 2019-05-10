@@ -78,14 +78,14 @@ gboolean TestLoadPixmaps(typMascot *mascot, gchar *filename, gint i_pix)
   g_free(tmp_open);
   if(!pixbuf) return(FALSE);
 
-  w = gdk_pixbuf_get_width(pixbuf)*((gfloat)(mascot->magnify)/100);
-  h = gdk_pixbuf_get_height(pixbuf)*((gfloat)(mascot->magnify)/100);
+  w = gdk_pixbuf_get_width(pixbuf)*((gdouble)(mascot->magnify)/100);
+  h = gdk_pixbuf_get_height(pixbuf)*((gdouble)(mascot->magnify)/100);
 
 #ifdef USE_WIN32
   if(mascot->move==MOVE_FOCUS){
     if(mascot->yoff>0){
       mascot->sdw_height
-	=mascot->yoff*(gfloat)(mascot->magnify)/100+mascot->sdw_y;
+	=mascot->yoff*(gdouble)(mascot->magnify)/100+mascot->sdw_y;
     }
     else{
       mascot->sdw_height=0;
@@ -117,7 +117,7 @@ gboolean TestLoadPixmaps(typMascot *mascot, gchar *filename, gint i_pix)
     ipstyle=GDK_INTERP_BILINEAR;
   }
 
-#ifdef USE_GTK3
+#ifdef USE_GTK3  ///////////////  GTK3  //////////////////////
   if(mascot->sprites[i_pix].pixbuf) {
     g_object_unref(G_OBJECT(mascot->sprites[i_pix].pixbuf));
     mascot->sprites[i_pix].pixbuf=NULL;
@@ -147,11 +147,11 @@ gboolean TestLoadPixmaps(typMascot *mascot, gchar *filename, gint i_pix)
     mascot->sprites[i_pix].mask_sdw=NULL;
   }
 #endif  
-#endif
+#endif  ////////////////////////////////////////////////
 
   pixbuf2=gdk_pixbuf_scale_simple(pixbuf,w,h,ipstyle);
 
-#ifdef USE_GTK3
+#ifdef USE_GTK3  ///////////////  GTK3  //////////////////////
   if(flag_img_cairo_go){
     if(mascot->sdw_flag){
       w= w + mascot->sdw_x_int;
@@ -170,14 +170,16 @@ gboolean TestLoadPixmaps(typMascot *mascot, gchar *filename, gint i_pix)
     if(mascot->sdw_flag){
       // Shadow
       cairo_save(cr);
-      cairo_scale (cr, (gfloat)(mascot->magnify)/100, 
-		   (gfloat)(mascot->magnify)/100);
-
+      
       if(mascot->sdw_x<0){
-	gdk_cairo_set_source_pixbuf(cr,pixbuf,0, mascot->sdw_y);
+	gdk_cairo_set_source_pixbuf(cr,pixbuf2,
+				    0,
+				    mascot->sdw_y*(gdouble)(mascot->magnify)/100);
       }
       else{
-	gdk_cairo_set_source_pixbuf(cr,pixbuf,mascot->sdw_x, mascot->sdw_y);
+	gdk_cairo_set_source_pixbuf(cr,pixbuf2,
+				    mascot->sdw_x*(gdouble)(mascot->magnify)/100,
+				    mascot->sdw_y*(gdouble)(mascot->magnify)/100);
       }
       cairo_paint(cr);
       region = gdk_cairo_region_create_from_surface(surface);
@@ -204,7 +206,7 @@ gboolean TestLoadPixmaps(typMascot *mascot, gchar *filename, gint i_pix)
 	cairo_set_operator (cr, CAIRO_OPERATOR_CLEAR);
 	cairo_move_to(cr,0,0);
 	cairo_rectangle(cr, 0, 0, w, 
-		      h-mascot->yoff*(gfloat)(mascot->magnify)/100-mascot->sdw_y_int);
+		      h-mascot->yoff*(gdouble)(mascot->magnify)/100-mascot->sdw_y_int);
 	cairo_fill(cr);
 	cairo_restore(cr);
       }      
@@ -303,8 +305,8 @@ gboolean TestLoadPixmaps(typMascot *mascot, gchar *filename, gint i_pix)
     if(mascot->sdw_flag){
       // Shadow
       cairo_save(cr);
-      cairo_scale (cr, (gfloat)(mascot->magnify)/100, 
-		   (gfloat)(mascot->magnify)/100);
+      cairo_scale (cr, (gdouble)(mascot->magnify)/100, 
+		   (gdouble)(mascot->magnify)/100);
       if(mascot->sdw_x<0){
 	gdk_cairo_set_source_pixmap(cr,mask,0, mascot->sdw_y);
       }
@@ -322,7 +324,7 @@ gboolean TestLoadPixmaps(typMascot *mascot, gchar *filename, gint i_pix)
 	cairo_set_operator (cr, CAIRO_OPERATOR_CLEAR);
 	cairo_move_to(cr,0,0);
 	cairo_rectangle(cr, 0, 0, w, 
-		      h-mascot->yoff*(gfloat)(mascot->magnify)/100-mascot->sdw_y_int);
+		      h-mascot->yoff*(gdouble)(mascot->magnify)/100-mascot->sdw_y_int);
 	cairo_fill(cr);
 	cairo_restore(cr);
       }
@@ -405,7 +407,7 @@ gboolean TestLoadPixmaps(typMascot *mascot, gchar *filename, gint i_pix)
     }
 #endif   
   }
-#endif    // USE_GTK3
+#endif    // USE_GTK3 /////////////////////////////////////////////////
   
   g_object_unref(G_OBJECT(pixbuf));
   g_object_unref(G_OBJECT(pixbuf2));
@@ -495,14 +497,14 @@ void LoadPixmaps(GtkWidget *widget, //GtkWidget *draw,
     }
     g_free(tmp_open);
 
-    w = gdk_pixbuf_get_width(pixbuf)*((gfloat)(mascot->magnify)/100);
-    h = gdk_pixbuf_get_height(pixbuf)*((gfloat)(mascot->magnify)/100);
+    w = gdk_pixbuf_get_width(pixbuf)*((gdouble)(mascot->magnify)/100);
+    h = gdk_pixbuf_get_height(pixbuf)*((gdouble)(mascot->magnify)/100);
 
 #ifdef USE_WIN32
     if(mascot->move==MOVE_FOCUS){
       if(mascot->yoff>0){
 	mascot->sdw_height
-	  =mascot->yoff*(gfloat)(mascot->magnify)/100+mascot->sdw_y;
+	  =mascot->yoff*(gdouble)(mascot->magnify)/100+mascot->sdw_y;
       }
       else{
 	mascot->sdw_height=0;
@@ -558,18 +560,20 @@ void LoadPixmaps(GtkWidget *widget, //GtkWidget *draw,
       if((mascot->sdw_flag)){
 	// Shadow
 	cairo_save(cr);
-	cairo_scale (cr, (gfloat)(mascot->magnify)/100, 
-		     (gfloat)(mascot->magnify)/100);
 	if(mascot->sdw_x<0){
-	  gdk_cairo_set_source_pixbuf(cr,pixbuf,0, mascot->sdw_y);
+	  gdk_cairo_set_source_pixbuf(cr,pixbuf2,
+				      0,
+				      mascot->sdw_y*(gdouble)(mascot->magnify)/100);
 	}
 	else{
-	  gdk_cairo_set_source_pixbuf(cr,pixbuf,mascot->sdw_x, mascot->sdw_y);
+	  gdk_cairo_set_source_pixbuf(cr,pixbuf2,
+				      mascot->sdw_x*(gdouble)(mascot->magnify)/100,
+				      mascot->sdw_y*(gdouble)(mascot->magnify)/100);
 	}
 	cairo_paint(cr);
 	region = gdk_cairo_region_create_from_surface(surface);
 
-	cairo_set_source_rgba(cr, 0, 0, 0, 0);
+	cairo_set_source_rgba(cr, 0, 0, 0, 0.0);
 	cairo_set_operator (cr, CAIRO_OPERATOR_SOURCE);
 	cairo_rectangle(cr, 0, 0, w, h);
 	cairo_fill(cr);
@@ -577,7 +581,7 @@ void LoadPixmaps(GtkWidget *widget, //GtkWidget *draw,
 
 	cairo_set_operator (cr, CAIRO_OPERATOR_OVER);
 	gdk_cairo_region(cr, region);
-	cairo_set_source_rgba(cr, 0, 0, 0, 1);
+	cairo_set_source_rgba(cr, 0, 0, 0, 1.0);
 	cairo_clip(cr);
 	cairo_paint_with_alpha (cr, (gdouble)(mascot->sdw_alpha)/100);
 	cairo_region_destroy(region);
@@ -591,7 +595,7 @@ void LoadPixmaps(GtkWidget *widget, //GtkWidget *draw,
 	  cairo_set_operator (cr, CAIRO_OPERATOR_CLEAR);
 	  cairo_move_to(cr,0,0);
 	  cairo_rectangle(cr, 0, 0, w, 
-			  h-mascot->yoff*(gfloat)(mascot->magnify)/100-mascot->sdw_y_int);
+			  h-mascot->yoff*(gdouble)(mascot->magnify)/100-mascot->sdw_y_int);
 	  cairo_fill(cr);
 	  cairo_restore(cr);
 	}
@@ -692,8 +696,8 @@ void LoadPixmaps(GtkWidget *widget, //GtkWidget *draw,
       if((mascot->sdw_flag)){
 	// Shadow
 	cairo_save(cr);
-	cairo_scale (cr, (gfloat)(mascot->magnify)/100, 
-		     (gfloat)(mascot->magnify)/100);
+	cairo_scale (cr, (gdouble)(mascot->magnify)/100, 
+		     (gdouble)(mascot->magnify)/100);
 	if(mascot->sdw_x<0){
 	  gdk_cairo_set_source_pixmap(cr,mask,0, mascot->sdw_y);
 	}
@@ -710,7 +714,7 @@ void LoadPixmaps(GtkWidget *widget, //GtkWidget *draw,
 	  cairo_set_operator (cr, CAIRO_OPERATOR_CLEAR);
 	  cairo_move_to(cr,0,0);
 	  cairo_rectangle(cr, 0, 0, w, 
-			  h-mascot->yoff*(gfloat)(mascot->magnify)/100-mascot->sdw_y_int);
+			  h-mascot->yoff*(gdouble)(mascot->magnify)/100-mascot->sdw_y_int);
 	  cairo_fill(cr);
 	  cairo_restore(cr);
 	}
@@ -1032,8 +1036,8 @@ void LoadBiffPixmap(GtkWidget *widget, typMascot *mascot){
       pixbuf = gdk_pixbuf_new_from_resource ("/icons/def_biff_r.png", NULL);
     }
   }
-  w = gdk_pixbuf_get_width(pixbuf)*((gfloat)(mascot->magnify)/100);
-  h = gdk_pixbuf_get_height(pixbuf)*((gfloat)(mascot->magnify)/100);
+  w = gdk_pixbuf_get_width(pixbuf)*((gdouble)(mascot->magnify)/100);
+  h = gdk_pixbuf_get_height(pixbuf)*((gdouble)(mascot->magnify)/100);
 
   pixbuf2=gdk_pixbuf_scale_simple(pixbuf,w,h,ipstyle);
 
@@ -1747,13 +1751,13 @@ gint DrawMascotWithDigit(typMascot *mascot){
     if(mascot->flag_clksd){
       gdk_draw_layout(pixmap_main[work_page],
 		      mascot->gc_mainsd[work_page],
-		      mascot->clktext_x*((gfloat)(mascot->magnify)/100)+1,
+		      mascot->clktext_x*((gdouble)(mascot->magnify)/100)+1,
 		      1,
 		      pango_text);
     }
     gdk_draw_layout(pixmap_main[work_page],
 		    mascot->gc_main[work_page],
-		    mascot->clktext_x*((gfloat)(mascot->magnify)/100),
+		    mascot->clktext_x*((gdouble)(mascot->magnify)/100),
 		    0,
 		    pango_text);
     
@@ -1767,16 +1771,16 @@ gint DrawMascotWithDigit(typMascot *mascot){
 	if(mascot->clk_pm){
 	  gdk_draw_arc(pixmap_main[work_page],mascot->gc_mainsd[work_page],
 		       TRUE,
-		       mascot->clktext_x*((gfloat)(mascot->magnify)/100)+1+clk_width,
-		       mascot->clktext_y*((gfloat)(mascot->magnify)/100)+1+clk_height*2/3-as,
+		       mascot->clktext_x*((gdouble)(mascot->magnify)/100)+1+clk_width,
+		       mascot->clktext_y*((gdouble)(mascot->magnify)/100)+1+clk_height*2/3-as,
 		       clk_height/3,clk_height/3,
 		       0,(360*64));
 	}
 	else{
 	  gdk_draw_arc(pixmap_main[work_page],mascot->gc_mainsd[work_page],
 		       TRUE,
-		       mascot->clktext_x*((gfloat)(mascot->magnify)/100)+1+clk_width,
-		       mascot->clktext_y*((gfloat)(mascot->magnify)/100)+1-as,
+		       mascot->clktext_x*((gdouble)(mascot->magnify)/100)+1+clk_width,
+		       mascot->clktext_y*((gdouble)(mascot->magnify)/100)+1-as,
 		       clk_height/3,clk_height/3,
 		       0,(360*64));
 	}
@@ -1785,16 +1789,16 @@ gint DrawMascotWithDigit(typMascot *mascot){
       if(mascot->clk_pm){
 	gdk_draw_arc(pixmap_main[work_page],mascot->gc_main[work_page],
 		     TRUE,
-		     mascot->clktext_x*((gfloat)(mascot->magnify)/100)+clk_width,
-		     mascot->clktext_y*((gfloat)(mascot->magnify)/100)+clk_height*2/3-as,
+		     mascot->clktext_x*((gdouble)(mascot->magnify)/100)+clk_width,
+		     mascot->clktext_y*((gdouble)(mascot->magnify)/100)+clk_height*2/3-as,
 		     clk_height/3,clk_height/3,
 		     0,(360*64));
       }
       else{
 	gdk_draw_arc(pixmap_main[work_page],mascot->gc_main[work_page],
 		     TRUE,
-		     mascot->clktext_x*((gfloat)(mascot->magnify)/100)+clk_width,
-		     mascot->clktext_y*((gfloat)(mascot->magnify)/100)-as,
+		     mascot->clktext_x*((gdouble)(mascot->magnify)/100)+clk_width,
+		     mascot->clktext_y*((gdouble)(mascot->magnify)/100)-as,
 		     clk_height/3,clk_height/3,
 		     0,(360*64));
       }
@@ -1954,13 +1958,13 @@ gint DrawMascotWithDigit(typMascot *mascot){
     if(mascot->flag_clksd){
       gdk_draw_layout(pixmap_main[work_page],
 		      mascot->gc_mainsd[work_page],
-		      mascot->clktext_x*((gfloat)(mascot->magnify)/100)+1,
+		      mascot->clktext_x*((gdouble)(mascot->magnify)/100)+1,
 		      1,
 		      pango_text);
     }
     gdk_draw_layout(pixmap_main[work_page],
 		    mascot->gc_main[work_page],
-		    mascot->clktext_x*((gfloat)(mascot->magnify)/100),
+		    mascot->clktext_x*((gdouble)(mascot->magnify)/100),
 		    0,
 		    pango_text);
     
@@ -1974,16 +1978,16 @@ gint DrawMascotWithDigit(typMascot *mascot){
 	if(mascot->clk_pm){
 	  gdk_draw_arc(pixmap_main[work_page],mascot->gc_mainsd[work_page],
 		       TRUE,
-		       mascot->clktext_x*((gfloat)(mascot->magnify)/100)+1+clk_width,
-		       mascot->clktext_y*((gfloat)(mascot->magnify)/100)+1+clk_height*2/3-as,
+		       mascot->clktext_x*((gdouble)(mascot->magnify)/100)+1+clk_width,
+		       mascot->clktext_y*((gdouble)(mascot->magnify)/100)+1+clk_height*2/3-as,
 		       clk_height/3,clk_height/3,
 		       0,(360*64));
 	}
 	else{
 	  gdk_draw_arc(pixmap_main[work_page],mascot->gc_mainsd[work_page],
 		       TRUE,
-		       mascot->clktext_x*((gfloat)(mascot->magnify)/100)+1+clk_width,
-		       mascot->clktext_y*((gfloat)(mascot->magnify)/100)+1-as,
+		       mascot->clktext_x*((gdouble)(mascot->magnify)/100)+1+clk_width,
+		       mascot->clktext_y*((gdouble)(mascot->magnify)/100)+1-as,
 		       clk_height/3,clk_height/3,
 		       0,(360*64));
 	}
@@ -1992,16 +1996,16 @@ gint DrawMascotWithDigit(typMascot *mascot){
       if(mascot->clk_pm){
 	gdk_draw_arc(pixmap_main[work_page],mascot->gc_main[work_page],
 		     TRUE,
-		     mascot->clktext_x*((gfloat)(mascot->magnify)/100)+clk_width,
-		     mascot->clktext_y*((gfloat)(mascot->magnify)/100)+clk_height*2/3-as,
+		     mascot->clktext_x*((gdouble)(mascot->magnify)/100)+clk_width,
+		     mascot->clktext_y*((gdouble)(mascot->magnify)/100)+clk_height*2/3-as,
 		     clk_height/3,clk_height/3,
 		     0,(360*64));
       }
       else{
 	gdk_draw_arc(pixmap_main[work_page],mascot->gc_main[work_page],
 		     TRUE,
-		     mascot->clktext_x*((gfloat)(mascot->magnify)/100)+clk_width,
-		     mascot->clktext_y*((gfloat)(mascot->magnify)/100)-as,
+		     mascot->clktext_x*((gdouble)(mascot->magnify)/100)+clk_width,
+		     mascot->clktext_y*((gdouble)(mascot->magnify)/100)-as,
 		     clk_height/3,clk_height/3,
 		     0,(360*64));
       }

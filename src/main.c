@@ -666,7 +666,7 @@ void ReadMenu(typMascot *mascot, gint offset_i_cat, gchar *merge_file)
 	    =ReadMascotName(mascot, mascot->menu_tgt[i_cat][i_tgt]);
 	  if(mascot->flag_install){
 	    gtk_progress_bar_set_fraction(GTK_PROGRESS_BAR(mascot->pdata->pbar),
-			  (gdouble)((i_tgt+1)/(gfloat)menu_total_for_install));
+			  (gdouble)((i_tgt+1)/(gdouble)menu_total_for_install));
 	    progress_txt=g_strdup_printf(_("Installing mascots [%2d/%2d]"),
 		      i_tgt+1,menu_total_for_install);
 	    gtk_progress_bar_set_text(GTK_PROGRESS_BAR(mascot->pdata->pbar),
@@ -1273,10 +1273,10 @@ void ReadRC(typMascot *mascot, gboolean def_flag)
 
     if(!xmms_cfg_read_boolean(cfgfile, field_tmp, "flag", &mascot->sdw_flag))
       mascot->sdw_flag=TRUE;
-    if(!xmms_cfg_read_float(cfgfile, field_tmp, "x",&mascot->sdw_x))
+    if(!xmms_cfg_read_double(cfgfile, field_tmp, "x",&mascot->sdw_x))
       mascot->sdw_x=CAIRO_SHADOW_X;
     
-    if(!xmms_cfg_read_float(cfgfile, field_tmp, "y",&mascot->sdw_y))
+    if(!xmms_cfg_read_double(cfgfile, field_tmp, "y",&mascot->sdw_y))
       mascot->sdw_y=CAIRO_SHADOW_Y;
 
     if(!xmms_cfg_read_int(cfgfile, field_tmp, "alpha",&mascot->sdw_alpha))
@@ -1657,8 +1657,8 @@ void SaveRC(typMascot *mascot,  gboolean def_flag)
   if(def_flag) field_tmp=g_strdup("Default-Shadow");
   else         field_tmp=g_strdup("Shadow");
   xmms_cfg_write_boolean(cfgfile, field_tmp, "flag",mascot->sdw_flag);
-  xmms_cfg_write_float(cfgfile, field_tmp, "x",mascot->sdw_x);
-  xmms_cfg_write_float(cfgfile, field_tmp, "y",mascot->sdw_y);
+  xmms_cfg_write_double2(cfgfile, field_tmp, "x",mascot->sdw_x, "%.2lf");
+  xmms_cfg_write_double2(cfgfile, field_tmp, "y",mascot->sdw_y, "%.2lf");
   xmms_cfg_write_int(cfgfile, field_tmp, "alpha",mascot->sdw_alpha);
 
 

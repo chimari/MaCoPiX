@@ -272,6 +272,16 @@ gboolean xmms_cfg_read_double(ConfigFile * cfg, gchar * section, gchar * key, gd
 	return TRUE;
 }
 
+void xmms_cfg_write_double2(ConfigFile * cfg, gchar * section, gchar * key, gdouble value, gchar * format)
+{
+	gchar *strvalue;
+
+	strvalue = g_strdup_printf(format, value);
+	xmms_cfg_write_string(cfg, section, key, strvalue);
+	g_free(strvalue);
+}
+
+
 void xmms_cfg_write_string(ConfigFile * cfg, gchar * section, gchar * key, gchar * value)
 {
 	ConfigSection *sect;

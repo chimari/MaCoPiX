@@ -154,7 +154,7 @@ void MoveMascot(typMascot *mascot, gint x, gint y)
     if(mascot->move==MOVE_FOCUS){
       gdk_window_move(gtk_widget_get_window(mascot->win_sdw), 
 		      x+mascot->sdw_x, 
-		      y+mascot->height-mascot->yoff*((gfloat)(mascot->magnify)/100));
+		      y+mascot->height-mascot->yoff*((gdouble)(mascot->magnify)/100));
     }
     else{
       gdk_window_move(gtk_widget_get_window(mascot->win_sdw), x+mascot->sdw_x, y+mascot->sdw_y);
@@ -168,12 +168,12 @@ void MoveMascot(typMascot *mascot, gint x, gint y)
   if(mascot->clkmode==CLOCK_PANEL){
 #ifdef USE_WIN32
     gdk_window_move(gtk_widget_get_window(mascot->clock_fg), 
-		    x+mascot->clk_x*((gfloat)(mascot->magnify)/100), 
-		    y+mascot->clk_y*((gfloat)(mascot->magnify)/100));
+		    x+mascot->clk_x*((gdouble)(mascot->magnify)/100), 
+		    y+mascot->clk_y*((gdouble)(mascot->magnify)/100));
 #endif
     gdk_window_move(gtk_widget_get_window(mascot->clock_main), 
-		    x+mascot->clk_x*((gfloat)(mascot->magnify)/100), 
-		    y+mascot->clk_y*((gfloat)(mascot->magnify)/100));
+		    x+mascot->clk_x*((gdouble)(mascot->magnify)/100), 
+		    y+mascot->clk_y*((gdouble)(mascot->magnify)/100));
   }
 #ifdef USE_BIFF
   MoveBiffPix(mascot, x, y);
@@ -610,12 +610,12 @@ int MoveToFocus(typMascot *mascot, gboolean force_fl)
     
     if(eflag){
       xpop=sx+realXPos+x_root;
-      ypop=sy+mascot->yoff*((gfloat)(mascot->magnify)/100)
+      ypop=sy+mascot->yoff*((gdouble)(mascot->magnify)/100)
 	+y_root-mascot->height+mascot->sdw_y_int;
     }
     else{
       xpop=sx+realXPos;
-      ypop=sy+mascot->yoff*((gfloat)(mascot->magnify)/100)
+      ypop=sy+mascot->yoff*((gdouble)(mascot->magnify)/100)
 	-mascot->height+mascot->sdw_y_int;
     }
 
@@ -701,7 +701,7 @@ int MoveToFocus(typMascot *mascot, gboolean force_fl)
       }
 #endif
       ypop=(mascot->height_root-mascot->home_y)
-	+mascot->yoff*((gfloat)(mascot->magnify)/100)-mascot->height
+	+mascot->yoff*((gdouble)(mascot->magnify)/100)-mascot->height
 	+mascot->sdw_y_int;
       break;
       
