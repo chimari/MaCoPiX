@@ -62,7 +62,7 @@ void DrawBalloon2(typMascot *mascot, char **wn_iwp, int wn_max)
   cairo_surface_t *surface;
   cairo_region_t *region_mask;
 #endif
-  mascot->alpha_bal=100;
+
   if(mascot->flag_composite==COMPOSITE_FALSE){
     shape_flag=TRUE;
   }
@@ -407,16 +407,12 @@ void DrawBalloon2(typMascot *mascot, char **wn_iwp, int wn_max)
   //ResizeMoveBalloon (mascot,mascot->x, mascot->y, w,h+h_arrow);
 
 #ifdef USE_GTK3  ////////////////////// GTK3 ////////////////////////////////////
-  /*
   if(shape_flag){
 #ifdef USE_WIN32
     if((mascot->flag_balfg)&&(mascot->alpha_bal!=100)){
-      cairo_region_t *region_fg=cairo_region_copy(region_mask);
       gdk_window_shape_combine_region( gtk_widget_get_window(mascot->balloon_fg),
-      				       region_fg,
+      				       region_mask,
       			       0,0);
-      cairo_region_destroy(region_fg);
-      gtk_widget_queue_draw(mascot->dw_balfg);
     }
 #endif
     
@@ -427,11 +423,14 @@ void DrawBalloon2(typMascot *mascot, char **wn_iwp, int wn_max)
     cairo_region_destroy(region_mask);
     cairo_surface_destroy(surface_mask);
   }
-  */
+
+#ifdef USE_WIN32
   if((mascot->flag_balfg)&&(mascot->alpha_bal!=100)){
-    gtk_widget_queue_draw(mascot->dw_balfg);
+      gtk_widget_queue_draw(mascot->dw_balfg);
   }
+#endif
   gtk_widget_queue_draw(mascot->dw_balloon);
+  
 #else            ////////////////////// GTK2 ////////////////////////////////////
   if(shape_flag){
 #ifdef USE_WIN32

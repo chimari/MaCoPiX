@@ -1330,8 +1330,10 @@ gint dw_expose_main(GtkWidget *widget, cairo_t *cr, gpointer gdata){
   typMascot *mascot;
   mascot=(typMascot *)gdata;
 
-  gdk_cairo_set_source_pixbuf(cr, pixbuf_main, 0, 0);
-  cairo_paint(cr);
+  if(pixbuf_main){
+    gdk_cairo_set_source_pixbuf(cr, pixbuf_main, 0, 0);
+    cairo_paint(cr);
+  }
   
   return(FALSE);
 }
@@ -1382,9 +1384,11 @@ gint dw_expose_sdw(GtkWidget *widget, cairo_t *cr,  gpointer gdata)
 {
   typMascot *mascot;
   mascot=(typMascot *)gdata;
-  
-  gdk_cairo_set_source_pixbuf(cr, pixbuf_sdw, 0, 0);
-  cairo_paint(cr);
+
+  if(pixbuf_sdw){
+    gdk_cairo_set_source_pixbuf(cr, pixbuf_sdw, 0, 0);
+    cairo_paint(cr);
+  }
   
   return(FALSE);
 }
@@ -1418,8 +1422,10 @@ gint dw_expose_biff_pix(GtkWidget *widget, cairo_t *cr,  gpointer gdata)
   typMascot *mascot;
   mascot=(typMascot *)gdata;
 
-  gdk_cairo_set_source_pixbuf(cr, mascot->mail.pixbuf, 0, 0);
-  cairo_paint(cr);
+  if(mascot->mail.pixbuf){
+    gdk_cairo_set_source_pixbuf(cr, mascot->mail.pixbuf, 0, 0);
+    cairo_paint(cr);
+  }
   
   return(FALSE);
 }
@@ -1471,8 +1477,10 @@ gint dw_expose_clk(GtkWidget *widget, cairo_t *cr,  gpointer gdata)
   typMascot *mascot;
   mascot=(typMascot *)gdata;
 
-  gdk_cairo_set_source_pixbuf(cr, pixbuf_clk, 0, 0);
-  cairo_paint(cr);
+  if(pixbuf_clk){
+    gdk_cairo_set_source_pixbuf(cr, pixbuf_clk, 0, 0);
+    cairo_paint(cr);
+  }
   
   return(FALSE);
 }
@@ -1525,10 +1533,10 @@ gint dw_expose_bal(GtkWidget *widget, cairo_t *cr,  gpointer gdata)
   typMascot *mascot;
   mascot=(typMascot *)gdata;
 
-  printf("draw!\n"); fflush(stdout);
-
-  gdk_cairo_set_source_pixbuf(cr, pixbuf_bal, 0, 0);
-  cairo_paint(cr);
+  if(pixbuf_bal){
+    gdk_cairo_set_source_pixbuf(cr, pixbuf_bal, 0, 0);
+    cairo_paint(cr);
+  }
   
   return(FALSE);
 }
