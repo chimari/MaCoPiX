@@ -1062,7 +1062,7 @@ gint dw_configure_main(GtkWidget *widget, GdkEventConfigure *event,
   printf("Configure: \n");
 #endif
 
-  DrawMascot(mascot);
+  DrawMascot(mascot, mascot->frame_pix[mascot->anime_ptn][mascot->anime_frm]);
   
 #ifdef DEBUG
   printf("End of Configure: \n");
@@ -1076,8 +1076,8 @@ gint dw_configure_sdw(GtkWidget *widget, GdkEventConfigure *event, gpointer user
   typMascot *mascot;
   mascot=(typMascot *)userdata;
 
-  if(pixbuf_sdw[mascot->pixmap_page]){
-    //gdk_cairo_set_source_pixbuf(cr, pixbuf_sdw[mascot->pixmap_page], 0, 0);
+  if(pixbuf_sdw){
+    //gdk_cairo_set_source_pixbuf(cr, pixbuf_sdw, 0, 0);
     //cairo_paint(cr);
   }
   return(FALSE);
@@ -1097,7 +1097,7 @@ gint dw_configure_sdw(GtkWidget *widget, GdkEventConfigure *event,
       
       gdk_draw_drawable(gtk_widget_get_window(widget),
 			style->fg_gc[gtk_widget_get_state(widget)],
-			pixmap_sdw[mascot->pixmap_page],
+			pixmap_sdw,
 			0,0,0,0,
 			allocation->width,
 			allocation->height);
@@ -1114,7 +1114,6 @@ gint dw_init_main(GtkWidget *widget, GdkEventConfigure *event,
 {
   typMascot *mascot;
   mascot=(typMascot *)gdata; 
-  gint i_work;
   gint i_frm=0;
 
 #ifdef DEBUG
@@ -1125,13 +1124,9 @@ gint dw_init_main(GtkWidget *widget, GdkEventConfigure *event,
   else i_frm=mascot->anime_frm;
 
 #ifndef USE_GTK3  
-  if(mascot->gc_main[0]==NULL){
-    mascot->gc_main[0] = MPCreatePen(pixmap_main[0], mascot->colclk);
-    mascot->gc_mainsd[0] = MPCreatePen(pixmap_main[0], mascot->colclksd);
-    if(mascot->gc_main[1]==NULL){
-      mascot->gc_main[1] = MPCreatePen(pixmap_main[1], mascot->colclk);
-      mascot->gc_mainsd[1] = MPCreatePen(pixmap_main[1], mascot->colclksd);
-    }
+  if(mascot->gc_main==NULL){
+    mascot->gc_main = MPCreatePen(pixmap_main, mascot->colclk);
+    mascot->gc_mainsd = MPCreatePen(pixmap_main, mascot->colclksd);
 #ifndef USE_WIN32
     if(errflag==-1){
       XSetErrorHandler (ehandler);
@@ -1143,20 +1138,18 @@ gint dw_init_main(GtkWidget *widget, GdkEventConfigure *event,
   }
 #endif // USE_GTK3
 
-  for(i_work=0;i_work<2;i_work++){
 #ifdef USE_GTK3
-    if(pixbuf_main[i_work]) g_object_unref(G_OBJECT(pixbuf_main[i_work]));
-    pixbuf_main[i_work]=gdk_pixbuf_copy(mascot->sprites[mascot->frame_pix[0][0]].pixbuf);
-    gtk_widget_queue_draw(widget);
+  if(pixbuf_main) g_object_unref(G_OBJECT(pixbuf_main));
+  pixbuf_main=gdk_pixbuf_copy(mascot->sprites[mascot->frame_pix[0][0]].pixbuf);
+  gtk_widget_queue_draw(widget);
 #else
-    gdk_draw_drawable(pixmap_main[i_work],
-		      mascot->gc_main[i_work],
-		      mascot->sprites[mascot->frame_pix[0][0]].pixmap,
-		      0, 0,
-		      0, 0,
-		      mascot->width, mascot->height);
+  gdk_draw_drawable(pixmap_main,
+		    mascot->gc_main,
+		    mascot->sprites[mascot->frame_pix[0][0]].pixmap,
+		    0, 0,
+		    0, 0,
+		    mascot->width, mascot->height);
 #endif
-  }
   
 #ifdef USE_WIN32  // Get Handle of Task-Bar
   hWndTaskBar = FindWindow("Shell_TrayWnd", NULL);
@@ -1211,8 +1204,8 @@ gint dw_configure_clk(GtkWidget *widget, GdkEventConfigure *event, gpointer user
   typMascot *mascot;
   mascot=(typMascot *)userdata;
 
-  if(pixbuf_clk[mascot->clk_page]){
-    //gdk_cairo_set_source_pixbuf(cr, pixbuf_clk[mascot->clk_page], 0, 0);
+  if(pixbuf_clk){
+    //gdk_cairo_set_source_pixbuf(cr, pixbuf_clk, 0, 0);
     //cairo_paint(cr);
   }
   return(FALSE);
@@ -1227,32 +1220,20 @@ gint dw_configure_clk(GtkWidget *widget, GdkEventConfigure *event,
   mascot=(typMascot *)gdata; 
   gtk_widget_get_allocation(widget,allocation);
 
-  if (!pixmap_clk[0]) {
-    pixmap_clk[0] = gdk_pixmap_new(gtk_widget_get_window(widget),
-				   allocation->width,
-				   allocation->height,
-				   -1);
+  if (!pixmap_clk) {
+    pixmap_clk = gdk_pixmap_new(gtk_widget_get_window(widget),
+				allocation->width,
+				allocation->height,
+				-1);
   } 
-  if (!pixmap_clk[1]) {
-    pixmap_clk[1] = gdk_pixmap_new(gtk_widget_get_window(widget),
-				   allocation->width,
-				   allocation->height,
-				   -1);
-  }
 
   g_free(allocation);
 
-  if(mascot->gc_clk[0]==NULL){
-    mascot->gc_clk[0] = MPCreatePen(pixmap_clk[0], mascot->colclk);
-    mascot->gc_clksd[0] = MPCreatePen(pixmap_clk[0], mascot->colclksd);
-    mascot->gc_clkbg[0] = MPCreatePen(pixmap_clk[0], mascot->colclkbg);
-    mascot->gc_clkbd[0] = MPCreatePen(pixmap_clk[0], mascot->colclkbd);
-  }
-  if(mascot->gc_clk[1]==NULL){
-    mascot->gc_clk[1] = MPCreatePen(pixmap_clk[1], mascot->colclk);
-    mascot->gc_clksd[1] = MPCreatePen(pixmap_clk[1], mascot->colclksd);
-    mascot->gc_clkbg[1] = MPCreatePen(pixmap_clk[1], mascot->colclkbg);
-    mascot->gc_clkbd[1] = MPCreatePen(pixmap_clk[1], mascot->colclkbd);
+  if(mascot->gc_clk==NULL){
+    mascot->gc_clk = MPCreatePen(pixmap_clk, mascot->colclk);
+    mascot->gc_clksd = MPCreatePen(pixmap_clk, mascot->colclksd);
+    mascot->gc_clkbg = MPCreatePen(pixmap_clk, mascot->colclkbg);
+    mascot->gc_clkbd = MPCreatePen(pixmap_clk, mascot->colclkbd);
   }
   
   if(mascot->clkmode==CLOCK_PANEL){
@@ -1267,7 +1248,7 @@ gint dw_configure_clk(GtkWidget *widget, GdkEventConfigure *event,
 	
 	gdk_draw_drawable(gtk_widget_get_window(mascot->dw_clkfg),
 			  style->fg_gc[gtk_widget_get_state(mascot->dw_clkfg)],
-			  pixmap_clk[mascot->clk_page],
+			  pixmap_clk,
 			  0,0,0,0,
 			  allocation->width,
 			  allocation->height);
@@ -1275,7 +1256,7 @@ gint dw_configure_clk(GtkWidget *widget, GdkEventConfigure *event,
       }
       /*
       gdk_window_set_back_pixmap(gtk_widget_get_window(mascot->clock_fg),
-				 pixmap_clk[mascot->clk_page],
+				 pixmap_clk,
 				 FALSE);
       */
     }
@@ -1287,7 +1268,7 @@ gint dw_configure_clk(GtkWidget *widget, GdkEventConfigure *event,
       
       gdk_draw_drawable(gtk_widget_get_window(mascot->dw_clock),
 			style->fg_gc[gtk_widget_get_state(mascot->dw_clock)],
-			pixmap_clk[mascot->clk_page],
+			pixmap_clk,
 			0,0,0,0,
 			allocation->width,
 			allocation->height);
@@ -1295,7 +1276,7 @@ gint dw_configure_clk(GtkWidget *widget, GdkEventConfigure *event,
     }
     /*
     gdk_window_set_back_pixmap(gtk_widget_get_window(mascot->clock_main),
-			       pixmap_clk[mascot->clk_page],
+			       pixmap_clk,
 			       FALSE);
     */
   }
@@ -1310,8 +1291,8 @@ gint dw_configure_bal(GtkWidget *widget, GdkEventConfigure *event,
   typMascot *mascot;
   mascot=(typMascot *)userdata;
   
-  if(pixbuf_bal[mascot->bal_page]){
-    //gdk_cairo_set_source_pixbuf(cr, pixbuf_bal[mascot->bal_page], 0, 0);
+  if(pixbuf_bal){
+    //gdk_cairo_set_source_pixbuf(cr, pixbuf_bal, 0, 0);
     //cairo_paint(cr);
   }
   
@@ -1325,29 +1306,17 @@ gint dw_configure_bal(GtkWidget *widget, GdkEventConfigure *event,
   mascot=(typMascot *)gdata; 
 
 
-  if(pixmap_bal[0]==NULL){
-    pixmap_bal[0] = gdk_pixmap_new(gtk_widget_get_window(widget),
+  if(pixmap_bal==NULL){
+    pixmap_bal = gdk_pixmap_new(gtk_widget_get_window(widget),
 				widget->allocation.width,
 				widget->allocation.height,
 				-1);
   }
 
-  if(pixmap_bal[1]==NULL){
-    pixmap_bal[1] = gdk_pixmap_new(gtk_widget_get_window(widget),
-				widget->allocation.width,
-				widget->allocation.height,
-				-1);
-  }
-
-  if(mascot->gc_bal[0]==NULL){
-    mascot->gc_bal[0] = MPCreatePen(pixmap_bal[0], mascot->colbal);
-    mascot->gc_balbg[0] = MPCreatePen(pixmap_bal[0], mascot->colbalbg);
-    mascot->gc_balbd[0] = MPCreatePen(pixmap_bal[0], mascot->colbalbd);
-  }
-  if(mascot->gc_bal[1]==NULL){
-    mascot->gc_bal[1] = MPCreatePen(pixmap_bal[1], mascot->colbal);
-    mascot->gc_balbg[1] = MPCreatePen(pixmap_bal[1], mascot->colbalbg);
-    mascot->gc_balbd[1] = MPCreatePen(pixmap_bal[1], mascot->colbalbd);
+  if(mascot->gc_bal==NULL){
+    mascot->gc_bal = MPCreatePen(pixmap_bal, mascot->colbal);
+    mascot->gc_balbg = MPCreatePen(pixmap_bal, mascot->colbalbg);
+    mascot->gc_balbd = MPCreatePen(pixmap_bal, mascot->colbalbd);
   }
 
   return FALSE;
@@ -1361,7 +1330,7 @@ gint dw_expose_main(GtkWidget *widget, cairo_t *cr, gpointer gdata){
   typMascot *mascot;
   mascot=(typMascot *)gdata;
 
-  gdk_cairo_set_source_pixbuf(cr, pixbuf_main[mascot->pixmap_page], 0, 0);
+  gdk_cairo_set_source_pixbuf(cr, pixbuf_main, 0, 0);
   cairo_paint(cr);
   
   return(FALSE);
@@ -1379,14 +1348,11 @@ gint dw_expose_main(GtkWidget *widget, GdkEventExpose *event,  gpointer gdata)
   // **** Mascot部の windowへの描画
   gdk_draw_drawable(gtk_widget_get_window(widget),
 		  widget->style->fg_gc[GTK_WIDGET_STATE (widget)],
-		  pixmap_main[mascot->pixmap_page],
+		  pixmap_main,
 		  event->area.x, event->area.y,
 		  event->area.x, event->area.y,
 		  event->area.width, event->area.height);
 
-#ifdef DEBUG
-  printf("Expose: using %d\n",mascot->pixmap_page);
-#endif
   return FALSE;
 }
 
@@ -1417,7 +1383,7 @@ gint dw_expose_sdw(GtkWidget *widget, cairo_t *cr,  gpointer gdata)
   typMascot *mascot;
   mascot=(typMascot *)gdata;
   
-  gdk_cairo_set_source_pixbuf(cr, pixbuf_sdw[mascot->pixmap_page], 0, 0);
+  gdk_cairo_set_source_pixbuf(cr, pixbuf_sdw, 0, 0);
   cairo_paint(cr);
   
   return(FALSE);
@@ -1433,7 +1399,7 @@ gint dw_expose_sdw(GtkWidget *widget, GdkEventExpose *event,  gpointer gdata)
   if((mascot->sdw_flag)&&(mascot->sdw_height>0))
     gdk_draw_drawable(gtk_widget_get_window(widget),
 		      widget->style->fg_gc[GTK_WIDGET_STATE (widget)],
-		      pixmap_sdw[mascot->pixmap_page],
+		      pixmap_sdw,
 		      event->area.x, event->area.y,
 		      event->area.x, event->area.y,
 		      event->area.width, event->area.height);
@@ -1505,7 +1471,7 @@ gint dw_expose_clk(GtkWidget *widget, cairo_t *cr,  gpointer gdata)
   typMascot *mascot;
   mascot=(typMascot *)gdata;
 
-  gdk_cairo_set_source_pixbuf(cr, pixbuf_clk[mascot->clk_page], 0, 0);
+  gdk_cairo_set_source_pixbuf(cr, pixbuf_clk, 0, 0);
   cairo_paint(cr);
   
   return(FALSE);
@@ -1522,7 +1488,7 @@ gint dw_expose_clk(GtkWidget *widget, GdkEventExpose *event,  gpointer gdata)
     // **** windowへの描画
     gdk_draw_drawable(gtk_widget_get_window(widget),
 		      widget->style->fg_gc[GTK_WIDGET_STATE (widget)],
-		      pixmap_clk[mascot->clk_page],
+		      pixmap_clk,
 		      0,0,0,0,
 		      widget->allocation.width,
 		      widget->allocation.height);
@@ -1559,7 +1525,9 @@ gint dw_expose_bal(GtkWidget *widget, cairo_t *cr,  gpointer gdata)
   typMascot *mascot;
   mascot=(typMascot *)gdata;
 
-  gdk_cairo_set_source_pixbuf(cr, pixbuf_bal[mascot->bal_page], 0, 0);
+  printf("draw!\n"); fflush(stdout);
+
+  gdk_cairo_set_source_pixbuf(cr, pixbuf_bal, 0, 0);
   cairo_paint(cr);
   
   return(FALSE);
@@ -1574,7 +1542,7 @@ gint dw_expose_bal(GtkWidget *widget, GdkEventExpose *event,  gpointer gdata)
 
   gdk_draw_drawable(gtk_widget_get_window(widget),
 		    widget->style->fg_gc[GTK_WIDGET_STATE (widget)],
-		    pixmap_bal[mascot->bal_page],
+		    pixmap_bal,
 		    0,0,0,0,
 		    widget->allocation.width,
 		    widget->allocation.height);
@@ -1760,7 +1728,6 @@ gboolean time_update(gpointer gdata)
   typMascot *mascot;
 #ifdef DEBUG
   static int pre_pix;
-  gint work_page;
 #endif
   SockMsgInitResult sockres;
   gchar *msg=NULL;
@@ -1931,23 +1898,15 @@ gboolean time_update(gpointer gdata)
   // アニメーションによるマスコットの描画
   // マスコット上の時計を書き換えたときはやらない
   if((flag_clock==FALSE)&&(flag_anime==TRUE)){ 
-#ifdef DEBUG 
-    work_page=mascot->pixmap_page;
-    work_page^=1;
-    printf("Drawto %d\n",work_page);
-#endif
   
     if(mascot->clkmode==CLOCK_PIXMAP){ 
       //時計は変わらないがアニメが変わった
       DrawMascotWithDigit(mascot);
     }
     else{
-      DrawMascot(mascot); 
+      DrawMascot(mascot, mascot->frame_pix[mascot->anime_ptn][mascot->anime_frm]); 
    }
 
-#ifdef DEBUG
-    printf("Draw finish %d\n",work_page);
-#endif
   }
 
   if(mascot->raise_force) raise_all(mascot);
@@ -2512,7 +2471,6 @@ MyXY GetAutoHomePos(void){
 
 
 void InitMascot0(typMascot *mascot){
-  int i_page;
 #ifndef USE_WIN32
   Window rootwin;
 #endif
@@ -2547,10 +2505,6 @@ void InitMascot0(typMascot *mascot){
   mascot->x=0;
   mascot->y=0;
   
-  mascot->pixmap_page=1;
-  mascot->bal_page=1;
-  mascot->clk_page=1;
-  
   mascot->balwidth=0;
   mascot->balheight=0;
   mascot->clk_drag=FALSE;
@@ -2558,19 +2512,17 @@ void InitMascot0(typMascot *mascot){
   mascot->flag_menu=FALSE;
 
 #ifndef USE_GTK3  
-  for(i_page=0;i_page<2;i_page++){
-    mascot->gc_main[i_page] = NULL;
-    mascot->gc_mainsd[i_page] = NULL;
-    mascot->gc_clk[i_page] = NULL;
-    mascot->gc_clksd[i_page] = NULL;
-    mascot->gc_clkbg[i_page] = NULL;
-    mascot->gc_clkbd[i_page] = NULL;
-    mascot->gc_clkmask[i_page] = NULL;
-    mascot->gc_bal[i_page] = NULL;
-    mascot->gc_balbg[i_page] = NULL;
-    mascot->gc_balbd[i_page] = NULL;
-    mascot->gc_balmask[i_page] = NULL;
-  }
+  mascot->gc_main = NULL;
+  mascot->gc_mainsd = NULL;
+  mascot->gc_clk = NULL;
+  mascot->gc_clksd = NULL;
+  mascot->gc_clkbg = NULL;
+  mascot->gc_clkbd = NULL;
+  mascot->gc_clkmask = NULL;
+  mascot->gc_bal = NULL;
+  mascot->gc_balbg = NULL;
+  mascot->gc_balbd = NULL;
+  mascot->gc_balmask = NULL;
 #endif
   
   mascot->sprites=sprite_void;

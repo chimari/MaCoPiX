@@ -1185,7 +1185,7 @@ void ReadRC(typMascot *mascot, gboolean def_flag)
     if(def_flag)  field_tmp=g_strdup("Default-BalloonColor");
     else          field_tmp=g_strdup("BalloonColor");
 
-    mascot->def_colbal->red  =my_mascot_read_color(cfgfile, field_tmp, "text_r", COLOR_BAL_R);
+    mascot->def_colbal->red  =my_mascot_read_color(cfgfile, field_tmp, "text_r", init_colbal.green);
     mascot->def_colbal->green=my_mascot_read_color(cfgfile, field_tmp, "text_g", init_colbal.green);
     mascot->def_colbal->blue =my_mascot_read_color(cfgfile, field_tmp, "text_b", init_colbal.blue);
     if(!xmms_cfg_read_int(cfgfile, field_tmp, "text_p", &col_tmp))
@@ -4472,26 +4472,18 @@ int main(int argc, char **argv)
   gtk_init(&argc, &argv);
 
 #ifdef USE_GTK3
-  pixbuf_main[0]=NULL;
-  pixbuf_main[1]=NULL;
-  pixbuf_clk[0]=NULL;
-  pixbuf_clk[1]=NULL;
-  pixbuf_bal[0]=NULL;
-  pixbuf_bal[1]=NULL;
+  pixbuf_main=NULL;
+  pixbuf_clk=NULL;
+  pixbuf_bal=NULL;
 #ifdef USE_WIN32
-  pixbuf_sdw[0]=NULL;
-  pixbuf_sdw[1]=NULL;
+  pixbuf_sdw=NULL;
 #endif
 #else
-  pixmap_main[0]=NULL;
-  pixmap_main[1]=NULL;
-  pixmap_clk[0]=NULL;
-  pixmap_clk[1]=NULL;
-  pixmap_bal[0]=NULL;
-  pixmap_bal[1]=NULL;
+  pixmap_main=NULL;
+  pixmap_clk=NULL;
+  pixmap_bal=NULL;
 #ifdef USE_WIN32
-  pixmap_sdw[0]=NULL;
-  pixmap_sdw[1]=NULL;
+  pixmap_sdw=NULL;
 #endif
 #endif
   

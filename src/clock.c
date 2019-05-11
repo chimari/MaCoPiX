@@ -27,7 +27,7 @@
 #include "main.h"
 
 #ifndef USE_GTK3
-GdkBitmap *mask_clk[2]={NULL,NULL};;
+GdkBitmap *mask_clk=NULL;
 #endif
 
 // from gui.c
@@ -133,7 +133,6 @@ void make_clock_fg(typMascot *mascot){
 void DrawPanelClock2(typMascot *mascot)
 {
   gint clk_width,clk_height;
-  gint work_page;
   gint new_w, new_h;
   cairo_t *cr;
   cairo_t *cr_mask;
@@ -149,8 +148,6 @@ void DrawPanelClock2(typMascot *mascot)
   cairo_region_t *region_mask;
 #endif
 
-  work_page=mascot->clk_page;
-  work_page^=1;
   if(mascot->flag_clkrd){
     if(mascot->flag_composite==COMPOSITE_FALSE){
       shape_flag=TRUE;
@@ -225,14 +222,14 @@ void DrawPanelClock2(typMascot *mascot)
 				       new_w,new_h);
   cr = cairo_create(surface);
 #else     ////////////////////// GTK2 ////////////////////////////////////
-  if (pixmap_clk[work_page]) {
-    g_object_unref(G_OBJECT(pixmap_clk[work_page]));
+  if (pixmap_clk) {
+    g_object_unref(G_OBJECT(pixmap_clk));
   } 
   
-  pixmap_clk[work_page] = gdk_pixmap_new(gtk_widget_get_window(mascot->clock_main),
-					 new_w,
-					 new_h,
-					 -1);
+  pixmap_clk = gdk_pixmap_new(gtk_widget_get_window(mascot->clock_main),
+			      new_w,
+			      new_h,
+			      -1);
 
   if(shape_flag){
     surface_mask = cairo_image_surface_create(CAIRO_FORMAT_RGB24,
@@ -245,7 +242,7 @@ void DrawPanelClock2(typMascot *mascot)
     cairo_set_source_rgb (cr_mask, 1, 1, 1); // opaque white
   } 
   
-  cr = gdk_cairo_create(pixmap_clk[work_page]);
+  cr = gdk_cairo_create(pixmap_clk);
 #endif  // USE_GTK3
   
   if((mascot->flag_composite==COMPOSITE_TRUE)
@@ -334,11 +331,11 @@ void DrawPanelClock2(typMascot *mascot)
     region_mask = gdk_cairo_region_create_from_surface(surface_mask);
 
 #else            ////////////////////// GTK2 ////////////////////////////////////
-    if (mask_clk[work_page]) {
-      g_object_unref(G_OBJECT(mask_clk[work_page]));
+    if (mask_clk) {
+      g_object_unref(G_OBJECT(mask_clk));
     }
 
-    mask_clk[work_page] = make_mask_from_surface(surface_mask);
+    mask_clk = make_mask_from_surface(surface_mask);
     // If having a mask, never clip
     // Anti-alias of cairo could cause discoloration
 #endif // USE_GTK3
@@ -449,16 +446,13 @@ void DrawPanelClock2(typMascot *mascot)
    
 
 #ifdef USE_GTK3  ////////////////////// GTK3 ////////////////////////////////////
-  if (pixbuf_clk[work_page]) {
-    g_object_unref(G_OBJECT(pixbuf_clk[work_page]));
+  if (pixbuf_clk) {
+    g_object_unref(G_OBJECT(pixbuf_clk));
   } 
-  pixbuf_clk[work_page] = gdk_pixbuf_get_from_surface(surface, 0, 0, new_w, new_h);
+  pixbuf_clk = gdk_pixbuf_get_from_surface(surface, 0, 0, new_w, new_h);
   cairo_surface_destroy(surface);
 
-  mascot->clk_page=work_page;
-  
 #else            ////////////////////// GTK2 ////////////////////////////////////
-  mascot->clk_page=work_page;
   
 #ifdef USE_WIN32
   if((mascot->flag_clkfg)&&(mascot->alpha_clk!=100)){
@@ -468,7 +462,7 @@ void DrawPanelClock2(typMascot *mascot)
     
     gdk_draw_drawable(gtk_widget_get_window(mascot->dw_clkfg),
 		      style->fg_gc[gtk_widget_get_state(mascot->dw_clkfg)],
-		      pixmap_clk[mascot->clk_page],
+		      pixmap_clk,
 		      0,0,0,0,
 		      allocation->width,
 		      allocation->height);
@@ -482,7 +476,7 @@ void DrawPanelClock2(typMascot *mascot)
     
     gdk_draw_drawable(gtk_widget_get_window(mascot->dw_clock),
 		      style->fg_gc[gtk_widget_get_state(mascot->dw_clock)],
-		      pixmap_clk[mascot->clk_page],
+		      pixmap_clk,
 		      0,0,0,0,
 		      allocation->width,
 		      allocation->height);
@@ -519,13 +513,13 @@ void DrawPanelClock2(typMascot *mascot)
 #ifdef USE_WIN32
     if((mascot->flag_clkfg)&&(mascot->alpha_clk!=100)){
       gdk_window_shape_combine_mask( gtk_widget_get_window(mascot->clock_fg),
-				     mask_clk[mascot->clk_page],
+				     mask_clk,
 				     0,0);
     }
 #endif
 
     gdk_window_shape_combine_mask( gtk_widget_get_window(mascot->clock_main),
-				   mask_clk[mascot->clk_page],
+				   mask_clk,
 				   0,0);
 #endif // USE_GTK3
   }
@@ -541,14 +535,14 @@ void DrawPanelClock2(typMascot *mascot)
 #ifdef USE_WIN32
   gdk_draw_drawable(gtk_widget_get_window(mascot->clock_fg),
 		    mascot->clock_fg->style->fg_gc[GTK_WIDGET_STATE(mascot->clock_main)],
-		    pixmap_clk[mascot->clk_page],
+		    pixmap_clk,
 		    0,0,0,0,
 		    new_w,
 		    new_h);
 #endif
   gdk_draw_drawable(gtk_widget_get_window(mascot->clock_main),
 		    mascot->clock_main->style->fg_gc[GTK_WIDGET_STATE(mascot->clock_main)],
-		    pixmap_clk[mascot->clk_page],
+		    pixmap_clk,
 		    0,0,0,0,
 		    new_w,
 		    new_h);

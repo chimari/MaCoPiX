@@ -48,7 +48,6 @@ typedef struct{
 // Prototype of Functions in this file
 #ifdef USE_BIFF
 #endif
-gint DrawMascotTemp();
 
 void create_default_font_selection_dialog();
 void ChangeDefFontname();
@@ -204,7 +203,7 @@ gboolean TestLoadPixmaps(typMascot *mascot, gchar *filename, gint i_pix)
 	cairo_save(cr);
       
 	cairo_set_operator (cr, CAIRO_OPERATOR_CLEAR);
-	cairo_move_to(cr,0,0);
+	cairo_move_to(cr,0.0,0.0);
 	cairo_rectangle(cr, 0, 0, w, 
 		      h-mascot->yoff*(gdouble)(mascot->magnify)/100-mascot->sdw_y_int);
 	cairo_fill(cr);
@@ -215,7 +214,7 @@ gboolean TestLoadPixmaps(typMascot *mascot, gchar *filename, gint i_pix)
 
     // Mascot
     cairo_set_operator (cr, CAIRO_OPERATOR_OVER);
-    cairo_move_to(cr,0,0);
+    cairo_move_to(cr,0.0,0.0);
     if((mascot->sdw_flag)&&(mascot->sdw_x<0)){
       gdk_cairo_set_source_pixbuf(cr,pixbuf2,-mascot->sdw_x,0);
     }
@@ -246,8 +245,6 @@ gboolean TestLoadPixmaps(typMascot *mascot, gchar *filename, gint i_pix)
     cairo_destroy(cr);
     
     mascot->sprites[i_pix].pixbuf = gdk_pixbuf_get_from_surface(surface, 0, 0, w, h);
-    gdk_window_shape_combine_region(gtk_widget_get_window(mascot->win_main),
-				    region, 0, 0 );
     cairo_region_destroy(region);
     cairo_surface_destroy(surface);
     
@@ -291,8 +288,6 @@ gboolean TestLoadPixmaps(typMascot *mascot, gchar *filename, gint i_pix)
 	cairo_destroy(cr);
 	
 	mascot->sprites[i_pix].pixbuf_sdw = gdk_pixbuf_get_from_surface(surface_sdw, 0, 0, w, h_sdw);
-	gdk_window_shape_combine_region(gtk_widget_get_window(mascot->win_sdw),
-					region_sdw, 0, 0 );
 	cairo_region_destroy(region_sdw);
 	cairo_surface_destroy(surface_sdw);
       }
@@ -346,7 +341,7 @@ gboolean TestLoadPixmaps(typMascot *mascot, gchar *filename, gint i_pix)
 	cairo_save(cr);
       
 	cairo_set_operator (cr, CAIRO_OPERATOR_CLEAR);
-	cairo_move_to(cr,0,0);
+	cairo_move_to(cr,0.0,0.0);
 	cairo_rectangle(cr, 0, 0, w, 
 		      h-mascot->yoff*(gdouble)(mascot->magnify)/100-mascot->sdw_y_int);
 	cairo_fill(cr);
@@ -356,7 +351,7 @@ gboolean TestLoadPixmaps(typMascot *mascot, gchar *filename, gint i_pix)
 
     // Mascot
     cairo_set_operator (cr, CAIRO_OPERATOR_OVER);
-    cairo_move_to(cr,0,0);
+    cairo_move_to(cr,0.0,0.0);
     if((mascot->sdw_flag)&&(mascot->sdw_x<0)){
       gdk_cairo_set_source_pixbuf(cr,pixbuf2,-mascot->sdw_x,0);
     }
@@ -436,7 +431,8 @@ gboolean TestLoadPixmaps(typMascot *mascot, gchar *filename, gint i_pix)
   g_object_unref(G_OBJECT(pixbuf));
   g_object_unref(G_OBJECT(pixbuf2));
 
-  DrawMascotTemp(mascot,i_pix);
+  while (my_main_iteration(FALSE));
+  DrawMascot(mascot,i_pix);
 
   return(TRUE);
   
@@ -616,7 +612,7 @@ void LoadPixmaps(GtkWidget *widget, //GtkWidget *draw,
 	  cairo_save(cr);
 	  
 	  cairo_set_operator (cr, CAIRO_OPERATOR_CLEAR);
-	  cairo_move_to(cr,0,0);
+	  cairo_move_to(cr,0.0,0.0);
 	  cairo_rectangle(cr, 0, 0, w, 
 			  h-mascot->yoff*(gdouble)(mascot->magnify)/100-mascot->sdw_y_int);
 	  cairo_fill(cr);
@@ -626,7 +622,7 @@ void LoadPixmaps(GtkWidget *widget, //GtkWidget *draw,
 
       // Mascot
       cairo_set_operator (cr, CAIRO_OPERATOR_OVER);
-      cairo_move_to(cr,0,0);
+      cairo_move_to(cr,0.0,0.0);
       if((mascot->sdw_flag)&&(mascot->sdw_x<0)){
 	gdk_cairo_set_source_pixbuf(cr,pixbuf2,-mascot->sdw_x,0);
       }
@@ -658,6 +654,8 @@ void LoadPixmaps(GtkWidget *widget, //GtkWidget *draw,
       cairo_destroy(cr);
       
       sprites[i].pixbuf = gdk_pixbuf_get_from_surface(surface, 0, 0, w, h);
+      cairo_region_destroy(region);
+      cairo_surface_destroy(surface);
       
       if(mascot->sdw_flag){
 	gint h_sdw, h0;
@@ -695,6 +693,8 @@ void LoadPixmaps(GtkWidget *widget, //GtkWidget *draw,
 	  cairo_destroy(cr);
 	  
 	  sprites[i].pixbuf_sdw = gdk_pixbuf_get_from_surface(surface_sdw, 0, 0, w, h_sdw);
+	  cairo_region_destroy(region_sdw);
+	  cairo_surface_destroy(surface_sdw);
 	}
       }
 #else
@@ -747,7 +747,7 @@ void LoadPixmaps(GtkWidget *widget, //GtkWidget *draw,
 	  cairo_save(cr);
 	  
 	  cairo_set_operator (cr, CAIRO_OPERATOR_CLEAR);
-	  cairo_move_to(cr,0,0);
+	  cairo_move_to(cr,0.0,0.0);
 	  cairo_rectangle(cr, 0, 0, w, 
 			  h-mascot->yoff*(gdouble)(mascot->magnify)/100-mascot->sdw_y_int);
 	  cairo_fill(cr);
@@ -757,7 +757,7 @@ void LoadPixmaps(GtkWidget *widget, //GtkWidget *draw,
 
       // Mascot
       cairo_set_operator (cr, CAIRO_OPERATOR_OVER);
-      cairo_move_to(cr,0,0);
+      cairo_move_to(cr,0.0,0.0);
       if((mascot->sdw_flag)&&(mascot->sdw_x<0)){
 	gdk_cairo_set_source_pixbuf(cr,pixbuf2,-mascot->sdw_x,0);
       }
@@ -962,7 +962,7 @@ void LoadPixmaps(GtkWidget *widget, //GtkWidget *draw,
   if(!mascot->digit)  strcpy(mascot->digit,"00:00:00");
   // 初回フレーム用マスク切出し
 
-
+  /*
 #ifdef USE_GTK3   /////////////  GTK3  ////////////////
 #ifdef USE_WIN32
   if(mascot->sdw_flag){
@@ -992,7 +992,7 @@ void LoadPixmaps(GtkWidget *widget, //GtkWidget *draw,
   cairo_region_destroy(region);
   cairo_surface_destroy(surface);
 #endif
-  
+
 #else  /////////////  GTK2  ////////////////
   if(flag_img_cairo_go){
     gdk_window_input_shape_combine_mask
@@ -1009,6 +1009,7 @@ void LoadPixmaps(GtkWidget *widget, //GtkWidget *draw,
  	0, 0 ); 
   }
 #endif  // USE_GTK3
+  */
 
 #ifdef USE_GTK_STATUS_ICON
   trayicon_set_tooltip(mascot);
@@ -1172,7 +1173,7 @@ void LoadBiffPixmap(GtkWidget *widget, typMascot *mascot){
     gtk_widget_get_allocation(mascot->dw_biff,allocation);
     
     gdk_draw_drawable(gtk_widget_get_window(mascot->dw_biff),
-		      mascot->gc_main[0],
+		      mascot->gc_main,
 		      mascot->mail.pixmap,
 		      0,0,0,0,
 		      allocation->width,
@@ -1199,108 +1200,83 @@ void LoadBiffPixmap(GtkWidget *widget, typMascot *mascot){
 // マスコットを変換した際にバッファを満たしておく
 gint DrawMascot0(typMascot *mascot)
 {
-  gint i_work;
-
-  //printf("DrawMascot0\n");
-
-
-  for(i_work=0;i_work<2;i_work++){
 #ifdef USE_GTK3  ////////////////////// GTK3 ////////////////////////////////////
-    if (pixbuf_main[i_work]) {
-      g_object_unref(G_OBJECT(pixbuf_main[i_work]));
-    }
-    pixbuf_main[i_work]=gdk_pixbuf_copy(mascot->sprites[mascot->frame_pix[0][0]].pixbuf);
+  if (pixbuf_main) {
+    g_object_unref(G_OBJECT(pixbuf_main));
+  }
+  pixbuf_main=gdk_pixbuf_copy(mascot->sprites[mascot->frame_pix[0][0]].pixbuf);
 
 #ifdef USE_WIN32
-    if(mascot->sdw_flag){
-      if(mascot->sdw_height>0){
-	if (pixbuf_sdw[i_work]) {
-	  g_object_unref(G_OBJECT(pixbuf_sdw[i_work]));
-	}
-	pixbuf_sdw[i_work]=gdk_pixbuf_copy(mascot->sprites[mascot->frame_pix[0][0]].pixbuf_sdw);
-	gtk_widget_queue_draw(mascot->dw_sdw);
+  if(mascot->sdw_flag){
+    if(mascot->sdw_height>0){
+      if (pixbuf_sdw) {
+	g_object_unref(G_OBJECT(pixbuf_sdw));
       }
+      pixbuf_sdw=gdk_pixbuf_copy(mascot->sprites[mascot->frame_pix[0][0]].pixbuf_sdw);
+      gtk_widget_queue_draw(mascot->dw_sdw);
     }
+  }
       
 #endif
-    gtk_widget_queue_draw(mascot->dw_main);
+  gtk_widget_queue_draw(mascot->dw_main);
 	
 #else     ////////////////////// GTK2 ////////////////////////////////////
-    if (pixmap_main[i_work]) {
-      g_object_unref(G_OBJECT(pixmap_main[i_work]));
-    } 
+  if (pixmap_main) {
+    g_object_unref(G_OBJECT(pixmap_main));
+  } 
    
-    pixmap_main[i_work] = gdk_pixmap_new(gtk_widget_get_window(mascot->win_main),
-					 mascot->width,
-					 mascot->height,
-					 -1);
+  pixmap_main = gdk_pixmap_new(gtk_widget_get_window(mascot->win_main),
+			       mascot->width,
+			       mascot->height,
+			       -1);
 #ifdef USE_WIN32
-    if(mascot->sdw_flag){
-      if(mascot->sdw_height>0){
-	if (pixmap_sdw[i_work]) {
-	  g_object_unref(G_OBJECT(pixmap_sdw[i_work]));
-	} 
+  if(mascot->sdw_flag){
+    if(mascot->sdw_height>0){
+      if (pixmap_sdw) {
+	g_object_unref(G_OBJECT(pixmap_sdw));
+      } 
 
-	pixmap_sdw[i_work] = gdk_pixmap_new(gtk_widget_get_window(mascot->win_sdw),
-					    mascot->width,
-					    mascot->sdw_height,
-					    -1);
-      }
+      pixmap_sdw = gdk_pixmap_new(gtk_widget_get_window(mascot->win_sdw),
+				  mascot->width,
+				  mascot->sdw_height,
+				  -1);
     }
+  }
 #endif
 #endif // USE_GTK3    
-  }
-  
-  //printf("DrawMascot0 End\n");
+
   return(0);
 }
 
 
 // Buffer中へのマスコットの書き込み
-gint DrawMascot(typMascot *mascot)
+gint DrawMascot(typMascot *mascot, gint i_pix)
 {
-  gint work_page;
 #ifdef USE_GTK3  
-  cairo_surface_t *surface;
   cairo_region_t *region;
-  cairo_t *cr;
 #endif
-
-  work_page =mascot->pixmap_page;
-  work_page^=1;
 
 #ifdef USE_GTK3
-  if (pixbuf_main[work_page]) {
-    g_object_unref(G_OBJECT(pixbuf_main[work_page]));
+  if (pixbuf_main) {
+    g_object_unref(G_OBJECT(pixbuf_main));
   }
 
-  pixbuf_main[work_page] = gdk_pixbuf_copy(mascot->sprites[mascot->frame_pix[mascot->anime_ptn][mascot->anime_frm]].pixbuf);
+  //pixbuf_main = gdk_pixbuf_copy(mascot->sprites[mascot->frame_pix[mascot->anime_ptn][mascot->anime_frm]].pixbuf);
+  pixbuf_main = gdk_pixbuf_copy(mascot->sprites[i_pix].pixbuf);
 #ifdef USE_WIN32
   if((mascot->sdw_flag)&&(mascot->sdw_height>0)){
-    pixbuf_sdw[work_page] = gdk_pixbuf_copy(mascot->sprites[mascot->frame_pix[mascot->anime_ptn][mascot->anime_frm]].pixbuf_sdw);
+    if (pixbuf_sdw) {
+      g_object_unref(G_OBJECT(pixbuf_sdw));
+    }
+    
+    //pixbuf_sdw = gdk_pixbuf_copy(mascot->sprites[mascot->frame_pix[mascot->anime_ptn][mascot->anime_frm]].pixbuf_sdw);
+    pixbuf_sdw = gdk_pixbuf_copy(mascot->sprites[i_pix].pixbuf_sdw);
   }
 
 #endif
-  region = get_cairo_region_from_pixbuf(pixbuf_main[work_page],
+  region = get_cairo_region_from_pixbuf(pixbuf_main,
 					mascot->width, mascot->height,
 					0,0);
-  /*
-  surface = cairo_image_surface_create(CAIRO_FORMAT_ARGB32,
-				       mascot->width, mascot->height);
-
-  cr = cairo_create(surface);
-
-  
-  cairo_set_source_rgba(cr, 1, 1, 1, 0);
-  cairo_rectangle(cr, 0, 0, mascot->width, mascot->height);
-  cairo_fill(cr);
-  cairo_paint(cr);
-
-  gdk_cairo_set_source_pixbuf(cr, pixmap_main[work_page], 0, 0);
-  cairo_paint(cr);
-  region = gdk_cairo_region_create_from_surface(surface);
-  cairo_destroy(cr);
-  */
   
   if(flag_img_cairo_go){
     gdk_window_input_shape_combine_region(gtk_widget_get_window(mascot->win_main),
@@ -1312,29 +1288,12 @@ gint DrawMascot(typMascot *mascot)
   }
 
   cairo_region_destroy(region);
-  //cairo_surface_destroy(surface);
 
 #ifdef USE_WIN32
   if((mascot->sdw_flag)&&(mascot->sdw_height>0)){
-    region = get_cairo_region_from_pixbuf(pixbuf_sdw[work_page],
+    region = get_cairo_region_from_pixbuf(pixbuf_sdw,
 					  mascot->width, mascot->sdw_height,
 					  0,0);
-    /*
-    surface = cairo_image_surface_create(CAIRO_FORMAT_ARGB32,
-					 mascot->width, mascot->sdw_height);
-    
-    cr = cairo_create(surface);
-    
-    cairo_set_source_rgba(cr, 1, 1, 1, 0);
-    cairo_rectangle(cr, 0, 0, mascot->width, mascot->sdw_height);
-    cairo_fill(cr);
-    cairo_paint(cr);
-    
-    gdk_cairo_set_source_pixbuf(cr, pixmap_sdw[work_page], 0, 0);
-    cairo_paint(cr);
-    region = gdk_cairo_region_create_from_surface(surface);
-    cairo_destroy(cr);
-    */
     
     if(flag_img_cairo_go){
       gdk_window_input_shape_combine_region(gtk_widget_get_window(mascot->win_sdw),
@@ -1346,47 +1305,50 @@ gint DrawMascot(typMascot *mascot)
     }
     
     cairo_region_destroy(region);
-    //cairo_surface_destroy(surface);
+    while (my_main_iteration(FALSE));
 
     gtk_widget_queue_draw(mascot->dw_sdw);
   }
 #endif
+  while (my_main_iteration(FALSE));
   gtk_widget_queue_draw(mascot->dw_main);
   
 #else  ///////////////////////// USE_GTK2 ///////////////////////////////
-  if (pixmap_main[work_page]) {
-    g_object_unref(G_OBJECT(pixmap_main[work_page]));
+  if (pixmap_main) {
+    g_object_unref(G_OBJECT(pixmap_main));
   } 
   
-  pixmap_main[work_page] = gdk_pixmap_new(gtk_widget_get_window(mascot->win_main),
-					  mascot->width,
-					  mascot->height,
-					  -1);
+  pixmap_main = gdk_pixmap_new(gtk_widget_get_window(mascot->win_main),
+			       mascot->width,
+			       mascot->height,
+			       -1);
   
 #ifdef USE_WIN32
   if((mascot->sdw_flag)&&(mascot->sdw_height>0)){
-    if (pixmap_sdw[work_page]) {
-      g_object_unref(G_OBJECT(pixmap_sdw[work_page]));
+    if (pixmap_sdw) {
+      g_object_unref(G_OBJECT(pixmap_sdw));
     } 
     
-    pixmap_sdw[work_page] = gdk_pixmap_new(gtk_widget_get_window(mascot->win_sdw),
-					   mascot->width,
-					   mascot->sdw_height,
-					   -1);
+    pixmap_sdw = gdk_pixmap_new(gtk_widget_get_window(mascot->win_sdw),
+				mascot->width,
+				mascot->sdw_height,
+				-1);
   }
 #endif
-  gdk_draw_drawable(pixmap_main[work_page],
-		    mascot->gc_main[work_page],
-		    mascot->sprites[mascot->frame_pix[mascot->anime_ptn][mascot->anime_frm]].pixmap,
+  gdk_draw_drawable(pixmap_main,
+		    mascot->gc_main,
+		    //mascot->sprites[mascot->frame_pix[mascot->anime_ptn][mascot->anime_frm]].pixmap,
+		    mascot->sprites[i_pix].pixmap,
 		    0, 0,
 		    0, 0,
 		    mascot->width, mascot->height);
   
 #ifdef USE_WIN32
   if((mascot->sdw_flag)&&(mascot->sdw_height>0)){
-    gdk_draw_drawable(pixmap_sdw[work_page],
-		      mascot->gc_main[work_page],
-		      mascot->sprites[mascot->frame_pix[mascot->anime_ptn][mascot->anime_frm]].pixmap_sdw,
+    gdk_draw_drawable(pixmap_sdw,
+		      mascot->gc_main,
+		      mascot->sprites[i_pix].pixmap_sdw,
+		      //mascot->sprites[mascot->frame_pix[mascot->anime_ptn][mascot->anime_frm]].pixmap_sdw,
 		      0, 0,
 		      0, 0,
 		      mascot->width, mascot->sdw_height);
@@ -1396,7 +1358,8 @@ gint DrawMascot(typMascot *mascot)
   if(flag_img_cairo_go){
     gdk_window_input_shape_combine_mask
       ( gtk_widget_get_window(mascot->win_main),
-	mascot->sprites[mascot->frame_pix[mascot->anime_ptn][mascot->anime_frm]].mask,
+	//mascot->sprites[mascot->frame_pix[mascot->anime_ptn][mascot->anime_frm]].mask,
+	mascot->sprites[i_pix].mask,
 	0, 0 );
     gdk_window_set_cursor(gtk_widget_get_window(mascot->win_main),
 			  mascot->cursor.normal);
@@ -1404,13 +1367,15 @@ gint DrawMascot(typMascot *mascot)
   else{
     gdk_window_shape_combine_mask
       ( gtk_widget_get_window(mascot->win_main),
-	mascot->sprites[mascot->frame_pix[mascot->anime_ptn][mascot->anime_frm]].mask,
+	//mascot->sprites[mascot->frame_pix[mascot->anime_ptn][mascot->anime_frm]].mask,
+	mascot->sprites[i_pix].mask,
 	0, 0 );
 #ifdef USE_WIN32
     if((mascot->sdw_flag)&&(mascot->sdw_height>0)){
       gdk_window_shape_combine_mask
 	( gtk_widget_get_window(mascot->win_sdw),
-	  mascot->sprites[mascot->frame_pix[mascot->anime_ptn][mascot->anime_frm]].mask_sdw,
+	  // mascot->sprites[mascot->frame_pix[mascot->anime_ptn][mascot->anime_frm]].mask_sdw,
+	  mascot->sprites[i_pix].mask_sdw,
 	  0, 0 );
     }
 #endif
@@ -1421,7 +1386,7 @@ gint DrawMascot(typMascot *mascot)
     
     gdk_draw_drawable(gtk_widget_get_window(mascot->dw_main),
 		      style->fg_gc[GTK_WIDGET_STATE(mascot->dw_main)],
-		      pixmap_main[work_page],
+		      pixmap_main,
 		      0,0,0,0,
 		      mascot->width, mascot->height);
   }
@@ -1432,230 +1397,22 @@ gint DrawMascot(typMascot *mascot)
     
     gdk_draw_drawable(gtk_widget_get_window(mascot->dw_sdw),
 		      style->fg_gc[GTK_WIDGET_STATE(mascot->win_sdw)],
-		      pixmap_sdw[work_page],
+		      pixmap_sdw,
 		      0,0,0,0,
 		      mascot->width, mascot->sdw_height);
   }
 #endif  
 #endif // USE_GTK3
   
-  mascot->pixmap_page=work_page;
-
   if(mascot->raise_kwin) raise_all();
-
 
   return(0);
 } 
-
-gint DrawMascotTemp(typMascot *mascot, gint i_pix)
-{
-  gint work_page;
-#ifdef USE_GTK3
-  cairo_region_t *region;
-#endif
-
-
-  work_page =mascot->pixmap_page;
-  //work_page^=1;
-
-#ifdef USE_GTK3  //////////////  GTK3  //////////////  
-  if (pixbuf_main[work_page]) {
-    g_object_unref(G_OBJECT(pixbuf_main[work_page]));
-  } 
-  
-#ifdef USE_WIN32
-  if((mascot->sdw_flag)&&(mascot->sdw_height>0)){
-    if (pixbuf_sdw[work_page]) {
-      g_object_unref(G_OBJECT(pixbuf_sdw[work_page]));
-    }     
-  }
-#endif
-
-  pixbuf_main[work_page] = gdk_pixbuf_copy(mascot->sprites[i_pix].pixbuf);
-
-#ifdef USE_WIN32
-  if((mascot->sdw_flag)&&(mascot->sdw_height>0)){
-    pixbuf_sdw[work_page] = gdk_pixbuf_copy(mascot->sprites[i_pix].pixbuf_sdw);
-    gtk_widget_queue_draw(mascot->dw_sdw);
-  }
-#endif
-  gtk_widget_queue_draw(mascot->dw_main);
-
-  region = get_cairo_region_from_pixbuf(pixbuf_main[work_page],
-					mascot->width, mascot->height,
-					0,0);
-  
-  if(flag_img_cairo_go){
-    gdk_window_input_shape_combine_region( gtk_widget_get_window(mascot->win_main), 
-					   region,
-					   0, 0 ); 
-    gdk_window_set_cursor(gtk_widget_get_window(mascot->win_main),
-			  mascot->cursor.normal);
-  }
-  else{
-    gdk_window_shape_combine_region( gtk_widget_get_window(mascot->win_main), 
-				     region,
-				     0, 0 );
-
-    cairo_region_destroy(region);
-#ifdef USE_WIN32
-    if((mascot->sdw_flag)&&(mascot->sdw_height>0)){
-      region = get_cairo_region_from_pixbuf(pixbuf_sdw[work_page],
-					    mascot->width, mascot->sdw_height,
-					    0,0);
-      gdk_window_shape_combine_region(gtk_widget_get_window(mascot->win_sdw),
-				      region,
-				      0, 0 );
-      cairo_region_destroy(region);
-    }
-#endif
-  }
-
-  gtk_widget_queue_draw(mascot->dw_main);
-
-#ifdef USE_WIN32
-  if((mascot->sdw_flag)&&(mascot->sdw_height>0)){
-    gtk_widget_queue_draw(mascot->dw_sdw);
-  }
-#endif   
-  
-#else  //////////////  GTK2  //////////////  
-  if (pixmap_main[work_page]) {
-    g_object_unref(G_OBJECT(pixmap_main[work_page]));
-  } 
-  
-  pixmap_main[work_page] = gdk_pixmap_new(gtk_widget_get_window(mascot->win_main),
-					  mascot->width,
-					  mascot->height,
-					  -1);
-
-#ifdef USE_WIN32
-  if((mascot->sdw_flag)&&(mascot->sdw_height>0)){
-    if (pixmap_sdw[work_page]) {
-      g_object_unref(G_OBJECT(pixmap_sdw[work_page]));
-    } 
-    
-    pixmap_sdw[work_page] = gdk_pixmap_new(gtk_widget_get_window(mascot->win_sdw),
-					   mascot->width,
-					   mascot->sdw_height,
-					   -1);
-  }
-#endif
-  
-
-  gdk_draw_drawable(
-		  pixmap_main[work_page],
-		  mascot->gc_main[work_page],
-                  mascot->sprites[i_pix].pixmap,
-                  0, 0,
-                  0, 0,
-		  mascot->width, mascot->height);
-
-#ifdef USE_WIN32
-  if((mascot->sdw_flag)&&(mascot->sdw_height>0)){
-    gdk_draw_drawable(pixmap_sdw[work_page],
-		      mascot->gc_main[work_page],
-		      mascot->sprites[i_pix].pixmap_sdw,
-		      0, 0,
-		      0, 0,
-		      mascot->width, mascot->sdw_height);
-  }
-#endif
-
-  {
-    GtkAllocation *allocation=g_new(GtkAllocation, 1);
-    GtkStyle *style=gtk_widget_get_style(mascot->dw_main);
-    gtk_widget_get_allocation(mascot->dw_main,allocation);
-    
-    gdk_draw_drawable(gtk_widget_get_window(mascot->dw_main),
-		      style->fg_gc[gtk_widget_get_state(mascot->dw_main)],
-		      pixmap_main[work_page],
-		      0,0,0,0,
-		      allocation->width,
-		      allocation->height);
-    g_free(allocation);
-  }
-
-#ifdef USE_WIN32
-  if((mascot->sdw_flag)&&(mascot->sdw_height>0)){
-    {
-      GtkAllocation *allocation=g_new(GtkAllocation, 1);
-      GtkStyle *style=gtk_widget_get_style(mascot->dw_sdw);
-      gtk_widget_get_allocation(mascot->dw_sdw,allocation);
-      
-      gdk_draw_drawable(gtk_widget_get_window(mascot->dw_sdw),
-			style->fg_gc[gtk_widget_get_state(mascot->dw_sdw)],
-			pixmap_sdw[work_page],
-			0,0,0,0,
-			allocation->width,
-			allocation->height);
-      g_free(allocation);
-    }
-  }
-#endif  
-
-
-  if(flag_img_cairo_go){
-    gdk_window_input_shape_combine_mask( gtk_widget_get_window(mascot->win_main), 
-					 mascot->sprites[i_pix].mask,
-					 0, 0 ); 
-    gdk_window_set_cursor(gtk_widget_get_window(mascot->win_main),
-			  mascot->cursor.normal);
-  }
-  else{
-    gdk_window_shape_combine_mask( gtk_widget_get_window(mascot->win_main), 
-				   mascot->sprites[i_pix].mask,
-				   0, 0 ); 
-#ifdef USE_WIN32
-  if((mascot->sdw_flag)&&(mascot->sdw_height>0)){
-      gdk_window_shape_combine_mask
-	( gtk_widget_get_window(mascot->win_sdw),
-	  mascot->sprites[i_pix].mask_sdw,
-	  0, 0 );
-    }
-#endif
-  }
-
-
-
-  {
-    GtkAllocation *allocation=g_new(GtkAllocation, 1);
-    GtkStyle *style=gtk_widget_get_style(mascot->dw_main);
-    gtk_widget_get_allocation(mascot->dw_main,allocation);
-    
-    gdk_draw_drawable(gtk_widget_get_window(mascot->dw_main),
-		      style->fg_gc[gtk_widget_get_state(mascot->dw_main)],
-		      pixmap_main[work_page],
-		      0,0,0,0,
-		      allocation->width,
-		      allocation->height);
-    g_free(allocation);
-  }
-
-#ifdef USE_WIN32
-  if((mascot->sdw_flag)&&(mascot->sdw_height>0)){
-    gdk_draw_drawable(gtk_widget_get_window(mascot->win_sdw),
-		      mascot->win_sdw->style->fg_gc[GTK_WIDGET_STATE(mascot->win_sdw)],
-		      pixmap_sdw[work_page],
-		      0,0,0,0,
-		      mascot->width, mascot->sdw_height);
-  }
-#endif   
-#endif // USE_GTK3
-  
-  mascot->pixmap_page=work_page;
-  
-  //while (my_main_iteration(FALSE));
-  //gdk_flush();
-
-  return(0);
-}
 
 // Buffer中へのマスコットの書き込み
 gint DrawMascotWithDigit(typMascot *mascot){
   gint clk_width,clk_height;
   //GdkGC *gc;
-  gint work_page;
   gint as=0;
   PangoLayout *pango_text;
   cairo_t *cr;
@@ -1666,13 +1423,9 @@ gint DrawMascotWithDigit(typMascot *mascot){
   cairo_region_t *region;
 #endif
   
-  work_page =mascot->pixmap_page;
-  work_page^=1;
-
-
 #ifdef USE_GTK3  //////////////  GTK3  //////////////
-  if (pixbuf_main[work_page]) {
-    g_object_unref(G_OBJECT(pixbuf_main[work_page]));
+  if (pixbuf_main) {
+    g_object_unref(G_OBJECT(pixbuf_main));
   } 
   
   surface = cairo_image_surface_create(CAIRO_FORMAT_ARGB32,
@@ -1719,21 +1472,21 @@ gint DrawMascotWithDigit(typMascot *mascot){
 			     (gdouble)mascot->alpclksd/100.0); /* transparent */
 #ifdef USE_PANGOCAIRO
       cairo_move_to(cr,
-		    mascot->clktext_x+mascot->clksd_x,
-		    mascot->clktext_y+mascot->clksd_y);
+		    (gdouble)(mascot->clktext_x+mascot->clksd_x),
+		    (gdouble)(mascot->clktext_y+mascot->clksd_y));
       pango_cairo_show_layout(cr,pango_text);
 #else
       cairo_move_to(cr,
-		    mascot->clktext_x+mascot->clksd_x,
-		    clk_height+mascot->clktext_y+mascot->clksd_y);
+		    (gdouble)(mascot->clktext_x+mascot->clksd_x),
+		    (gdouble)(clk_height+mascot->clktext_y+mascot->clksd_y));
       cairo_show_text(cr,mascot->digit);
 #endif
       switch(mascot->clktype){
       case CLOCK_TYPE_12S:
       case CLOCK_TYPE_12M:
 	cairo_move_to(cr,
-		      mascot->clktext_x+mascot->clksd_x+clk_width+3,
-		      mascot->clktext_y+mascot->clksd_y+clk_height);
+		      (gdouble)(mascot->clktext_x+mascot->clksd_x+clk_width+3),
+		      (gdouble)(mascot->clktext_y+mascot->clksd_y+clk_height));
 	cairo_save(cr);
 	cairo_scale (cr, CLOCK_AMPM_RATIO, CLOCK_AMPM_RATIO);
 
@@ -1759,21 +1512,21 @@ gint DrawMascotWithDigit(typMascot *mascot){
 			   (gdouble)mascot->alpclk/100.0); /* transparent */
 #ifdef USE_PANGOCAIRO
     cairo_move_to(cr,
-		  mascot->clktext_x,
-		  mascot->clktext_y);
+		  (gdouble)(mascot->clktext_x),
+		  (gdouble)(mascot->clktext_y));
     pango_cairo_show_layout(cr,pango_text);
 #else
     cairo_move_to(cr,
-		  mascot->clktext_x,
-		  clk_height+mascot->clktext_y);
+		  (gdouble)(mascot->clktext_x),
+		  (gdouble)(clk_height+mascot->clktext_y));
     cairo_show_text(cr,mascot->digit);
 #endif
     switch(mascot->clktype){
     case CLOCK_TYPE_12S:
     case CLOCK_TYPE_12M:
       cairo_move_to(cr,
-		    mascot->clktext_x+clk_width+3,
-		    mascot->clktext_y+clk_height);
+		    (gdouble)(mascot->clktext_x+clk_width+3),
+		    (gdouble)(mascot->clktext_y+clk_height));
       cairo_save(cr);
       cairo_scale (cr, CLOCK_AMPM_RATIO, CLOCK_AMPM_RATIO);
 
@@ -1797,14 +1550,14 @@ gint DrawMascotWithDigit(typMascot *mascot){
     
     
     if(mascot->flag_clksd){
-      gdk_draw_layout(pixmap_main[work_page],
-		      mascot->gc_mainsd[work_page],
+      gdk_draw_layout(pixmap_main,
+		      mascot->gc_mainsd,
 		      mascot->clktext_x*((gdouble)(mascot->magnify)/100)+1,
 		      1,
 		      pango_text);
     }
-    gdk_draw_layout(pixmap_main[work_page],
-		    mascot->gc_main[work_page],
+    gdk_draw_layout(pixmap_main,
+		    mascot->gc_main,
 		    mascot->clktext_x*((gdouble)(mascot->magnify)/100),
 		    0,
 		    pango_text);
@@ -1817,7 +1570,7 @@ gint DrawMascotWithDigit(typMascot *mascot){
       // digital clock
       if(mascot->flag_clksd){
 	if(mascot->clk_pm){
-	  gdk_draw_arc(pixmap_main[work_page],mascot->gc_mainsd[work_page],
+	  gdk_draw_arc(pixmap_main,mascot->gc_mainsd,
 		       TRUE,
 		       mascot->clktext_x*((gdouble)(mascot->magnify)/100)+1+clk_width,
 		       mascot->clktext_y*((gdouble)(mascot->magnify)/100)+1+clk_height*2/3-as,
@@ -1825,7 +1578,7 @@ gint DrawMascotWithDigit(typMascot *mascot){
 		       0,(360*64));
 	}
 	else{
-	  gdk_draw_arc(pixmap_main[work_page],mascot->gc_mainsd[work_page],
+	  gdk_draw_arc(pixmap_main,mascot->gc_mainsd,
 		       TRUE,
 		       mascot->clktext_x*((gdouble)(mascot->magnify)/100)+1+clk_width,
 		       mascot->clktext_y*((gdouble)(mascot->magnify)/100)+1-as,
@@ -1835,7 +1588,7 @@ gint DrawMascotWithDigit(typMascot *mascot){
       }
       
       if(mascot->clk_pm){
-	gdk_draw_arc(pixmap_main[work_page],mascot->gc_main[work_page],
+	gdk_draw_arc(pixmap_main,mascot->gc_main,
 		     TRUE,
 		     mascot->clktext_x*((gdouble)(mascot->magnify)/100)+clk_width,
 		     mascot->clktext_y*((gdouble)(mascot->magnify)/100)+clk_height*2/3-as,
@@ -1843,7 +1596,7 @@ gint DrawMascotWithDigit(typMascot *mascot){
 		     0,(360*64));
       }
       else{
-	gdk_draw_arc(pixmap_main[work_page],mascot->gc_main[work_page],
+	gdk_draw_arc(pixmap_main,mascot->gc_main,
 		     TRUE,
 		     mascot->clktext_x*((gdouble)(mascot->magnify)/100)+clk_width,
 		     mascot->clktext_y*((gdouble)(mascot->magnify)/100)-as,
@@ -1858,10 +1611,10 @@ gint DrawMascotWithDigit(typMascot *mascot){
 
   cairo_destroy(cr);
 
-  pixbuf_main[work_page] = gdk_pixbuf_get_from_surface(surface, 0, 0, mascot->width, mascot->height);
+  pixbuf_main = gdk_pixbuf_get_from_surface(surface, 0, 0, mascot->width, mascot->height);
   cairo_surface_destroy (surface);
 
-  region = get_cairo_region_from_pixbuf(pixbuf_main[work_page], mascot->width, mascot->height, 0, 0);
+  region = get_cairo_region_from_pixbuf(pixbuf_main, mascot->width, mascot->height, 0, 0);
 
   if(flag_img_cairo_go){
     
@@ -1877,33 +1630,33 @@ gint DrawMascotWithDigit(typMascot *mascot){
 
   cairo_region_destroy(region);
   
-  mascot->pixmap_page=work_page;
   gtk_widget_queue_draw(mascot->dw_main);
 
 #else  //////////////  GTK2  //////////////
-  if (pixmap_main[work_page]) {
-    g_object_unref(G_OBJECT(pixmap_main[work_page]));
+  if (pixmap_main) {
+    g_object_unref(G_OBJECT(pixmap_main));
   } 
   
-  pixmap_main[work_page] = gdk_pixmap_new(gtk_widget_get_window(mascot->win_main),
-					  mascot->width,
-					  mascot->height,
-					  -1);
+  pixmap_main = gdk_pixmap_new(gtk_widget_get_window(mascot->win_main),
+			       mascot->width,
+			       mascot->height,
+			       -1);
 
-  gdk_draw_drawable(pixmap_main[work_page],
-		    mascot->gc_main[work_page],
+  gdk_draw_drawable(pixmap_main,
+		    mascot->gc_main,
 		    mascot->sprites[mascot->frame_pix[mascot->anime_ptn][mascot->anime_frm]].pixmap,
 		    0, 0,
 		    0, 0,
 		    mascot->width, mascot->height);
   
-  if(flag_img_cairo_go){
+  //if(flag_img_cairo_go){
+  {
 #ifdef USE_PANGOCAIRO
     pango_text=gtk_widget_create_pango_layout(mascot->clock_main,
 					      mascot->digit);
     pango_layout_get_pixel_size(pango_text,&clk_width,&clk_height);
 #endif
-    cr = gdk_cairo_create(pixmap_main[work_page]);
+    cr = gdk_cairo_create(pixmap_main);
    
     cairo_select_font_face (cr, 
 			    mascot->fontclk_pc.family,
@@ -1927,21 +1680,21 @@ gint DrawMascotWithDigit(typMascot *mascot){
 			     (gdouble)mascot->alpclksd/100.0); /* transparent */
 #ifdef USE_PANGOCAIRO
       cairo_move_to(cr,
-		    mascot->clktext_x+mascot->clksd_x,
-		    mascot->clktext_y+mascot->clksd_y);
+		    (gdouble)(mascot->clktext_x+mascot->clksd_x),
+		    (gdouble)(mascot->clktext_y+mascot->clksd_y));
       pango_cairo_show_layout(cr,pango_text);
 #else
       cairo_move_to(cr,
-		    mascot->clktext_x+mascot->clksd_x,
-		    clk_height+mascot->clktext_y+mascot->clksd_y);
+		    (gdouble)(mascot->clktext_x+mascot->clksd_x),
+		    (gdouble)(clk_height+mascot->clktext_y+mascot->clksd_y));
       cairo_show_text(cr,mascot->digit);
 #endif
       switch(mascot->clktype){
       case CLOCK_TYPE_12S:
       case CLOCK_TYPE_12M:
 	cairo_move_to(cr,
-		      mascot->clktext_x+mascot->clksd_x+clk_width+3,
-		      mascot->clktext_y+mascot->clksd_y+clk_height);
+		      (gdouble)(mascot->clktext_x+mascot->clksd_x+clk_width+3),
+		      (gdouble)(mascot->clktext_y+mascot->clksd_y+clk_height));
 	cairo_save(cr);
 	cairo_scale (cr, CLOCK_AMPM_RATIO, CLOCK_AMPM_RATIO);
 
@@ -1967,21 +1720,21 @@ gint DrawMascotWithDigit(typMascot *mascot){
 			   (gdouble)mascot->alpclk/100.0); /* transparent */
 #ifdef USE_PANGOCAIRO
     cairo_move_to(cr,
-		  mascot->clktext_x,
-		  mascot->clktext_y);
+		  (gdouble)(mascot->clktext_x),
+		  (gdouble)(mascot->clktext_y));
     pango_cairo_show_layout(cr,pango_text);
 #else
     cairo_move_to(cr,
-		  mascot->clktext_x,
-		  clk_height+mascot->clktext_y);
+		  (gdouble)(mascot->clktext_x),
+		  (gdouble)(clk_height+mascot->clktext_y));
     cairo_show_text(cr,mascot->digit);
 #endif
     switch(mascot->clktype){
     case CLOCK_TYPE_12S:
     case CLOCK_TYPE_12M:
       cairo_move_to(cr,
-		    mascot->clktext_x+clk_width+3,
-		    mascot->clktext_y+clk_height);
+		    (gdouble)(mascot->clktext_x+clk_width+3),
+		    (gdouble)(mascot->clktext_y+clk_height));
       cairo_save(cr);
       cairo_scale (cr, CLOCK_AMPM_RATIO, CLOCK_AMPM_RATIO);
 
@@ -1997,70 +1750,6 @@ gint DrawMascotWithDigit(typMascot *mascot){
       break;
     }
   }
-  else{
-    pango_text=gtk_widget_create_pango_layout(mascot->clock_main,
-					      mascot->digit);
-   
-    
-    
-    if(mascot->flag_clksd){
-      gdk_draw_layout(pixmap_main[work_page],
-		      mascot->gc_mainsd[work_page],
-		      mascot->clktext_x*((gdouble)(mascot->magnify)/100)+1,
-		      1,
-		      pango_text);
-    }
-    gdk_draw_layout(pixmap_main[work_page],
-		    mascot->gc_main[work_page],
-		    mascot->clktext_x*((gdouble)(mascot->magnify)/100),
-		    0,
-		    pango_text);
-    
-    switch(mascot->clktype){
-    case CLOCK_TYPE_12S:
-    case CLOCK_TYPE_12M:
-      pango_layout_get_pixel_size(pango_text,&clk_width,&clk_height);
-      
-      // digital clock
-      if(mascot->flag_clksd){
-	if(mascot->clk_pm){
-	  gdk_draw_arc(pixmap_main[work_page],mascot->gc_mainsd[work_page],
-		       TRUE,
-		       mascot->clktext_x*((gdouble)(mascot->magnify)/100)+1+clk_width,
-		       mascot->clktext_y*((gdouble)(mascot->magnify)/100)+1+clk_height*2/3-as,
-		       clk_height/3,clk_height/3,
-		       0,(360*64));
-	}
-	else{
-	  gdk_draw_arc(pixmap_main[work_page],mascot->gc_mainsd[work_page],
-		       TRUE,
-		       mascot->clktext_x*((gdouble)(mascot->magnify)/100)+1+clk_width,
-		       mascot->clktext_y*((gdouble)(mascot->magnify)/100)+1-as,
-		       clk_height/3,clk_height/3,
-		       0,(360*64));
-	}
-      }
-      
-      if(mascot->clk_pm){
-	gdk_draw_arc(pixmap_main[work_page],mascot->gc_main[work_page],
-		     TRUE,
-		     mascot->clktext_x*((gdouble)(mascot->magnify)/100)+clk_width,
-		     mascot->clktext_y*((gdouble)(mascot->magnify)/100)+clk_height*2/3-as,
-		     clk_height/3,clk_height/3,
-		     0,(360*64));
-      }
-      else{
-	gdk_draw_arc(pixmap_main[work_page],mascot->gc_main[work_page],
-		     TRUE,
-		     mascot->clktext_x*((gdouble)(mascot->magnify)/100)+clk_width,
-		     mascot->clktext_y*((gdouble)(mascot->magnify)/100)-as,
-		     clk_height/3,clk_height/3,
-		     0,(360*64));
-      }
-      
-      break;
-    }
-  }
   
 
   {
@@ -2070,7 +1759,7 @@ gint DrawMascotWithDigit(typMascot *mascot){
     
     gdk_draw_drawable(gtk_widget_get_window(mascot->dw_main),
 		      style->fg_gc[gtk_widget_get_state(mascot->dw_main)],
-		      pixmap_main[work_page],
+		      pixmap_main,
 		      0,0,0,0,
 		      allocation->width,
 		      allocation->height);
@@ -2097,14 +1786,13 @@ gint DrawMascotWithDigit(typMascot *mascot){
     
     gdk_draw_drawable(gtk_widget_get_window(mascot->dw_main),
 		      style->fg_gc[gtk_widget_get_state(mascot->dw_main)],
-		      pixmap_main[work_page],
+		      pixmap_main,
 		      0,0,0,0,
 		      allocation->width,
 		      allocation->height);
     g_free(allocation);
   }
 
-  mascot->pixmap_page=work_page;
 #endif // USE_GTK3
   
 
@@ -2125,37 +1813,33 @@ gint DrawMascotWithDigit(typMascot *mascot){
 #ifndef USE_GTK3
 void ReInitGC(typMascot *mascot)
 {
-  int i_page;
-
-  for(i_page=0;i_page<2;i_page++){
-    if(mascot->gc_main[i_page]){
-       gdk_gc_unref(mascot->gc_main[i_page]);
-       gdk_gc_unref(mascot->gc_mainsd[i_page]);
-    }
-    mascot->gc_main[i_page] = MPCreatePen(pixmap_main[i_page], mascot->colclk);
-    mascot->gc_mainsd[i_page] = MPCreatePen(pixmap_main[i_page], mascot->colclksd);
-
-    if(mascot->gc_bal[i_page]){
-       gdk_gc_unref(mascot->gc_bal[i_page]);
-       gdk_gc_unref(mascot->gc_balbg[i_page]);
-       gdk_gc_unref(mascot->gc_balbd[i_page]);
-    }
-    mascot->gc_bal[i_page] = MPCreatePen(pixmap_bal[i_page], mascot->colbal);
-    mascot->gc_balbg[i_page] = MPCreatePen(pixmap_bal[i_page], mascot->colbalbg);
-    mascot->gc_balbd[i_page] = MPCreatePen(pixmap_bal[i_page], mascot->colbalbd);
-
-    if(mascot->gc_clk[i_page]){
-       gdk_gc_unref(mascot->gc_clk[i_page]);
-       
-       gdk_gc_unref(mascot->gc_clkbg[i_page]);
-       gdk_gc_unref(mascot->gc_clkbd[i_page]);
-       gdk_gc_unref(mascot->gc_clksd[i_page]);
-    }
-    mascot->gc_clk[i_page] = MPCreatePen(pixmap_clk[i_page], mascot->colclk);
-    mascot->gc_clkbg[i_page] = MPCreatePen(pixmap_clk[i_page], mascot->colclkbg);
-    mascot->gc_clkbd[i_page] = MPCreatePen(pixmap_clk[i_page], mascot->colclkbd);
-    mascot->gc_clksd[i_page] = MPCreatePen(pixmap_clk[i_page], mascot->colclksd);
+  if(mascot->gc_main){
+    gdk_gc_unref(mascot->gc_main);
+    gdk_gc_unref(mascot->gc_mainsd);
   }
+  mascot->gc_main = MPCreatePen(pixmap_main, mascot->colclk);
+  mascot->gc_mainsd = MPCreatePen(pixmap_main, mascot->colclksd);
+  
+  if(mascot->gc_bal){
+    gdk_gc_unref(mascot->gc_bal);
+    gdk_gc_unref(mascot->gc_balbg);
+    gdk_gc_unref(mascot->gc_balbd);
+  }
+  mascot->gc_bal = MPCreatePen(pixmap_bal, mascot->colbal);
+  mascot->gc_balbg = MPCreatePen(pixmap_bal, mascot->colbalbg);
+  mascot->gc_balbd = MPCreatePen(pixmap_bal, mascot->colbalbd);
+  
+  if(mascot->gc_clk){
+    gdk_gc_unref(mascot->gc_clk);
+    
+    gdk_gc_unref(mascot->gc_clkbg);
+    gdk_gc_unref(mascot->gc_clkbd);
+    gdk_gc_unref(mascot->gc_clksd);
+  }
+  mascot->gc_clk = MPCreatePen(pixmap_clk, mascot->colclk);
+  mascot->gc_clkbg = MPCreatePen(pixmap_clk, mascot->colclkbg);
+  mascot->gc_clkbd = MPCreatePen(pixmap_clk, mascot->colclkbd);
+  mascot->gc_clksd = MPCreatePen(pixmap_clk, mascot->colclksd);
 }
 #endif
 
@@ -2357,7 +2041,7 @@ void InitComposite(typMascot *mascot){
 #ifdef USE_GTK3
   if(gdk_screen_is_composited(gtk_widget_get_screen(mascot->win_main)))
 #else
-  if(gtk_widget_is_composited(mascot->win_main))
+ if(gtk_widget_is_composited(mascot->win_main))
 #endif    
     mascot->flag_composite=COMPOSITE_TRUE;
   else
@@ -2414,15 +2098,11 @@ void InitComposite(typMascot *mascot){
   gtk_widget_realize(mascot->clock_main);
   //clear buffer
 #ifdef USE_GTK3
-  if(pixbuf_clk[0]!=NULL) g_object_unref(G_OBJECT(pixbuf_clk[0]));
-  if(pixbuf_clk[1]!=NULL) g_object_unref(G_OBJECT(pixbuf_clk[1]));
-  pixbuf_clk[0]=NULL;
-  pixbuf_clk[1]=NULL;
+  if(pixbuf_clk!=NULL) g_object_unref(G_OBJECT(pixbuf_clk));
+  pixbuf_clk=NULL;
 #else  
-  if(pixmap_clk[0]!=NULL) g_object_unref(G_OBJECT(pixmap_clk[0]));
-  if(pixmap_clk[1]!=NULL) g_object_unref(G_OBJECT(pixmap_clk[1]));
-  pixmap_clk[0]=NULL;
-  pixmap_clk[1]=NULL;
+  if(pixmap_clk!=NULL) g_object_unref(G_OBJECT(pixmap_clk));
+  pixmap_clk=NULL;
 #endif
   // call configure to make pixmaps
   //dw_configure_clk(mascot->dw_clock, "configure_event",(gpointer)mascot);
@@ -2442,15 +2122,11 @@ void InitComposite(typMascot *mascot){
   gtk_widget_realize(mascot->balloon_main);
   //clear buffer
 #ifdef USE_GTK3  
-  if(pixbuf_bal[0]!=NULL) g_object_unref(G_OBJECT(pixbuf_bal[0]));
-  if(pixbuf_bal[1]!=NULL) g_object_unref(G_OBJECT(pixbuf_bal[1]));
-  pixbuf_bal[0]=NULL;
-  pixbuf_bal[1]=NULL;
+  if(pixbuf_bal!=NULL) g_object_unref(G_OBJECT(pixbuf_bal));
+  pixbuf_bal=NULL;
 #else
-  if(pixmap_bal[0]!=NULL) g_object_unref(G_OBJECT(pixmap_bal[0]));
-  if(pixmap_bal[1]!=NULL) g_object_unref(G_OBJECT(pixmap_bal[1]));
-  pixmap_bal[0]=NULL;
-  pixmap_bal[1]=NULL;
+  if(pixmap_bal!=NULL) g_object_unref(G_OBJECT(pixmap_bal));
+  pixmap_bal=NULL;
 #endif
   // call configure to make pixmaps
   //dw_configure_bal(mascot->balloon_main, "configure_event",(gpointer)mascot);

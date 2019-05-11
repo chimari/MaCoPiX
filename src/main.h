@@ -860,17 +860,17 @@ struct _typMascot{
   GdkRGBA *colbalbg;
   GdkRGBA *colbalbd;
 #else             /////////////// GTK2 ///////////////
-  GdkGC *gc_main[2];
-  GdkGC *gc_mainsd[2];
-  GdkGC *gc_clk[2];
-  GdkGC *gc_clksd[2];
-  GdkGC *gc_clkbg[2];
-  GdkGC *gc_clkbd[2];
-  GdkGC *gc_clkmask[2];
-  GdkGC *gc_bal[2];
-  GdkGC *gc_balbg[2];
-  GdkGC *gc_balbd[2];
-  GdkGC *gc_balmask[2];
+  GdkGC *gc_main;
+  GdkGC *gc_mainsd;
+  GdkGC *gc_clk;
+  GdkGC *gc_clksd;
+  GdkGC *gc_clkbg;
+  GdkGC *gc_clkbd;
+  GdkGC *gc_clkmask;
+  GdkGC *gc_bal;
+  GdkGC *gc_balbg;
+  GdkGC *gc_balbd;
+  GdkGC *gc_balmask;
   GdkColor *def_colclk;
   GdkColor *def_colclksd;
   GdkColor *def_colclkbg;
@@ -969,9 +969,6 @@ struct _typMascot{
   gboolean flag_xp;
   gint offsetp;
   gboolean flag_menu;
-  gint pixmap_page;
-  gint bal_page;
-  gint clk_page;
   gint bal_mode;
   gint bal_defpos;
   gint bal_pos;
@@ -1031,14 +1028,14 @@ struct _typMascot{
 
 ///////////   Global Arguments   //////////
 #ifdef USE_GTK3
-GdkPixbuf *pixbuf_main[2], *pixbuf_clk[2], *pixbuf_bal[2];
+GdkPixbuf *pixbuf_main, *pixbuf_clk, *pixbuf_bal;
 #ifdef USE_WIN32
-GdkPixbuf *pixbuf_sdw[2];
+GdkPixbuf *pixbuf_sdw;
 #endif
 #else  // USE_GTK3
-GdkPixmap *pixmap_main[2], *pixmap_clk[2], *pixmap_bal[2];
+GdkPixmap *pixmap_main, *pixmap_clk, *pixmap_bal;
 #ifdef USE_WIN32
-GdkPixmap *pixmap_sdw[2];
+GdkPixmap *pixmap_sdw;
 #endif
 #endif // USE_GTK3
 gint window_x, window_y;

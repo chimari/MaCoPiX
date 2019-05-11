@@ -1918,23 +1918,21 @@ static void close_conf(GtkWidget *w, GtkWidget *dialog)
   LoadPixmaps(Mascot->win_main, Mascot, Mascot->sprites);
   DrawMascot0(Mascot);
 
-// テスト表示でShapeが変わった場合のための対応
-if(Mascot->clkmode==CLOCK_PIXMAP){ 
+  // テスト表示でShapeが変わった場合のための対応
+  if(Mascot->clkmode==CLOCK_PIXMAP){ 
     DrawMascotWithDigit(Mascot);
   }
   else{
-    DrawMascot(Mascot);
+    DrawMascot(Mascot, Mascot->frame_pix[Mascot->anime_ptn][Mascot->anime_frm]);
   }
 
 
-  while (my_main_iteration(FALSE));
   gtk_widget_destroy(GTK_WIDGET(dialog));
-  while (my_main_iteration(FALSE));
 
   flag_make_pixmap_list=FALSE;
   Mascot->flag_menu=FALSE;
 
-  gdkut_flush(Mascot);
+  //gdkut_flush(Mascot);
 }
 
 
@@ -1970,7 +1968,7 @@ void TestPut(GtkWidget *w, gint gdata)
 {
   int i_pix;
   i_pix=(int)gdata;
-  
+
   TestLoadPixmaps(&tmp_mascot,
 		  tmp_pixfile[i_pix],
 		  i_pix);
