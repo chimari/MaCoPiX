@@ -188,9 +188,9 @@ void DrawBalloon2(typMascot *mascot, char **wn_iwp, int wn_max)
   cairo_set_operator (cr, CAIRO_OPERATOR_SOURCE);
   cairo_paint (cr);
   
-  cairo_set_operator (cr, CAIRO_OPERATOR_OVER);
+  cairo_set_operator (cr, CAIRO_OPERATOR_SOURCE);
   
-#ifdef USE_WIN32  
+#ifdef FG_DRAW
   //BG should be opaque to BG only translucency for Win32
   my_cairo_set_source_rgba (cr, mascot->colbalbd, 1.0); /* opaque BG */
 
@@ -293,7 +293,7 @@ void DrawBalloon2(typMascot *mascot, char **wn_iwp, int wn_max)
 #endif
 
   ///// BACKGROUND /////
-#ifdef USE_WIN32  
+#ifdef FG_DRAW
   //BG should be opaque to BG only translucency for Win32
   my_cairo_set_source_rgba (cr, mascot->colbalbg, 1.0); /* opaque BG */
   cairo_fill_preserve(cr);
@@ -362,7 +362,7 @@ void DrawBalloon2(typMascot *mascot, char **wn_iwp, int wn_max)
 
 #else            ////////////////////// GTK2 ////////////////////////////////////
   
-#ifdef USE_WIN32
+#ifdef FG_DRAW
   if((mascot->flag_balfg)&&(mascot->alpha_bal!=100)){
     {
       GtkAllocation *allocation=g_new(GtkAllocation, 1);
@@ -396,7 +396,7 @@ void DrawBalloon2(typMascot *mascot, char **wn_iwp, int wn_max)
 #endif  // USE_GTK3
   
   // Resize of Balloon (calling dw_bal_expose)
-#ifdef USE_WIN32
+#ifdef FG_DRAW
   if((mascot->flag_balfg)&&(mascot->alpha_bal!=100)){
     gtk_widget_set_size_request (mascot->dw_balfg, w, h+h_arrow);
     gdk_window_resize (gtk_widget_get_window(mascot->balloon_fg),w,h+h_arrow);
@@ -408,7 +408,7 @@ void DrawBalloon2(typMascot *mascot, char **wn_iwp, int wn_max)
 
 #ifdef USE_GTK3  ////////////////////// GTK3 ////////////////////////////////////
   if(shape_flag){
-#ifdef USE_WIN32
+#ifdef FG_DRAW
     if((mascot->flag_balfg)&&(mascot->alpha_bal!=100)){
       gdk_window_shape_combine_region( gtk_widget_get_window(mascot->balloon_fg),
       				       region_mask,
@@ -424,7 +424,7 @@ void DrawBalloon2(typMascot *mascot, char **wn_iwp, int wn_max)
     cairo_surface_destroy(surface_mask);
   }
 
-#ifdef USE_WIN32
+#ifdef FG_DRAW
   if((mascot->flag_balfg)&&(mascot->alpha_bal!=100)){
       gtk_widget_queue_draw(mascot->dw_balfg);
   }
@@ -433,7 +433,7 @@ void DrawBalloon2(typMascot *mascot, char **wn_iwp, int wn_max)
   
 #else            ////////////////////// GTK2 ////////////////////////////////////
   if(shape_flag){
-#ifdef USE_WIN32
+#ifdef FG_DRAW
     if((mascot->flag_balfg)&&(mascot->alpha_bal!=100)){
       gdk_window_shape_combine_mask( gtk_widget_get_window(mascot->balloon_fg),
 				     mask_bal,
@@ -764,7 +764,7 @@ void make_balloon(typMascot *mascot){
 }
 
 
-#ifdef USE_WIN32
+#ifdef FG_DRAW
 void make_balloon_fg(typMascot *mascot){
   GtkWidget *ebox;
 

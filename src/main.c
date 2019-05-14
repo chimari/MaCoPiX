@@ -996,6 +996,7 @@ void InitDefCol(typMascot* mascot){
   mascot->def_colbal=gdk_color_copy(&init_colbal);
   mascot->def_colbalbg=gdk_color_copy(&init_colbalbg);
   mascot->def_colbalbd=gdk_color_copy(&init_colbalbd);
+#endif 
 
   mascot->def_alpclk  =DEF_ALPHA_OTHER;
   mascot->def_alpclkbg=DEF_ALPHA_CLK;
@@ -1004,7 +1005,6 @@ void InitDefCol(typMascot* mascot){
   mascot->def_alpbal  =DEF_ALPHA_OTHER;
   mascot->def_alpbalbg=DEF_ALPHA_BAL;
   mascot->def_alpbalbd=DEF_ALPHA_OTHER;
-#endif 
 }
 
 
@@ -1093,11 +1093,7 @@ void ReadRC(typMascot *mascot, gboolean def_flag)
       mascot->force_composite=FALSE;
     if(!xmms_cfg_read_boolean(cfgfile, field_tmp, "cairo_image",
 			      &mascot->flag_img_cairo))
-#ifdef USE_WIN32
-      mascot->flag_img_cairo=FALSE;
-#else
       mascot->flag_img_cairo=TRUE;
-#endif
     if(!xmms_cfg_read_boolean(cfgfile, field_tmp, "cairo_balloon",
 			      &mascot->flag_bal_cairo))
       mascot->flag_bal_cairo=TRUE;
@@ -1431,13 +1427,13 @@ void ReadRC(typMascot *mascot, gboolean def_flag)
       mascot->def_alpha_biff=DEF_ALPHA_BIFF;
 #endif
 
-#ifdef USE_WIN32
+#ifdef FG_DRAW
     if(!xmms_cfg_read_int(cfgfile, field_tmp, "balloon",&mascot->def_alpha_bal))
       mascot->def_alpha_bal=DEF_ALPHA_BAL;
-    if(!xmms_cfg_read_int(cfgfile, field_tmp, "clock",&mascot->def_alpha_clk))
-      mascot->def_alpha_clk=DEF_ALPHA_CLK;
     if(!xmms_cfg_read_boolean(cfgfile,field_tmp,"balloonfg",&mascot->def_flag_balfg))
       mascot->def_flag_balfg=TRUE;
+    if(!xmms_cfg_read_int(cfgfile, field_tmp, "clock",&mascot->def_alpha_clk))
+      mascot->def_alpha_clk=DEF_ALPHA_CLK;
     if(!xmms_cfg_read_boolean(cfgfile,field_tmp,"clockfg",&mascot->def_flag_clkfg))
       mascot->def_flag_clkfg=TRUE;
 #endif
@@ -1448,11 +1444,7 @@ void ReadRC(typMascot *mascot, gboolean def_flag)
     // USER_RCFILEがないときは作成する : おそらく初回起動時のみ
     mascot->flag_install=FALSE;
     mascot->force_composite=FALSE;
-#ifdef USE_WIN32
-    mascot->flag_img_cairo=FALSE;
-#else
     mascot->flag_img_cairo=TRUE;
-#endif
     mascot->flag_bal_cairo=TRUE;
     mascot->flag_clk_cairo=TRUE;
     mascot->flag_ow=FALSE;
@@ -1534,10 +1526,10 @@ void ReadRC(typMascot *mascot, gboolean def_flag)
 #ifdef USE_BIFF
     mascot->def_alpha_biff=DEF_ALPHA_BIFF;
 #endif
-#ifdef USE_WIN32
-    mascot->def_alpha_bal=DEF_ALPHA_BAL;
+#ifdef FG_DRAW
     mascot->def_alpha_clk=DEF_ALPHA_CLK;
     mascot->def_flag_clkfg=TRUE;
+    mascot->def_alpha_bal=DEF_ALPHA_BAL;
     mascot->def_flag_balfg=TRUE;
 #endif
     
@@ -2386,11 +2378,11 @@ void ReadMascot(typMascot *mascot, gboolean def_flag)
 #ifdef USE_BIFF
       mascot->alpha_biff=mascot->def_alpha_biff;
 #endif
-#ifdef USE_WIN32
-      mascot->alpha_bal=mascot->def_alpha_bal;
+#ifdef FG_DRAW
       mascot->alpha_clk=mascot->def_alpha_clk;
-      mascot->flag_balfg=mascot->def_flag_balfg;
       mascot->flag_clkfg=mascot->def_flag_clkfg;
+      mascot->alpha_bal=mascot->def_alpha_bal;
+      mascot->flag_balfg=mascot->def_flag_balfg;
 #endif
     }
     else{
@@ -2404,15 +2396,15 @@ void ReadMascot(typMascot *mascot, gboolean def_flag)
       if(!xmms_cfg_read_int(cfgfile, f_tmp0, "biff",&mascot->alpha_biff))
 	mascot->alpha_biff=mascot->def_alpha_biff;
 #endif
-#ifdef USE_WIN32
-      if(!xmms_cfg_read_int(cfgfile, f_tmp0, "balloon",&mascot->alpha_bal))
-	mascot->alpha_bal=mascot->def_alpha_bal;
+#ifdef FG_DRAW
       if(!xmms_cfg_read_int(cfgfile, f_tmp0, "clock",&mascot->alpha_clk))
 	mascot->alpha_clk=mascot->def_alpha_clk;
-      if(!xmms_cfg_read_boolean(cfgfile, f_tmp0,"balloonfg",&mascot->flag_balfg))
-	mascot->flag_balfg=mascot->def_flag_balfg;
       if(!xmms_cfg_read_boolean(cfgfile, f_tmp0,"clockfg",&mascot->flag_clkfg))
 	mascot->flag_clkfg=mascot->def_flag_clkfg;
+      if(!xmms_cfg_read_int(cfgfile, f_tmp0, "balloon",&mascot->alpha_bal))
+	mascot->alpha_bal=mascot->def_alpha_bal;
+      if(!xmms_cfg_read_boolean(cfgfile, f_tmp0,"balloonfg",&mascot->flag_balfg))
+	mascot->flag_balfg=mascot->def_flag_balfg;
 #endif
     }
                                                                                
@@ -3567,11 +3559,11 @@ void SaveMascot(typMascot *mascot, gboolean def_flag)
 #ifdef USE_BIFF
     xmms_cfg_write_int(cfgfile, f_tmp, "biff",mascot->alpha_biff);
 #endif
-#ifdef USE_WIN32
-    xmms_cfg_write_int(cfgfile, f_tmp, "balloon",mascot->alpha_bal);
+#ifdef FG_DRAW
     xmms_cfg_write_int(cfgfile, f_tmp, "clock",mascot->alpha_clk);
-    xmms_cfg_write_boolean(cfgfile, f_tmp,"balloonfg",mascot->flag_balfg);
     xmms_cfg_write_boolean(cfgfile, f_tmp,"clockfg",mascot->flag_clkfg);
+    xmms_cfg_write_int(cfgfile, f_tmp, "balloon",mascot->alpha_bal);
+    xmms_cfg_write_boolean(cfgfile, f_tmp,"balloonfg",mascot->flag_balfg);
 #endif
   }
 
@@ -4544,14 +4536,14 @@ int main(int argc, char **argv)
   pixbuf_main=NULL;
   pixbuf_clk=NULL;
   pixbuf_bal=NULL;
-#ifdef USE_WIN32
+#ifdef FG_DRAW
   pixbuf_sdw=NULL;
 #endif
 #else
   pixmap_main=NULL;
   pixmap_clk=NULL;
   pixmap_bal=NULL;
-#ifdef USE_WIN32
+#ifdef FG_DRAW
   pixmap_sdw=NULL;
 #endif
 #endif
@@ -4608,11 +4600,11 @@ int main(int argc, char **argv)
   make_mascot(Mascot);
   
   make_balloon(Mascot);
-#ifdef USE_WIN32
+#ifdef FG_DRAW
   make_balloon_fg(Mascot);
 #endif
   make_clock(Mascot);
-#ifdef USE_WIN32
+#ifdef FG_DRAW
   make_clock_fg(Mascot);
 #endif
 #ifdef USE_BIFF
@@ -4654,13 +4646,13 @@ int main(int argc, char **argv)
 #endif // USE_BIFF
 
 
-#ifdef USE_WIN32
+#ifdef FG_DRAW
   gtk_widget_show_all(Mascot->balloon_fg);
 #endif
   gtk_widget_show_all(Mascot->balloon_main);
   map_balloon(Mascot, FALSE);
 
-#ifdef USE_WIN32
+#ifdef FG_DRAW
   gtk_widget_show_all(Mascot->clock_fg);
 #endif
   gtk_widget_show_all(Mascot->clock_main);
@@ -4684,7 +4676,7 @@ int main(int argc, char **argv)
 #endif // USE_BIFF
 
 
-#ifdef USE_WIN32
+#ifdef FG_DRAW
   gtk_widget_show_all(Mascot->win_sdw);
 #endif
   gtk_widget_show_all(Mascot->win_main);

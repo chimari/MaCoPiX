@@ -70,7 +70,7 @@ gboolean TestLoadPixmaps(typMascot *mascot, gchar *filename, gint i_pix)
 #ifdef USE_GTK3
   cairo_surface_t *surface;
   cairo_region_t *region;
-#ifdef USE_WIN32  
+#ifdef FG_DRAW
   cairo_surface_t *surface_sdw;
   cairo_region_t  *region_sdw;
 #endif
@@ -125,7 +125,7 @@ gboolean TestLoadPixmaps(typMascot *mascot, gchar *filename, gint i_pix)
     g_object_unref(G_OBJECT(mascot->sprites[i_pix].pixbuf));
     mascot->sprites[i_pix].pixbuf=NULL;
   }
-#ifdef USE_WIN32
+#ifdef FG_DRAW
   if(mascot->sprites[i_pix].pixbuf_sdw) {
     g_object_unref(G_OBJECT(mascot->sprites[i_pix].pixbuf_sdw));
     mascot->sprites[i_pix].pixbuf_sdw=NULL;
@@ -140,7 +140,7 @@ gboolean TestLoadPixmaps(typMascot *mascot, gchar *filename, gint i_pix)
     g_object_unref(G_OBJECT(mascot->sprites[i_pix].mask));
     mascot->sprites[i_pix].mask=NULL;
   }
-#ifdef USE_WIN32
+#ifdef FG_DRAW
   if(mascot->sprites[i_pix].pixmap_sdw) {
     g_object_unref(G_OBJECT(mascot->sprites[i_pix].pixmap_sdw));
     mascot->sprites[i_pix].pixmap_sdw=NULL;
@@ -228,7 +228,7 @@ gboolean TestLoadPixmaps(typMascot *mascot, gchar *filename, gint i_pix)
     cairo_surface_destroy (surface);
   }
   else{// for Win32 and non-composited Gtk+2.8 or later
-#ifdef USE_WIN32
+#ifdef FC_DRAW
     surface = cairo_image_surface_create(CAIRO_FORMAT_ARGB32, w, h);
     cr = cairo_create(surface);
 
@@ -371,7 +371,7 @@ gboolean TestLoadPixmaps(typMascot *mascot, gchar *filename, gint i_pix)
   else{// for Win32 and non-composited Gtk+2.8 or later
     gdk_pixbuf_render_pixmap_and_mask(pixbuf2, &mascot->sprites[i_pix].pixmap,
 				      &mascot->sprites[i_pix].mask, 0xc0);
-#ifdef USE_WIN32
+#ifdef FG_DRAW
     if(mascot->sdw_flag){
       
       if(mascot->move==MOVE_FOCUS){
@@ -450,7 +450,7 @@ void LoadPixmaps(typMascot *mascot){
 #ifdef USE_GTK3
   cairo_surface_t *surface;
   cairo_region_t *region;
-#ifdef USE_WIN32  
+#ifdef FG_DRAW
   cairo_surface_t *surface_sdw;
   cairo_region_t  *region_sdw;
 #endif
@@ -459,20 +459,21 @@ void LoadPixmaps(typMascot *mascot){
 
 #ifdef USE_WIN32
   GdkWinChangeAlpha(gtk_widget_get_window(mascot->win_main), mascot->alpha_main);
-  GdkWinChangeAlpha(gtk_widget_get_window(mascot->win_sdw),  mascot->sdw_alpha);
 #ifdef USE_BIFF
   GdkWinChangeAlpha(gtk_widget_get_window(mascot->biff_pix), mascot->alpha_biff);
 #endif
-  if((mascot->flag_balfg)&&(mascot->alpha_bal!=100)){
-    GdkWinChangeAlphaFG(gtk_widget_get_window(mascot->balloon_fg), mascot->colbalbg);
-  }
-  GdkWinChangeAlpha(gtk_widget_get_window(mascot->balloon_main), mascot->alpha_bal);
+#endif
+#ifdef FG_DRAW
+  GdkWinChangeAlpha(gtk_widget_get_window(mascot->win_sdw),  mascot->sdw_alpha);
   if((mascot->flag_clkfg)&&(mascot->alpha_clk!=100)){
     GdkWinChangeAlphaFG(gtk_widget_get_window(mascot->clock_fg), mascot->colclkbg);
   }
   GdkWinChangeAlpha(gtk_widget_get_window(mascot->clock_main), mascot->alpha_clk);
+  if((mascot->flag_balfg)&&(mascot->alpha_bal!=100)){
+    GdkWinChangeAlphaFG(gtk_widget_get_window(mascot->balloon_fg), mascot->colbalbg);
+  }
+  GdkWinChangeAlpha(gtk_widget_get_window(mascot->balloon_main), mascot->alpha_bal);
 #endif
-
 
   while(mascot->sprites[i].filename){
 #ifdef USE_GTK3
@@ -480,7 +481,7 @@ void LoadPixmaps(typMascot *mascot){
       g_object_unref(G_OBJECT(mascot->sprites[i].pixbuf));
       mascot->sprites[i].pixbuf=NULL;
     }
-#ifdef USE_WIN32
+#ifdef FG_DRAW
     if (mascot->sprites[i].pixbuf_sdw){
       g_object_unref(G_OBJECT(mascot->sprites[i].pixbuf_sdw));
       mascot->sprites[i].pixbuf_sdw=NULL;
@@ -496,7 +497,7 @@ void LoadPixmaps(typMascot *mascot){
       mascot->sprites[i].mask=NULL;
     }
     
-#ifdef USE_WIN32
+#ifdef FG_DRAW
     if (mascot->sprites[i].pixmap_sdw){
       g_object_unref(G_OBJECT(mascot->sprites[i].pixmap_sdw));
       mascot->sprites[i].pixmap_sdw=NULL;
@@ -635,7 +636,7 @@ void LoadPixmaps(typMascot *mascot){
       mascot->sprites[i].pixbuf = gdk_pixbuf_get_from_surface(surface, 0, 0, w, h);
     }
     else{// for Win32 and non-composited Gtk+2.8 or later
-#ifdef USE_WIN32
+#ifdef FG_DRAW
       surface = cairo_image_surface_create(CAIRO_FORMAT_ARGB32, w, h);
       cr = cairo_create(surface);
 
@@ -775,7 +776,7 @@ void LoadPixmaps(typMascot *mascot){
     else{// for Win32 and non-composited Gtk+2.8 or later
       gdk_pixbuf_render_pixmap_and_mask(pixbuf2, &mascot->sprites[i].pixmap,
 					&mascot->sprites[i].mask, 0xc0); 
-#ifdef USE_WIN32
+#ifdef FG_DRAW
       if(mascot->sdw_flag){
 	
 	if(mascot->move==MOVE_FOCUS){
@@ -848,7 +849,7 @@ void LoadPixmaps(typMascot *mascot){
   dw_init_main(mascot->dw_main, "configure_event",(gpointer)mascot);
 
 
-#ifdef USE_WIN32
+#ifdef FG_DRAW
   if((mascot->sdw_flag)&&(mascot->sdw_height>0)){
     gtk_window_resize (GTK_WINDOW(mascot->win_sdw), w, mascot->sdw_height);
     gtk_widget_set_size_request (mascot->dw_sdw, w, mascot->sdw_height);
@@ -943,9 +944,9 @@ void LoadPixmaps(typMascot *mascot){
 #ifdef USE_GTK3
   css_change_font(mascot->dw_balloon,mascot->fontbal_pc);
   css_change_font(mascot->dw_clock,mascot->fontclk_pc);
-#ifdef USE_WIN32
-  css_change_font(mascot->dw_balfg,mascot->fontbal_pc);
+#ifdef FG_DRAW
   css_change_font(mascot->dw_clkfg,mascot->fontclk_pc);
+  css_change_font(mascot->dw_balfg,mascot->fontbal_pc);
 #endif
 #else
   gtk_widget_modify_font(mascot->clock_main,mascot->fontclk);
@@ -1227,7 +1228,7 @@ gint DrawMascot0(typMascot *mascot)
   }
   pixbuf_main=gdk_pixbuf_copy(mascot->sprites[mascot->frame_pix[0][0]].pixbuf);
 
-#ifdef USE_WIN32
+#ifdef FG_DRAW
   if(mascot->sdw_flag){
     if(mascot->sdw_height>0){
       if (pixbuf_sdw) {
@@ -1250,7 +1251,7 @@ gint DrawMascot0(typMascot *mascot)
 			       mascot->width,
 			       mascot->height,
 			       -1);
-#ifdef USE_WIN32
+#ifdef FG_DRAW
   if(mascot->sdw_flag){
     if(mascot->sdw_height>0){
       if (pixmap_sdw) {
@@ -1284,7 +1285,7 @@ gint DrawMascot(typMascot *mascot, gint i_pix)
 
   //pixbuf_main = gdk_pixbuf_copy(mascot->sprites[mascot->frame_pix[mascot->anime_ptn][mascot->anime_frm]].pixbuf);
   pixbuf_main = gdk_pixbuf_copy(mascot->sprites[i_pix].pixbuf);
-#ifdef USE_WIN32
+#ifdef FG_DRAW
   if((mascot->sdw_flag)&&(mascot->sdw_height>0)){
     if (pixbuf_sdw) {
       g_object_unref(G_OBJECT(pixbuf_sdw));
@@ -1310,7 +1311,7 @@ gint DrawMascot(typMascot *mascot, gint i_pix)
 
   cairo_region_destroy(region);
 
-#ifdef USE_WIN32
+#ifdef FG_DRAW
   if((mascot->sdw_flag)&&(mascot->sdw_height>0)){
     region = get_cairo_region_from_pixbuf(pixbuf_sdw,
 					  mascot->width, mascot->sdw_height,
@@ -1344,7 +1345,7 @@ gint DrawMascot(typMascot *mascot, gint i_pix)
 			       mascot->height,
 			       -1);
   
-#ifdef USE_WIN32
+#ifdef FG_DRAW
   if((mascot->sdw_flag)&&(mascot->sdw_height>0)){
     if (pixmap_sdw) {
       g_object_unref(G_OBJECT(pixmap_sdw));
@@ -1364,7 +1365,7 @@ gint DrawMascot(typMascot *mascot, gint i_pix)
 		    0, 0,
 		    mascot->width, mascot->height);
   
-#ifdef USE_WIN32
+#ifdef FG_DRAW
   if((mascot->sdw_flag)&&(mascot->sdw_height>0)){
     gdk_draw_drawable(pixmap_sdw,
 		      mascot->gc_main,
@@ -1391,7 +1392,7 @@ gint DrawMascot(typMascot *mascot, gint i_pix)
 	//mascot->sprites[mascot->frame_pix[mascot->anime_ptn][mascot->anime_frm]].mask,
 	mascot->sprites[i_pix].mask,
 	0, 0 );
-#ifdef USE_WIN32
+#ifdef FG_DRAW
     if((mascot->sdw_flag)&&(mascot->sdw_height>0)){
       gdk_window_shape_combine_mask
 	( gtk_widget_get_window(mascot->win_sdw),
@@ -1412,7 +1413,7 @@ gint DrawMascot(typMascot *mascot, gint i_pix)
 		      mascot->width, mascot->height);
   }
   
-#ifdef USE_WIN32
+#ifdef FG_DRAW
   if((mascot->sdw_flag)&&(mascot->sdw_height>0)){
     GtkStyle *style=gtk_widget_get_style(mascot->dw_sdw);
     
@@ -2069,7 +2070,7 @@ void InitComposite(typMascot *mascot){
     mascot->flag_composite=COMPOSITE_FALSE;
   mascot->force_composite=FALSE;
 
-#ifndef USE_WIN32
+#ifndef FG_DRAW
   //unrealize to change colormap
   gtk_window_resize(GTK_WINDOW(mascot->win_main),1,1);
   gtk_widget_unrealize(mascot->win_main);
@@ -2168,7 +2169,7 @@ void InitComposite(typMascot *mascot){
 
   //reset shape mask
 #ifndef USE_GTK3  
-#ifndef USE_WIN32
+#ifndef FG_DRAW
   gdk_window_shape_combine_mask(gtk_widget_get_window(mascot->win_main),
 				NULL,0, 0 );
   
@@ -2179,9 +2180,9 @@ void InitComposite(typMascot *mascot){
 
   gdk_window_shape_combine_mask(gtk_widget_get_window(mascot->clock_main), NULL,0, 0 ); 
   gdk_window_shape_combine_mask(gtk_widget_get_window(mascot->balloon_main), NULL,0, 0 ); 
-#ifdef USE_WIN32
+#ifdef FG_DRAW
   gdk_window_shape_combine_mask(gtk_widget_get_window(mascot->clock_fg), NULL,0, 0 ); 
-  gdk_window_shape_combine_mask(gtk_widget_get_window(mascot->balloon_fg), NULL,0, 0 ); 
+  gdk_window_shape_combine_mask(gtk_widget_get_window(mascot->balloon_fg), NULL,0, 0 );
 #endif
 #endif
   

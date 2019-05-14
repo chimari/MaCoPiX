@@ -1233,7 +1233,7 @@ static void cc_get_toggle_sdw (GtkWidget * widget, gboolean * gdata)
 {
   *gdata=gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(widget));
 
-#ifndef USE_WIN32
+#ifndef FG_DRAW
   if(!*gdata){
     gtk_widget_set_sensitive(frame_sdw,FALSE);
   }
@@ -1771,7 +1771,7 @@ void ChangeColorButton(GtkWidget *w, gpointer gdata)
     break;
   case CONF_COLOR_BALBG:
     gtk_color_chooser_get_rgba(GTK_COLOR_CHOOSER(w),mascot->colbalbg);
-#ifndef USE_WIN32
+#ifndef FG_DRAW
     mascot->alpbalbg=(gint)(mascot->colbalbg->alpha*100);
 #endif
     break;
@@ -1803,7 +1803,7 @@ void ChangeColorButton(GtkWidget *w, gpointer gdata)
     break;
   case CONF_DEF_COLOR_BALBG:
     gtk_color_chooser_get_rgba(GTK_COLOR_CHOOSER(w),mascot->def_colbalbg);
-#ifndef USE_WIN32
+#ifndef FG_DRAW
     mascot->def_alpbalbg=(gint)(mascot->def_colbalbg->alpha*100);
 #endif
     break;
@@ -1840,7 +1840,7 @@ void ChangeColorButton(GtkWidget *w, gpointer gdata)
     break;
   case CONF_COLOR_BALBG:
     gtk_color_button_get_color(GTK_COLOR_BUTTON(w),mascot->colbalbg);
-#ifndef USE_WIN32
+#ifndef FG_DRAW
     mascot->alpbalbg=get_alpha;
 #endif
     break;
@@ -1872,7 +1872,7 @@ void ChangeColorButton(GtkWidget *w, gpointer gdata)
     break;
   case CONF_DEF_COLOR_BALBG:
     gtk_color_button_get_color(GTK_COLOR_BUTTON(w),mascot->def_colbalbg);
-#ifndef USE_WIN32
+#ifndef FG_DRAW
     mascot->def_alpbalbg=get_alpha;
 #endif
     break;
@@ -4533,7 +4533,7 @@ static void MakeNewMascot(gchar *mascot_file, gchar *image_file, gchar *copyrigh
   Mascot->clktype=CLOCK_TYPE_24S;
   Mascot->flag_clksd=TRUE;
   Mascot->flag_clkrd=TRUE;
-#ifdef USE_WIN32
+#ifdef FG_DRAW
   Mascot->flag_clkfg=TRUE;
 #endif
   Mascot->fontname_clk=Mascot->deffontname_clk;
@@ -4543,7 +4543,7 @@ static void MakeNewMascot(gchar *mascot_file, gchar *image_file, gchar *copyrigh
   Mascot->wbalbd=INIT_BAL_BORDER;
   Mascot->bal_defpos=BAL_POS_LEFT;
   Mascot->fontname_bal=Mascot->deffontname_bal;
-#ifdef USE_WIN32
+#ifdef FG_DRAW
   Mascot->flag_balfg=TRUE;
 #endif
   
@@ -7789,9 +7789,7 @@ void create_config_dialog(GtkWidget *widget, gpointer gdata){
       }
       my_signal_connect (check, "toggled",cc_get_toggle_sdw,
 			 &mascot->flag_img_cairo);
-#ifdef USE_WIN32
       gtk_widget_set_sensitive(check,FALSE);
-#endif
 
       {
 	GtkWidget *vbox_sdw;
@@ -7840,7 +7838,7 @@ void create_config_dialog(GtkWidget *widget, gpointer gdata){
 	gtk_box_pack_start(GTK_BOX(hbox_sdw), label,FALSE, FALSE, 5);
 	gtkut_pos(label, POS_END, POS_CENTER);
 
-#ifdef USE_WIN32
+#ifdef FG_DRAW
 	adj = (GtkAdjustment *)gtk_adjustment_new 
 	  (mascot->sdw_y, 0.0, 5.0, 1.0, 1.0, 0.0);
 	spinner =  gtk_spin_button_new (adj, 0, 0);
@@ -7872,7 +7870,7 @@ void create_config_dialog(GtkWidget *widget, gpointer gdata){
 	gtk_box_pack_start(GTK_BOX(hbox_sdw), scale,TRUE, TRUE, 5);
 
 	
-#ifndef USE_WIN32
+#ifndef FG_DRAW
 	if(!mascot->flag_img_cairo){
 	  gtk_widget_set_sensitive(frame_sdw,FALSE);
 	}
@@ -8082,12 +8080,12 @@ void create_config_dialog(GtkWidget *widget, gpointer gdata){
 
 #ifdef USE_GTK3
       button = gtk_color_button_new_with_rgba(mascot->def_colbalbg);
-#ifndef USE_WIN32
+#ifndef FG_DRAW
       gtk_color_chooser_set_use_alpha(GTK_COLOR_CHOOSER(button),TRUE);
 #endif
 #else
       button = gtk_color_button_new_with_color(mascot->def_colbalbg);
-#ifndef USE_WIN32
+#ifndef FG_DRAW
       gtk_color_button_set_use_alpha(GTK_COLOR_BUTTON(button),TRUE);
       gtk_color_button_set_alpha(GTK_COLOR_BUTTON(button),
 				 (gint)((gdouble)mascot->def_alpbalbg/100.0*0xFFFF));
@@ -8198,7 +8196,7 @@ void create_config_dialog(GtkWidget *widget, gpointer gdata){
 #endif
 #endif
 
-#ifdef USE_WIN32
+#ifdef FG_DRAW
       adj = (GtkAdjustment *)gtk_adjustment_new 
 	((gdouble)mascot->def_alpha_bal, 0, 100, 1.0, 10.0, 0.0);
       my_signal_connect (adj, "value_changed",cc_get_adj,
@@ -9202,7 +9200,7 @@ void create_config_dialog(GtkWidget *widget, gpointer gdata){
 			  GTK_FILL|GTK_EXPAND, GTK_SHRINK, 5, 5);
       my_signal_connect(button,"clicked",change_colclk_default, (gpointer)mascot);
 
-#ifdef USE_WIN32
+#ifdef FG_DRAW
       frame = gtkut_frame_new (_("Opacity"));
       gtk_container_set_border_width (GTK_CONTAINER (frame), 5);
       gtkut_table_attach(table, frame, 0, 2, 4, 5,
@@ -9408,12 +9406,12 @@ void create_config_dialog(GtkWidget *widget, gpointer gdata){
 
 #ifdef USE_GTK3
       button = gtk_color_button_new_with_rgba(mascot->colbalbg);
-#ifndef USE_WIN32
+#ifndef FG_DRAW
       gtk_color_chooser_set_use_alpha(GTK_COLOR_CHOOSER(button),TRUE);
 #endif
 #else
       button = gtk_color_button_new_with_color(mascot->colbalbg);
-#ifndef USE_WIN32
+#ifndef FG_DRAW
       gtk_color_button_set_use_alpha(GTK_COLOR_BUTTON(button),TRUE);
       gtk_color_button_set_alpha(GTK_COLOR_BUTTON(button),
 				 (gint)((gdouble)mascot->alpbalbg/100.0*0xFFFF));
@@ -9454,7 +9452,7 @@ void create_config_dialog(GtkWidget *widget, gpointer gdata){
 			 GTK_FILL,GTK_SHRINK,0,0);
       my_signal_connect(button,"clicked",change_colbal_default, (gpointer)mascot);
 
-#ifdef USE_WIN32
+#ifdef FG_DRAW
       frame = gtkut_frame_new (_("Opacity"));
       gtk_container_set_border_width (GTK_CONTAINER (frame), 5);
       gtkut_table_attach(table, frame, 0, 2, 2, 3,
@@ -10066,10 +10064,10 @@ void create_config_dialog(GtkWidget *widget, gpointer gdata){
   gtk_widget_realize(mascot->dw_balloon);
   gtk_widget_realize(mascot->dw_clock);
   gtk_widget_realize(mascot->dw_biff);
-#ifdef USE_WIN32
+#ifdef FG_DRAW
   gtk_widget_realize(mascot->dw_sdw);
-  gtk_widget_realize(mascot->dw_balfg);
   gtk_widget_realize(mascot->dw_clkfg);
+  gtk_widget_realize(mascot->dw_balfg);
 #endif
 
   if(mascot->clkmode!=CLOCK_NO) clock_update(mascot, TRUE);
@@ -11553,10 +11551,10 @@ void ChangeMascot(){
   gtk_widget_realize(Mascot->dw_balloon);
   gtk_widget_realize(Mascot->dw_clock);
   gtk_widget_realize(Mascot->dw_biff);
-#ifdef USE_WIN32
+#ifdef FG_DRAW
   gtk_widget_realize(Mascot->dw_sdw);
-  gtk_widget_realize(Mascot->dw_balfg);
   gtk_widget_realize(Mascot->dw_clkfg);
+  gtk_widget_realize(Mascot->dw_balfg);
 #endif
 }
 
@@ -11589,10 +11587,10 @@ void NkrChangeMascot(){
   gtk_widget_realize(Mascot->dw_balloon);
   gtk_widget_realize(Mascot->dw_clock);
   gtk_widget_realize(Mascot->dw_biff);
-#ifdef USE_WIN32
+#ifdef FG_DRAW
   gtk_widget_realize(Mascot->dw_sdw);
-  gtk_widget_realize(Mascot->dw_balfg);
   gtk_widget_realize(Mascot->dw_clkfg);
+  gtk_widget_realize(Mascot->dw_balfg);
 #endif
 }
 

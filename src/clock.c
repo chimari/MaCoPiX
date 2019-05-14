@@ -90,7 +90,7 @@ void  make_clock(typMascot *mascot){
 }
 
 
-#ifdef USE_WIN32
+#ifdef FG_DRAW
 void make_clock_fg(typMascot *mascot){
   GtkWidget *ebox;
 
@@ -263,9 +263,9 @@ void DrawPanelClock2(typMascot *mascot)
   cairo_set_font_size (cr, 
 		       mascot->fontclk_pc.pointsize*96/72);
 
-  cairo_set_operator (cr, CAIRO_OPERATOR_OVER);
+  cairo_set_operator (cr, CAIRO_OPERATOR_SOURCE);
 
-#ifdef USE_WIN32  
+#ifdef FG_DRAW
   //BG should be opaque to BG only translucency for Win32
   my_cairo_set_source_rgba (cr, mascot->colclkbg, 1.0); /* opaque BG */
   cairo_rectangle(cr, 0, 0, new_w, new_h);
@@ -344,10 +344,11 @@ void DrawPanelClock2(typMascot *mascot)
     cairo_clip_preserve (cr);
   }
 
-#ifndef USE_WIN32
+#ifndef FG_DRAW
   // Paint BG with alpha
   if(!shape_flag){
     cairo_fill_preserve(cr);
+    cairo_paint(cr);
   }
 #endif
 
@@ -454,7 +455,7 @@ void DrawPanelClock2(typMascot *mascot)
 
 #else            ////////////////////// GTK2 ////////////////////////////////////
   
-#ifdef USE_WIN32
+#ifdef FG_DRAW
   if((mascot->flag_clkfg)&&(mascot->alpha_clk!=100)){
     GtkAllocation *allocation=g_new(GtkAllocation, 1);
     GtkStyle *style=gtk_widget_get_style(mascot->dw_clkfg);
@@ -484,7 +485,7 @@ void DrawPanelClock2(typMascot *mascot)
   }
 #endif // USE_GTK3
 
-#ifdef USE_WIN32
+#ifdef FG_DRAW
   if((mascot->flag_clkfg)&&(mascot->alpha_clk!=100)){
     gdk_window_resize (gtk_widget_get_window(mascot->clock_fg), new_w, new_h);
     gtk_widget_set_size_request (mascot->dw_clkfg, new_w,new_h);
@@ -495,7 +496,7 @@ void DrawPanelClock2(typMascot *mascot)
 
   if(shape_flag){
 #ifdef USE_GTK3  ////////////////////// GTK3 ////////////////////////////////////
-#ifdef USE_WIN32
+#ifdef FG_DRAW
     if((mascot->flag_clkfg)&&(mascot->alpha_clk!=100)){
       gdk_window_shape_combine_region( gtk_widget_get_window(mascot->clock_fg),
 				       region_mask,
@@ -510,7 +511,7 @@ void DrawPanelClock2(typMascot *mascot)
     cairo_region_destroy(region_mask);
     cairo_surface_destroy(surface_mask);
 #else            ////////////////////// GTK2 ////////////////////////////////////
-#ifdef USE_WIN32
+#ifdef FG_DRAW
     if((mascot->flag_clkfg)&&(mascot->alpha_clk!=100)){
       gdk_window_shape_combine_mask( gtk_widget_get_window(mascot->clock_fg),
 				     mask_clk,
@@ -525,7 +526,7 @@ void DrawPanelClock2(typMascot *mascot)
   }
 
 #ifdef USE_GTK3  ////////////////////// GTK3 ////////////////////////////////////
-#ifdef USE_WIN32
+#ifdef USE_FG_DRAW
   if((mascot->flag_clkfg)&&(mascot->alpha_clk!=100)){
       gtk_widget_queue_draw(mascot->dw_clkfg);
   }

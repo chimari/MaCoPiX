@@ -67,7 +67,7 @@ int ehandler ();
 #ifdef USE_BIFF
 #endif
 
-#ifdef USE_WIN32
+#ifdef FG_DRAW
 gint dw_init_sdw();
 #endif
 gchar * ini_week();
@@ -82,7 +82,7 @@ gint dw_configure_main();
 gint dw_expose_main();
 gint expose_main();
 gboolean window_motion();
-#ifdef USE_WIN32
+#ifdef FG_DRAW
 gint dw_configure_sdw();
 gint dw_expose_sdw();
 #endif
@@ -149,7 +149,7 @@ void MoveMascot(typMascot *mascot, gint x, gint y)
   mascot->x=x;
   mascot->y=y;
 
-#ifdef USE_WIN32
+#ifdef FG_DRAW
   if((mascot->sdw_flag)&&(mascot->sdw_height>0)){
     if(mascot->move==MOVE_FOCUS){
       gdk_window_move(gtk_widget_get_window(mascot->win_sdw), 
@@ -166,7 +166,7 @@ void MoveMascot(typMascot *mascot, gint x, gint y)
 
   MoveBalloon(mascot, x, y);
   if(mascot->clkmode==CLOCK_PANEL){
-#ifdef USE_WIN32
+#ifdef FG_DRAW
     gdk_window_move(gtk_widget_get_window(mascot->clock_fg), 
 		    x+mascot->clk_x*((gdouble)(mascot->magnify)/100), 
 		    y+mascot->clk_y*((gdouble)(mascot->magnify)/100));
@@ -233,7 +233,7 @@ void MoveBalloon(typMascot *mascot, gint x, gint y)
   if(bal_y<0) bal_y=0;
 
   if(mascot->bal_pos==BAL_POS_LEFT){
-#ifdef USE_WIN32
+#ifdef FG_DRAW
     gdk_window_move(gtk_widget_get_window(mascot->balloon_fg), 
 		    x-mascot->balwidth+mascot->bal_lxoff[mascot->anime_ptn],
 		    bal_y);
@@ -243,7 +243,7 @@ void MoveBalloon(typMascot *mascot, gint x, gint y)
 		    bal_y);
   }
   else{
-#ifdef USE_WIN32
+#ifdef FG_DRAW
     gdk_window_move(gtk_widget_get_window(mascot->balloon_fg), 
 		    x+mascot->width+mascot->bal_rxoff[mascot->anime_ptn],
 		    bal_y);
@@ -268,7 +268,7 @@ void ResizeMoveBalloon(typMascot *mascot, gint x, gint y, gint w, gint h)
   if(bal_y<0) bal_y=0;
 
   if(mascot->bal_pos==BAL_POS_LEFT){
-#ifdef USE_WIN32
+#ifdef FG_DRAW
     gdk_window_move_resize(gtk_widget_get_window(mascot->balloon_fg), 
 			   x-w+mascot->bal_lxoff[mascot->anime_ptn],
 			   bal_y,
@@ -280,7 +280,7 @@ void ResizeMoveBalloon(typMascot *mascot, gint x, gint y, gint w, gint h)
 			   w,h);
   }
   else{
-#ifdef USE_WIN32
+#ifdef FG_DRAW
     gdk_window_move_resize(gtk_widget_get_window(mascot->balloon_fg), 
 			   x+mascot->width+mascot->bal_rxoff[mascot->anime_ptn],
 			   bal_y,
@@ -367,9 +367,11 @@ int MoveToFocus(typMascot *mascot, gboolean force_fl)
 #ifdef USE_WIN32
     /* for Windows */
   if(hWnd!=GDK_WINDOW_HWND(gtk_widget_get_window(mascot->win_main)) 
+#ifdef FG_DRAW
      && hWnd!=GDK_WINDOW_HWND(gtk_widget_get_window(mascot->balloon_fg))
-     && hWnd!=GDK_WINDOW_HWND(gtk_widget_get_window(mascot->balloon_main))
      && hWnd!=GDK_WINDOW_HWND(gtk_widget_get_window(mascot->clock_fg))
+#endif
+     && hWnd!=GDK_WINDOW_HWND(gtk_widget_get_window(mascot->balloon_main))
      && hWnd!=GDK_WINDOW_HWND(gtk_widget_get_window(mascot->clock_main))
 #ifdef USE_BIFF
      && hWnd!=GDK_WINDOW_HWND(gtk_widget_get_window(mascot->biff_pix))
@@ -1070,7 +1072,7 @@ gint dw_configure_main(GtkWidget *widget, GdkEventConfigure *event,
   return FALSE;
 }
 
-#ifdef USE_WIN32
+#ifdef FG_DRAW
 #ifdef USE_GTK3
 gint dw_configure_sdw(GtkWidget *widget, GdkEventConfigure *event, gpointer userdata){
   typMascot *mascot;
@@ -1239,7 +1241,7 @@ gint dw_configure_clk(GtkWidget *widget, GdkEventConfigure *event,
   if(mascot->clkmode==CLOCK_PANEL){
     // **** Mascot部の windowへの描画
     // **** windowへの描画
-#ifdef USE_WIN32
+#ifdef FG_DRAW
     if((mascot->flag_clkfg)&&(mascot->alpha_clk!=100)){
       {
 	GtkAllocation *allocation=g_new(GtkAllocation, 1);
@@ -1254,11 +1256,6 @@ gint dw_configure_clk(GtkWidget *widget, GdkEventConfigure *event,
 			  allocation->height);
 	g_free(allocation);
       }
-      /*
-      gdk_window_set_back_pixmap(gtk_widget_get_window(mascot->clock_fg),
-				 pixmap_clk,
-				 FALSE);
-      */
     }
 #endif
     {
@@ -1274,11 +1271,6 @@ gint dw_configure_clk(GtkWidget *widget, GdkEventConfigure *event,
 			allocation->height);
       g_free(allocation);
     }
-    /*
-    gdk_window_set_back_pixmap(gtk_widget_get_window(mascot->clock_main),
-			       pixmap_clk,
-			       FALSE);
-    */
   }
   return FALSE;
 }
@@ -1378,7 +1370,7 @@ gint expose_main(GtkWidget *widget, GdkEventExpose *event,  gpointer gdata)
 }
 #endif
 
-#ifdef USE_WIN32
+#ifdef FG_DRAW
 #ifdef USE_GTK3
 gint dw_expose_sdw(GtkWidget *widget, cairo_t *cr,  gpointer gdata)
 {
@@ -1949,7 +1941,7 @@ void clock_update(typMascot *mascot, gboolean force_flag){
 
     gtk_widget_set_tooltip_text(mascot->clock_main,caldigit);
 
-#ifdef USE_WIN32
+#ifdef FG_DRAW
     gtk_widget_set_tooltip_text(mascot->clock_fg,caldigit);
 #endif
 
@@ -2226,18 +2218,18 @@ void raise_all(typMascot *mascot){
 	SWP_SHOWWINDOW|SWP_NOMOVE|SWP_NOSIZE);
   SetWindowLong(GDK_WINDOW_HWND(gtk_widget_get_window(mascot->win_main)), GWL_EXSTYLE, 
 	GetWindowLong(GDK_WINDOW_HWND(gtk_widget_get_window(mascot->win_main)), GWL_EXSTYLE)|WS_EX_NOACTIVATE);
+#ifdef FG_DRAW
   gdk_window_raise(gtk_widget_get_window(mascot->win_sdw));
-  gdk_window_raise(gtk_widget_get_window(mascot->win_main));
-#else
-  gdk_window_raise(gtk_widget_get_window(mascot->win_main));
 #endif
+#endif
+  gdk_window_raise(gtk_widget_get_window(mascot->win_main));
 
-#ifdef USE_WIN32
+#ifdef FG_DRAW
   gdk_window_raise(gtk_widget_get_window(mascot->clock_fg));
 #endif
   gdk_window_raise(gtk_widget_get_window(mascot->clock_main));
 
-#ifdef USE_WIN32
+#ifdef FG_DRAW
   gdk_window_raise(gtk_widget_get_window(mascot->balloon_fg));
 #endif
   gdk_window_raise(gtk_widget_get_window(mascot->balloon_main));
@@ -2633,7 +2625,7 @@ void make_mascot(typMascot *mascot){
 
   gtk_event_box_set_above_child(GTK_EVENT_BOX(ebox), TRUE);
   
-#ifdef USE_WIN32
+#ifdef FG_DRAW
   mascot->win_sdw = gtk_window_new(GTK_WINDOW_POPUP);
   gtk_window_set_accept_focus(GTK_WINDOW(mascot->win_sdw),FALSE);
   gtk_window_set_resizable(GTK_WINDOW(mascot->win_sdw),TRUE);
@@ -2695,7 +2687,7 @@ void make_mascot(typMascot *mascot){
 				   TRUE);
 #endif
 
-#ifdef USE_WIN32
+#ifdef FG_DRAW
   gdk_window_set_decorations(gtk_widget_get_window(mascot->win_sdw), 0);
 #endif
 
@@ -2770,7 +2762,7 @@ void make_mascot(typMascot *mascot){
   		    (gpointer)mascot);
 #endif
 
-#ifdef USE_WIN32
+#ifdef FG_DRAW
   my_signal_connect(mascot->dw_sdw, "configure_event",dw_configure_sdw,
   		    (gpointer)mascot);
   // 重なった場合の再描画関連
@@ -2789,7 +2781,7 @@ void make_mascot(typMascot *mascot){
 
 void map_balloon(typMascot *mascot, gboolean flag){
   if(flag){
-#ifdef USE_WIN32
+#ifdef FG_DRAW
     if((mascot->flag_balfg)&&(mascot->alpha_bal!=100)){
       gtk_widget_map(mascot->balloon_fg);
       gtk_widget_map(mascot->dw_balfg);
@@ -2803,7 +2795,7 @@ void map_balloon(typMascot *mascot, gboolean flag){
     gtk_widget_map(mascot->dw_balloon);
   }
   else{
-#ifdef USE_WIN32
+#ifdef FG_DRAW
     gtk_widget_unmap(mascot->balloon_fg);
     gtk_widget_unmap(mascot->dw_balfg);
 #endif
@@ -2815,7 +2807,7 @@ void map_balloon(typMascot *mascot, gboolean flag){
 
 void map_clock(typMascot *mascot, gboolean flag){
   if(flag){
-#ifdef USE_WIN32
+#ifdef FG_DRAW
     if((!mascot->flag_clkfg)||(mascot->alpha_clk==100)){
       gtk_widget_unmap(mascot->clock_fg);
       gtk_widget_unmap(mascot->dw_clkfg);
@@ -2829,7 +2821,7 @@ void map_clock(typMascot *mascot, gboolean flag){
     gtk_widget_map(mascot->dw_clock);
   }
   else{
-#ifdef USE_WIN32
+#ifdef FG_DRAW
     gtk_widget_unmap(mascot->clock_fg);
     gtk_widget_unmap(mascot->dw_clkfg);
 #endif
@@ -2854,7 +2846,7 @@ void map_biff(typMascot *mascot, gboolean flag){
 
 void map_main(typMascot *mascot, gboolean flag){
   if(flag){
-#ifdef USE_WIN32
+#ifdef FG_DRAW
     if((mascot->sdw_flag)&&(mascot->sdw_height)){
       gtk_widget_map(mascot->win_sdw);
       gtk_widget_map(mascot->dw_sdw);
@@ -2868,7 +2860,7 @@ void map_main(typMascot *mascot, gboolean flag){
     gtk_widget_map(mascot->dw_main);
   }
   else{
-#ifdef USE_WIN32
+#ifdef FG_DRAW
     gtk_widget_unmap(mascot->win_sdw);
     gtk_widget_unmap(mascot->dw_sdw);
 #endif
