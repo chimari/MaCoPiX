@@ -452,7 +452,6 @@ void NkrRead(typMascot *mascot)
   cfgfile = xmms_cfg_open_file(inifilename);
   
   
-  
   if (cfgfile) {
     // General
     if(!xmms_cfg_read_string(cfgfile, "Chara", "Name",&mascot->name))
@@ -556,7 +555,7 @@ void NkrRead(typMascot *mascot)
 	if(strlen(my_basename(tmp1))!=0){
 	  if(access(filename0,F_OK)!=0){
 	    while(!(filename0=
-		    g_strdup(create_nkr_change_image_dialog(tmp1,i_pix)))){
+		    g_strdup(create_nkr_change_image_dialog(mascot, tmp1, i_pix)))){
 	    }
 	  }
 	  tmp_open=to_utf8(filename0);

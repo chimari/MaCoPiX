@@ -439,9 +439,7 @@ gboolean TestLoadPixmaps(typMascot *mascot, gchar *filename, gint i_pix)
 }
 
 
-
-void LoadPixmaps(GtkWidget *widget, //GtkWidget *draw, 
-		 typMascot *mascot, typSprite *sprites){
+void LoadPixmaps(typMascot *mascot){
   int i=0;
   //GdkImlibImage* im = NULL;
   GdkPixbuf *pixbuf = NULL, *pixbuf2 = NULL;
@@ -476,42 +474,42 @@ void LoadPixmaps(GtkWidget *widget, //GtkWidget *draw,
 #endif
 
 
-  while(sprites[i].filename){
+  while(mascot->sprites[i].filename){
 #ifdef USE_GTK3
-    if (sprites[i].pixbuf){
-      g_object_unref(G_OBJECT(sprites[i].pixbuf));
-      sprites[i].pixbuf=NULL;
+    if (mascot->sprites[i].pixbuf){
+      g_object_unref(G_OBJECT(mascot->sprites[i].pixbuf));
+      mascot->sprites[i].pixbuf=NULL;
     }
 #ifdef USE_WIN32
-    if (sprites[i].pixbuf_sdw){
-      g_object_unref(G_OBJECT(sprites[i].pixbuf_sdw));
-      sprites[i].pixbuf_sdw=NULL;
+    if (mascot->sprites[i].pixbuf_sdw){
+      g_object_unref(G_OBJECT(mascot->sprites[i].pixbuf_sdw));
+      mascot->sprites[i].pixbuf_sdw=NULL;
     }
 #endif
 #else   //////////  GTK2  /////////    
-    if (sprites[i].pixmap){
-      g_object_unref(G_OBJECT(sprites[i].pixmap));
-      sprites[i].pixmap=NULL;
+    if (mascot->sprites[i].pixmap){
+      g_object_unref(G_OBJECT(mascot->sprites[i].pixmap));
+      mascot->sprites[i].pixmap=NULL;
     }
-    if (sprites[i].mask){
-      g_object_unref(G_OBJECT(sprites[i].mask));
-      sprites[i].mask=NULL;
+    if (mascot->sprites[i].mask){
+      g_object_unref(G_OBJECT(mascot->sprites[i].mask));
+      mascot->sprites[i].mask=NULL;
     }
     
 #ifdef USE_WIN32
-    if (sprites[i].pixmap_sdw){
-      g_object_unref(G_OBJECT(sprites[i].pixmap_sdw));
-      sprites[i].pixmap_sdw=NULL;
+    if (mascot->sprites[i].pixmap_sdw){
+      g_object_unref(G_OBJECT(mascot->sprites[i].pixmap_sdw));
+      mascot->sprites[i].pixmap_sdw=NULL;
     }
-    if (sprites[i].mask_sdw){
-      g_object_unref(G_OBJECT(sprites[i].mask_sdw));
-      sprites[i].mask_sdw=NULL;
+    if (mascot->sprites[i].mask_sdw){
+      g_object_unref(G_OBJECT(mascot->sprites[i].mask_sdw));
+      mascot->sprites[i].mask_sdw=NULL;
     }
 #endif
 #endif  // USE_GTK3
 
-    //im = gdk_imlib_load_image(sprites[i].filename);
-    tmp_open=to_utf8(sprites[i].filename);
+    //im = gdk_imlib_load_image(mascot->sprites[i].filename);
+    tmp_open=to_utf8(mascot->sprites[i].filename);
     pixbuf = gdk_pixbuf_new_from_file(tmp_open, NULL);
     // if(im==NULL){
     if(pixbuf==NULL){
@@ -634,7 +632,7 @@ void LoadPixmaps(GtkWidget *widget, //GtkWidget *draw,
       //cairo_paint (cr);
 
       cairo_destroy (cr);
-      sprites[i].pixbuf = gdk_pixbuf_get_from_surface(surface, 0, 0, w, h);
+      mascot->sprites[i].pixbuf = gdk_pixbuf_get_from_surface(surface, 0, 0, w, h);
     }
     else{// for Win32 and non-composited Gtk+2.8 or later
 #ifdef USE_WIN32
@@ -653,7 +651,7 @@ void LoadPixmaps(GtkWidget *widget, //GtkWidget *draw,
       region = gdk_cairo_region_create_from_surface(surface);
       cairo_destroy(cr);
       
-      sprites[i].pixbuf = gdk_pixbuf_get_from_surface(surface, 0, 0, w, h);
+      mascot->sprites[i].pixbuf = gdk_pixbuf_get_from_surface(surface, 0, 0, w, h);
       cairo_region_destroy(region);
       cairo_surface_destroy(surface);
       
@@ -692,13 +690,13 @@ void LoadPixmaps(GtkWidget *widget, //GtkWidget *draw,
 	  
 	  cairo_destroy(cr);
 	  
-	  sprites[i].pixbuf_sdw = gdk_pixbuf_get_from_surface(surface_sdw, 0, 0, w, h_sdw);
+	  mascot->sprites[i].pixbuf_sdw = gdk_pixbuf_get_from_surface(surface_sdw, 0, 0, w, h_sdw);
 	  cairo_region_destroy(region_sdw);
 	  cairo_surface_destroy(surface_sdw);
 	}
       }
 #else
-      sprites[i].pixbuf = gdk_pixbuf_copy(pixbuf2);
+      mascot->sprites[i].pixbuf = gdk_pixbuf_copy(pixbuf2);
 #endif   
     }
 
@@ -714,15 +712,15 @@ void LoadPixmaps(GtkWidget *widget, //GtkWidget *draw,
       }
       
       gdk_pixbuf_render_pixmap_and_mask(pixbuf2, NULL,
-					&sprites[i].mask, 0xc0);
+					&mascot->sprites[i].mask, 0xc0);
       
-      sprites[i].pixmap = gdk_pixmap_new(gtk_widget_get_window(mascot->win_main),
+      mascot->sprites[i].pixmap = gdk_pixmap_new(gtk_widget_get_window(mascot->win_main),
 					 w,
 					 h,
 					 -1);
       
       // Clear BG
-      cr = gdk_cairo_create(sprites[i].pixmap);
+      cr = gdk_cairo_create(mascot->sprites[i].pixmap);
       cairo_set_source_rgba (cr, 0, 0, 0, 0);
       cairo_set_operator (cr, CAIRO_OPERATOR_SOURCE);
       cairo_paint (cr);
@@ -775,8 +773,8 @@ void LoadPixmaps(GtkWidget *widget, //GtkWidget *draw,
       }
     }
     else{// for Win32 and non-composited Gtk+2.8 or later
-      gdk_pixbuf_render_pixmap_and_mask(pixbuf2, &sprites[i].pixmap,
-					&sprites[i].mask, 0xc0); 
+      gdk_pixbuf_render_pixmap_and_mask(pixbuf2, &mascot->sprites[i].pixmap,
+					&mascot->sprites[i].mask, 0xc0); 
 #ifdef USE_WIN32
       if(mascot->sdw_flag){
 	
@@ -843,11 +841,12 @@ void LoadPixmaps(GtkWidget *widget, //GtkWidget *draw,
   mascot->width=w;
   mascot->height=h;
 
+  gtk_window_resize (GTK_WINDOW(mascot->win_main), w, h);
+  gtk_widget_set_size_request (mascot->dw_main, w, h);
+
   DrawMascot0(mascot);
   dw_init_main(mascot->dw_main, "configure_event",(gpointer)mascot);
 
-  gtk_window_resize (GTK_WINDOW(widget), w, h);
-  gtk_widget_set_size_request (mascot->dw_main, w, h);
 
 #ifdef USE_WIN32
   if((mascot->sdw_flag)&&(mascot->sdw_height>0)){
@@ -957,9 +956,31 @@ void LoadPixmaps(GtkWidget *widget, //GtkWidget *draw,
 
   
   mascot->nPixmap = i;
-  mascot->sprites = sprites;
   mascot->drag=FALSE;
   if(!mascot->digit)  strcpy(mascot->digit,"00:00:00");
+
+  for(i=mascot->nPixmap;i<MAX_PIXMAP;i++){
+    if(mascot->sprites[i].filename){
+      g_free(mascot->sprites[i].filename);
+    }
+    mascot->sprites[i].filename=NULL;
+#ifdef USE_GTK3
+    if(mascot->sprites[i].pixbuf){
+      g_object_unref(G_OBJECT(mascot->sprites[i].pixbuf));
+    }
+    mascot->sprites[i].pixbuf=NULL;
+#else
+    if(mascot->sprites[i].pixmap){
+      g_object_unref(G_OBJECT(mascot->sprites[i].pixmap));
+    }
+    mascot->sprites[i].pixmap=NULL;
+    if(mascot->sprites[i].mask){
+      g_object_unref(G_OBJECT(mascot->sprites[i].mask));
+    }
+    mascot->sprites[i].mask=NULL;
+#endif
+  }
+  
   // 初回フレーム用マスク切出し
 
   /*

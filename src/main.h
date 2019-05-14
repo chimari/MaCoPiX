@@ -76,6 +76,7 @@
 
 #ifndef MAIN_H
 #define MAIN_H 1
+#endif
 
 #ifdef HAVE_CONFIG_H
 #  include "config.h"
@@ -282,6 +283,9 @@ enum{ CLOCK_NO,
 
 // Home Position Mode
 enum{ HOMEPOS_NEVER, HOMEPOS_VANISH, HOMEPOS_BAR } HomePos;
+
+// Titlebar Offset for Focus Follow
+enum{ FF_BAR_ABS, FF_BAR_REL };
 
 
 // MOVE mode
@@ -516,19 +520,21 @@ enum{CONF_FONT_CLK,
        INIT_DEF_FONT_BAL} GuiFontConf;
 
 enum{CONF_COLOR_CLK,
-       CONF_COLOR_CLKBG,
-       CONF_COLOR_CLKBD,
-       CONF_COLOR_CLKSD,
-       CONF_COLOR_BAL,  
-       CONF_COLOR_BALBG,
-       CONF_COLOR_BALBD,
-       CONF_DEF_COLOR_CLK,  
-       CONF_DEF_COLOR_CLKBG,
-       CONF_DEF_COLOR_CLKBD,
-       CONF_DEF_COLOR_CLKSD,
-       CONF_DEF_COLOR_BAL,  
-       CONF_DEF_COLOR_BALBG,
-       CONF_DEF_COLOR_BALBD} GuiColorConf;
+     CONF_COLOR_CLKBG,
+     CONF_COLOR_CLKBD,
+     CONF_COLOR_CLKSD,
+     CONF_COLOR_BAL,  
+     CONF_COLOR_BALBG,
+     CONF_COLOR_BALBD,
+     CONF_DEF_COLOR_CLK,  
+     CONF_DEF_COLOR_CLKBG,
+     CONF_DEF_COLOR_CLKBD,
+     CONF_DEF_COLOR_CLKSD,
+     CONF_DEF_COLOR_BAL,  
+     CONF_DEF_COLOR_BALBG,
+     CONF_DEF_COLOR_BALBD,
+     NUM_CONF_COLOR
+} GuiColorConf;
 
 enum{ SET_RELEASE_BALLOON, SET_RELEASE_CLOCK } SetReleaseData;
 
@@ -675,6 +681,7 @@ typedef struct{
   glong y;
   gboolean flag;
 }MyXY;
+
 
 // カーソル構造体
 typedef struct _typCursor typCursor;
@@ -828,7 +835,7 @@ struct _typMascot{
   gchar *deffontname_clk;  
   myPangoCairo fontbal_pc;
   myPangoCairo fontclk_pc;
-  typSprite *sprites;
+  typSprite sprites[MAX_PIXMAP];
   int clkmode;
   int clk_x;
   int clk_y;
@@ -943,6 +950,7 @@ struct _typMascot{
   gint bal_lyoff[MAX_ANIME_PATTERN];
   gint bal_rxoff[MAX_ANIME_PATTERN];
   gint bal_ryoff[MAX_ANIME_PATTERN];
+  int ptn_num;
   int random_total;
   int click_total;
   gint move;
@@ -966,7 +974,7 @@ struct _typMascot{
   gint home_y;
   gint ff_side;
   gint offset;
-  gboolean flag_xp;
+  gint flag_xp;
   gint offsetp;
   gboolean flag_menu;
   gint bal_mode;
@@ -1024,7 +1032,21 @@ struct _typMascot{
   gint sdw_y_int;
 };
 
-#endif
+
+// GUI用構造体 1
+typedef struct{
+  typMascot *mascot;
+  gint num;
+}confNum;
+
+// GUI用構造体 2
+typedef struct{
+  typMascot *mascot;
+  gint num;
+  gint num2;
+}confNum2;
+
+
 
 ///////////   Global Arguments   //////////
 #ifdef USE_GTK3
@@ -1148,6 +1170,7 @@ void signal_drag_data_received();
 void signal_drag_data_received_smenu();
 
 // gui.c
+void create_conf_num();
 void NkrChangeMascot();
 GtkWidget * make_popup_menu();
 void create_config_dialog();

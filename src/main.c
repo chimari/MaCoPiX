@@ -940,6 +940,7 @@ void SaveMenu(typMascot *mascot)
       if(!tmp_conv) tmp_conv=g_strdup(_("(Invalid Character Code)"));
     }
     xmms_cfg_write_string(cfgfile, f_tmp0, "Name",tmp_conv);
+    
 
     for(i_tgt=0;i_tgt<mascot->menu_tgt_max[i_cat];i_tgt++){
     
@@ -1017,6 +1018,7 @@ void ReadRC(typMascot *mascot, gboolean def_flag)
   gchar *filename;
   gchar *field_tmp=NULL;
   gint col_tmp;
+  gboolean b_buf;
 
   // USER_DIRがないときは作成する  : おそらく初回起動時のみ
 #ifdef USE_WIN32
@@ -1220,9 +1222,17 @@ void ReadRC(typMascot *mascot, gboolean def_flag)
     if(def_flag) field_tmp=g_strdup("Default-Move");
     else         field_tmp=g_strdup("Move");
 
-    if(!xmms_cfg_read_boolean(cfgfile, field_tmp, "relative_x",
-			      &mascot->flag_xp))
-      mascot->flag_xp=FALSE;
+    if(!xmms_cfg_read_boolean(cfgfile, field_tmp, "relative_x", &b_buf)){
+      mascot->flag_xp=FF_BAR_ABS;
+    }
+    else{
+      if(b_buf){
+	mascot->flag_xp=FF_BAR_REL;
+      }
+      else{
+	mascot->flag_xp=FF_BAR_ABS;
+      }
+    }
     if(!xmms_cfg_read_int(cfgfile, field_tmp, "offset",&mascot->offset))
       mascot->offset=0;
     if(!xmms_cfg_read_int(cfgfile, field_tmp, "offsetp",&mascot->offsetp))
@@ -1459,7 +1469,7 @@ void ReadRC(typMascot *mascot, gboolean def_flag)
     mascot->tray_icon_flag=TRUE;
 #endif
 
-    mascot->flag_xp=FALSE;
+    mascot->flag_xp=FF_BAR_ABS;
     mascot->offset=0;
     mascot->offsetp=0;
     mascot->ff_side=FF_SIDE_RIGHT;
@@ -1629,7 +1639,12 @@ void SaveRC(typMascot *mascot,  gboolean def_flag)
 
   if(def_flag) field_tmp=g_strdup("Default-Move");
   else         field_tmp=g_strdup("Move");
-  xmms_cfg_write_boolean(cfgfile, field_tmp, "relative_x",mascot->flag_xp);
+  if(mascot->flag_xp==FF_BAR_ABS){
+    xmms_cfg_write_boolean(cfgfile, field_tmp, "relative_x",FALSE);
+  }
+  else{
+    xmms_cfg_write_boolean(cfgfile, field_tmp, "relative_x",TRUE);
+  }
   xmms_cfg_write_int(cfgfile, field_tmp, "offset",mascot->offset);
   xmms_cfg_write_int(cfgfile, field_tmp, "offsetp",mascot->offsetp);
   xmms_cfg_write_int(cfgfile, field_tmp, "ff_side",mascot->ff_side);
@@ -1841,7 +1856,8 @@ void ReadMascot(typMascot *mascot, gboolean def_flag)
   gint col_tmp;
   gchar *tmp_conv=NULL;
   gboolean flag_def_col=FALSE;
-
+  gchar *c_buf;
+  gint nPix;
 
   mascot->random_total=0;
   mascot->click_total=0;
@@ -2043,19 +2059,25 @@ void ReadMascot(typMascot *mascot, gboolean def_flag)
     if(def_flag)      f_tmp0=g_strdup("Default-General");
     else              f_tmp0=g_strdup("General");
     
-    if(!xmms_cfg_read_string(cfgfile, f_tmp0, "code",&mascot->code))
-      mascot->code = NULL;
+    mascot->code =
+      (xmms_cfg_read_string(cfgfile, f_tmp0, "code",&c_buf))
+      ? c_buf : NULL;
 
-    if(!xmms_cfg_read_string(cfgfile, f_tmp0, "name",&mascot->name))
-      mascot->name=NULL;
-    if(mascot->name){
+    if(mascot->name) g_free(mascot->name);
+    if(xmms_cfg_read_string(cfgfile, f_tmp0, "name", &c_buf)){
       mascot->name=
-	x_locale_to_utf8(mascot->name,-1,NULL,NULL,NULL,mascot->code);
-      if(!mascot->name) mascot->name=g_strdup(_("(Invalid Character Code)"));
-      
+	x_locale_to_utf8(c_buf,-1,NULL,NULL,NULL,mascot->code);
+      if(!mascot->name){
+	mascot->name=g_strdup(_("(Invalid Character Code)"));
+      }
     }
-    if(!xmms_cfg_read_string(cfgfile, f_tmp0, "copyright",&mascot->copyright))
-      mascot->copyright=NULL;
+    else{
+      mascot->name=NULL;
+    }
+      
+    mascot->copyright=
+      (xmms_cfg_read_string(cfgfile, f_tmp0, "copyright",&c_buf))
+      ? c_buf : NULL;
     if(!xmms_cfg_read_boolean(cfgfile, f_tmp0, "default_color",&flag_def_col))
       flag_def_col=FALSE;
 
@@ -2103,8 +2125,9 @@ void ReadMascot(typMascot *mascot, gboolean def_flag)
       mascot->flag_clksd=TRUE;
     if(!xmms_cfg_read_boolean(cfgfile, f_tmp0, "round",&mascot->flag_clkrd))
       mascot->flag_clkrd=TRUE;
-    if(!xmms_cfg_read_string(cfgfile, f_tmp0, "font",&mascot->fontname_clk))
-      mascot->fontname_clk=NULL;
+    mascot->fontname_clk=
+      (xmms_cfg_read_string(cfgfile, f_tmp0, "font",&c_buf))
+      ? c_buf : NULL;
     //      mascot->fontname_clk=g_strconcat(FONT_CLK,NULL);
 
 
@@ -2121,8 +2144,9 @@ void ReadMascot(typMascot *mascot, gboolean def_flag)
       mascot->wbalbd=INIT_BAL_BORDER;
     if(!xmms_cfg_read_int(cfgfile, f_tmp0, "position",&mascot->bal_defpos))
       mascot->bal_defpos=BAL_POS_LEFT;
-    if(!xmms_cfg_read_string(cfgfile, f_tmp0, "font",&mascot->fontname_bal))
-      mascot->fontname_bal=NULL;
+    mascot->fontname_bal=
+      (xmms_cfg_read_string(cfgfile, f_tmp0, "font",&c_buf))
+      ? c_buf : NULL;
     //      mascot->fontname_bal=g_strconcat(FONT_BAL,NULL);
 
     // Color for Clock
@@ -2324,12 +2348,10 @@ void ReadMascot(typMascot *mascot, gboolean def_flag)
     if(def_flag)   f_tmp0=g_strdup("Default-Biff");
     else           f_tmp0=g_strdup("Biff");
 
-    if(!xmms_cfg_read_string(cfgfile, f_tmp0, "pix-file",&filename0))
-      // Biff用画像ファイル
-      mascot->mail.pix_file=NULL;
-    else
-      mascot->mail.pix_file=FullPathPixmapFile(mascot, filename0);
-
+    // Biff用画像ファイル
+    mascot->mail.pix_file=
+      (xmms_cfg_read_string(cfgfile, f_tmp0, "pix-file",&c_buf))
+      ? FullPathPixmapFile(mascot, c_buf) : NULL; 
 
     if(!xmms_cfg_read_int(cfgfile, f_tmp0, "pix-pos",&mascot->mail.pix_pos))
       mascot->mail.pix_pos=MAIL_PIX_RIGHT;
@@ -2338,20 +2360,23 @@ void ReadMascot(typMascot *mascot, gboolean def_flag)
     if(!xmms_cfg_read_int(cfgfile, f_tmp0, "pix-y",&mascot->mail.pix_y))
       mascot->mail.pix_y=0;
 
-    if(!xmms_cfg_read_string(cfgfile, f_tmp0, "word",&mascot->mail.word))
-      // Biff用ふきだしメッセージ
-      mascot->mail.word=NULL;
-    if(mascot->mail.word){
+    // Biff用ふきだしメッセージ
+    if(mascot->mail.word) g_free(mascot->mail.word);
+    if(xmms_cfg_read_string(cfgfile, f_tmp0, "word",&c_buf)){
       mascot->mail.word=
-	x_locale_to_utf8(mascot->mail.word,
-			 -1,NULL,NULL,NULL,mascot->code);
-      if(!mascot->mail.word) mascot->mail.word=g_strdup(_("(Invalid Character Code)"));
-      
+	x_locale_to_utf8(c_buf,-1,NULL,NULL,NULL,mascot->code);
+      if(!mascot->mail.word){
+	mascot->mail.word=g_strdup(_("(Invalid Character Code)"));
+      }
+    }
+    else{
+      mascot->mail.word=NULL;
     }
    
-    if(!xmms_cfg_read_string(cfgfile, f_tmp0, "sound",&mascot->mail.sound))
-      // Biff着信時再生用ファイル
-      mascot->mail.sound=NULL;
+    // Biff着信時再生用ファイル
+    mascot->mail.sound=
+      (xmms_cfg_read_string(cfgfile, f_tmp0, "sound",&c_buf))
+      ? c_buf : NULL;
 #endif // USE_BIFF
 
 
@@ -2399,20 +2424,22 @@ void ReadMascot(typMascot *mascot, gboolean def_flag)
     
     for(i_pix=0;i_pix<MAX_PIXMAP;i_pix++){
       sprintf(tmp, "pixmap%02d", i_pix);
-      if(!xmms_cfg_read_string(cfgfile, f_tmp0, tmp, &filename0)){
-	for(i_pix2=i_pix;i_pix2<MAX_PIXMAP;i_pix2++){
-	    if(mascot->sprites[i_pix2].filename) g_free(mascot->sprites[i_pix2].filename);
-	      mascot->sprites[i_pix2].filename=NULL;
-	}
+      if(!xmms_cfg_read_string(cfgfile, f_tmp0, tmp, &c_buf)){
 	break;
       }
       else{
-	mascot->sprites[i_pix].filename=
-	  FullPathPixmapFile(mascot, filename0);
-	  
+	if(mascot->sprites[i_pix].filename) g_free(mascot->sprites[i_pix].filename);
+	mascot->sprites[i_pix].filename=FullPathPixmapFile(mascot, c_buf);  
       }
-
     }
+
+    nPix=i_pix;
+    for(i_pix=nPix;i_pix<MAX_PIXMAP;i_pix++){
+      if(mascot->sprites[i_pix].filename) g_free(mascot->sprites[i_pix].filename);
+      mascot->sprites[i_pix].filename=NULL;  
+    }
+
+    
 	
     // Animationデータ
     // 各パターンのフレーム0のpixファイル名がないとうちきり
@@ -2451,47 +2478,47 @@ void ReadMascot(typMascot *mascot, gboolean def_flag)
 	// ふきだしオフセット Y Right
 	mascot->bal_ryoff[i_ptn]=0;
 
-      if(!xmms_cfg_read_string(cfgfile, tmp0, "click_word",
-			       &mascot->click_word[i_ptn])){
 	// バルーン表示用テキスト
+
+      if(mascot->click_word[i_ptn]) g_free(mascot->click_word[i_ptn]);
+      if(xmms_cfg_read_string(cfgfile, tmp0, "click_word", &c_buf)){
+	mascot->click_word[i_ptn]=
+	  x_locale_to_utf8(c_buf,-1,NULL,NULL,NULL,mascot->code);
+	if(!mascot->click_word[i_ptn]){
+	  mascot->click_word[i_ptn]=g_strdup(_("(Invalid Character Code)"));
+	}
+      }
+      else{
 	mascot->click_word[i_ptn]=NULL;
       }
-      else if(mascot->click_word[i_ptn]){
-	mascot->click_word[i_ptn]=
-	  x_locale_to_utf8(mascot->click_word[i_ptn],
-			   -1,NULL,NULL,NULL,mascot->code);
-	if(!mascot->click_word[i_ptn]) 
-	  mascot->click_word[i_ptn]=g_strdup(_("(Invalid Character Code)"));
-			   
-      }
    
-      if(!xmms_cfg_read_string(cfgfile, tmp0, "click_sound",
-			      &mascot->click_sound[i_ptn]))
-	// クリック時再生用ファイル
-	mascot->click_sound[i_ptn]=NULL;
+      // クリック時再生用ファイル
+      mascot->click_sound[i_ptn]=
+	(xmms_cfg_read_string(cfgfile, tmp0, "click_sound", &c_buf))
+	? c_buf : NULL;
    
 
 #ifdef USE_SOCKMSG
-      if(!xmms_cfg_read_string(cfgfile, tmp0, "duet_tgt",
-			      &mascot->duet_tgt[i_ptn]))
-	// デュエットアニメ
-	mascot->duet_tgt[i_ptn]=NULL;
+      // デュエットアニメ
+      mascot->duet_tgt[i_ptn]=
+	(xmms_cfg_read_string(cfgfile, tmp0, "duet_tgt", &c_buf))
+	? c_buf : NULL;
 
       if(!xmms_cfg_read_int(cfgfile, tmp0, "duet_ptn",
 			    &mascot->duet_ptn[i_ptn]))
 	mascot->duet_ptn[i_ptn]=2;
    
-      if(!xmms_cfg_read_string(cfgfile, tmp0, "duet_word",
-			       &mascot->duet_word[i_ptn])){
-	mascot->duet_word[i_ptn]=NULL;
-      }
-      else if(mascot->duet_word[i_ptn]){
+      if(mascot->duet_word[i_ptn]) g_free(mascot->duet_word[i_ptn]);
+      if(xmms_cfg_read_string(cfgfile, tmp0, "duet_word",
+			       &c_buf)){
 	mascot->duet_word[i_ptn]=
-	  x_locale_to_utf8(mascot->duet_word[i_ptn],
-			   -1,NULL,NULL,NULL,mascot->code);
-	if(!mascot->duet_word[i_ptn]) 
+	  x_locale_to_utf8(c_buf,-1,NULL,NULL,NULL,mascot->code);
+	if(!mascot->duet_word[i_ptn]) {
 	  mascot->duet_word[i_ptn]=g_strdup(_("(Invalid Character Code)"));
-			   
+	}
+      }
+      else{
+	mascot->duet_word[i_ptn]=NULL;
       }
    
       if(!xmms_cfg_read_int(cfgfile, tmp0, "duet_delay",
@@ -3899,7 +3926,7 @@ void SetColorForReleaseData(typMascot *mascot, gboolean def_flag,
 
 void InitMascot(typMascot *mascot)
 {
-  int i_ptn,i_frm;
+  int i_ptn,i_frm, i_pix;
 #ifdef USE_SOCKMSG
   SockMsgInitResult sockres;
 
@@ -3931,6 +3958,18 @@ void InitMascot(typMascot *mascot)
   }
 #endif // USE_SOCKMSG
   
+  for(i_pix=0;i_pix<MAX_PIXMAP;i_pix++){
+#ifdef USE_GTK3
+    if(mascot->sprites[i_pix].pixbuf) g_object_unref(G_OBJECT(mascot->sprites[i_pix].pixbuf));
+    mascot->sprites[i_pix].pixbuf=NULL;
+#else
+    if(mascot->sprites[i_pix].pixmap) g_object_unref(G_OBJECT(mascot->sprites[i_pix].pixmap));
+    mascot->sprites[i_pix].pixmap=NULL;
+    if(mascot->sprites[i_pix].mask) g_object_unref(G_OBJECT(mascot->sprites[i_pix].mask));
+    mascot->sprites[i_pix].mask=NULL;
+#endif
+  }
+
   mascot->xoff=0;
   mascot->yoff=0;
   mascot->xfix=0;
@@ -3958,6 +3997,9 @@ void InitMascot(typMascot *mascot)
   mascot->flag_clksd=TRUE;
   mascot->flag_clkrd=TRUE;
   mascot->wclkbd = INIT_CLK_BORDER;
+  if(mascot->fontname_clk){
+    g_free(mascot->fontname_clk);
+  }
   mascot->fontname_clk = NULL;
 
 
@@ -3966,6 +4008,9 @@ void InitMascot(typMascot *mascot)
   mascot->wbalbd = INIT_BAL_BORDER;
   mascot->bal_defpos = BAL_POS_LEFT;
   mascot->bal_pos=mascot->bal_defpos;
+  if(mascot->fontname_bal){
+    g_free(mascot->fontname_bal);
+  }
   mascot->fontname_bal = NULL;
 
 #ifdef USE_GTK3
@@ -3988,11 +4033,20 @@ void InitMascot(typMascot *mascot)
   mascot->colbalbd=gdk_color_copy(mascot->def_colbalbd);
 #endif
 #ifdef USE_BIFF
+  if(mascot->mail.pix_file){
+    g_free(mascot->mail.pix_file);
+  }
   mascot->mail.pix_file=NULL;
   mascot->mail.pix_pos=MAIL_PIX_RIGHT;
   mascot->mail.pix_x=0;
   mascot->mail.pix_y=0;
+  if(mascot->mail.word){
+    g_free(mascot->mail.word);
+  }
   mascot->mail.word=NULL;
+  if(mascot->mail.sound){
+    g_free(mascot->mail.sound);
+  }
   mascot->mail.sound=NULL;
 #endif // USE_BIFF
 
@@ -4001,6 +4055,9 @@ void InitMascot(typMascot *mascot)
   mascot->duet_mode=DUET_RANDOM;
 #endif  // USE_SOCKMSG
 
+  if(mascot->code){
+    g_free(mascot->code);
+  }
   mascot->code=NULL;
 
   for(i_ptn=0;i_ptn<MAX_ANIME_PATTERN;i_ptn++){
@@ -4011,11 +4068,23 @@ void InitMascot(typMascot *mascot)
       mascot->bal_lyoff[i_ptn]=0;
       mascot->bal_rxoff[i_ptn]=0;
       mascot->bal_ryoff[i_ptn]=0;
+      if(mascot->click_word[i_ptn]){
+	g_free(mascot->click_word[i_ptn]);
+      }
       mascot->click_word[i_ptn]=NULL;
+      if(mascot->click_sound[i_ptn]){
+	g_free(mascot->click_sound[i_ptn]);
+      }
       mascot->click_sound[i_ptn]=NULL;
 #ifdef USE_SOCKMSG
+      if(mascot->duet_tgt[i_ptn]){
+	g_free(mascot->duet_tgt[i_ptn]);
+      }
       mascot->duet_tgt[i_ptn]=NULL;
       mascot->duet_ptn[i_ptn]=1;
+      if(mascot->duet_word[i_ptn]){
+	g_free(mascot->duet_word[i_ptn]);
+      }
       mascot->duet_word[i_ptn]=NULL;
       mascot->duet_delay[i_ptn]=DEF_DUET_DELAY;
 #endif  // USE_SOCKMSG
@@ -4030,9 +4099,7 @@ void InitMascot(typMascot *mascot)
       mascot->frame_loop[i_ptn][i_frm].seqend=0;
     }
   }
-
 }
-
 
 
 void get_option(int argc, char **argv, typMascot *mascot)
@@ -4054,15 +4121,17 @@ void get_option(int argc, char **argv, typMascot *mascot)
 	    (strcmp(argv[i_opt],"--offset") == 0)){ 
       if(i_opt+1 < argc ) {
 	char* chkRF;
+	gboolean flag;
 	i_opt++;
 	mascot->offset=strtol(argv[i_opt],&chkRF,10);
-	if((mascot->flag_xp='%')==*chkRF){
+	if((flag='%')==*chkRF){
+	  mascot->flag_xp=FF_BAR_REL;
 	  mascot->offsetp=mascot->offset;
 	  mascot->offset=0;
 	  if((mascot->offsetp<0 )||(100<mascot->offsetp))mascot->offsetp=10;
 	}
 	else{
-	  mascot->flag_xp=FALSE;
+	  mascot->flag_xp=FF_BAR_ABS;
 	}
 	i_opt++;
       }
@@ -4519,7 +4588,7 @@ int main(int argc, char **argv)
   Mascot->installed_menu_dir=NULL;
   Mascot->menu_code=NULL;
   ReadMenu(Mascot,0,NULL);
-  Mascot->PopupMenu=make_popup_menu();
+  Mascot->PopupMenu=make_popup_menu(Mascot);
   
   if(!Mascot->file){
     if(Mascot->menu_file){
@@ -4530,7 +4599,7 @@ int main(int argc, char **argv)
       create_smenu_dialog(Mascot,FALSE);
       if(Mascot->menu_file){
 	ReadMenu(Mascot,0,NULL);
-	Mascot->PopupMenu=make_popup_menu();
+	Mascot->PopupMenu=make_popup_menu(Mascot);
 	Mascot->file=g_strdup(all_random_menu_mascot_file(Mascot));
       }
     }
@@ -4551,7 +4620,7 @@ int main(int argc, char **argv)
 #endif
 
   InitComposite(Mascot);
-  LoadPixmaps(Mascot->win_main, Mascot, Mascot->sprites);  
+  LoadPixmaps(Mascot);  
 
   Mascot->flag_ow=FALSE;
 

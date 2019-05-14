@@ -94,7 +94,7 @@ void trayicon_create(typMascot *mascot){
     gtk_container_add (GTK_CONTAINER (trayicon_menu), popup_button);
     my_signal_connect (popup_button, "activate",
 		       create_config_dialog,
-		       NULL);
+		       (gpointer)mascot);
                         
     image=gtk_image_new_from_stock (GTK_STOCK_SAVE, GTK_ICON_SIZE_MENU);
     popup_button =gtk_image_menu_item_new_with_label (_("Save All"));

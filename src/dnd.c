@@ -89,7 +89,7 @@ signal_drag_data_received (GtkWidget        *widget,
 	  
 	  gtk_widget_destroy(Mascot->PopupMenu);
 	  ReadMenu(Mascot,0,NULL);
-	  Mascot->PopupMenu=make_popup_menu();
+	  Mascot->PopupMenu=make_popup_menu(Mascot);
 	  
 	  Mascot->flag_menu=FALSE;
 	  Mascot->flag_install=flag_install;

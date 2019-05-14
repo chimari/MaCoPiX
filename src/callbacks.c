@@ -31,7 +31,7 @@
 
 // *** GLOBAL ARGUMENT ***
 // スプライト初期化
-static  typSprite sprite_void[MAX_PIXMAP+1];
+//static  typSprite sprite_void[MAX_PIXMAP+1];
 
 void DrawPanelClock0();
 
@@ -502,7 +502,7 @@ int MoveToFocus(typMascot *mascot, gboolean force_fl)
 	  	       wf,&rootwin,&x,&y,&width,&height,
 	  	       &border,&depth);
 	  // フォーカスするWindowが存在しない Offset"%"のとき
-	  //		if (mascot->flag_xp){
+	  //		if (mascot->flag_xp==FF_BAR_REL){
 	  // if((x<0)&&(y<0)&&(depth==0)&&(border==0)){
 	  //   x-=mascot->width; y-=mascot->height;
 	  //}
@@ -590,7 +590,7 @@ int MoveToFocus(typMascot *mascot, gboolean force_fl)
     oypop=ypop;
     
     if(mascot->ff_side==FF_SIDE_RIGHT){
-      if(mascot->flag_xp){
+      if(mascot->flag_xp==FF_BAR_REL){
 	realXPos=((int)width-mascot->width)*(1-(mascot->offsetp*0.01))
 	  -mascot->xoff;
       }
@@ -599,7 +599,7 @@ int MoveToFocus(typMascot *mascot, gboolean force_fl)
       }
     }
     else{
-      if(mascot->flag_xp){
+      if(mascot->flag_xp==FF_BAR_REL){
 	realXPos=((int)width-mascot->width)*(mascot->offsetp*0.01)
 	  -mascot->xoff;
       }
@@ -648,7 +648,7 @@ int MoveToFocus(typMascot *mascot, gboolean force_fl)
     switch(flag_homepos){
     case HOMEPOS_BAR:
       if(mascot->ff_side==FF_SIDE_RIGHT){
-	if(mascot->flag_xp){
+	if(mascot->flag_xp==FF_BAR_REL){
 	  xpop=((mascot->width_root-mascot->home_x)-mascot->width)
 	    *(1-(mascot->offsetp*0.01)) -mascot->xoff;
 	}
@@ -658,7 +658,7 @@ int MoveToFocus(typMascot *mascot, gboolean force_fl)
 	}
       }
       else{
-	if(mascot->flag_xp){
+	if(mascot->flag_xp==FF_BAR_REL){
 	  xpop=((mascot->width_root-mascot->home_x)-mascot->width)
 	    *(mascot->offsetp*0.01) -mascot->xoff;
 	}
@@ -1605,7 +1605,7 @@ gboolean window_motion(GtkWidget * widget, GdkEventMotion * event, gpointer gdat
       gdk_window_set_cursor(gtk_widget_get_window(widget),mascot->cursor.drag_h);
       newx = mx - window_x;
       if(mascot->ff_side==FF_SIDE_RIGHT){
-	if(mascot->flag_xp){
+	if(mascot->flag_xp==FF_BAR_REL){
 	  mascot->offsetp=100-
 	    (int)((double)(newx-FWinX)/(double)(FWinWidth-mascot->width)*100);
 	  if(mascot->offsetp>100) mascot->offsetp=100;
@@ -1616,7 +1616,7 @@ gboolean window_motion(GtkWidget * widget, GdkEventMotion * event, gpointer gdat
 	}
       }
       else{
-	if(mascot->flag_xp){
+	if(mascot->flag_xp==FF_BAR_REL){
 	    mascot->offsetp=(int)((double)(newx-FWinX)/
 				  (double)(FWinWidth-mascot->width)*100);
 	  if(mascot->offsetp>100) mascot->offsetp=100;
@@ -2482,8 +2482,8 @@ void InitMascot0(typMascot *mascot){
 #ifndef USE_WIN32
   Window rootwin;
 #endif
-
   int x_root, y_root, width_root, height_root, border, depth;
+  int i_pix, i_ptn, i_frm;
   // Root Windowの大きさ取得
 
 #ifdef USE_WIN32
@@ -2532,11 +2532,24 @@ void InitMascot0(typMascot *mascot){
   mascot->gc_balbd = NULL;
   mascot->gc_balmask = NULL;
 #endif
-  
-  mascot->sprites=sprite_void;
+
+  //mascot->sprites=sprite_void;
+  //mascot->sprites=sprite_void;
+  for(i_pix=0;i_pix<MAX_PIXMAP;i_pix++){
+    mascot->sprites[i_pix].filename=NULL;
+#ifdef USE_GTK3
+    mascot->sprites[i_pix].pixbuf=NULL;
+#else
+    mascot->sprites[i_pix].pixmap=NULL;
+    mascot->sprites[i_pix].mask=NULL;
+#endif
+  }
 
 #ifdef USE_BIFF
   mascot->mail.proc_id=-1;
+  mascot->mail.pix_file=NULL;
+  mascot->mail.word=NULL;
+  mascot->mail.sound=NULL;
 #ifdef USE_GTK3
   mascot->mail.pixbuf=NULL;
 #else  
@@ -2560,7 +2573,21 @@ void InitMascot0(typMascot *mascot){
   mascot->colbalbg=g_malloc0(sizeof(GdkColor));
   mascot->colbalbd=g_malloc0(sizeof(GdkColor));
 
+  mascot->fontname_clk = NULL;
+  mascot->fontname_bal = NULL;
 
+  mascot->code=NULL;
+
+  for(i_ptn=0;i_ptn<MAX_ANIME_PATTERN;i_ptn++){
+    mascot->click_word[i_ptn]=NULL;
+    mascot->click_sound[i_ptn]=NULL;
+#ifdef USE_SOCKMSG
+    mascot->duet_tgt[i_ptn]=NULL;
+    mascot->duet_word[i_ptn]=NULL;
+#endif  // USE_SOCKMSG
+  }
+
+  create_conf_num(mascot);
   InitMascot(mascot);
 
 }
