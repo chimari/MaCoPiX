@@ -152,7 +152,7 @@
 
 #ifdef USE_WIN32
 #ifndef USE_GTK3
-#define FG_DRAW
+//#define FG_DRAW
 #endif
 #endif
 

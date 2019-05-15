@@ -228,7 +228,7 @@ gboolean TestLoadPixmaps(typMascot *mascot, gchar *filename, gint i_pix)
     cairo_surface_destroy (surface);
   }
   else{// for Win32 and non-composited Gtk+2.8 or later
-#ifdef FC_DRAW
+#ifdef FG_DRAW
     surface = cairo_image_surface_create(CAIRO_FORMAT_ARGB32, w, h);
     cr = cairo_create(surface);
 

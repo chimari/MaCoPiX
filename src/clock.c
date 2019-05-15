@@ -526,14 +526,14 @@ void DrawPanelClock2(typMascot *mascot)
   }
 
 #ifdef USE_GTK3  ////////////////////// GTK3 ////////////////////////////////////
-#ifdef USE_FG_DRAW
+#ifdef FG_DRAW
   if((mascot->flag_clkfg)&&(mascot->alpha_clk!=100)){
       gtk_widget_queue_draw(mascot->dw_clkfg);
   }
 #endif
   gtk_widget_queue_draw(mascot->dw_clock);
 #else            ////////////////////// GTK2 ////////////////////////////////////
-#ifdef USE_WIN32
+#ifdef FG_DRAW
   gdk_draw_drawable(gtk_widget_get_window(mascot->clock_fg),
 		    mascot->clock_fg->style->fg_gc[GTK_WIDGET_STATE(mascot->clock_main)],
 		    pixmap_clk,

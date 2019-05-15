@@ -6457,7 +6457,7 @@ void create_config_dialog(GtkWidget *widget, gpointer gdata){
 					  NULL,
 					  GTK_DIALOG_MODAL,
 #ifdef USE_GTK3
-					  "OK", GTK_RESPONSE_OK,
+					  "_OK", GTK_RESPONSE_OK,
 #else
 					  GTK_STOCK_OK,GTK_RESPONSE_OK,
 #endif
@@ -7820,7 +7820,7 @@ void create_config_dialog(GtkWidget *widget, gpointer gdata){
 	gtk_box_pack_start(GTK_BOX(hbox_sdw), label,FALSE, FALSE, 5);
 	gtkut_pos(label, POS_END, POS_CENTER);
 
-#ifdef USE_WIN32
+#ifdef FG_DRAW
 	adj = (GtkAdjustment *)gtk_adjustment_new 
 	  ((gdouble)mascot->sdw_x, -5.0, 5.0, 1.0, 1.0, 0.0);
 	spinner =  gtk_spin_button_new (adj, 0, 0);
@@ -9210,7 +9210,7 @@ void create_config_dialog(GtkWidget *widget, gpointer gdata){
       gtk_container_add (GTK_CONTAINER (frame), table1);
 
       label = gtkut_label_new (_("Opacity Alpha[%]"));
-      gtkut_pos(label, POS_START, POS_END);
+      gtkut_pos(label, POS_START, POS_CENTER);
       gtkut_table_attach(table1, label, 0, 1, 0, 1,
 			 GTK_FILL,GTK_SHRINK,0,0);
       
@@ -9462,7 +9462,7 @@ void create_config_dialog(GtkWidget *widget, gpointer gdata){
       gtk_container_add (GTK_CONTAINER (frame), table1);
 
       label = gtkut_label_new (_("Opacity Alpha[%]"));
-      gtkut_pos(label, POS_START, POS_END);
+      gtkut_pos(label, POS_START, POS_CENTER);
       gtkut_table_attach(table1, label, 0, 1, 0, 1,
 			 GTK_FILL,GTK_SHRINK,0,0);
       
@@ -9592,7 +9592,7 @@ void create_config_dialog(GtkWidget *widget, gpointer gdata){
       gtk_container_add (GTK_CONTAINER (frame), table1);
 
       label = gtkut_label_new (_("Opacity Alpha[%]"));
-      gtkut_pos(label, POS_START, POS_END);
+      gtkut_pos(label, POS_START, POS_CENTER);
       gtkut_table_attach(table1, label, 0, 1, 0, 1,
 			 GTK_FILL,GTK_SHRINK,0,0);
       
