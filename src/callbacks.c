@@ -56,6 +56,18 @@ HWND hWnd_active;
 HWND hWndTaskBar;
 #endif
 
+#ifdef USE_WIN32
+#define MAX_MONITOR 10
+//      接続されているモニタの諸元を格納
+typedef struct _MONITORS{
+        int max;        //      モニター数
+        RECT rect[MAX_MONITOR];     //      各モニターの座標
+} MONITORS;
+
+BOOL CALLBACK myinfoenumproc(HMONITOR hMon, HDC hdcMon, LPRECT lpMon, LPARAM dwDate);
+
+#endif
+
 // Prototype of functions in this file
 int weight_random();
 int weight_click();
@@ -311,6 +323,9 @@ int MoveToFocus(typMascot *mascot, gboolean force_fl)
   int sx,sy,x_root=0,y_root=0;
   int realXPos;
   unsigned int width;
+  static MONITORS mon;
+  gint nmon, i_mon;
+  gint mon_x0=0, mon_y0=0;
 #else
   Window rootwin,parent,*children,child,wf;
   int sx,sy,x,y,i,x_root=0,y_root=0;
@@ -329,6 +344,17 @@ int MoveToFocus(typMascot *mascot, gboolean force_fl)
   /* for Windows */
   hWnd = GetForegroundWindow();
 
+  nmon= GetSystemMetrics(SM_CMONITORS);
+  EnumDisplayMonitors(NULL, NULL, (MONITORENUMPROC)myinfoenumproc, (LPARAM)&mon);
+  for(i_mon=0;i_mon<nmon; i_mon++){
+    if(mon.rect[i_mon].left<mon_x0){
+      mon_x0=mon.rect[i_mon].left;
+    }
+    if(mon.rect[i_mon].top<mon_y0){
+      mon_y0=mon.rect[i_mon].top;
+    }
+  }
+    
   if(hWnd!=hWnd_active){ // for multiple running 
     char wtitle[256];    
     GetWindowText(hWnd, wtitle, 256);
@@ -390,8 +416,44 @@ int MoveToFocus(typMascot *mascot, gboolean force_fl)
     }
       
     GetWindowRect(hWnd, &nRect);
-    sx = nRect.left;
-    sy = nRect.top;
+
+    /*
+    HMONITOR hMonitor = MonitorFromRect(&nRect, MONITOR_DEFAULTTONEAREST);
+    MONITORINFO mi;
+    mi.cbSize = sizeof(MONITORINFO);
+    GetMonitorInfo(hMonitor, &mi);
+    
+
+    printf("%d  %d  : %d  %d\n",
+	   mi.rcMonitor.left, mi.rcMonitor.right,
+	   nRect.left, nRect.right); fflush(stdout);
+
+   if (nRect.right > mi.rcMonitor.right)
+    {
+        nRect.left -= nRect.right - mi.rcMonitor.right;
+        nRect.right = mi.rcMonitor.right;
+    }
+    if (nRect.left < mi.rcMonitor.left)
+    {
+        nRect.right += mi.rcMonitor.left - nRect.left;
+        nRect.left = mi.rcMonitor.left;
+    }
+    if (nRect.bottom > mi.rcMonitor.bottom)
+    {
+        nRect.top -= nRect.bottom - mi.rcMonitor.bottom;
+        nRect.bottom = mi.rcMonitor.bottom;
+    }
+    if (nRect.top < mi.rcMonitor.top)
+    {
+        nRect.bottom += mi.rcMonitor.top - nRect.top;
+        nRect.top = mi.rcMonitor.top;
+    }
+
+    printf("%d  %d\n", nRect.right, nRect.left); fflush(stdout);
+    */
+    
+    sx = nRect.left-mon_x0;
+    sy = nRect.top-mon_y0;
     width = nRect.right-nRect.left;
 
 #else  // UNIX X
@@ -2868,3 +2930,16 @@ void map_main(typMascot *mascot, gboolean flag){
     gtk_widget_unmap(mascot->dw_main);
   }
 }
+
+
+#ifdef USE_WIN32
+BOOL CALLBACK myinfoenumproc(HMONITOR hMon, HDC hdcMon, LPRECT lpMon, LPARAM dwDate){
+  MONITORS* mon = (MONITORS*)dwDate;
+  mon->rect[mon->max].bottom = lpMon->bottom;
+  mon->rect[mon->max].left = lpMon->left;
+  mon->rect[mon->max].top = lpMon->top;
+  mon->rect[mon->max].right = lpMon->right;
+  ++mon->max;
+  return TRUE;
+}
+#endif

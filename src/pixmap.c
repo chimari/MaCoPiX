@@ -427,6 +427,7 @@ gboolean TestLoadPixmaps(typMascot *mascot, gchar *filename, gint i_pix)
 #endif   
   }
 #endif    // USE_GTK3 /////////////////////////////////////////////////
+  gtk_widget_queue_draw(mascot->dw_main);
   
   g_object_unref(G_OBJECT(pixbuf));
   g_object_unref(G_OBJECT(pixbuf2));

@@ -2070,10 +2070,12 @@ void TestAnime(GtkWidget *w, gpointer gdata)
 
   // еве╦ес
   while(i_frm<mascot->frame_num[i_ptn]){
+    while (my_main_iteration(FALSE));
     TestLoadPixmaps(mascot,
 		    mascot->sprites[mascot->frame_pix[i_ptn][i_frm]].filename,
     		    mascot->frame_pix[i_ptn][i_frm]);
     while (my_main_iteration(FALSE));
+    DrawMascot(mascot, mascot->frame_pix[i_ptn][i_frm]);
 
     seqend=RANDOM(mascot->frame_max[i_ptn][i_frm]
 		  -mascot->frame_min[i_ptn][i_frm]+1)
