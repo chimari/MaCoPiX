@@ -26,6 +26,7 @@
 
 #include "main.h"
 
+// 画像用tree
 enum
 {
   COLUMN_IMGTREE_NUMBER,
@@ -34,6 +35,21 @@ enum
   COLUMN_IMGTREE_COLBG,
   NUM_IMGTREE_COLUMNS
 };
+
+enum
+{
+  COLUMN_PTNTREE_NUMBER,
+  COLUMN_PTNTREE_IMAGE,
+  COLUMN_PTNTREE_MIN,
+  COLUMN_PTNTREE_MAX,
+  COLUMN_PTNTREE_BL_NEXT,
+  COLUMN_PTNTREE_BL_MIN,
+  COLUMN_PTNTREE_BL_MAX,
+  COLUMN_PTNTREE_COLFG,
+  COLUMN_PTNTREE_COLBG,
+  NUM_PTNTREE_COLUMNS
+};
+
 
 
 //Callback受け渡し用抱き合わせ構造体 フォント変更用
@@ -99,6 +115,8 @@ gint selected_smenu;
 // Need to Initialize
 gboolean flagChildDialog;
 gboolean flag_make_pixmap_list;
+gboolean flag_make_imgtree;
+gboolean flag_make_ptntree[MAX_ANIME_PATTERN];
 
 // Prototype of Functions in this file
 void MenuSaveRC();
@@ -315,6 +333,14 @@ void imgtree_update_item();
 static void focus_imgtree_item();
 static void act_imgtree_item();
 void imgtree_cell_data_func();
+
+// Ptn Tree
+void make_ptn_tree();
+static void ptntree_add_columns();
+static GtkTreeModel *ptntree_create_items_model ();
+void ptntree_update_item();
+static void focus_ptntree_item();
+void ptntree_cell_data_func();
 
 
 ///// Widget as Global argument /////
@@ -1989,7 +2015,6 @@ static void create_add_image_dialog(GtkWidget *widget, gpointer gdata)
       i_pix++;
     }
   
-    //make_pixmap_list(mascot);
     make_img_tree(mascot);
     
     g_slist_free(fnames);
@@ -2068,7 +2093,7 @@ static void create_del_image_dialog(GtkWidget *widget, gpointer gdata)
     mascot->sprites[mascot->nPixmap-1].filename=NULL;
     mascot->nPixmap--;
     
-    make_pixmap_list(mascot);
+    make_img_tree(mascot);
   }
   else{
     tmp=g_strdup_printf(_("Image %02d is used in Pattern %02d / Frame %02d\n"),
@@ -9053,7 +9078,6 @@ void create_config_dialog(GtkWidget *widget, gpointer gdata){
       gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW(mascot->sw_imgtree),
 				      GTK_POLICY_NEVER,
 				      GTK_POLICY_ALWAYS);
-
       make_img_tree(mascot);
       
       hbox = gtkut_hbox_new(FALSE,5);
@@ -9111,7 +9135,7 @@ void create_config_dialog(GtkWidget *widget, gpointer gdata){
       i_ptn=0;
       while(mascot->frame_pix[i_ptn][0]!=-1){
 	make_pattern_list(mascot, ptn_note, i_ptn);
-	
+
 	i_ptn++;
       }
       mascot->ptn_num=i_ptn;
@@ -9475,6 +9499,12 @@ void create_config_dialog(GtkWidget *widget, gpointer gdata){
 
   gtk_dialog_run(GTK_DIALOG(mascot->conf_main));
 
+  if(GTK_IS_WIDGET(mascot->imgtree)) gtk_widget_destroy(mascot->imgtree);
+  flag_make_imgtree=FALSE;
+
+  for(i_ptn=0;i_ptn<MAX_ANIME_PATTERN;i_ptn++){
+    flag_make_ptntree[i_ptn]=FALSE;
+  }
   if(GTK_IS_WIDGET(mascot->conf_main)) gtk_widget_destroy(mascot->conf_main);
   
   //InitMascot(mascot);
@@ -9482,7 +9512,6 @@ void create_config_dialog(GtkWidget *widget, gpointer gdata){
 #ifdef USE_BIFF
   SetMailChecker(mascot);
 #endif   // USE_BIFF
-
 
   InitComposite(mascot);
   LoadPixmaps(mascot);
@@ -11829,10 +11858,15 @@ void destroy_progress(typMascot *mascot){
   g_free (mascot->pdata);
 }
 
-
+ 
 void gui_arg_init(){
+  gint i_ptn;
   flagChildDialog=FALSE;
   flag_make_pixmap_list=FALSE;
+  flag_make_imgtree=FALSE;
+  for(i_ptn=0;i_ptn<MAX_ANIME_PATTERN;i_ptn++){
+    flag_make_ptntree[i_ptn]=FALSE;
+  }
 }
 
 gint select_menu_from_ext(typMascot *mascot, gchar *dest_file){
@@ -11959,15 +11993,16 @@ void make_img_tree(typMascot *mascot){
   GtkWidget *button;
   GtkTreeModel *items_model;
   
-  if(GTK_IS_WIDGET(mascot->imgtree))  gtk_widget_destroy(mascot->imgtree);
+  if(flag_make_imgtree){
+    gtk_widget_destroy(mascot->imgtree);
+    g_object_unref(G_OBJECT(mascot->imgtree));
+  }
+  else flag_make_imgtree=TRUE;
 
   items_model = imgtree_create_items_model (mascot);
 
   /* create tree view */
   mascot->imgtree = gtk_tree_view_new_with_model (items_model);
-#ifndef USE_GTK3
-  gtk_tree_view_set_rules_hint (GTK_TREE_VIEW (mascot->imgtree), TRUE);
-#endif
   gtk_tree_selection_set_mode (gtk_tree_view_get_selection (GTK_TREE_VIEW (mascot->imgtree)),
 			       GTK_SELECTION_SINGLE);
   imgtree_add_columns (mascot, GTK_TREE_VIEW (mascot->imgtree), 
@@ -12004,11 +12039,12 @@ imgtree_add_columns (typMascot *mascot,
 						   "text",
 						   COLUMN_IMGTREE_NUMBER,
 #ifdef USE_GTK3
-						   "background-rgba", 
+						   "foreground-rgba", COLUMN_IMGTREE_COLFG,
+						   "background-rgba", COLUMN_IMGTREE_COLBG,
 #else
-						   "background-gdk", 
+						   "foreground-gdk", COLUMN_IMGTREE_COLFG,
+						   "background-gdk", COLUMN_IMGTREE_COLBG,
 #endif
-						   COLUMN_IMGTREE_COLBG,
 						   NULL);
   gtk_tree_view_append_column(GTK_TREE_VIEW (treeview),column);
 
@@ -12152,6 +12188,336 @@ void imgtree_cell_data_func(GtkTreeViewColumn *col ,
   switch (index) {
   case COLUMN_IMGTREE_FILENAME:
     str=g_path_get_basename(c_buf);
+    break;
+  }
+
+  g_object_set(renderer, "text", str, NULL);
+  if(str)g_free(str);
+}
+
+
+/// Pattern
+void make_ptn_tree(typMascot *mascot, gint i_ptn){
+  GtkWidget *vbox;
+  GtkWidget *hbox;
+  GtkWidget *sw;
+  GtkWidget *button;
+  GtkTreeModel *items_model;
+  
+  if(flag_make_ptntree[i_ptn]){
+    gtk_widget_destroy(mascot->ptntree[i_ptn]);
+    g_object_unref(G_OBJECT(mascot->ptntree[i_ptn]));
+  }
+  else flag_make_ptntree[i_ptn]=TRUE;
+
+  items_model = ptntree_create_items_model (mascot, i_ptn);
+
+  /* create tree view */
+  mascot->ptntree[i_ptn] = gtk_tree_view_new_with_model (items_model);
+  gtk_tree_selection_set_mode (gtk_tree_view_get_selection (GTK_TREE_VIEW (mascot->ptntree[i_ptn])),
+			       GTK_SELECTION_SINGLE);
+  ptntree_add_columns (mascot, GTK_TREE_VIEW (mascot->ptntree[i_ptn]), 
+		       items_model, i_ptn);
+
+  g_object_unref(items_model);
+  
+  gtk_container_add (GTK_CONTAINER (mascot->sw_ptntree[i_ptn]),
+		     mascot->ptntree[i_ptn]);
+
+  g_signal_connect (mascot->ptntree[i_ptn], "cursor-changed",
+		    G_CALLBACK (focus_ptntree_item), (gpointer)mptn[i_ptn]);
+  
+  gtk_widget_show_all(mascot->ptntree[i_ptn]);
+}
+
+
+static void
+ptntree_add_columns (typMascot *mascot,
+		     GtkTreeView  *treeview, 
+		     GtkTreeModel *items_model,
+		     gint i_ptn)
+{
+  GtkCellRenderer *renderer;
+  GtkTreeViewColumn *column;  
+
+  /* number column */
+  renderer = gtk_cell_renderer_text_new ();
+  g_object_set_data (G_OBJECT (renderer), "column", 
+  		     GINT_TO_POINTER (COLUMN_PTNTREE_NUMBER));
+  column=gtk_tree_view_column_new_with_attributes (_("No."),
+						   renderer,
+						   "text",
+						   COLUMN_PTNTREE_NUMBER,
+#ifdef USE_GTK3
+						   "foreground-rgba", COLUMN_PTNTREE_COLFG,
+						   "background-rgba", COLUMN_PTNTREE_COLBG,
+#else
+						   "foreground-gdk", COLUMN_PTNTREE_COLFG,
+						   "background-gdk", COLUMN_PTNTREE_COLBG,
+#endif
+						   NULL);
+  gtk_tree_view_column_set_cell_data_func(column, renderer,
+					  ptntree_cell_data_func,
+					  GUINT_TO_POINTER(COLUMN_PTNTREE_NUMBER),
+					  NULL);
+  gtk_tree_view_append_column(GTK_TREE_VIEW (treeview),column);
+
+
+  /* Image column */
+  renderer = gtk_cell_renderer_text_new ();
+  g_object_set_data (G_OBJECT (renderer), "column", 
+  		     GINT_TO_POINTER (COLUMN_PTNTREE_IMAGE));
+  column=gtk_tree_view_column_new_with_attributes (_("Image"),
+						   renderer,
+						   "text", 
+						   COLUMN_PTNTREE_IMAGE,
+#ifdef USE_GTK3
+						   "foreground-rgba", COLUMN_PTNTREE_COLFG,
+						   "background-rgba", COLUMN_PTNTREE_COLBG,
+#else
+						   "foreground-gdk", COLUMN_PTNTREE_COLFG,
+						   "background-gdk", COLUMN_PTNTREE_COLBG,
+#endif					   
+						   NULL);
+  gtk_tree_view_column_set_cell_data_func(column, renderer,
+					  ptntree_cell_data_func,
+					  GUINT_TO_POINTER(COLUMN_PTNTREE_IMAGE),
+					  NULL);
+  gtk_tree_view_append_column(GTK_TREE_VIEW (treeview),column);
+
+
+  /* Min column */
+  renderer = gtk_cell_renderer_text_new ();
+  g_object_set_data (G_OBJECT (renderer), "column", 
+  		     GINT_TO_POINTER (COLUMN_PTNTREE_MIN));
+  column=gtk_tree_view_column_new_with_attributes (_("Min"),
+						   renderer,
+						   "text", 
+						   COLUMN_PTNTREE_MIN,
+#ifdef USE_GTK3
+						   "foreground-rgba", COLUMN_PTNTREE_COLFG,
+						   "background-rgba", COLUMN_PTNTREE_COLBG,
+#else
+						   "foreground-gdk", COLUMN_PTNTREE_COLFG,
+						   "background-gdk", COLUMN_PTNTREE_COLBG,
+#endif					   
+						   NULL);
+  gtk_tree_view_column_set_cell_data_func(column, renderer,
+					  ptntree_cell_data_func,
+					  GUINT_TO_POINTER(COLUMN_PTNTREE_MIN),
+					  NULL);
+  gtk_tree_view_append_column(GTK_TREE_VIEW (treeview),column);
+
+
+  /* Max column */
+  renderer = gtk_cell_renderer_text_new ();
+  g_object_set_data (G_OBJECT (renderer), "column", 
+  		     GINT_TO_POINTER (COLUMN_PTNTREE_MAX));
+  column=gtk_tree_view_column_new_with_attributes (_("Max"),
+						   renderer,
+						   "text", 
+						   COLUMN_PTNTREE_MAX,
+#ifdef USE_GTK3
+						   "foreground-rgba", COLUMN_PTNTREE_COLFG,
+						   "background-rgba", COLUMN_PTNTREE_COLBG,
+#else
+						   "foreground-gdk", COLUMN_PTNTREE_COLFG,
+						   "background-gdk", COLUMN_PTNTREE_COLBG,
+#endif					   
+						   NULL);
+  gtk_tree_view_column_set_cell_data_func(column, renderer,
+					  ptntree_cell_data_func,
+					  GUINT_TO_POINTER(COLUMN_PTNTREE_MAX),
+					  NULL);
+  gtk_tree_view_append_column(GTK_TREE_VIEW (treeview),column);
+
+
+  /* Block Loop : Next Frame column */
+  renderer = gtk_cell_renderer_text_new ();
+  g_object_set_data (G_OBJECT (renderer), "column", 
+  		     GINT_TO_POINTER (COLUMN_PTNTREE_BL_NEXT));
+  column=gtk_tree_view_column_new_with_attributes (_("Block Loop : Next Frame"),
+						   renderer,
+						   "text", 
+						   COLUMN_PTNTREE_BL_NEXT,
+#ifdef USE_GTK3
+						   "foreground-rgba", COLUMN_PTNTREE_COLFG,
+						   "background-rgba", COLUMN_PTNTREE_COLBG,
+#else
+						   "foreground-gdk", COLUMN_PTNTREE_COLFG,
+						   "background-gdk", COLUMN_PTNTREE_COLBG,
+#endif					   
+						   NULL);
+  gtk_tree_view_column_set_cell_data_func(column, renderer,
+					  ptntree_cell_data_func,
+					  GUINT_TO_POINTER(COLUMN_PTNTREE_BL_NEXT),
+					  NULL);
+  gtk_tree_view_append_column(GTK_TREE_VIEW (treeview),column);
+
+
+  /* Block Loop : Min column */
+  renderer = gtk_cell_renderer_text_new ();
+  g_object_set_data (G_OBJECT (renderer), "column", 
+  		     GINT_TO_POINTER (COLUMN_PTNTREE_BL_MIN));
+  column=gtk_tree_view_column_new_with_attributes (_("Block Loop : Min"),
+						   renderer,
+						   "text", 
+						   COLUMN_PTNTREE_BL_MIN,
+#ifdef USE_GTK3
+						   "foreground-rgba", COLUMN_PTNTREE_COLFG,
+						   "background-rgba", COLUMN_PTNTREE_COLBG,
+#else
+						   "foreground-gdk", COLUMN_PTNTREE_COLFG,
+						   "background-gdk", COLUMN_PTNTREE_COLBG,
+#endif					   
+						   NULL);
+  gtk_tree_view_column_set_cell_data_func(column, renderer,
+					  ptntree_cell_data_func,
+					  GUINT_TO_POINTER(COLUMN_PTNTREE_BL_MIN),
+					  NULL);
+  gtk_tree_view_append_column(GTK_TREE_VIEW (treeview),column);
+
+
+  /* Block Loop : Max column */
+  renderer = gtk_cell_renderer_text_new ();
+  g_object_set_data (G_OBJECT (renderer), "column", 
+  		     GINT_TO_POINTER (COLUMN_PTNTREE_BL_MAX));
+  column=gtk_tree_view_column_new_with_attributes (_("Block Loop : Max"),
+						   renderer,
+						   "text", 
+						   COLUMN_PTNTREE_BL_MAX,
+#ifdef USE_GTK3
+						   "foreground-rgba", COLUMN_PTNTREE_COLFG,
+						   "background-rgba", COLUMN_PTNTREE_COLBG,
+#else
+						   "foreground-gdk", COLUMN_PTNTREE_COLFG,
+						   "background-gdk", COLUMN_PTNTREE_COLBG,
+#endif					   
+						   NULL);
+  gtk_tree_view_column_set_cell_data_func(column, renderer,
+					  ptntree_cell_data_func,
+					  GUINT_TO_POINTER(COLUMN_PTNTREE_BL_MAX),
+					  NULL);
+  gtk_tree_view_append_column(GTK_TREE_VIEW (treeview),column);
+}
+
+static GtkTreeModel *
+ptntree_create_items_model (typMascot *mascot, gint i_ptn)
+{
+  gint i_frm = 0;
+  GtkListStore *model;
+  GtkTreeIter iter;
+
+  /* create list store */
+  model = gtk_list_store_new (NUM_IMGTREE_COLUMNS, 
+			      G_TYPE_INT,     // number
+			      G_TYPE_INT,     // image
+			      G_TYPE_INT,     // min
+			      G_TYPE_INT,     // max
+			      G_TYPE_INT,     // BL : next
+			      G_TYPE_INT,     // BL : min
+			      G_TYPE_INT,     // BL : max
+#ifdef USE_GTK3
+			      GDK_TYPE_RGBA,   //fgcolor
+			      GDK_TYPE_RGBA   //bgcolor
+#else
+			      GDK_TYPE_COLOR,  //fgcolor
+			      GDK_TYPE_COLOR  //bgcolor
+#endif
+			      );  
+
+  //gtk_list_store_set_column_types (GTK_LIST_STORE (model), 1, 
+  //			   (GType []){ G_TYPE_STRING }); // NOTE
+  for (i_frm = 0; i_frm < mascot->frame_num[i_ptn]; i_frm++){
+    gtk_list_store_append (model, &iter);
+    ptntree_update_item(mascot, GTK_TREE_MODEL(model), iter, i_ptn, i_frm);
+  }
+  
+  return GTK_TREE_MODEL (model);
+}
+
+
+void ptntree_update_item(typMascot *mascot, 
+			 GtkTreeModel *model, 
+			 GtkTreeIter iter,
+			 gint i_ptn,
+			 gint i_frm)
+{
+  gtk_list_store_set (GTK_LIST_STORE(model), &iter,
+		      COLUMN_PTNTREE_NUMBER, i_frm,
+		      COLUMN_PTNTREE_IMAGE,  mascot->frame_pix[i_ptn][i_frm],
+		      COLUMN_PTNTREE_MIN,    mascot->frame_min[i_ptn][i_frm],
+		      COLUMN_PTNTREE_MAX,    mascot->frame_min[i_ptn][i_frm],
+		      COLUMN_PTNTREE_BL_NEXT, mascot->frame_loop[i_ptn][i_frm].next,
+		      COLUMN_PTNTREE_BL_MIN,  mascot->frame_loop[i_ptn][i_frm].min,
+		      COLUMN_PTNTREE_BL_MAX,  mascot->frame_loop[i_ptn][i_frm].max,
+		      COLUMN_PTNTREE_COLFG, &color_black,
+		      COLUMN_PTNTREE_COLBG, (i_frm%2==0) ? &color_white : &color_pale3,
+		      -1);
+}
+
+
+static void
+focus_ptntree_item (GtkWidget *widget, gpointer gdata)
+{
+  confNum *mptn=(confNum *)gdata;
+  typMascot *mascot = mptn->mascot;
+  gint i_ptn=mptn->num;
+  GtkTreeIter iter;
+  GtkTreeModel *model = gtk_tree_view_get_model (GTK_TREE_VIEW(widget));
+  GtkTreeSelection *selection = gtk_tree_view_get_selection (GTK_TREE_VIEW(widget));
+  gint i_frm, i_pix;
+
+  if (gtk_tree_selection_get_selected (selection, NULL, &iter)){
+    GtkTreePath *path;
+    
+    path = gtk_tree_model_get_path (model, &iter);
+    gtk_tree_model_get (model, &iter, COLUMN_PTNTREE_NUMBER, &i_frm, -1);
+    gtk_tree_model_get (model, &iter, COLUMN_PTNTREE_IMAGE, &i_pix, -1);
+    gtk_tree_path_free (path);
+
+    TestLoadPixmaps(mascot,
+		    mascot->sprites[i_pix].filename,
+		    i_pix);
+    mascot->ptntree_i_ptn=i_ptn;
+    mascot->ptntree_i_frm=i_frm;
+  }
+ 
+}
+
+
+void ptntree_cell_data_func(GtkTreeViewColumn *col , 
+			    GtkCellRenderer *renderer,
+			    GtkTreeModel *model, 
+			    GtkTreeIter *iter,
+			    gpointer user_data)
+{
+  const guint index = GPOINTER_TO_UINT(user_data);
+  guint64 size;
+  gint int_value;
+  gchar *c_buf, *str;
+
+  switch (index) {
+  case COLUMN_PTNTREE_NUMBER:
+  case COLUMN_PTNTREE_IMAGE:
+  case COLUMN_PTNTREE_MIN:
+  case COLUMN_PTNTREE_MAX:
+  case COLUMN_PTNTREE_BL_NEXT:
+  case COLUMN_PTNTREE_BL_MIN:
+  case COLUMN_PTNTREE_BL_MAX:
+    gtk_tree_model_get (model, iter, 
+			index, &int_value,
+			-1);
+    break;
+  }
+
+  switch (index) {
+  case COLUMN_PTNTREE_NUMBER:
+    str=g_strdup_printf("%02d", int_value);
+    break;
+
+  default:
+    str=g_strdup_printf("%d", int_value);
     break;
   }
 

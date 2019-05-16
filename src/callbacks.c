@@ -723,8 +723,8 @@ int MoveToFocus(typMascot *mascot, gboolean force_fl)
 	xy=GetTaskbarHeight();
 	
 	if(xy.flag){
-	  mascot->home_x=mascot->width_root-xy.x;
-	  mascot->home_y=xy.y;
+	  mascot->home_x=mascot->width_root-xy.x+mascot->mon_x0;
+	  mascot->home_y=xy.y+mascot->mon_y0;
 	}
 	if((!xy.flag)||(mascot->home_y==0)){
 	  if(mascot->home_auto_vanish){

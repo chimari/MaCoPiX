@@ -1028,9 +1028,15 @@ struct _typMascot{
   gint sdw_y_int;
 
   GtkWidget *conf_main;
+
   GtkWidget *sw_imgtree;
   GtkWidget *imgtree;
   gint imgtree_i;
+
+  GtkWidget *sw_ptntree[MAX_ANIME_PATTERN];
+  GtkWidget *ptntree[MAX_ANIME_PATTERN];
+  gint ptntree_i_ptn;
+  gint ptntree_i_frm;
 };
 
 
