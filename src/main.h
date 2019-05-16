@@ -458,6 +458,7 @@ static GdkRGBA color_pink =    {1.00, 0.40, 0.40, 1};
 static GdkRGBA color_pink2 =   {1.00, 0.80, 0.80, 1};
 static GdkRGBA color_pale =    {0.40, 0.40, 1.00, 1};
 static GdkRGBA color_pale2 =   {0.80, 0.80, 1.00, 1};
+static GdkRGBA color_pale3 =   {0.90, 0.90, 1.00, 1};
 static GdkRGBA color_orange =  {1.00, 0.80, 0.40, 1};
 static GdkRGBA color_orange2 = {1.00, 1.00, 0.80, 1};
 static GdkRGBA color_orange3 = {0.95, 0.45, 0.02, 1};
@@ -485,6 +486,7 @@ static GdkColor color_pink = {0, 0xFFFF, 0x6666, 0x6666};
 static GdkColor color_pink2 = {0, 0xFFFF, 0xCCCC, 0xCCCC};
 static GdkColor color_pale = {0, 0x6666, 0x6666, 0xFFFF};
 static GdkColor color_pale2 = {0, 0xCCCC, 0xCCCC, 0xFFFF};
+static GdkColor color_pale3 = {0, 0xEEEE, 0xEEEE, 0xFFFF};
 static GdkColor color_orange = {0, 0xFFFF, 0xCCCC, 0x6666};
 static GdkColor color_orange2 = {0, 0xFFFF, 0xFFFF, 0xCCCC};
 static GdkColor color_orange3 = {0, 0xFD00, 0x6A00, 0x0200};
@@ -808,6 +810,8 @@ struct _typMascot{
   int width;
 #ifdef USE_WIN32
   int sdw_height;
+  int mon_x0;
+  int mon_y0;
 #endif
   gint magnify;
   gint ip_style;
@@ -1022,6 +1026,11 @@ struct _typMascot{
   gint    sdw_alpha;
   gint sdw_x_int;
   gint sdw_y_int;
+
+  GtkWidget *conf_main;
+  GtkWidget *sw_imgtree;
+  GtkWidget *imgtree;
+  gint imgtree_i;
 };
 
 

@@ -323,9 +323,6 @@ int MoveToFocus(typMascot *mascot, gboolean force_fl)
   int sx,sy,x_root=0,y_root=0;
   int realXPos;
   unsigned int width;
-  static MONITORS mon;
-  gint nmon, i_mon;
-  gint mon_x0=0, mon_y0=0;
 #else
   Window rootwin,parent,*children,child,wf;
   int sx,sy,x,y,i,x_root=0,y_root=0;
@@ -344,17 +341,6 @@ int MoveToFocus(typMascot *mascot, gboolean force_fl)
   /* for Windows */
   hWnd = GetForegroundWindow();
 
-  nmon= GetSystemMetrics(SM_CMONITORS);
-  EnumDisplayMonitors(NULL, NULL, (MONITORENUMPROC)myinfoenumproc, (LPARAM)&mon);
-  for(i_mon=0;i_mon<nmon; i_mon++){
-    if(mon.rect[i_mon].left<mon_x0){
-      mon_x0=mon.rect[i_mon].left;
-    }
-    if(mon.rect[i_mon].top<mon_y0){
-      mon_y0=mon.rect[i_mon].top;
-    }
-  }
-    
   if(hWnd!=hWnd_active){ // for multiple running 
     char wtitle[256];    
     GetWindowText(hWnd, wtitle, 256);
@@ -452,8 +438,8 @@ int MoveToFocus(typMascot *mascot, gboolean force_fl)
     printf("%d  %d\n", nRect.right, nRect.left); fflush(stdout);
     */
     
-    sx = nRect.left-mon_x0;
-    sy = nRect.top-mon_y0;
+    sx = nRect.left-mascot->mon_x0;
+    sy = nRect.top-mascot->mon_y0;
     width = nRect.right-nRect.left;
 
 #else  // UNIX X
@@ -2533,7 +2519,10 @@ MyXY GetAutoHomePos(void){
 
 
 void InitMascot0(typMascot *mascot){
-#ifndef USE_WIN32
+#ifdef USE_WIN32
+  static MONITORS mon;
+  gint nmon, i_mon;
+#else  
   Window rootwin;
 #endif
   int x_root, y_root, width_root, height_root, border, depth;
@@ -2544,6 +2533,23 @@ void InitMascot0(typMascot *mascot){
   width_root=GetSystemMetrics(SM_CXVIRTUALSCREEN);
   height_root=GetSystemMetrics(SM_CYVIRTUALSCREEN);
 
+  mascot->mon_x0=0;
+  mascot->mon_y0=0;
+
+  // メインモニター(0番)の左上が座標 (0, 0)になるので
+  // 左や上にサブモニターがある場合は マイナス座標になる
+  // その修正分(モニター矩形の最小値)を取得しておく
+  nmon= GetSystemMetrics(SM_CMONITORS);
+  EnumDisplayMonitors(NULL, NULL, (MONITORENUMPROC)myinfoenumproc, (LPARAM)&mon);
+  for(i_mon=0;i_mon<nmon; i_mon++){
+    if(mon.rect[i_mon].left<mascot->mon_x0){
+      mascot->mon_x0=mon.rect[i_mon].left;
+    }
+    if(mon.rect[i_mon].top<mascot->mon_y0){
+      mascot->mon_y0=mon.rect[i_mon].top;
+    }
+  }
+  
 #else
   XGetGeometry(GDK_WINDOW_XDISPLAY(gtk_widget_get_window(mascot->win_main)),
 	       GDK_ROOT_WINDOW(),

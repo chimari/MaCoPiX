@@ -26,6 +26,16 @@
 
 #include "main.h"
 
+enum
+{
+  COLUMN_IMGTREE_NUMBER,
+  COLUMN_IMGTREE_FILENAME,
+  COLUMN_IMGTREE_COLFG,
+  COLUMN_IMGTREE_COLBG,
+  NUM_IMGTREE_COLUMNS
+};
+
+
 //Callback受け渡し用抱き合わせ構造体 フォント変更用
 typedef struct{
   gchar *fn;
@@ -80,8 +90,6 @@ typedef struct{
 
 // *** GLOBAL ARGUMENT ***
 GtkTooltip *tooltip;
-//typMascot tmp_mascot;
-//gchar *tmp_pixfile[MAX_PIXMAP];
 gboolean flag_make_pattern_list[MAX_ANIME_PATTERN];
 gboolean flag_make_frame_list[MAX_ANIME_PATTERN];
 gboolean flag_make_cat_list[MAX_MENU_CATEGORY];
@@ -296,9 +304,18 @@ void do_install_common_mascot();
 #endif
 void do_select_mascot();
 
-
-
 gint select_menu_from_ext();
+
+
+// Img Tree
+void make_img_tree();
+static void imgtree_add_columns();
+static GtkTreeModel *imgtree_create_items_model ();
+void imgtree_update_item();
+static void focus_imgtree_item();
+static void act_imgtree_item();
+void imgtree_cell_data_func();
+
 
 ///// Widget as Global argument /////
 
@@ -486,564 +503,6 @@ void MenuSaveAll(void){
   g_free(buf);
 }
 
-/*
-void MoveTmpDataRC(void){
-
-  //// for RCFILE
-  //Move
-  Mascot->offset=tmp_mascot.offset;
-  Mascot->offsetp=tmp_mascot.offsetp;
-  Mascot->ff_side=tmp_mascot.ff_side;
-  Mascot->raise_force=tmp_mascot.raise_force;
-  Mascot->raise_kwin=tmp_mascot.raise_kwin;
-  Mascot->focus_autobar=tmp_mascot.focus_autobar;
-#ifdef USE_WIN32
-  Mascot->task_force=tmp_mascot.task_force;
-#endif
-  Mascot->no_capbar=tmp_mascot.no_capbar;
-  Mascot->bar_size=tmp_mascot.bar_size;
-  Mascot->bar_offset=tmp_mascot.bar_offset;
-  Mascot->homepos_nf=tmp_mascot.homepos_nf;
-  Mascot->homepos_out=tmp_mascot.homepos_out;
-  Mascot->homepos_nb=tmp_mascot.homepos_nb;
-  Mascot->home_auto=tmp_mascot.home_auto;
-  Mascot->home_auto_vanish=tmp_mascot.home_auto_vanish;
-  Mascot->home_x=tmp_mascot.home_x;
-  Mascot->home_y=tmp_mascot.home_y;
-  Mascot->sdw_flag=tmp_mascot.sdw_flag;
-  Mascot->sdw_x=tmp_mascot.sdw_x;
-  Mascot->sdw_y=tmp_mascot.sdw_y;
-  Mascot->sdw_alpha=tmp_mascot.sdw_alpha;
-#ifndef USE_WIN32
-  Mascot->sound_command=tmp_mascot.sound_command;
-#endif
-#ifdef USE_GTAR
-  Mascot->tar_command=tmp_mascot.tar_command;
-#endif
-
-  //Alpha Default
-  Mascot->force_def_alpha=tmp_mascot.force_def_alpha;
-  Mascot->def_alpha_main=tmp_mascot.def_alpha_main;
-#ifdef USE_BIFF
-  Mascot->def_alpha_biff=tmp_mascot.def_alpha_biff;
-#endif
-#ifdef USE_WIN32
-  Mascot->def_alpha_bal=tmp_mascot.def_alpha_bal;
-  Mascot->def_alpha_clk=tmp_mascot.def_alpha_clk;
-  Mascot->def_flag_balfg=tmp_mascot.def_flag_balfg;
-  Mascot->def_flag_clkfg=tmp_mascot.def_flag_clkfg;
-#endif
-
-  Mascot->def_alpclk=tmp_mascot.def_alpclk;
-  Mascot->def_alpclksd=tmp_mascot.def_alpclksd;
-  Mascot->def_alpclkbg=tmp_mascot.def_alpclkbg;
-  Mascot->def_alpclkbd=tmp_mascot.def_alpclkbd;
-
-  Mascot->def_alpbal=tmp_mascot.def_alpbal;
-  Mascot->def_alpbalbg=tmp_mascot.def_alpbalbg;
-  Mascot->def_alpbalbd=tmp_mascot.def_alpbalbd;
-
-  //Misc
-  Mascot->magnify=tmp_mascot.magnify;
-  Mascot->duet_use_click=tmp_mascot.duet_use_click;
-  Mascot->duet_use_random=tmp_mascot.duet_use_random;
-  Mascot->sockmsg_type=tmp_mascot.sockmsg_type;
-  Mascot->sockmsg_step=tmp_mascot.sockmsg_step;
-  Mascot->sockmsg_expire_def=tmp_mascot.sockmsg_expire_def;
-  Mascot->ip_style=tmp_mascot.ip_style;
-  Mascot->flag_install=tmp_mascot.flag_install;
-  Mascot->force_composite=tmp_mascot.force_composite;
-  Mascot->flag_img_cairo=tmp_mascot.flag_img_cairo;
-  Mascot->flag_clk_cairo=tmp_mascot.flag_clk_cairo;
-  Mascot->flag_bal_cairo=tmp_mascot.flag_bal_cairo;
-  Mascot->cons_check_mode=tmp_mascot.cons_check_mode;
-  Mascot->deffontname_clk=tmp_mascot.deffontname_clk;
-  Mascot->deffontname_bal=tmp_mascot.deffontname_bal;
-#ifdef USE_GTK_STATUS_ICON
-  Mascot->tray_icon_flag=tmp_mascot.tray_icon_flag;
-  if(Mascot->tray_icon_flag){
-    trayicon_show(Mascot);
-  }
-  else{
-    trayicon_hide(Mascot);
-  }
-#endif
-}
-
-void MoveTmpDataMascot(void){
-  int i_pix, i_ptn, i_frm;
-  gint i_tmp;
-  gchar *pix_dir;
-  gchar *tmp_file, *tmp_file2;
-
-  /// 
-  Mascot->code=tmp_mascot.code;
-  Mascot->name=tmp_mascot.name;
-
-  //// Move Window
-  Mascot->move=tmp_mascot.move;
-
-  Mascot->xfix=tmp_mascot.xfix;
-  Mascot->yfix=tmp_mascot.yfix;
-
-
-  //// Clock
-  Mascot->clkmode=tmp_mascot.clkmode;
-  Mascot->clktype=tmp_mascot.clktype;
-  Mascot->fontname_clk=tmp_mascot.fontname_clk;
-  Mascot->clk_x=tmp_mascot.clk_x;
-  Mascot->clk_y=tmp_mascot.clk_y;
-  Mascot->clktext_x=tmp_mascot.clktext_x;
-  Mascot->clktext_y=tmp_mascot.clktext_y;
-  Mascot->clksd_x=tmp_mascot.clksd_x;
-  Mascot->clksd_y=tmp_mascot.clksd_y;
-  Mascot->flag_clksd=tmp_mascot.flag_clksd;
-  Mascot->flag_clkrd=tmp_mascot.flag_clkrd;
-  Mascot->wclkbd=tmp_mascot.wclkbd;
-
-#ifdef USE_GTK3
-  if(gdk_rgba_equal(Mascot->def_colclk,tmp_mascot.colclk)&&
-     gdk_rgba_equal(Mascot->colclk,tmp_mascot.colclk)){
-    Mascot->colclk=gdk_rgba_copy(tmp_mascot.def_colclk);
-  }
-  else{
-    Mascot->colclk=gdk_rgba_copy(tmp_mascot.colclk);
-  }
-  if(gdk_rgba_equal(Mascot->def_colclkbg,tmp_mascot.colclkbg)&&
-     gdk_rgba_equal(Mascot->colclkbg,tmp_mascot.colclkbg)){
-    Mascot->colclkbg=gdk_rgba_copy(tmp_mascot.def_colclkbg);
-  }
-  else{
-    Mascot->colclkbg=gdk_rgba_copy(tmp_mascot.colclkbg);
-  }
-  if(gdk_rgba_equal(Mascot->def_colclkbd,tmp_mascot.colclkbd)&&
-     gdk_rgba_equal(Mascot->colclkbd,tmp_mascot.colclkbd)){
-    Mascot->colclkbd=gdk_rgba_copy(tmp_mascot.def_colclkbd);
-  }
-  else{
-    Mascot->colclkbd=gdk_rgba_copy(tmp_mascot.colclkbd);
-  }
-  if(gdk_rgba_equal(Mascot->def_colclksd,tmp_mascot.colclksd)&&
-     gdk_rgba_equal(Mascot->colclksd,tmp_mascot.colclksd)){
-    Mascot->colclksd=gdk_rgba_copy(tmp_mascot.def_colclksd);
-  }
-  else{
-    Mascot->colclksd=gdk_rgba_copy(tmp_mascot.colclksd);
-  }
-
-  gdk_rgba_free(Mascot->def_colclk);
-  Mascot->def_colclk=gdk_rgba_copy(tmp_mascot.def_colclk);
-  gdk_rgba_free(Mascot->def_colclkbg);
-  Mascot->def_colclkbg=gdk_rgba_copy(tmp_mascot.def_colclkbg);
-  gdk_rgba_free(Mascot->def_colclkbd);
-  Mascot->def_colclkbd=gdk_rgba_copy(tmp_mascot.def_colclkbd);
-  gdk_rgba_free(Mascot->def_colclksd);
-  Mascot->def_colclksd=gdk_rgba_copy(tmp_mascot.def_colclksd);
-#else
-  if(gdk_color_equal(Mascot->def_colclk,tmp_mascot.colclk)&&
-     gdk_color_equal(Mascot->colclk,tmp_mascot.colclk)){
-    Mascot->colclk=gdk_color_copy(tmp_mascot.def_colclk);
-  }
-  else{
-    Mascot->colclk=gdk_color_copy(tmp_mascot.colclk);
-  }
-  if(gdk_color_equal(Mascot->def_colclkbg,tmp_mascot.colclkbg)&&
-     gdk_color_equal(Mascot->colclkbg,tmp_mascot.colclkbg)){
-    Mascot->colclkbg=gdk_color_copy(tmp_mascot.def_colclkbg);
-  }
-  else{
-    Mascot->colclkbg=gdk_color_copy(tmp_mascot.colclkbg);
-  }
-  if(gdk_color_equal(Mascot->def_colclkbd,tmp_mascot.colclkbd)&&
-     gdk_color_equal(Mascot->colclkbd,tmp_mascot.colclkbd)){
-    Mascot->colclkbd=gdk_color_copy(tmp_mascot.def_colclkbd);
-  }
-  else{
-    Mascot->colclkbd=gdk_color_copy(tmp_mascot.colclkbd);
-  }
-  if(gdk_color_equal(Mascot->def_colclksd,tmp_mascot.colclksd)&&
-     gdk_color_equal(Mascot->colclksd,tmp_mascot.colclksd)){
-    Mascot->colclksd=gdk_color_copy(tmp_mascot.def_colclksd);
-  }
-  else{
-    Mascot->colclksd=gdk_color_copy(tmp_mascot.colclksd);
-  }
-
-  gdk_color_free(Mascot->def_colclk);
-  Mascot->def_colclk=gdk_color_copy(tmp_mascot.def_colclk);
-  gdk_color_free(Mascot->def_colclkbg);
-  Mascot->def_colclkbg=gdk_color_copy(tmp_mascot.def_colclkbg);
-  gdk_color_free(Mascot->def_colclkbd);
-  Mascot->def_colclkbd=gdk_color_copy(tmp_mascot.def_colclkbd);
-  gdk_color_free(Mascot->def_colclksd);
-  Mascot->def_colclksd=gdk_color_copy(tmp_mascot.def_colclksd);
-#endif
-  
-  Mascot->alpclk=tmp_mascot.alpclk;
-  Mascot->alpclksd=tmp_mascot.alpclksd;
-  Mascot->alpclkbg=tmp_mascot.alpclkbg;
-  Mascot->alpclkbd=tmp_mascot.alpclkbd;
-
-  //// Time Signal
-  Mascot->signal.flag=tmp_mascot.signal.flag;
-  Mascot->signal.type=tmp_mascot.signal.type;
-  Mascot->signal.com=tmp_mascot.signal.com;
-  
-
-  //// Balloon
-  Mascot->fontname_bal=tmp_mascot.fontname_bal;
-  Mascot->baltext_x=tmp_mascot.baltext_x;
-  Mascot->baltext_y=tmp_mascot.baltext_y;
-  Mascot->wbalbd=tmp_mascot.wbalbd;
-  Mascot->bal_defpos=tmp_mascot.bal_defpos;
-
-#ifdef USE_GTK3
-  gdk_rgba_free(Mascot->colbal);
-  if(gdk_rgba_equal(Mascot->def_colbal,tmp_mascot.colbal)&&
-     gdk_rgba_equal(Mascot->colbal,tmp_mascot.colbal)){
-    Mascot->colbal=gdk_rgba_copy(tmp_mascot.def_colbal);
-  }
-  else{
-    Mascot->colbal=gdk_rgba_copy(tmp_mascot.colbal);
-  }
-  gdk_rgba_free(Mascot->colbalbg);
-  if(gdk_rgba_equal(Mascot->def_colbalbg,tmp_mascot.colbalbg)&&
-     gdk_rgba_equal(Mascot->colbalbg,tmp_mascot.colbalbg)){
-    Mascot->colbalbg=gdk_rgba_copy(tmp_mascot.def_colbalbg);
-  }
-  else{
-    Mascot->colbalbg=gdk_rgba_copy(tmp_mascot.colbalbg);
-  }
-  gdk_rgba_free(Mascot->colbalbd);
-  if(gdk_rgba_equal(Mascot->def_colbalbd,tmp_mascot.colbalbd)&&
-     gdk_rgba_equal(Mascot->colbalbd,tmp_mascot.colbalbd)){
-    Mascot->colbalbd=gdk_rgba_copy(tmp_mascot.def_colbalbd);
-  }
-  else{
-    Mascot->colbalbd=gdk_rgba_copy(tmp_mascot.colbalbd);
-  }
-
-  gdk_rgba_free(Mascot->def_colbal);
-  Mascot->def_colbal=gdk_rgba_copy(tmp_mascot.def_colbal);
-  gdk_rgba_free(Mascot->def_colbalbg);
-  Mascot->def_colbalbg=gdk_rgba_copy(tmp_mascot.def_colbalbg);
-  gdk_rgba_free(Mascot->def_colbalbd);
-  Mascot->def_colbalbd=gdk_rgba_copy(tmp_mascot.def_colbalbd);
-#else  
-  gdk_color_free(Mascot->colbal);
-  if(gdk_color_equal(Mascot->def_colbal,tmp_mascot.colbal)&&
-     gdk_color_equal(Mascot->colbal,tmp_mascot.colbal)){
-    Mascot->colbal=gdk_color_copy(tmp_mascot.def_colbal);
-  }
-  else{
-    Mascot->colbal=gdk_color_copy(tmp_mascot.colbal);
-  }
-  gdk_color_free(Mascot->colbalbg);
-  if(gdk_color_equal(Mascot->def_colbalbg,tmp_mascot.colbalbg)&&
-     gdk_color_equal(Mascot->colbalbg,tmp_mascot.colbalbg)){
-    Mascot->colbalbg=gdk_color_copy(tmp_mascot.def_colbalbg);
-  }
-  else{
-    Mascot->colbalbg=gdk_color_copy(tmp_mascot.colbalbg);
-  }
-  gdk_color_free(Mascot->colbalbd);
-  if(gdk_color_equal(Mascot->def_colbalbd,tmp_mascot.colbalbd)&&
-     gdk_color_equal(Mascot->colbalbd,tmp_mascot.colbalbd)){
-    Mascot->colbalbd=gdk_color_copy(tmp_mascot.def_colbalbd);
-  }
-  else{
-    Mascot->colbalbd=gdk_color_copy(tmp_mascot.colbalbd);
-  }
-
-  gdk_color_free(Mascot->def_colbal);
-  Mascot->def_colbal=gdk_color_copy(tmp_mascot.def_colbal);
-  gdk_color_free(Mascot->def_colbalbg);
-  Mascot->def_colbalbg=gdk_color_copy(tmp_mascot.def_colbalbg);
-  gdk_color_free(Mascot->def_colbalbd);
-  Mascot->def_colbalbd=gdk_color_copy(tmp_mascot.def_colbalbd);
-#endif
-  
-  Mascot->alpbal=tmp_mascot.alpbal;
-  Mascot->alpbalbg=tmp_mascot.alpbalbg;
-  Mascot->alpbalbd=tmp_mascot.alpbalbd;
-  
-
-#ifdef USE_BIFF
-  //// Biff
-  Mascot->mail.type=tmp_mascot.mail.type;
-  Mascot->mail.pop_server=tmp_mascot.mail.pop_server;
-  Mascot->mail.pop_id=tmp_mascot.mail.pop_id;
-  Mascot->mail.pop_save=tmp_mascot.mail.pop_save;
-  Mascot->mail.pop_pass=tmp_mascot.mail.pop_pass;
-#ifdef  USE_SSL
-  Mascot->mail.ssl_mode=tmp_mascot.mail.ssl_mode;
-  Mascot->mail.ssl_cert_skip=tmp_mascot.mail.ssl_cert_skip;
-#endif
-  Mascot->mail.pop_port=tmp_mascot.mail.pop_port;
-  Mascot->mail.file=tmp_mascot.mail.file;
-  if(!tmp_mascot.mail.file){
-    if(Mascot->mail.type==MAIL_LOCAL){
-      Mascot->mail.file=g_strdup(g_getenv("MAIL"));
-    }
-    else if(Mascot->mail.type==MAIL_QMAIL){
-      Mascot->mail.file=g_strconcat(
-#ifdef USE_WIN32
-				    get_win_home(),
-#else
-				    g_get_home_dir(),
-#endif
-				    G_DIR_SEPARATOR_S, 
-				    "Maildir", 
-				    G_DIR_SEPARATOR_S, 
-				    "new",
-				    G_DIR_SEPARATOR_S, 
-				    NULL);
-    }
-    else if(Mascot->mail.type==MAIL_PROCMAIL){
-      Mascot->mail.file=g_strconcat(set_mhdir(),PROCMAIL_LOG,NULL);
-    }
-  }
-    Mascot->mail.tooltips_fl=tmp_mascot.mail.tooltips_fl;
-    Mascot->mail.spam_check=tmp_mascot.mail.spam_check;
-    Mascot->mail.spam_mark=tmp_mascot.mail.spam_mark;
-  
-
-    Mascot->mail.interval=tmp_mascot.mail.interval;
-    Mascot->mail.polling=tmp_mascot.mail.polling;
-    Mascot->mail.mailer=tmp_mascot.mail.mailer;
-
-    Mascot->mail.pix_file=tmp_mascot.mail.pix_file;
-    Mascot->mail.pix_pos=tmp_mascot.mail.pix_pos;
-    Mascot->mail.pix_x=tmp_mascot.mail.pix_x;
-    Mascot->mail.pix_y=tmp_mascot.mail.pix_y;
-    Mascot->mail.word=tmp_mascot.mail.word;
-    Mascot->mail.sound=
-    FullPathSoundFile(&tmp_mascot,tmp_mascot.mail.sound,TRUE);
-
-  Mascot->mail.win_width=tmp_mascot.mail.win_width;
-  Mascot->mail.win_height=tmp_mascot.mail.win_height;
-  Mascot->mail.pop_max_fs=tmp_mascot.mail.pop_max_fs;
-#endif
-
-  //Alpha
-  if(Mascot->force_def_alpha){
-    Mascot->alpha_main=Mascot->def_alpha_main;
-#ifdef USE_BIFF
-    Mascot->alpha_biff=Mascot->def_alpha_biff;
-#endif
-#ifdef USE_WIN32
-    Mascot->alpha_bal=Mascot->def_alpha_bal;
-    Mascot->alpha_clk=Mascot->def_alpha_clk;
-    Mascot->flag_balfg=Mascot->def_flag_balfg;
-    Mascot->flag_clkfg=Mascot->def_flag_clkfg;
-#endif
-  }
-  else{
-    Mascot->alpha_main=tmp_mascot.alpha_main;
-#ifdef USE_BIFF
-    Mascot->alpha_biff=tmp_mascot.alpha_biff;
-#endif
-#ifdef USE_WIN32
-    Mascot->alpha_bal=tmp_mascot.alpha_bal;
-    Mascot->alpha_clk=tmp_mascot.alpha_clk;
-    Mascot->flag_balfg=tmp_mascot.flag_balfg;
-    Mascot->flag_clkfg=tmp_mascot.flag_clkfg;
-#endif
-  }
-
-
-  //// Pixmap
-  Mascot->xoff=tmp_mascot.xoff;
-  Mascot->yoff=tmp_mascot.yoff;
-
-  pix_dir=my_dirname(Mascot->sprites[0].filename);
-  for(i_pix=0;i_pix<tmp_mascot.nPixmap;i_pix++){
-    // ディレクトリが00番イメージと違う場合は
-    //  00番イメージと同じディレクトリ -> USERDIR/PIXDIR/
-    // の優先順位でコピーをする(両方に同じファイルがないときのみ)
-    if(tmp_pixfile[i_pix]){
-      if(strcmp(my_dirname(tmp_pixfile[i_pix]),pix_dir)){
-	tmp_file=g_strconcat(pix_dir,G_DIR_SEPARATOR_S,my_basename(tmp_pixfile[i_pix]),NULL);
-#ifdef USE_WIN32
-	tmp_file2=g_strconcat(get_win_home(), G_DIR_SEPARATOR_S,USER_DIR,
-#else
-	tmp_file2=g_strconcat(g_get_home_dir(), G_DIR_SEPARATOR_S,USER_DIR,
-#endif
-			     PIXDIR, my_basename(tmp_pixfile[i_pix]), NULL);
-	if((access(tmp_file,F_OK)!=0)&&(access(tmp_file2,F_OK)!=0)){
-	  if(access(pix_dir,W_OK)==0){
-	    g_print(_("Installing %s -> %s\n"),tmp_pixfile[i_pix],tmp_file);
-	    copy_file(tmp_pixfile[i_pix],tmp_file);
-	  }
-	  else{
-	    g_print(_("Installing %s -> %s\n"),tmp_pixfile[i_pix],tmp_file2);
-	    copy_file(tmp_pixfile[i_pix],tmp_file2);
-	  }
-	}
-      }
-    }
-    //if(Mascot->sprites[i_pix].filename) g_free(Mascot->sprites[i_pix].filename);
-    Mascot->sprites[i_pix].filename=tmp_pixfile[i_pix];
-    //if(Mascot->sprites[i_pix].pixmap) gdk_pixmap_unref(Mascot->sprites[i_pix].pixmap);
-    //if(Mascot->sprites[i_pix].mask) gdk_pixmap_unref(Mascot->sprites[i_pix].mask);
-    //Mascot->sprites[i_pix].pixmap=NULL;
-    //Mascot->sprites[i_pix].mask=NULL;
-  }
-  
-  for(i_pix=tmp_mascot.nPixmap;i_pix<MAX_PIXMAP;i_pix++){
-    Mascot->sprites[i_pix].filename=NULL;
-    //if(Mascot->sprites[i_pix].pixmap) gdk_pixmap_unref(Mascot->sprites[i_pix].pixmap);
-    //if(Mascot->sprites[i_pix].mask) gdk_pixmap_unref(Mascot->sprites[i_pix].mask);
-    //Mascot->sprites[i_pix].pixmap=NULL;
-    //Mascot->sprites[i_pix].mask=NULL;
-  }
-
-  Mascot->random_total=0;
-  Mascot->click_total=0;
-  //// Animation
-  for(i_ptn=0;i_ptn<MAX_ANIME_PATTERN;i_ptn++){
-      Mascot->frame_num[i_ptn]=tmp_mascot.frame_num[i_ptn];
-      Mascot->random_weight[i_ptn]=tmp_mascot.random_weight[i_ptn];
-      Mascot->click_weight[i_ptn]=tmp_mascot.click_weight[i_ptn];
-      Mascot->bal_lxoff[i_ptn]=tmp_mascot.bal_lxoff[i_ptn];
-      Mascot->bal_lyoff[i_ptn]=tmp_mascot.bal_lyoff[i_ptn];
-      Mascot->bal_rxoff[i_ptn]=tmp_mascot.bal_rxoff[i_ptn];
-      Mascot->bal_ryoff[i_ptn]=tmp_mascot.bal_ryoff[i_ptn];
-      Mascot->click_word[i_ptn]=tmp_mascot.click_word[i_ptn];
-      Mascot->click_sound[i_ptn]=
-	FullPathSoundFile(&tmp_mascot,tmp_mascot.click_sound[i_ptn],TRUE);
-      Mascot->duet_tgt[i_ptn]=tmp_mascot.duet_tgt[i_ptn];
-      Mascot->duet_ptn[i_ptn]=tmp_mascot.duet_ptn[i_ptn];
-      Mascot->duet_word[i_ptn]=tmp_mascot.duet_word[i_ptn];
-      Mascot->duet_delay[i_ptn]=tmp_mascot.duet_delay[i_ptn];
-      Mascot->random_total+=Mascot->random_weight[i_ptn];
-      Mascot->click_total+=Mascot->click_weight[i_ptn];
-    for(i_frm=0;i_frm<MAX_ANIME_FRAME;i_frm++){
-      Mascot->frame_pix[i_ptn][i_frm]=tmp_mascot.frame_pix[i_ptn][i_frm];
-      Mascot->frame_min[i_ptn][i_frm]=tmp_mascot.frame_min[i_ptn][i_frm];
-      Mascot->frame_max[i_ptn][i_frm]=tmp_mascot.frame_max[i_ptn][i_frm];
-      Mascot->frame_loop[i_ptn][i_frm].next
-	=tmp_mascot.frame_loop[i_ptn][i_frm].next;
-      Mascot->frame_loop[i_ptn][i_frm].min
-	=tmp_mascot.frame_loop[i_ptn][i_frm].min;
-      Mascot->frame_loop[i_ptn][i_frm].max
-	=tmp_mascot.frame_loop[i_ptn][i_frm].max;
-
-      if(Mascot->frame_min[i_ptn][i_frm]>Mascot->frame_max[i_ptn][i_frm]){
-	i_tmp=Mascot->frame_max[i_ptn][i_frm];
-	Mascot->frame_max[i_ptn][i_frm]=Mascot->frame_min[i_ptn][i_frm];
-	Mascot->frame_min[i_ptn][i_frm]=i_tmp;
-      }
-      if( Mascot->frame_loop[i_ptn][i_frm].min
-	  > Mascot->frame_loop[i_ptn][i_frm].max){
-	i_tmp= Mascot->frame_loop[i_ptn][i_frm].max;
-	Mascot->frame_loop[i_ptn][i_frm].max
-	  = Mascot->frame_loop[i_ptn][i_frm].min;
-	Mascot->frame_loop[i_ptn][i_frm].min=i_tmp;
-      }
-    }
-  }
-}
-
-void MoveTmpDataMenu(void){
-  int i_cat, i_tgt;
-
-  //// for Menu
-  Mascot->menu_file=tmp_mascot.menu_file;
-  Mascot->menu_cat_max=tmp_mascot.menu_cat_max;
-  Mascot->menu_total=tmp_mascot.menu_total;
-
-  for(i_cat=0;i_cat<Mascot->menu_cat_max;i_cat++){
-    Mascot->menu_cat[i_cat]=tmp_mascot.menu_cat[i_cat];
-    Mascot->menu_tgt_max[i_cat]=tmp_mascot.menu_tgt_max[i_cat];
-    for(i_tgt=0;i_tgt<Mascot->menu_tgt_max[i_cat];i_tgt++){
-      Mascot->menu_tgt[i_cat][i_tgt]=tmp_mascot.menu_tgt[i_cat][i_tgt];
-      Mascot->menu_tgt_name[i_cat][i_tgt]
-	=tmp_mascot.menu_tgt_name[i_cat][i_tgt];
-    }
-  }
-}
-
-
-
-static void conf_change(GtkWidget *w, GtkWidget *dialog)
-{
-
-  if(flagChildDialog){
-    return;
-  }
-
-  InitMascot(Mascot);
-
-  MoveTmpDataRC();
-  MoveTmpDataMascot();
-  MoveTmpDataMenu();
-
-
-#ifdef USE_BIFF
-  SetMailChecker(Mascot);
-#endif   // USE_BIFF
-
-  gtk_widget_destroy(GTK_WIDGET(dialog));
-  while (my_main_iteration(FALSE));
-
-  InitComposite(Mascot);
-  LoadPixmaps(Mascot);
-#ifndef USE_GTK3
-  ReInitGC(Mascot);
-#endif
-  map_balloon(Mascot, FALSE);
-  flag_balloon=FALSE;
-#ifdef USE_BIFF
-  LoadBiffPixmap(Mascot->biff_pix, Mascot);
-#endif
-
-  // DrawingArea のrealize
-  gtk_widget_realize(Mascot->dw_main);
-  gtk_widget_realize(Mascot->dw_balloon);
-  gtk_widget_realize(Mascot->dw_clock);
-  gtk_widget_realize(Mascot->dw_biff);
-#ifdef USE_WIN32
-  gtk_widget_realize(Mascot->dw_sdw);
-  gtk_widget_realize(Mascot->dw_balfg);
-  gtk_widget_realize(Mascot->dw_clkfg);
-#endif
-  
-  if(Mascot->clkmode!=CLOCK_NO) clock_update(Mascot, TRUE);
-
-  if(Mascot->clkmode==CLOCK_PANEL){
-    map_clock(Mascot, TRUE);
-  }
-  else{
-    map_clock(Mascot, FALSE);
-  }
-
-  map_main(Mascot, TRUE);
-
-  if(Mascot->clkmode!=CLOCK_NO)  clock_update(Mascot, TRUE);
-
-  if((Mascot->move==MOVE_FIX)
-     &&(Mascot->xfix>=0)&&(Mascot->xfix<=Mascot->width_root)
-     &&(Mascot->yfix>=0)&&(Mascot->yfix<=Mascot->height_root))
-    MoveMascot(Mascot,Mascot->xfix,Mascot->yfix);
-  else{
-    Mascot->x=tmp_mascot.x;
-    Mascot->y=tmp_mascot.y;
-    //MoveMascot(Mascot,Mascot->x,Mascot->y); 
-    MoveToFocus(Mascot,TRUE);
- }
-
-
-  gtk_widget_destroy(Mascot->PopupMenu);
-  Mascot->PopupMenu=make_popup_menu(Mascot);
-
-  flag_make_pixmap_list=FALSE;
-  Mascot->flag_menu=FALSE;
-
-  while (my_main_iteration(FALSE));
-  gdkut_flush(Mascot);
-}
-*/
 
 void cc_radio(GtkWidget *button, gint *gdata)
 { 
@@ -2131,21 +1590,13 @@ void TestAnime(GtkWidget *w, gpointer gdata)
 
 
 
-static void create_change_image_dialog(GtkWidget *w, gpointer gdata)
+static void create_change_image_dialog(typMascot *mascot, gint i_pix)
 {
-  confNum *mpix;
-  typMascot *mascot;
   GtkWidget *fdialog;
   char win_title[64];
-  gint i_pix;
   gchar *fname=NULL;
   gchar *dest_file=NULL;
-
-  mpix=(confNum *)gdata;
-
-  i_pix=mpix->num;
-  mascot=mpix->mascot;
-
+  
   if(flagChildDialog){
     return;
   }
@@ -2159,7 +1610,7 @@ static void create_change_image_dialog(GtkWidget *w, gpointer gdata)
   sprintf(win_title,_("Select New Image for No.%02d"),
 	  i_pix);
   fdialog = gtk_file_chooser_dialog_new(_(win_title),
-					NULL,
+					GTK_WINDOW(mascot->conf_main),
 					GTK_FILE_CHOOSER_ACTION_OPEN,
 #ifdef USE_GTK3
 					"_Cancel",GTK_RESPONSE_CANCEL,
@@ -2226,7 +1677,7 @@ static void create_change_image_dialog(GtkWidget *w, gpointer gdata)
 		    NULL);
     }
   
-    gtk_entry_set_text(GTK_ENTRY(pixmap_entry[i_pix]),my_basename(dest_file));
+    //gtk_entry_set_text(GTK_ENTRY(pixmap_entry[i_pix]),my_basename(dest_file));
   }
   else{
     gtk_widget_destroy(fdialog);
@@ -2420,14 +1871,14 @@ static void create_change_biff_image_dialog(GtkWidget *w, gpointer gdata)
 #endif  // USE_BIFF
 
 
-static void create_add_image_dialog(GtkWidget *w, gpointer gdata)
+static void create_add_image_dialog(GtkWidget *widget, gpointer gdata)
 {
   typMascot *mascot;
   GtkWidget *fdialog;
   gchar *win_title;
   GSList *fnames;
   gchar *dest_file=NULL;
-  int i_pix;
+  gint i_pix;
 
   mascot=(typMascot *)gdata;
 
@@ -2439,7 +1890,7 @@ static void create_add_image_dialog(GtkWidget *w, gpointer gdata)
   }
 
   if(mascot->nPixmap>=MAX_PIXMAP){
-    popup_message(mascot->win_main,
+    popup_message(mascot->conf_main,
 #ifdef USE_GTK3
 		  "dialog-error", 
 #else
@@ -2460,7 +1911,7 @@ static void create_add_image_dialog(GtkWidget *w, gpointer gdata)
 			    mascot->nPixmap);
 
   fdialog = gtk_file_chooser_dialog_new(win_title,
-					NULL,
+					GTK_WINDOW(mascot->conf_main),
 					GTK_FILE_CHOOSER_ACTION_OPEN,
 #ifdef USE_GTK3
 					"_Cancel",GTK_RESPONSE_CANCEL,
@@ -2538,7 +1989,8 @@ static void create_add_image_dialog(GtkWidget *w, gpointer gdata)
       i_pix++;
     }
   
-    make_pixmap_list(mascot);
+    //make_pixmap_list(mascot);
+    make_img_tree(mascot);
     
     g_slist_free(fnames);
   }
@@ -2551,14 +2003,9 @@ static void create_add_image_dialog(GtkWidget *w, gpointer gdata)
 }
 
 
-static void create_del_image_dialog(GtkWidget *w, gpointer gdata)
+static void create_del_image_dialog(GtkWidget *widget, gpointer gdata)
 {
   typMascot *mascot;
-  GtkWidget *dialog;
-  GtkWidget *button;
-  GtkWidget *label;
-  GtkAdjustment *adj;
-  GtkWidget *spinner;
   GtkWidget *hbox;
   gchar *tmp;
   int i_pix, i_ptn, i_frm;
@@ -2575,94 +2022,71 @@ static void create_del_image_dialog(GtkWidget *w, gpointer gdata)
     flagChildDialog=TRUE;
   }
 
-  del_pix=mascot->nPixmap-1;
+  if((mascot->imgtree_i<0)||(mascot->imgtree_i>=mascot->nPixmap)){
+    popup_message(mascot->conf_main,
+#ifdef USE_GTK3
+		  "dialog-warning", 
+#else
+		  GTK_STOCK_DIALOG_WARNING,
+#endif
+		  -1,
+		  _("Warning : Please select an image to delete in the list."),
+		  NULL);
+    return;
+  }
+
+  del_pix=mascot->imgtree_i;
+  
   hit_ptn=-1;
   hit_frm=-1;
-
-  dialog = gtk_dialog_new_with_buttons(_("Select Image No. to Delete"),
-				       GTK_WINDOW(pixmap_scrwin),
-				       GTK_DIALOG_MODAL,
-#ifdef USE_GTK3
-				       "_Cancel",GTK_RESPONSE_CANCEL,
-				       "_OK",GTK_RESPONSE_OK,
-#else
-				       GTK_STOCK_CANCEL,GTK_RESPONSE_CANCEL,
-				       GTK_STOCK_OK,GTK_RESPONSE_OK,
-#endif
-				       NULL);
-  gtk_window_set_position(GTK_WINDOW(dialog), GTK_WIN_POS_CENTER);
-  gtk_container_set_border_width(GTK_CONTAINER(dialog),5);
-
-  hbox=gtkut_hbox_new(FALSE,0);
-  gtk_box_pack_start(GTK_BOX(gtk_dialog_get_content_area(GTK_DIALOG(dialog))),
-		     hbox,TRUE,TRUE,0);
-
-  label=gtkut_label_new(_("Delete Image No."));
-  gtk_box_pack_start(GTK_BOX(hbox),label,TRUE,TRUE,0);
-
-  adj = (GtkAdjustment *)gtk_adjustment_new 
-    ((gdouble)mascot->nPixmap-1, 0,(gdouble)mascot->nPixmap-1,
-     1.0, 1.0, 0.0);
-  my_signal_connect (adj, "value_changed",cc_get_adj,&del_pix);
-  spinner =  gtk_spin_button_new (adj, 0, 0);
-  gtk_spin_button_set_wrap (GTK_SPIN_BUTTON (spinner), FALSE);
-  gtk_box_pack_start(GTK_BOX(hbox), spinner,FALSE, FALSE, 0);
   
-  gtk_widget_show_all(dialog);
-
-  if (gtk_dialog_run(GTK_DIALOG(dialog)) == GTK_RESPONSE_OK) {
-    gtk_widget_destroy(dialog);
-
+  
+  for(i_ptn=0;i_ptn<MAX_ANIME_PATTERN;i_ptn++){
+    for(i_frm=0;i_frm<MAX_ANIME_FRAME;i_frm++){
+      if(mascot->frame_pix[i_ptn][i_frm]==del_pix){
+	hit_ptn=i_ptn;
+	hit_frm=i_frm;
+	break;
+      }
+    }
+    if(hit_ptn!=-1) break;
+  }
+  
+  if(hit_ptn==-1){
     for(i_ptn=0;i_ptn<MAX_ANIME_PATTERN;i_ptn++){
       for(i_frm=0;i_frm<MAX_ANIME_FRAME;i_frm++){
-	if(mascot->frame_pix[i_ptn][i_frm]==del_pix){
-	  hit_ptn=i_ptn;
-	  hit_frm=i_frm;
-	  break;
+	if(mascot->frame_pix[i_ptn][i_frm]>del_pix){
+	  mascot->frame_pix[i_ptn][i_frm]--;
 	}
       }
-      if(hit_ptn!=-1) break;
     }
     
-    if(hit_ptn==-1){
-      for(i_ptn=0;i_ptn<MAX_ANIME_PATTERN;i_ptn++){
-	for(i_frm=0;i_frm<MAX_ANIME_FRAME;i_frm++){
-	  if(mascot->frame_pix[i_ptn][i_frm]>del_pix){
-	    mascot->frame_pix[i_ptn][i_frm]--;
-	  }
-	}
-      }
-      
-      for(i_pix=del_pix;i_pix<mascot->nPixmap-1;i_pix++){
-	mascot->sprites[i_pix].filename=g_strdup(mascot->sprites[i_pix+1].filename);
-      }
-      if(mascot->sprites[mascot->nPixmap-1].filename) g_free(mascot->sprites[mascot->nPixmap-1].filename);
-      mascot->sprites[mascot->nPixmap-1].filename=NULL;
-      mascot->nPixmap--;
-      
-      make_pixmap_list(mascot);
+    for(i_pix=del_pix;i_pix<mascot->nPixmap-1;i_pix++){
+      mascot->sprites[i_pix].filename=g_strdup(mascot->sprites[i_pix+1].filename);
     }
-    else{
-      tmp=g_strdup_printf(_("Image %02d is used in Pattern %02d / Frame %02d\n"),
-			  del_pix,hit_ptn,hit_frm);
-      popup_message(Mascot->win_main,
-#ifdef USE_GTK3
-		    "dialog-error", 
-#else
-		    GTK_STOCK_DIALOG_ERROR,
-#endif
-		    -1,
-		    _("Error : Delete Image."),
-		    " ",
-		    tmp,
-		    " ",
-		    _("Please Change..."),
-		    NULL);
-      g_free(tmp);
-    }
+    if(mascot->sprites[mascot->nPixmap-1].filename) g_free(mascot->sprites[mascot->nPixmap-1].filename);
+    mascot->sprites[mascot->nPixmap-1].filename=NULL;
+    mascot->nPixmap--;
+    
+    make_pixmap_list(mascot);
   }
   else{
-    gtk_widget_destroy(dialog);
+    tmp=g_strdup_printf(_("Image %02d is used in Pattern %02d / Frame %02d\n"),
+			del_pix,hit_ptn,hit_frm);
+    popup_message(mascot->conf_main,
+#ifdef USE_GTK3
+		  "dialog-error", 
+#else
+		  GTK_STOCK_DIALOG_ERROR,
+#endif
+		  -1,
+		  _("Error : Delete Image."),
+		  " ",
+		  tmp,
+		  " ",
+		  _("Please Change..."),
+		  NULL);
+    g_free(tmp);
   }
   
   flagChildDialog=FALSE;
@@ -6438,7 +5862,6 @@ static void change_colclk_default(GtkWidget *w, gpointer gdata)
 // 設定ダイアログの生成
 void create_config_dialog(GtkWidget *widget, gpointer gdata){
   typMascot *mascot;
-  GtkWidget *conf_main;
   GtkWidget *conf_tbl;
   GtkWidget *all_note;
   GtkWidget *button;
@@ -6446,6 +5869,7 @@ void create_config_dialog(GtkWidget *widget, gpointer gdata){
   gint i_col, i_cat, i_tgt, i_ptn;
 
   mascot = (typMascot *)gdata;
+  flag_make_pixmap_list=FALSE;
  
   // Win構築は重いので先にExposeイベント等をすべて処理してから
   while (my_main_iteration(FALSE));
@@ -6453,23 +5877,25 @@ void create_config_dialog(GtkWidget *widget, gpointer gdata){
 
   mascot->flag_menu=TRUE;
  
+  mascot->imgtree_i=-1;
 
   //conf_main = gtk_window_new(GTK_WINDOW_TOPLEVEL);
-  conf_main = gtk_dialog_new_with_buttons(_("Config for MaCoPiX"),
-					  NULL,
-					  GTK_DIALOG_MODAL,
+  mascot->conf_main = gtk_dialog_new_with_buttons(_("Config for MaCoPiX"),
+						  NULL,
+						  GTK_DIALOG_MODAL,
 #ifdef USE_GTK3
-					  "_OK", GTK_RESPONSE_OK,
+						  "_OK", GTK_RESPONSE_OK,
 #else
-					  GTK_STOCK_OK,GTK_RESPONSE_OK,
+						  GTK_STOCK_OK,GTK_RESPONSE_OK,
 #endif
-					  NULL);
-  gtk_dialog_set_default_response(GTK_DIALOG(conf_main), GTK_RESPONSE_OK); 
-  gtk_widget_grab_focus(gtk_dialog_get_widget_for_response(GTK_DIALOG(conf_main),
+						  NULL);
+  gtk_dialog_set_default_response(GTK_DIALOG(mascot->conf_main),
+				  GTK_RESPONSE_OK); 
+  gtk_widget_grab_focus(gtk_dialog_get_widget_for_response(GTK_DIALOG(mascot->conf_main),
 							   GTK_RESPONSE_OK));
-  gtk_container_set_border_width(GTK_CONTAINER(conf_main),5);
+  gtk_container_set_border_width(GTK_CONTAINER(mascot->conf_main),5);
 
-  //gtk_window_set_title(GTK_WINDOW(conf_main), 
+  //gtk_window_set_title(GTK_WINDOW(mascot->conf_main), 
   //		       _("Config for MaCoPiX"));
   //gtk_widget_realize(conf_main);
   //my_signal_connect(conf_main,"destroy",close_conf, GTK_WIDGET(conf_main));
@@ -6478,7 +5904,7 @@ void create_config_dialog(GtkWidget *widget, gpointer gdata){
   // 3x6のテーブル
   conf_tbl = gtkut_table_new (3, 6, FALSE, 0, 0, 0);
   //gtk_container_add (GTK_CONTAINER (conf_main), conf_tbl);
-  gtk_box_pack_start(GTK_BOX(gtk_dialog_get_content_area(GTK_DIALOG(conf_main))),
+  gtk_box_pack_start(GTK_BOX(gtk_dialog_get_content_area(GTK_DIALOG(mascot->conf_main))),
 		     conf_tbl,FALSE, FALSE, 5);
 
 
@@ -6705,7 +6131,7 @@ void create_config_dialog(GtkWidget *widget, gpointer gdata){
       gtkut_pos(label, POS_START, POS_CENTER);
       gtkut_table_attach_defaults (table2, label, 0, 1, 1, 2);
       {
-	label = gtkut_label_new (GetCurrentWMName(conf_main));
+	label = gtkut_label_new (GetCurrentWMName(mascot->conf_main));
 	gtkut_pos(label, POS_START, POS_CENTER);
 	gtkut_table_attach_defaults (table2, label, 1, 2, 1, 2);
       }
@@ -9596,7 +9022,7 @@ void create_config_dialog(GtkWidget *widget, gpointer gdata){
       label = gtkut_label_new (_("Opacity Alpha[%]"));
       gtkut_pos(label, POS_START, POS_CENTER);
       gtkut_table_attach(table1, label, 0, 1, 0, 1,
-			 GTK_FILL,GTK_SHRINK,0,0);
+			 GTK_SHRINK,GTK_SHRINK,0,0);
       
       adj = (GtkAdjustment *)gtk_adjustment_new 
 	((gdouble)mascot->alpha_main, 0, 100, 1.0, 10.0, 0.0);
@@ -9611,7 +9037,7 @@ void create_config_dialog(GtkWidget *widget, gpointer gdata){
 	gtk_widget_set_sensitive(scale,FALSE);
       }
 #endif
-
+      /*
       pixmap_scrwin = gtk_scrolled_window_new (NULL, NULL);
       gtkut_table_attach_defaults (table, pixmap_scrwin, 0, 2, 1, 2);
       gtk_container_set_border_width (GTK_CONTAINER (pixmap_scrwin), 5);
@@ -9620,8 +9046,16 @@ void create_config_dialog(GtkWidget *widget, gpointer gdata){
 				      GTK_POLICY_ALWAYS);
 
       make_pixmap_list(mascot);
-  
+      */
+      mascot->sw_imgtree = gtk_scrolled_window_new (NULL, NULL);
+      gtkut_table_attach_defaults (table, mascot->sw_imgtree, 0, 2, 1, 2);
+      gtk_container_set_border_width (GTK_CONTAINER (mascot->sw_imgtree), 5);
+      gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW(mascot->sw_imgtree),
+				      GTK_POLICY_NEVER,
+				      GTK_POLICY_ALWAYS);
 
+      make_img_tree(mascot);
+      
       hbox = gtkut_hbox_new(FALSE,5);
       gtk_container_set_border_width (GTK_CONTAINER (hbox), 5);
       gtkut_table_attach(table, hbox, 0, 2, 2, 3,
@@ -9636,7 +9070,7 @@ void create_config_dialog(GtkWidget *widget, gpointer gdata){
 					);
       gtk_box_pack_start(GTK_BOX(hbox), button,FALSE, FALSE, 0);
       my_signal_connect(button,"clicked",create_add_image_dialog,
-			(gpointer)scrwin);
+			(gpointer)mascot);
       
 
       button=gtkut_button_new_with_icon(_("Delete"),
@@ -9648,7 +9082,7 @@ void create_config_dialog(GtkWidget *widget, gpointer gdata){
 					);
       gtk_box_pack_start(GTK_BOX(hbox), button,FALSE, FALSE, 0);
       my_signal_connect(button,"clicked",create_del_image_dialog,
-			(gpointer)scrwin);
+			(gpointer)mascot);
 
 
       label = gtkut_label_new (_("Images"));
@@ -10037,11 +9471,11 @@ void create_config_dialog(GtkWidget *widget, gpointer gdata){
      
   }
 
-  gtk_widget_show_all(conf_main);
+  gtk_widget_show_all(mascot->conf_main);
 
-  gtk_dialog_run(GTK_DIALOG(conf_main));
+  gtk_dialog_run(GTK_DIALOG(mascot->conf_main));
 
-  if(GTK_IS_WIDGET(conf_main)) gtk_widget_destroy(conf_main);
+  if(GTK_IS_WIDGET(mascot->conf_main)) gtk_widget_destroy(mascot->conf_main);
   
   //InitMascot(mascot);
 
@@ -10271,8 +9705,8 @@ void make_pixmap_list(typMascot *mascot)
     gtkut_table_attach (pixmap_table, button, 
 			2, 3, i_pix+1, i_pix+2,
 			GTK_SHRINK,GTK_SHRINK,0,0);
-    my_signal_connect(button,"clicked",create_change_image_dialog, 
-		      (gpointer)mpix[i_pix]);
+    //my_signal_connect(button,"clicked",create_change_image_dialog, 
+    //		      (gpointer)mpix[i_pix]);
     
   }
   label=gtkut_label_new("");
@@ -12288,9 +11722,9 @@ void popup_message(GtkWidget *parent, gchar* stock_id,gint delay, ...){
 					 GTK_WINDOW(parent),
 					 GTK_DIALOG_MODAL,
 #ifdef USE_GTK3
-					 "_Yes",GTK_RESPONSE_YES,
+					 _("_OK"),GTK_RESPONSE_OK,
 #else
-					 GTK_STOCK_YES,GTK_RESPONSE_YES,
+					 GTK_STOCK_OK,GTK_RESPONSE_OK,
 #endif
 					 NULL);
   }
@@ -12516,3 +11950,211 @@ void unlink_all(gchar *dirname)
   return;
 }
 
+
+
+void make_img_tree(typMascot *mascot){
+  GtkWidget *vbox;
+  GtkWidget *hbox;
+  GtkWidget *sw;
+  GtkWidget *button;
+  GtkTreeModel *items_model;
+  
+  if(GTK_IS_WIDGET(mascot->imgtree))  gtk_widget_destroy(mascot->imgtree);
+
+  items_model = imgtree_create_items_model (mascot);
+
+  /* create tree view */
+  mascot->imgtree = gtk_tree_view_new_with_model (items_model);
+#ifndef USE_GTK3
+  gtk_tree_view_set_rules_hint (GTK_TREE_VIEW (mascot->imgtree), TRUE);
+#endif
+  gtk_tree_selection_set_mode (gtk_tree_view_get_selection (GTK_TREE_VIEW (mascot->imgtree)),
+			       GTK_SELECTION_SINGLE);
+  imgtree_add_columns (mascot, GTK_TREE_VIEW (mascot->imgtree), 
+		       items_model);
+
+  g_object_unref(items_model);
+  
+  gtk_container_add (GTK_CONTAINER (mascot->sw_imgtree), mascot->imgtree);
+
+  g_signal_connect (mascot->imgtree, "cursor-changed",
+		    G_CALLBACK (focus_imgtree_item), (gpointer)mascot);
+  g_signal_connect(mascot->imgtree, "row-activated", 
+		   G_CALLBACK (act_imgtree_item), (gpointer)mascot);
+  
+  gtk_widget_show_all(mascot->imgtree);
+
+}
+
+
+static void
+imgtree_add_columns (typMascot *mascot,
+		     GtkTreeView  *treeview, 
+		     GtkTreeModel *items_model)
+{
+  GtkCellRenderer *renderer;
+  GtkTreeViewColumn *column;  
+
+  /* number column */
+  renderer = gtk_cell_renderer_text_new ();
+  g_object_set_data (G_OBJECT (renderer), "column", 
+  		     GINT_TO_POINTER (COLUMN_IMGTREE_NUMBER));
+  column=gtk_tree_view_column_new_with_attributes (_("No."),
+						   renderer,
+						   "text",
+						   COLUMN_IMGTREE_NUMBER,
+#ifdef USE_GTK3
+						   "background-rgba", 
+#else
+						   "background-gdk", 
+#endif
+						   COLUMN_IMGTREE_COLBG,
+						   NULL);
+  gtk_tree_view_append_column(GTK_TREE_VIEW (treeview),column);
+
+
+  /* Filename column */
+  renderer = gtk_cell_renderer_text_new ();
+  g_object_set_data (G_OBJECT (renderer), "column", 
+  		     GINT_TO_POINTER (COLUMN_IMGTREE_FILENAME));
+  column=gtk_tree_view_column_new_with_attributes (_("Image File Name"),
+						   renderer,
+						   "text", 
+						   COLUMN_IMGTREE_FILENAME,
+#ifdef USE_GTK3
+						   "foreground-rgba", COLUMN_IMGTREE_COLFG,
+						   "background-rgba", COLUMN_IMGTREE_COLBG,
+#else
+						   "foreground-gdk", COLUMN_IMGTREE_COLFG,
+						   "background-gdk", COLUMN_IMGTREE_COLBG,
+#endif
+						   
+						   NULL);
+  gtk_tree_view_column_set_cell_data_func(column, renderer,
+					  imgtree_cell_data_func,
+					  GUINT_TO_POINTER(COLUMN_IMGTREE_FILENAME),
+					  NULL);
+  gtk_tree_view_append_column(GTK_TREE_VIEW (treeview),column);
+}
+
+static GtkTreeModel *
+imgtree_create_items_model (typMascot *mascot)
+{
+  gint i_pix = 0;
+  GtkListStore *model;
+  GtkTreeIter iter;
+
+  /* create list store */
+  model = gtk_list_store_new (NUM_IMGTREE_COLUMNS, 
+			      G_TYPE_INT,     // number
+			      G_TYPE_STRING,  // Filename
+#ifdef USE_GTK3
+			      GDK_TYPE_RGBA,   //fgcolor
+			      GDK_TYPE_RGBA   //bgcolor
+#else
+			      GDK_TYPE_COLOR,  //fgcolor
+			      GDK_TYPE_COLOR  //bgcolor
+#endif
+			      );  
+
+  //gtk_list_store_set_column_types (GTK_LIST_STORE (model), 1, 
+  //			   (GType []){ G_TYPE_STRING }); // NOTE
+  for (i_pix = 0; i_pix < MAX_PIXMAP; i_pix++){
+    if(!mascot->sprites[i_pix].filename) break;
+    gtk_list_store_append (model, &iter);
+    imgtree_update_item(mascot, GTK_TREE_MODEL(model), iter, i_pix);
+  }
+  
+  return GTK_TREE_MODEL (model);
+}
+
+
+void imgtree_update_item(typMascot *mascot, 
+			 GtkTreeModel *model, 
+			 GtkTreeIter iter, 
+			 gint i_pix)
+{
+  gtk_list_store_set (GTK_LIST_STORE(model), &iter,
+		      COLUMN_IMGTREE_NUMBER, i_pix,
+		      COLUMN_IMGTREE_FILENAME,  mascot->sprites[i_pix].filename,
+		      COLUMN_IMGTREE_COLFG, &color_black,
+		      COLUMN_IMGTREE_COLBG, (i_pix%2==0) ? &color_white : &color_pale3,
+		      -1);
+}
+
+
+static void
+focus_imgtree_item (GtkWidget *widget, gpointer data)
+{
+  GtkTreeIter iter;
+  typMascot *mascot = (typMascot *)data;
+  GtkTreeModel *model = gtk_tree_view_get_model (GTK_TREE_VIEW(mascot->imgtree));
+  GtkTreeSelection *selection = gtk_tree_view_get_selection (GTK_TREE_VIEW(mascot->imgtree));
+  gint i_pix;
+
+  if (gtk_tree_selection_get_selected (selection, NULL, &iter)){
+    GtkTreePath *path;
+    
+    path = gtk_tree_model_get_path (model, &iter);
+    gtk_tree_model_get (model, &iter, COLUMN_IMGTREE_NUMBER, &i_pix, -1);
+    gtk_tree_path_free (path);
+
+    TestLoadPixmaps(mascot,
+		    mascot->sprites[i_pix].filename,
+		    i_pix);
+    mascot->imgtree_i=i_pix;
+  }
+ 
+}
+
+
+static void act_imgtree_item(GtkTreeView        *treeview,
+			     GtkTreePath        *path,
+			     GtkTreeViewColumn  *col,
+			     gpointer            gdata){
+  typMascot *mascot = (typMascot *)gdata;
+  GtkTreeModel *model;
+  GtkTreeIter   iter;
+  gint i_pix;
+  
+  model = gtk_tree_view_get_model(treeview);
+  
+  if (gtk_tree_model_get_iter(model, &iter, path)){
+    
+    i_pix = gtk_tree_path_get_indices (path)[0];
+
+    create_change_image_dialog(mascot, i_pix);
+
+    imgtree_update_item(mascot, model, iter, i_pix);
+  }
+}
+
+
+void imgtree_cell_data_func(GtkTreeViewColumn *col , 
+			    GtkCellRenderer *renderer,
+			    GtkTreeModel *model, 
+			    GtkTreeIter *iter,
+			    gpointer user_data)
+{
+  const guint index = GPOINTER_TO_UINT(user_data);
+  guint64 size;
+  gint int_value;
+  gchar *c_buf, *str;
+
+  switch (index) {
+  case COLUMN_IMGTREE_FILENAME:
+    gtk_tree_model_get (model, iter, 
+			index, &c_buf,
+			-1);
+    break;
+  }
+
+  switch (index) {
+  case COLUMN_IMGTREE_FILENAME:
+    str=g_path_get_basename(c_buf);
+    break;
+  }
+
+  g_object_set(renderer, "text", str, NULL);
+  if(str)g_free(str);
+}
