@@ -1033,10 +1033,10 @@ struct _typMascot{
   GtkWidget *imgtree;
   gint imgtree_i;
 
+  gint test_timer;
   GtkWidget *sw_ptntree[MAX_ANIME_PATTERN];
   GtkWidget *ptntree[MAX_ANIME_PATTERN];
-  gint ptntree_i_ptn;
-  gint ptntree_i_frm;
+  gint ptntree_i_frm[MAX_ANIME_PATTERN];
 };
 
 
@@ -1185,6 +1185,7 @@ void create_cons_dialog();
 void create_smenu_dialog();
 void gui_arg_init();
 void popup_message(GtkWidget *parent, gchar* stock_id,gint delay, ...);
+gboolean popup_ask(GtkWidget *parent, gchar* stock_id, ...);
 void popup_progress();
 void destroy_progress();
 void unlink_all();

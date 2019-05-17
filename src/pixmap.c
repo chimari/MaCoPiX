@@ -1334,6 +1334,7 @@ gint DrawMascot(typMascot *mascot, gint i_pix)
   }
 #endif
   while (my_main_iteration(FALSE));
+  //printf("DrawMascot  i_pix=%d\n",i_pix);
   gtk_widget_queue_draw(mascot->dw_main);
   
 #else  ///////////////////////// USE_GTK2 ///////////////////////////////

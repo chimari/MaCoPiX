@@ -895,9 +895,9 @@ void drag_end(GtkWidget * widget, GdkEventButton * event, gpointer gdata)
       mascot->anime_frm=-1;
       mascot->anime_seq=-1;
       mascot->anime_seqend=
-	RANDOM(mascot->frame_max[mascot->anime_ptn][mascot->anime_frm]
-	       -mascot->frame_min[mascot->anime_ptn][mascot->anime_frm]+1)
-	+mascot->frame_min[mascot->anime_ptn][mascot->anime_frm];
+	RANDOM(mascot->frame_max[mascot->anime_ptn][mascot->anime_frm+1]
+	       -mascot->frame_min[mascot->anime_ptn][mascot->anime_frm+1]+1)
+	+mascot->frame_min[mascot->anime_ptn][mascot->anime_frm+1];
 
       sound_play(mascot,mascot->click_sound[mascot->anime_ptn]);
 
@@ -1369,7 +1369,8 @@ gint dw_configure_bal(GtkWidget *widget, GdkEventConfigure *event,
 gint dw_expose_main(GtkWidget *widget, cairo_t *cr, gpointer gdata){
   typMascot *mascot;
   mascot=(typMascot *)gdata;
-
+  //printf("Expose!\n");
+  
   if(pixbuf_main){
     gdk_cairo_set_source_pixbuf(cr, pixbuf_main, 0, 0);
     cairo_paint(cr);
@@ -2022,9 +2023,9 @@ void clock_update(typMascot *mascot, gboolean force_flag){
 	    mascot->anime_frm=-1;
 	    mascot->anime_seq=-1;
 	    mascot->anime_seqend=
-	      RANDOM(mascot->frame_max[mascot->anime_ptn][mascot->anime_frm]
-		     -mascot->frame_min[mascot->anime_ptn][mascot->anime_frm]+1)
-	      +mascot->frame_min[mascot->anime_ptn][mascot->anime_frm];
+	      RANDOM(mascot->frame_max[mascot->anime_ptn][mascot->anime_frm+1]
+		     -mascot->frame_min[mascot->anime_ptn][mascot->anime_frm+1]+1)
+	      +mascot->frame_min[mascot->anime_ptn][mascot->anime_frm+1];
 
 	    sound_play(mascot,mascot->click_sound[mascot->anime_ptn]);
 

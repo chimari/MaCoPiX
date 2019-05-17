@@ -226,6 +226,7 @@ static void close_conf();
 static void close_smenu();
 
 void TestPut();
+gboolean test_update();
 void TestAnime();
 void AddPixmap();
 void DelPixmap();
@@ -341,6 +342,8 @@ static GtkTreeModel *ptntree_create_items_model ();
 void ptntree_update_item();
 static void focus_ptntree_item();
 void ptntree_cell_data_func();
+static void ptntree_cell_edited ();
+void ptntree_select_frame();
 
 
 ///// Widget as Global argument /////
@@ -1529,6 +1532,87 @@ void TestPut(GtkWidget *w, gpointer gdata)
 		  i_pix);
 }
 
+
+gboolean test_update(gpointer gdata){
+  typMascot *mascot = (typMascot *)gdata;
+
+    
+  if(mascot->anime_seqend > mascot->anime_seq){
+    mascot->anime_seq++;
+    return(TRUE);
+  }
+  else{
+    // ブロックループ
+    if((mascot->frame_loop[mascot->anime_ptn][mascot->anime_frm].next>=0)){
+      mascot->frame_loop[mascot->anime_ptn][mascot->anime_frm].seq++;
+      if(mascot->frame_loop[mascot->anime_ptn][mascot->anime_frm].seq==1){
+	// ブロックループ開始
+	mascot->frame_loop[mascot->anime_ptn][mascot->anime_frm].seqend=
+	  RANDOM(mascot->frame_loop[mascot->anime_ptn][mascot->anime_frm].max
+		 -mascot->frame_loop[mascot->anime_ptn][mascot->anime_frm].min+1)
+	  +mascot->frame_loop[mascot->anime_ptn][mascot->anime_frm].min;
+	
+	if(mascot->frame_loop[mascot->anime_ptn][mascot->anime_frm].seqend==1){
+	  mascot->frame_loop[mascot->anime_ptn][mascot->anime_frm].seq=0;
+	  mascot->anime_frm++;
+	}
+	else{
+	  mascot->anime_frm=
+	    mascot->frame_loop[mascot->anime_ptn][mascot->anime_frm].next;
+	}
+      }
+      else if(mascot->frame_loop[mascot->anime_ptn][mascot->anime_frm].seqend-
+	      mascot->frame_loop[mascot->anime_ptn][mascot->anime_frm].seq<=0){
+	// ブロックループ終了
+	mascot->frame_loop[mascot->anime_ptn][mascot->anime_frm].seq=0;
+	mascot->anime_frm++;
+      }
+      else{
+	// ブロックループ継続
+	mascot->anime_frm=
+	  mascot->frame_loop[mascot->anime_ptn][mascot->anime_frm].next;
+      }
+    }
+    else{
+      mascot->anime_frm++;
+    }
+
+    // パターン終了
+    if(mascot->anime_frm >= mascot->frame_num[mascot->anime_ptn]){
+      mascot->anime_ptn=0;
+      mascot->anime_frm=0;
+      mascot->anime_seq=0;
+      mascot->anime_seqend=RANDOM(mascot->frame_max[0][0]
+				  -mascot->frame_min[0][0]+1)
+	+mascot->frame_min[0][0];
+      
+      TestLoadPixmaps(mascot,
+		      mascot->sprites[mascot->frame_pix[0][0]].filename,
+		      mascot->frame_pix[0][0]);
+      mascot->test_timer=-1;
+      return(FALSE);
+    }
+
+    // 新規画像ロード
+    ptntree_select_frame(mascot->ptntree[mascot->anime_ptn],
+			 mascot->anime_frm,
+			 mascot->frame_num[mascot->anime_ptn]);
+
+    mascot->anime_seq=1;
+    mascot->anime_seqend=RANDOM(mascot->frame_max[mascot->anime_ptn][mascot->anime_frm]
+				-mascot->frame_min[mascot->anime_ptn][mascot->anime_frm]+1)
+      +mascot->frame_min[mascot->anime_ptn][mascot->anime_frm];
+    /*
+    printf("img=%d %s   seqend=%d\n",
+	   mascot->frame_pix[mascot->anime_ptn][mascot->anime_frm],
+	   mascot->sprites[mascot->frame_pix[mascot->anime_ptn][mascot->anime_frm]].filename,
+	   mascot->anime_seqend);
+    */
+    return(TRUE);
+  }
+}
+
+
 // マスコットテスト表示用コールバック Animationページ用
 void TestAnime(GtkWidget *w, gpointer gdata)
 {
@@ -1542,6 +1626,8 @@ void TestAnime(GtkWidget *w, gpointer gdata)
   i_ptn=mptn->num;
   mascot=mptn->mascot;
 
+  if(mascot->test_timer>0) return;
+
   if(flagChildDialog){
     return;
   }
@@ -1550,62 +1636,29 @@ void TestAnime(GtkWidget *w, gpointer gdata)
   }
 
   gtk_widget_set_sensitive(w, FALSE);
-  
+
   i_frm=0;
 
   // アニメ
-  while(i_frm<mascot->frame_num[i_ptn]){
-    while (my_main_iteration(FALSE));
-    TestLoadPixmaps(mascot,
-		    mascot->sprites[mascot->frame_pix[i_ptn][i_frm]].filename,
-    		    mascot->frame_pix[i_ptn][i_frm]);
-    while (my_main_iteration(FALSE));
-    DrawMascot(mascot, mascot->frame_pix[i_ptn][i_frm]);
 
-    seqend=RANDOM(mascot->frame_max[i_ptn][i_frm]
-		  -mascot->frame_min[i_ptn][i_frm]+1)
-      +mascot->frame_min[i_ptn][i_frm];
-    usleep(seqend*INTERVAL*1e3);
-
-    // ブロックループ
-    if((mascot->frame_loop[i_ptn][i_frm].next>=0)){
-      mascot->frame_loop[i_ptn][i_frm].seq++;
-      if(mascot->frame_loop[i_ptn][i_frm].seq==1){
-	// ブロックループ開始
-	mascot->frame_loop[i_ptn][i_frm].seqend=
-	  RANDOM(mascot->frame_loop[i_ptn][i_frm].max
-		 -mascot->frame_loop[i_ptn][i_frm].min+1)
-	  +mascot->frame_loop[i_ptn][i_frm].min;
-	       
-	if(mascot->frame_loop[i_ptn][i_frm].seqend==1){
-	  mascot->frame_loop[i_ptn][i_frm].seq=0;
-	  i_frm++;
-	}
-	else{
-	  i_frm=
-	    mascot->frame_loop[i_ptn][i_frm].next;
-	}
-      }
-      else if(mascot->frame_loop[i_ptn][i_frm].seqend-
-	      mascot->frame_loop[i_ptn][i_frm].seq<=0){
-	// ブロックループ終了
-	mascot->frame_loop[i_ptn][i_frm].seq=0;
-	i_frm++;
-      }
-      else{
-	// ブロックループ継続
-	i_frm=
-	  mascot->frame_loop[i_ptn][i_frm].next;
-      }
-    }
-    else{
-      i_frm++;
-    }
-  }
-
-  TestLoadPixmaps(mascot,
-		  mascot->sprites[mascot->frame_pix[0][0]].filename,
-		  mascot->frame_pix[0][0]);
+  mascot->anime_ptn=i_ptn;
+  mascot->anime_frm=0;
+  mascot->anime_seq=1;
+  mascot->anime_seqend=
+    RANDOM(mascot->frame_max[mascot->anime_ptn][mascot->anime_frm]
+	   -mascot->frame_min[mascot->anime_ptn][mascot->anime_frm]+1)
+    +mascot->frame_min[mascot->anime_ptn][mascot->anime_frm];
+  
+  ptntree_select_frame(mascot->ptntree[mascot->anime_ptn],
+		       mascot->anime_frm,
+		       mascot->frame_num[mascot->anime_ptn]);
+  
+  mascot->test_timer=g_timeout_add_full(G_PRIORITY_HIGH,
+					INTERVAL, 
+					(GSourceFunc)test_update, 
+					(gpointer)mascot,
+					NULL);
+  
 
   gtk_widget_set_sensitive(w, TRUE);
   flagChildDialog=FALSE;
@@ -1782,7 +1835,7 @@ gchar* create_nkr_change_image_dialog (typMascot *mascot,
     if(fname) g_free(fname);
 
     if(access(dest_file,F_OK)!=0){
-      popup_message(mascot->win_main,
+      popup_message(mascot->conf_main,
 #ifdef USE_GTK3
 		    "dialog-error", 
 #else
@@ -1874,7 +1927,7 @@ static void create_change_biff_image_dialog(GtkWidget *w, gpointer gdata)
 			 to_utf8(my_basename(mascot->mail.pix_file)));
     }
     else{
-      popup_message(mascot->win_main,
+      popup_message(mascot->conf_main,
 #ifdef USE_GTK3
 		    "dialog-error", 
 #else
@@ -1984,7 +2037,7 @@ static void create_add_image_dialog(GtkWidget *widget, gpointer gdata)
 	  
 	}
 	else{
-	  popup_message(mascot->win_main,
+	  popup_message(mascot->conf_main,
 #ifdef USE_GTK3
 			"dialog-error", 
 #else
@@ -1998,7 +2051,7 @@ static void create_add_image_dialog(GtkWidget *widget, gpointer gdata)
 	}
       }
       else{
-	popup_message(mascot->win_main,
+	popup_message(mascot->conf_main,
 #ifdef USE_GTK3
 		      "dialog-error", 
 #else
@@ -2131,7 +2184,7 @@ static void create_add_pattern_dialog(GtkWidget *w, gpointer gdata)
   int i_ptn,i_frm;
   gint dest_ptn;
 
-  mascot=(typMascot *)mascot;
+  mascot=(typMascot *)gdata;
 
   if(flagChildDialog){
     return;
@@ -2141,7 +2194,7 @@ static void create_add_pattern_dialog(GtkWidget *w, gpointer gdata)
   }
 
   if(mascot->ptn_num>=MAX_ANIME_PATTERN){
-    popup_message(mascot->win_main,
+    popup_message(mascot->conf_main,
 #ifdef USE_GTK3
 		  "dialog-error", 
 #else
@@ -2152,13 +2205,15 @@ static void create_add_pattern_dialog(GtkWidget *w, gpointer gdata)
 		  " ",
 		  _("The number of patterns maxes out."),
 		  NULL);
+    flagChildDialog=FALSE;
     return;
   }
 
-  dest_ptn=mascot->ptn_num;
+  dest_ptn=gtk_notebook_get_current_page(GTK_NOTEBOOK(ptn_note));
+  dest_ptn++;
 
   dialog = gtk_dialog_new_with_buttons(_("Select Pattern No. to Append"),
-				       GTK_WINDOW(ptn_note),
+				       GTK_WINDOW(mascot->conf_main),
 				       GTK_DIALOG_MODAL,
 #ifdef USE_GTK3
 				       "_Cancel",GTK_RESPONSE_CANCEL,
@@ -2179,7 +2234,7 @@ static void create_add_pattern_dialog(GtkWidget *w, gpointer gdata)
   gtk_box_pack_start(GTK_BOX(hbox),label,TRUE,TRUE,0);
 
   adj = (GtkAdjustment *)gtk_adjustment_new 
-    ((gdouble)mascot->ptn_num, 1,(gdouble)mascot->ptn_num,1.0, 1.0, 0.0);
+    ((gdouble)dest_ptn, 1, (gdouble)mascot->ptn_num, 1.0, 1.0, 0.0);
   my_signal_connect (adj, "value_changed",cc_get_adj,&dest_ptn);
   spinner =  gtk_spin_button_new (adj, 0, 0);
   gtk_spin_button_set_wrap (GTK_SPIN_BUTTON (spinner), FALSE);
@@ -2214,10 +2269,11 @@ static void create_add_pattern_dialog(GtkWidget *w, gpointer gdata)
 	mascot->frame_loop[i_ptn][i_frm].min=mascot->frame_loop[i_ptn-1][i_frm].min;
 	mascot->frame_loop[i_ptn][i_frm].max=mascot->frame_loop[i_ptn-1][i_frm].max;
       }
+      
+      gtk_widget_destroy(mascot->ptntree[i_ptn-1]);
+      flag_make_ptntree[i_ptn-1]=FALSE;
       gtk_notebook_remove_page(GTK_NOTEBOOK(ptn_note),i_ptn-1);
-      flag_make_frame_list[i_ptn-1]=FALSE;
       flag_make_pattern_list[i_ptn-1]=FALSE;
-      gtk_widget_queue_draw (GTK_WIDGET(ptn_note));
     }
 
     mascot->frame_pix[dest_ptn][0]=0;
@@ -2271,16 +2327,12 @@ static void create_add_pattern_dialog(GtkWidget *w, gpointer gdata)
 static void create_del_pattern_dialog(GtkWidget *w, gpointer gdata)
 {
   typMascot *mascot;
-  GtkWidget *dialog;
-  GtkWidget *button;
-  GtkWidget *label;
-  GtkAdjustment *adj;
-  GtkWidget *spinner;
-  GtkWidget *hbox;
   int i_ptn,i_frm;
   gint dest_ptn;
+  gboolean ret;
+  gchar *tmp;
   
-  mascot=(typMascot *)mascot;
+  mascot=(typMascot *)gdata;
 
   if(flagChildDialog){
     return;
@@ -2289,8 +2341,10 @@ static void create_del_pattern_dialog(GtkWidget *w, gpointer gdata)
     flagChildDialog=TRUE;
   }
 
-  if(mascot->ptn_num==1){
-    popup_message(mascot->win_main,
+  dest_ptn=gtk_notebook_get_current_page(GTK_NOTEBOOK(ptn_note));
+  
+  if(dest_ptn==0){
+    popup_message(mascot->conf_main,
 #ifdef USE_GTK3
 		  "dialog-error", 
 #else
@@ -2299,125 +2353,109 @@ static void create_del_pattern_dialog(GtkWidget *w, gpointer gdata)
 		  -1,
 		  _("Error: Delete Pattern."),
 		  " ",
-		  _("You cannot delete the base pattern."),
+		  _("You cannot delete the Base pattern."),
 		  NULL);
+    flagChildDialog=FALSE;
+    return;
+  }
+  
+
+  tmp=g_strdup_printf(_("Do you really delete Pattern <b>%02d</b>?"),
+		      dest_ptn);
+  
+  ret=popup_ask(mascot->conf_main,
+#ifdef USE_GTK3
+		"dialog-warning", 
+#else
+		GTK_STOCK_DIALOG_WARNING,
+#endif
+		_("Warning: Delete Pattern."),
+		" ",
+		tmp,
+		NULL);
+  g_free(tmp);
+
+  if(!ret){
+    flagChildDialog=FALSE;
     return;
   }
 
-  dest_ptn=mascot->ptn_num-1;
-
-  dialog = gtk_dialog_new_with_buttons(_("Select Pattern No. to Delete"),
-				       GTK_WINDOW(ptn_note),
-				       GTK_DIALOG_MODAL,
-#ifdef USE_GTK3
-				       "_Cancel",GTK_RESPONSE_CANCEL,
-				       "_OK",GTK_RESPONSE_OK,
-#else
-				       GTK_STOCK_CANCEL,GTK_RESPONSE_CANCEL,
-				       GTK_STOCK_OK,GTK_RESPONSE_OK,
-#endif
-				       NULL);
-  gtk_window_set_position(GTK_WINDOW(dialog), GTK_WIN_POS_CENTER);
-  gtk_container_set_border_width(GTK_CONTAINER(dialog),5);
-  
-  hbox=gtkut_hbox_new(FALSE,0);
-  gtk_box_pack_start(GTK_BOX(gtk_dialog_get_content_area(GTK_DIALOG(dialog))),
-		     hbox,TRUE,TRUE,0);
-
-  label=gtkut_label_new(_("Delete Pattern No."));
-  gtk_box_pack_start(GTK_BOX(hbox),label,TRUE,TRUE,0);
-
-  adj = (GtkAdjustment *)gtk_adjustment_new 
-    ((gdouble)gtk_notebook_get_current_page(GTK_NOTEBOOK(ptn_note)),
-     1,(gdouble)mascot->ptn_num-1,1.0, 1.0, 0.0);
-  my_signal_connect (adj, "value_changed",cc_get_adj,&dest_ptn);
-  spinner =  gtk_spin_button_new (adj, 0, 0);
-  gtk_spin_button_set_wrap (GTK_SPIN_BUTTON (spinner), FALSE);
-  gtk_box_pack_start(GTK_BOX(hbox), spinner,FALSE, FALSE, 0);
-  
-  gtk_widget_show_all(dialog);
-
-  if (gtk_dialog_run(GTK_DIALOG(dialog)) == GTK_RESPONSE_OK) {
-    gtk_widget_destroy(dialog);
-
-    for(i_ptn=dest_ptn;i_ptn<mascot->ptn_num-1;i_ptn++){
-      mascot->frame_num[i_ptn]=mascot->frame_num[i_ptn+1];
-      mascot->random_weight[i_ptn]=mascot->random_weight[i_ptn+1];
-      mascot->click_weight[i_ptn]=mascot->click_weight[i_ptn+1];
-      mascot->bal_lxoff[i_ptn]=mascot->bal_lxoff[i_ptn+1];
-      mascot->bal_lyoff[i_ptn]=mascot->bal_lyoff[i_ptn+1];
-      mascot->bal_rxoff[i_ptn]=mascot->bal_rxoff[i_ptn+1];
-      mascot->bal_ryoff[i_ptn]=mascot->bal_ryoff[i_ptn+1];
-      if(mascot->click_word[i_ptn]) g_free(mascot->click_word[i_ptn]);
-      mascot->click_word[i_ptn]=g_strdup(mascot->click_word[i_ptn+1]);
-      if(mascot->duet_tgt[i_ptn]) g_free(mascot->duet_tgt[i_ptn]);
-      mascot->duet_tgt[i_ptn]=g_strdup(mascot->duet_tgt[i_ptn+1]);
-      mascot->duet_ptn[i_ptn]=mascot->duet_ptn[i_ptn+1];
-      if(mascot->duet_word[i_ptn]) g_free(mascot->duet_word[i_ptn]);
-      mascot->duet_word[i_ptn]=g_strdup(mascot->duet_word[i_ptn+1]);
-      mascot->duet_delay[i_ptn]=mascot->duet_delay[i_ptn+1];
-      for(i_frm=0;i_frm<MAX_ANIME_FRAME;i_frm++){
-	mascot->frame_pix[i_ptn][i_frm]=mascot->frame_pix[i_ptn+1][i_frm];
-	mascot->frame_min[i_ptn][i_frm] =mascot->frame_min[i_ptn+1][i_frm];
-	mascot->frame_max[i_ptn][i_frm] =mascot->frame_max[i_ptn+1][i_frm];
-	mascot->frame_loop[i_ptn][i_frm].next=mascot->frame_loop[i_ptn+1][i_frm].next;
-	mascot->frame_loop[i_ptn][i_frm].min=mascot->frame_loop[i_ptn+1][i_frm].min;
-	mascot->frame_loop[i_ptn][i_frm].max=mascot->frame_loop[i_ptn+1][i_frm].max;
-      }
-    }
-
-    for(i_ptn=mascot->ptn_num-1;i_ptn>=dest_ptn;i_ptn--){
-      gtk_notebook_remove_page(GTK_NOTEBOOK(ptn_note),i_ptn);
-      flag_make_frame_list[i_ptn]=FALSE;
-      flag_make_pattern_list[i_ptn]=FALSE;
-      gtk_widget_queue_draw (GTK_WIDGET(ptn_note));
-    }
-
-    mascot->frame_num[mascot->ptn_num-1]=0;
-    mascot->random_weight[mascot->ptn_num-1]=0;
-    mascot->click_weight[mascot->ptn_num-1]=0;
-    mascot->bal_lxoff[mascot->ptn_num-1]=0;
-    mascot->bal_lyoff[mascot->ptn_num-1]=0;
-    mascot->bal_rxoff[mascot->ptn_num-1]=0;
-    mascot->bal_ryoff[mascot->ptn_num-1]=0;
-    if(mascot->click_word[mascot->ptn_num-1]) g_free(mascot->click_word[mascot->ptn_num-1]);
-    mascot->click_word[mascot->ptn_num-1]=NULL;
-    if(mascot->duet_tgt[mascot->ptn_num-1]) g_free(mascot->duet_tgt[mascot->ptn_num-1]);
-    mascot->duet_tgt[mascot->ptn_num-1]=NULL;
-    mascot->duet_ptn[mascot->ptn_num-1]=1;
-    if(mascot->duet_word[mascot->ptn_num-1]) g_free(mascot->duet_word[mascot->ptn_num-1]);
-    mascot->duet_word[mascot->ptn_num-1]=NULL;
-    mascot->duet_delay[mascot->ptn_num-1]=DEF_DUET_DELAY;
+  for(i_ptn=dest_ptn;i_ptn<mascot->ptn_num-1;i_ptn++){
+    mascot->frame_num[i_ptn]=mascot->frame_num[i_ptn+1];
+    mascot->random_weight[i_ptn]=mascot->random_weight[i_ptn+1];
+    mascot->click_weight[i_ptn]=mascot->click_weight[i_ptn+1];
+    mascot->bal_lxoff[i_ptn]=mascot->bal_lxoff[i_ptn+1];
+    mascot->bal_lyoff[i_ptn]=mascot->bal_lyoff[i_ptn+1];
+    mascot->bal_rxoff[i_ptn]=mascot->bal_rxoff[i_ptn+1];
+    mascot->bal_ryoff[i_ptn]=mascot->bal_ryoff[i_ptn+1];
+    if(mascot->click_word[i_ptn]) g_free(mascot->click_word[i_ptn]);
+    mascot->click_word[i_ptn]=g_strdup(mascot->click_word[i_ptn+1]);
+    if(mascot->duet_tgt[i_ptn]) g_free(mascot->duet_tgt[i_ptn]);
+    mascot->duet_tgt[i_ptn]=g_strdup(mascot->duet_tgt[i_ptn+1]);
+    mascot->duet_ptn[i_ptn]=mascot->duet_ptn[i_ptn+1];
+    if(mascot->duet_word[i_ptn]) g_free(mascot->duet_word[i_ptn]);
+    mascot->duet_word[i_ptn]=g_strdup(mascot->duet_word[i_ptn+1]);
+    mascot->duet_delay[i_ptn]=mascot->duet_delay[i_ptn+1];
     for(i_frm=0;i_frm<MAX_ANIME_FRAME;i_frm++){
-      mascot->frame_pix[mascot->ptn_num-1][i_frm]=-1;
-      mascot->frame_min[mascot->ptn_num-1][i_frm]=0;
-      mascot->frame_max[mascot->ptn_num-1][i_frm]=0;
-      mascot->frame_loop[mascot->ptn_num-1][i_frm].next=-1;
-      mascot->frame_loop[mascot->ptn_num-1][i_frm].min=0;
-      mascot->frame_loop[mascot->ptn_num-1][i_frm].max=0;
-      mascot->frame_loop[mascot->ptn_num-1][i_frm].seq=0;
-      mascot->frame_loop[mascot->ptn_num-1][i_frm].seqend=0;
+      mascot->frame_pix[i_ptn][i_frm]=mascot->frame_pix[i_ptn+1][i_frm];
+      mascot->frame_min[i_ptn][i_frm] =mascot->frame_min[i_ptn+1][i_frm];
+      mascot->frame_max[i_ptn][i_frm] =mascot->frame_max[i_ptn+1][i_frm];
+      mascot->frame_loop[i_ptn][i_frm].next=mascot->frame_loop[i_ptn+1][i_frm].next;
+      mascot->frame_loop[i_ptn][i_frm].min=mascot->frame_loop[i_ptn+1][i_frm].min;
+      mascot->frame_loop[i_ptn][i_frm].max=mascot->frame_loop[i_ptn+1][i_frm].max;
     }
+  }
+
+  for(i_ptn=mascot->ptn_num-1;i_ptn>=dest_ptn;i_ptn--){
+    gtk_widget_destroy(mascot->ptntree[i_ptn]);
+    flag_make_ptntree[i_ptn]=FALSE;
+    flag_make_pattern_list[i_ptn]=FALSE;
+    gtk_notebook_remove_page(GTK_NOTEBOOK(ptn_note),i_ptn);
+  }
+  
+  mascot->frame_num[mascot->ptn_num-1]=0;
+  mascot->random_weight[mascot->ptn_num-1]=0;
+  mascot->click_weight[mascot->ptn_num-1]=0;
+  mascot->bal_lxoff[mascot->ptn_num-1]=0;
+  mascot->bal_lyoff[mascot->ptn_num-1]=0;
+  mascot->bal_rxoff[mascot->ptn_num-1]=0;
+  mascot->bal_ryoff[mascot->ptn_num-1]=0;
+  if(mascot->click_word[mascot->ptn_num-1])
+    g_free(mascot->click_word[mascot->ptn_num-1]);
+  mascot->click_word[mascot->ptn_num-1]=NULL;
+  if(mascot->duet_tgt[mascot->ptn_num-1])
+    g_free(mascot->duet_tgt[mascot->ptn_num-1]);
+  mascot->duet_tgt[mascot->ptn_num-1]=NULL;
+  mascot->duet_ptn[mascot->ptn_num-1]=1;
+  if(mascot->duet_word[mascot->ptn_num-1])
+    g_free(mascot->duet_word[mascot->ptn_num-1]);
+  mascot->duet_word[mascot->ptn_num-1]=NULL;
+  mascot->duet_delay[mascot->ptn_num-1]=DEF_DUET_DELAY;
+  for(i_frm=0;i_frm<MAX_ANIME_FRAME;i_frm++){
+    mascot->frame_pix[mascot->ptn_num-1][i_frm]=-1;
+    mascot->frame_min[mascot->ptn_num-1][i_frm]=0;
+    mascot->frame_max[mascot->ptn_num-1][i_frm]=0;
+    mascot->frame_loop[mascot->ptn_num-1][i_frm].next=-1;
+    mascot->frame_loop[mascot->ptn_num-1][i_frm].min=0;
+    mascot->frame_loop[mascot->ptn_num-1][i_frm].max=0;
+    mascot->frame_loop[mascot->ptn_num-1][i_frm].seq=0;
+    mascot->frame_loop[mascot->ptn_num-1][i_frm].seqend=0;
+  }
     
-    mascot->ptn_num--;
+  mascot->ptn_num--;
 
-    for(i_ptn=dest_ptn;i_ptn<mascot->ptn_num;i_ptn++){
-      make_pattern_list(mascot, ptn_note, i_ptn);
-    }
+  for(i_ptn=dest_ptn;i_ptn<mascot->ptn_num;i_ptn++){
+    make_pattern_list(mascot, ptn_note, i_ptn);
+  }
 
-    if(dest_ptn<=mascot->ptn_num){
-      gtk_notebook_set_current_page(GTK_NOTEBOOK(ptn_note), dest_ptn-1);
-    }
-    else{
-      gtk_notebook_set_current_page(GTK_NOTEBOOK(ptn_note), dest_ptn);
-    }
-    gtk_widget_queue_draw(GTK_WIDGET(ptn_note));
-
+  if(dest_ptn<=mascot->ptn_num){
+    gtk_notebook_set_current_page(GTK_NOTEBOOK(ptn_note), dest_ptn-1);
   }
   else{
-    gtk_widget_destroy(dialog);
+    gtk_notebook_set_current_page(GTK_NOTEBOOK(ptn_note), dest_ptn);
   }
-
+  gtk_widget_queue_draw(GTK_WIDGET(ptn_note));
+  
   flagChildDialog=FALSE;
   return;
 }
@@ -2435,6 +2473,7 @@ static void create_copy_pattern_dialog(GtkWidget *w, gpointer gdata)
   int i_ptn,i_frm;
   gint from_ptn;
   gint dest_ptn;
+  gchar *tmp;
 
   mascot=(typMascot *)gdata;
 
@@ -2445,8 +2484,26 @@ static void create_copy_pattern_dialog(GtkWidget *w, gpointer gdata)
     flagChildDialog=TRUE;
   }
 
-  if(mascot->ptn_num==1){
-    popup_message(mascot->win_main,
+  if(mascot->ptn_num>=MAX_ANIME_PATTERN){
+    popup_message(mascot->conf_main,
+#ifdef USE_GTK3
+		  "dialog-error", 
+#else
+		  GTK_STOCK_DIALOG_ERROR,
+#endif
+		  -1,
+		  _("Error: Append Pattern."),
+		  " ",
+		  _("The number of patterns maxes out."),
+		  NULL);
+    flagChildDialog=FALSE;
+    return;
+  }
+
+  from_ptn=gtk_notebook_get_current_page(GTK_NOTEBOOK(ptn_note));
+
+  if(from_ptn==0){
+    popup_message(mascot->conf_main,
 #ifdef USE_GTK3
 		  "dialog-error", 
 #else
@@ -2455,17 +2512,17 @@ static void create_copy_pattern_dialog(GtkWidget *w, gpointer gdata)
 		  -1,
 		  _("Error: Copy Pattern."),
 		  " ",
-		  _("You should append new pattern to copy."),
+		  _("You cannot copy the Base pattern."),
 		  NULL);
+    flagChildDialog=FALSE;
     return;
   }
 
 
-  from_ptn=1;
-  dest_ptn=mascot->ptn_num-1;
+  dest_ptn=mascot->ptn_num;
 
   dialog = gtk_dialog_new_with_buttons(_("Pattern Copy"),
-				       GTK_WINDOW(ptn_note),
+				       GTK_WINDOW(mascot->conf_main),
 				       GTK_DIALOG_MODAL,
 #ifdef USE_GTK3
 				       "_Cancel",GTK_RESPONSE_CANCEL,
@@ -2482,22 +2539,14 @@ static void create_copy_pattern_dialog(GtkWidget *w, gpointer gdata)
   gtk_box_pack_start(GTK_BOX(gtk_dialog_get_content_area(GTK_DIALOG(dialog))),
 		     hbox,TRUE,TRUE,0);
 
-  label=gtkut_label_new(_("Pattern Copy :  No."));
+  tmp=g_strdup_printf(_("Pattern Copy No. <b>%02d</b> to No. "),
+		      from_ptn);
+  label=gtkut_label_new(tmp);
   gtk_box_pack_start(GTK_BOX(hbox),label,TRUE,TRUE,0);
 
   adj = (GtkAdjustment *)gtk_adjustment_new 
-    ((gdouble)gtk_notebook_get_current_page(GTK_NOTEBOOK(ptn_note)),
-     1,(gdouble)mascot->ptn_num-1,1.0, 1.0, 0.0);
-  my_signal_connect (adj, "value_changed",cc_get_adj,&from_ptn);
-  spinner =  gtk_spin_button_new (adj, 0, 0);
-  gtk_spin_button_set_wrap (GTK_SPIN_BUTTON (spinner), FALSE);
-  gtk_box_pack_start(GTK_BOX(hbox), spinner,FALSE, FALSE, 0);
-  
-  label=gtkut_label_new(_(" -> No."));
-  gtk_box_pack_start(GTK_BOX(hbox),label,TRUE,TRUE,0);
-
-  adj = (GtkAdjustment *)gtk_adjustment_new 
-    ((gdouble)mascot->ptn_num-1, 1,(gdouble)mascot->ptn_num-1,1.0, 1.0, 0.0);
+    ((gdouble)dest_ptn,
+     1,(gdouble)mascot->ptn_num,1.0, 1.0, 0.0);
   my_signal_connect (adj, "value_changed",cc_get_adj,&dest_ptn);
   spinner =  gtk_spin_button_new (adj, 0, 0);
   gtk_spin_button_set_wrap (GTK_SPIN_BUTTON (spinner), FALSE);
@@ -2507,6 +2556,37 @@ static void create_copy_pattern_dialog(GtkWidget *w, gpointer gdata)
 
   if (gtk_dialog_run(GTK_DIALOG(dialog)) == GTK_RESPONSE_OK) {
     gtk_widget_destroy(dialog);
+
+    for(i_ptn=mascot->ptn_num;i_ptn>dest_ptn;i_ptn--){
+      mascot->frame_num[i_ptn]=mascot->frame_num[i_ptn-1];
+      mascot->random_weight[i_ptn]=mascot->random_weight[i_ptn-1];
+      mascot->click_weight[i_ptn]=mascot->click_weight[i_ptn-1];
+      mascot->bal_lxoff[i_ptn]=mascot->bal_lxoff[i_ptn-1];
+      mascot->bal_lyoff[i_ptn]=mascot->bal_lyoff[i_ptn-1];
+      mascot->bal_rxoff[i_ptn]=mascot->bal_rxoff[i_ptn-1];
+      mascot->bal_ryoff[i_ptn]=mascot->bal_ryoff[i_ptn-1];
+      if(mascot->click_word[i_ptn]) g_free(mascot->click_word[i_ptn]);
+      mascot->click_word[i_ptn]=g_strdup(mascot->click_word[i_ptn-1]);
+      if(mascot->duet_tgt[i_ptn]) g_free(mascot->duet_tgt[i_ptn]);
+      mascot->duet_tgt[i_ptn]=g_strdup(mascot->duet_tgt[i_ptn-1]);
+      mascot->duet_ptn[i_ptn]=mascot->duet_ptn[i_ptn-1];
+      if(mascot->duet_word[i_ptn]) g_free(mascot->duet_word[i_ptn]);
+      mascot->duet_word[i_ptn]=g_strdup(mascot->duet_word[i_ptn-1]);
+      mascot->duet_delay[i_ptn]=mascot->duet_delay[i_ptn-1];
+      for(i_frm=0;i_frm<MAX_ANIME_FRAME;i_frm++){
+	mascot->frame_pix[i_ptn][i_frm]=mascot->frame_pix[i_ptn-1][i_frm];
+	mascot->frame_min[i_ptn][i_frm]=mascot->frame_min[i_ptn-1][i_frm];
+	mascot->frame_max[i_ptn][i_frm]=mascot->frame_max[i_ptn-1][i_frm];
+	mascot->frame_loop[i_ptn][i_frm].next=mascot->frame_loop[i_ptn-1][i_frm].next;
+	mascot->frame_loop[i_ptn][i_frm].min=mascot->frame_loop[i_ptn-1][i_frm].min;
+	mascot->frame_loop[i_ptn][i_frm].max=mascot->frame_loop[i_ptn-1][i_frm].max;
+      }
+      
+      gtk_widget_destroy(mascot->ptntree[i_ptn-1]);
+      flag_make_ptntree[i_ptn-1]=FALSE;
+      gtk_notebook_remove_page(GTK_NOTEBOOK(ptn_note),i_ptn-1);
+      flag_make_pattern_list[i_ptn-1]=FALSE;
+    }
 
     mascot->frame_num[dest_ptn]=mascot->frame_num[from_ptn];
     mascot->random_weight[dest_ptn]=mascot->random_weight[from_ptn];
@@ -2531,18 +2611,12 @@ static void create_copy_pattern_dialog(GtkWidget *w, gpointer gdata)
       mascot->frame_loop[dest_ptn][i_frm].min=mascot->frame_loop[from_ptn][i_frm].min;
       mascot->frame_loop[dest_ptn][i_frm].max=mascot->frame_loop[from_ptn][i_frm].max;
     }
-
-    for(i_ptn=mascot->ptn_num-1;i_ptn>=dest_ptn;i_ptn--){
-      gtk_notebook_remove_page(GTK_NOTEBOOK(ptn_note),i_ptn);
-      flag_make_frame_list[i_ptn]=FALSE;
-      flag_make_pattern_list[i_ptn]=FALSE;
-      gtk_widget_queue_draw (GTK_WIDGET(ptn_note));
-    }
+    
+    mascot->ptn_num++;
 
     for(i_ptn=dest_ptn;i_ptn<mascot->ptn_num;i_ptn++){
       make_pattern_list(mascot, ptn_note, i_ptn);
     }
-
     gtk_notebook_set_current_page(GTK_NOTEBOOK(ptn_note), dest_ptn);
     gtk_widget_queue_draw(GTK_WIDGET(ptn_note));
   }
@@ -2581,7 +2655,7 @@ static void create_add_frame_dialog(GtkWidget *w, gpointer gdata)
   }
 
   if(mascot->frame_num[i_ptn]>=MAX_ANIME_FRAME){
-    popup_message(mascot->win_main,
+    popup_message(mascot->conf_main,
 #ifdef USE_GTK3
 		  "dialog-error", 
 #else
@@ -2595,10 +2669,17 @@ static void create_add_frame_dialog(GtkWidget *w, gpointer gdata)
     return;
   }
 
-  dest_frm=mascot->frame_num[i_ptn];
+  if((mascot->ptntree_i_frm[i_ptn]<0)
+     || (mascot->ptntree_i_frm[i_ptn]>=mascot->frame_num[i_ptn])){
+    dest_frm=mascot->frame_num[i_ptn];
+  }
+  else{
+    dest_frm=mascot->ptntree_i_frm[i_ptn];
+  }
+  dest_frm++;
 
   dialog = gtk_dialog_new_with_buttons(_("Select Frame No. to Append"),
-				       NULL,
+				       GTK_WINDOW(mascot->conf_main),
 				       GTK_DIALOG_MODAL,
 #ifdef USE_GTK3
 				       "_Cancel",GTK_RESPONSE_CANCEL,
@@ -2619,8 +2700,8 @@ static void create_add_frame_dialog(GtkWidget *w, gpointer gdata)
   gtk_box_pack_start(GTK_BOX(hbox),label,TRUE,TRUE,0);
 
   adj = (GtkAdjustment *)gtk_adjustment_new 
-    ((gdouble)mascot->frame_num[i_ptn], 0,
-     (gdouble)mascot->frame_num[i_ptn],1.0, 1.0, 0.0);
+    ((gdouble)dest_frm, 1,
+     (gdouble)mascot->frame_num[i_ptn]+1,1.0, 1.0, 0.0);
   my_signal_connect (adj, "value_changed",cc_get_adj,&dest_frm);
   spinner =  gtk_spin_button_new (adj, 0, 0);
   gtk_spin_button_set_wrap (GTK_SPIN_BUTTON (spinner), FALSE);
@@ -2630,6 +2711,8 @@ static void create_add_frame_dialog(GtkWidget *w, gpointer gdata)
 
   if (gtk_dialog_run(GTK_DIALOG(dialog)) == GTK_RESPONSE_OK) {
     gtk_widget_destroy(dialog);
+
+    dest_frm--;
 
     for(i_frm=mascot->frame_num[i_ptn];i_frm>dest_frm;i_frm--){
       mascot->frame_pix[i_ptn][i_frm]=mascot->frame_pix[i_ptn][i_frm-1];
@@ -2651,7 +2734,8 @@ static void create_add_frame_dialog(GtkWidget *w, gpointer gdata)
 
     mascot->frame_num[i_ptn]++;
 
-    make_frame_list(mascot, i_ptn);
+    //make_frame_list(mascot, i_ptn);
+    make_ptn_tree(mascot, i_ptn);
   }
   else{
     gtk_widget_destroy(dialog);
@@ -2689,7 +2773,7 @@ static void create_del_frame_dialog(GtkWidget *w, gpointer gdata)
   }
 
   if(mascot->frame_num[i_ptn]==1){
-    popup_message(mascot->win_main,
+    popup_message(mascot->conf_main,
 #ifdef USE_GTK3
 		  "dialog-error", 
 #else
@@ -2703,70 +2787,50 @@ static void create_del_frame_dialog(GtkWidget *w, gpointer gdata)
     return;
   }
 
-  dest_frm=mascot->frame_num[i_ptn]-1;
-
-  dialog = gtk_dialog_new_with_buttons(_("Select Frame No. to Delete"),
-				       NULL,
-				       GTK_DIALOG_MODAL,
+  if((mascot->ptntree_i_frm[i_ptn]<0)
+     || (mascot->ptntree_i_frm[i_ptn]>=mascot->frame_num[i_ptn])){
+    popup_message(mascot->conf_main,
 #ifdef USE_GTK3
-				       "_Cancel",GTK_RESPONSE_CANCEL,
-				       "_OK",GTK_RESPONSE_OK,
+		  "dialog-error", 
 #else
-				       GTK_STOCK_CANCEL,GTK_RESPONSE_CANCEL,
-				       GTK_STOCK_OK,GTK_RESPONSE_OK,
+		  GTK_STOCK_DIALOG_ERROR,
 #endif
-				       NULL);
-  gtk_window_set_position(GTK_WINDOW(dialog), GTK_WIN_POS_CENTER);
-  gtk_container_set_border_width(GTK_CONTAINER(dialog),5);
-  
-  hbox=gtkut_hbox_new(FALSE,0);
-  gtk_box_pack_start(GTK_BOX(gtk_dialog_get_content_area(GTK_DIALOG(dialog))),
-		     hbox,TRUE,TRUE,0);
-
-  label=gtkut_label_new(_("Delete Frame No."));
-  gtk_box_pack_start(GTK_BOX(hbox),label,TRUE,TRUE,0);
-
-  adj = (GtkAdjustment *)gtk_adjustment_new 
-    ((gdouble)mascot->frame_num[i_ptn]-1, 0,
-     (gdouble)mascot->frame_num[i_ptn]-1,1.0, 1.0, 0.0);
-  my_signal_connect (adj, "value_changed",cc_get_adj,&dest_frm);
-  spinner =  gtk_spin_button_new (adj, 0, 0);
-  gtk_spin_button_set_wrap (GTK_SPIN_BUTTON (spinner), FALSE);
-  gtk_box_pack_start(GTK_BOX(hbox), spinner,FALSE, FALSE, 0);
-  
-  gtk_widget_show_all(dialog);
-  
-  if (gtk_dialog_run(GTK_DIALOG(dialog)) == GTK_RESPONSE_OK) {
-    gtk_widget_destroy(dialog);
-
-        for(i_frm=dest_frm;i_frm<mascot->frame_num[i_ptn]-1;i_frm++){
-      mascot->frame_pix[i_ptn][i_frm]=mascot->frame_pix[i_ptn][i_frm+1];
-      mascot->frame_min[i_ptn][i_frm]=mascot->frame_min[i_ptn][i_frm+1];
-      mascot->frame_max[i_ptn][i_frm]=mascot->frame_max[i_ptn][i_frm+1];
-      mascot->frame_loop[i_ptn][i_frm].next
-	=mascot->frame_loop[i_ptn][i_frm+1].next;
-      mascot->frame_loop[i_ptn][i_frm].min
-	=mascot->frame_loop[i_ptn][i_frm+1].min;
-      mascot->frame_loop[i_ptn][i_frm].max
-	=mascot->frame_loop[i_ptn][i_frm+1].max;
-    }
-    mascot->frame_pix[i_ptn][mascot->frame_num[i_ptn]-1]=-1;
-    mascot->frame_min[i_ptn][mascot->frame_num[i_ptn]-1]=0;
-    mascot->frame_max[i_ptn][mascot->frame_num[i_ptn]-1]=0;
-    mascot->frame_loop[i_ptn][mascot->frame_num[i_ptn]-1].next=-1;
-    mascot->frame_loop[i_ptn][mascot->frame_num[i_ptn]-1].min=0;
-    mascot->frame_loop[i_ptn][mascot->frame_num[i_ptn]-1].max=0;
-
-    mascot->frame_num[i_ptn]--;
-
-    make_frame_list(mascot, i_ptn);
+		  -1,
+		  _("Error: Delete Frame."),
+		  " ",
+		  _("Please select a frame to delete."),
+		  NULL);
+    return;
   }
-  else{
-    gtk_widget_destroy(dialog);
+
+  
+  dest_frm=mascot->ptntree_i_frm[i_ptn];
+
+
+  for(i_frm=dest_frm;i_frm<mascot->frame_num[i_ptn]-1;i_frm++){
+    mascot->frame_pix[i_ptn][i_frm]=mascot->frame_pix[i_ptn][i_frm+1];
+    mascot->frame_min[i_ptn][i_frm]=mascot->frame_min[i_ptn][i_frm+1];
+    mascot->frame_max[i_ptn][i_frm]=mascot->frame_max[i_ptn][i_frm+1];
+    mascot->frame_loop[i_ptn][i_frm].next
+      =mascot->frame_loop[i_ptn][i_frm+1].next;
+    mascot->frame_loop[i_ptn][i_frm].min
+      =mascot->frame_loop[i_ptn][i_frm+1].min;
+    mascot->frame_loop[i_ptn][i_frm].max
+      =mascot->frame_loop[i_ptn][i_frm+1].max;
   }
+  mascot->frame_pix[i_ptn][mascot->frame_num[i_ptn]-1]=-1;
+  mascot->frame_min[i_ptn][mascot->frame_num[i_ptn]-1]=0;
+  mascot->frame_max[i_ptn][mascot->frame_num[i_ptn]-1]=0;
+  mascot->frame_loop[i_ptn][mascot->frame_num[i_ptn]-1].next=-1;
+  mascot->frame_loop[i_ptn][mascot->frame_num[i_ptn]-1].min=0;
+  mascot->frame_loop[i_ptn][mascot->frame_num[i_ptn]-1].max=0;
+  
+  mascot->frame_num[i_ptn]--;
+  
+  //make_frame_list(mascot, i_ptn);
+  make_ptn_tree(mascot, i_ptn);
 
   flagChildDialog=FALSE;
-  return;
 }
 
 static void create_change_tgt_dialog(GtkWidget *w, gpointer gdata)
@@ -5903,6 +5967,9 @@ void create_config_dialog(GtkWidget *widget, gpointer gdata){
   mascot->flag_menu=TRUE;
  
   mascot->imgtree_i=-1;
+  for(i_ptn=0;i_ptn<MAX_ANIME_PATTERN;i_ptn++){
+    mascot->ptntree_i_frm[i_ptn]=-1;
+  }
 
   //conf_main = gtk_window_new(GTK_WINDOW_TOPLEVEL);
   mascot->conf_main = gtk_dialog_new_with_buttons(_("Config for MaCoPiX"),
@@ -9129,7 +9196,8 @@ void create_config_dialog(GtkWidget *widget, gpointer gdata){
       // Pattern 収録用notebook
       for(i_ptn=0;i_ptn<MAX_ANIME_PATTERN;i_ptn++){
 	flag_make_pattern_list[i_ptn]=FALSE;
-	flag_make_frame_list[i_ptn]=FALSE;
+	//flag_make_frame_list[i_ptn]=FALSE;
+	flag_make_ptntree[i_ptn]=FALSE;
       }
       
       i_ptn=0;
@@ -9505,6 +9573,10 @@ void create_config_dialog(GtkWidget *widget, gpointer gdata){
   for(i_ptn=0;i_ptn<MAX_ANIME_PATTERN;i_ptn++){
     flag_make_ptntree[i_ptn]=FALSE;
   }
+
+  if(mascot->test_timer>0) g_source_remove(mascot->test_timer);
+  mascot->test_timer=-1;
+  
   if(GTK_IS_WIDGET(mascot->conf_main)) gtk_widget_destroy(mascot->conf_main);
   
   //InitMascot(mascot);
@@ -9761,7 +9833,8 @@ void make_pattern_list(typMascot *mascot, GtkWidget *ptn_note, int i_ptn)
   if(flag_make_pattern_list[i_ptn]) {
     gtk_widget_destroy(GTK_WIDGET(pattern_table[i_ptn]));
     g_object_unref(GTK_WIDGET(pattern_table[i_ptn]));
-    flag_make_frame_list[i_ptn]=FALSE;
+    //flag_make_frame_list[i_ptn]=FALSE;
+    flag_make_ptntree[i_ptn]=FALSE;
   }
   else flag_make_pattern_list[i_ptn]=TRUE;
 
@@ -9784,7 +9857,8 @@ void make_pattern_list(typMascot *mascot, GtkWidget *ptn_note, int i_ptn)
 				  GTK_POLICY_NEVER,
 				  GTK_POLICY_ALWAYS);
 	  
-  make_frame_list(mascot, i_ptn);
+  //make_frame_list(mascot, i_ptn);
+  make_ptn_tree(mascot, i_ptn);
 	  
   hbox = gtkut_hbox_new(FALSE,5);
   gtk_container_set_border_width (GTK_CONTAINER (hbox), 5);
@@ -11747,7 +11821,7 @@ void popup_message(GtkWidget *parent, gchar* stock_id,gint delay, ...){
     dialog = gtk_dialog_new();
   }
   else{
-    dialog = gtk_dialog_new_with_buttons("HOE : Message",
+    dialog = gtk_dialog_new_with_buttons("MaCoPiX : Message",
 					 GTK_WINDOW(parent),
 					 GTK_DIALOG_MODAL,
 #ifdef USE_GTK3
@@ -11759,7 +11833,7 @@ void popup_message(GtkWidget *parent, gchar* stock_id,gint delay, ...){
   }
   gtk_container_set_border_width(GTK_CONTAINER(dialog),5);
   gtk_window_set_transient_for(GTK_WINDOW(dialog),GTK_WINDOW(parent));
-  gtk_window_set_title(GTK_WINDOW(dialog),"HOE : Message");
+  gtk_window_set_title(GTK_WINDOW(dialog),"MaCoPiX : Message");
 
   if(delay>0){
     timer=g_timeout_add(delay*1000, (GSourceFunc)close_popup,
@@ -11806,6 +11880,78 @@ void popup_message(GtkWidget *parent, gchar* stock_id,gint delay, ...){
   else{
     gtk_dialog_run(GTK_DIALOG(dialog));
     gtk_widget_destroy(dialog);
+  }
+}
+
+
+gboolean popup_ask(GtkWidget *parent, gchar* stock_id, ...){
+  va_list args;
+  gchar *msg1;
+  GtkWidget *dialog;
+  GtkWidget *label;
+  GtkWidget *button;
+  GtkWidget *pixmap;
+  GtkWidget *hbox;
+  GtkWidget *vbox;
+  gint timer;
+
+  va_start(args, stock_id);
+
+  dialog = gtk_dialog_new_with_buttons("MaCoPiX : Dialog",
+				       GTK_WINDOW(parent),
+				       GTK_DIALOG_MODAL,
+#ifdef USE_GTK3
+				       _("_OK"),GTK_RESPONSE_OK,
+				       _("_Cancel"),GTK_RESPONSE_CANCEL,
+#else
+				       GTK_STOCK_OK,GTK_RESPONSE_OK,
+				       GTK_STOCK_CANCEL,GTK_RESPONSE_CENCEL,
+#endif
+				       NULL);
+  gtk_container_set_border_width(GTK_CONTAINER(dialog),5);
+  gtk_window_set_transient_for(GTK_WINDOW(dialog),GTK_WINDOW(parent));
+  gtk_window_set_title(GTK_WINDOW(dialog),"MaCoPiX : Dialog");
+
+  hbox = gtkut_hbox_new(FALSE,2);
+  gtk_container_set_border_width (GTK_CONTAINER (hbox), 0);
+  gtk_box_pack_start(GTK_BOX(gtk_dialog_get_content_area(GTK_DIALOG(dialog))),
+		     hbox,FALSE, FALSE, 0);
+
+#ifdef USE_GTK3
+  pixmap=gtk_image_new_from_icon_name (stock_id,
+				       GTK_ICON_SIZE_DIALOG);
+#else
+  pixmap=gtk_image_new_from_stock (stock_id,
+				   GTK_ICON_SIZE_DIALOG);
+#endif
+
+  gtk_box_pack_start(GTK_BOX(hbox), pixmap,FALSE, FALSE, 0);
+
+  vbox = gtkut_vbox_new(FALSE,2);
+  gtk_container_set_border_width (GTK_CONTAINER (vbox), 0);
+  gtk_box_pack_start(GTK_BOX(hbox),vbox,FALSE, FALSE, 0);
+
+  while(1){
+    msg1=va_arg(args,gchar*);
+    if(!msg1) break;
+    
+    label=gtkut_label_new(msg1);
+    gtkut_pos(label, POS_START, POS_CENTER);
+    gtk_box_pack_start(GTK_BOX(vbox),
+		       label,TRUE,TRUE,0);
+  }
+
+  va_end(args);
+  
+  gtk_widget_show_all(dialog);
+  
+  if( gtk_dialog_run(GTK_DIALOG(dialog)) == GTK_RESPONSE_OK){
+    gtk_widget_destroy(dialog);
+    return(TRUE);
+  }
+  else{
+    if(GTK_IS_WIDGET(dialog)) gtk_widget_destroy(dialog);
+    return(FALSE);
   }
 }
 
@@ -11995,7 +12141,6 @@ void make_img_tree(typMascot *mascot){
   
   if(flag_make_imgtree){
     gtk_widget_destroy(mascot->imgtree);
-    g_object_unref(G_OBJECT(mascot->imgtree));
   }
   else flag_make_imgtree=TRUE;
 
@@ -12010,7 +12155,12 @@ void make_img_tree(typMascot *mascot){
 
   g_object_unref(items_model);
   
+#ifdef USE_GTK3
   gtk_container_add (GTK_CONTAINER (mascot->sw_imgtree), mascot->imgtree);
+#else
+  gtk_scrolled_window_add_with_viewport(GTK_SCROLLED_WINDOW (mascot->sw_imgtree),
+					mascot->imgtree);
+#endif
 
   g_signal_connect (mascot->imgtree, "cursor-changed",
 		    G_CALLBACK (focus_imgtree_item), (gpointer)mascot);
@@ -12206,7 +12356,6 @@ void make_ptn_tree(typMascot *mascot, gint i_ptn){
   
   if(flag_make_ptntree[i_ptn]){
     gtk_widget_destroy(mascot->ptntree[i_ptn]);
-    g_object_unref(G_OBJECT(mascot->ptntree[i_ptn]));
   }
   else flag_make_ptntree[i_ptn]=TRUE;
 
@@ -12221,8 +12370,12 @@ void make_ptn_tree(typMascot *mascot, gint i_ptn){
 
   g_object_unref(items_model);
   
-  gtk_container_add (GTK_CONTAINER (mascot->sw_ptntree[i_ptn]),
-		     mascot->ptntree[i_ptn]);
+#ifdef USE_GTK3
+  gtk_container_add(GTK_CONTAINER(ptn_scrwin[i_ptn]), mascot->ptntree[i_ptn]);
+#else
+  gtk_scrolled_window_add_with_viewport(GTK_SCROLLED_WINDOW (ptn_scrwin[i_ptn]),
+					mascot->ptntree[i_ptn]);
+#endif
 
   g_signal_connect (mascot->ptntree[i_ptn], "cursor-changed",
 		    G_CALLBACK (focus_ptntree_item), (gpointer)mptn[i_ptn]);
@@ -12283,6 +12436,8 @@ ptntree_add_columns (typMascot *mascot,
 					  ptntree_cell_data_func,
 					  GUINT_TO_POINTER(COLUMN_PTNTREE_IMAGE),
 					  NULL);
+  g_object_set (renderer, "editable", TRUE, NULL);
+  g_signal_connect (renderer, "edited", G_CALLBACK (ptntree_cell_edited), (gpointer)mptn[i_ptn]);
   gtk_tree_view_append_column(GTK_TREE_VIEW (treeview),column);
 
 
@@ -12306,6 +12461,8 @@ ptntree_add_columns (typMascot *mascot,
 					  ptntree_cell_data_func,
 					  GUINT_TO_POINTER(COLUMN_PTNTREE_MIN),
 					  NULL);
+  g_object_set (renderer, "editable", TRUE, NULL);
+  g_signal_connect (renderer, "edited", G_CALLBACK (ptntree_cell_edited), (gpointer)mptn[i_ptn]);
   gtk_tree_view_append_column(GTK_TREE_VIEW (treeview),column);
 
 
@@ -12329,6 +12486,8 @@ ptntree_add_columns (typMascot *mascot,
 					  ptntree_cell_data_func,
 					  GUINT_TO_POINTER(COLUMN_PTNTREE_MAX),
 					  NULL);
+  g_object_set (renderer, "editable", TRUE, NULL);
+  g_signal_connect (renderer, "edited", G_CALLBACK (ptntree_cell_edited), (gpointer)mptn[i_ptn]);
   gtk_tree_view_append_column(GTK_TREE_VIEW (treeview),column);
 
 
@@ -12352,6 +12511,8 @@ ptntree_add_columns (typMascot *mascot,
 					  ptntree_cell_data_func,
 					  GUINT_TO_POINTER(COLUMN_PTNTREE_BL_NEXT),
 					  NULL);
+  g_object_set (renderer, "editable", TRUE, NULL);
+  g_signal_connect (renderer, "edited", G_CALLBACK (ptntree_cell_edited), (gpointer)mptn[i_ptn]);
   gtk_tree_view_append_column(GTK_TREE_VIEW (treeview),column);
 
 
@@ -12375,6 +12536,8 @@ ptntree_add_columns (typMascot *mascot,
 					  ptntree_cell_data_func,
 					  GUINT_TO_POINTER(COLUMN_PTNTREE_BL_MIN),
 					  NULL);
+  g_object_set (renderer, "editable", TRUE, NULL);
+  g_signal_connect (renderer, "edited", G_CALLBACK (ptntree_cell_edited), (gpointer)mptn[i_ptn]);
   gtk_tree_view_append_column(GTK_TREE_VIEW (treeview),column);
 
 
@@ -12398,6 +12561,8 @@ ptntree_add_columns (typMascot *mascot,
 					  ptntree_cell_data_func,
 					  GUINT_TO_POINTER(COLUMN_PTNTREE_BL_MAX),
 					  NULL);
+  g_object_set (renderer, "editable", TRUE, NULL);
+  g_signal_connect (renderer, "edited", G_CALLBACK (ptntree_cell_edited), (gpointer)mptn[i_ptn]);
   gtk_tree_view_append_column(GTK_TREE_VIEW (treeview),column);
 }
 
@@ -12409,7 +12574,7 @@ ptntree_create_items_model (typMascot *mascot, gint i_ptn)
   GtkTreeIter iter;
 
   /* create list store */
-  model = gtk_list_store_new (NUM_IMGTREE_COLUMNS, 
+  model = gtk_list_store_new (NUM_PTNTREE_COLUMNS, 
 			      G_TYPE_INT,     // number
 			      G_TYPE_INT,     // image
 			      G_TYPE_INT,     // min
@@ -12447,7 +12612,7 @@ void ptntree_update_item(typMascot *mascot,
 		      COLUMN_PTNTREE_NUMBER, i_frm,
 		      COLUMN_PTNTREE_IMAGE,  mascot->frame_pix[i_ptn][i_frm],
 		      COLUMN_PTNTREE_MIN,    mascot->frame_min[i_ptn][i_frm],
-		      COLUMN_PTNTREE_MAX,    mascot->frame_min[i_ptn][i_frm],
+		      COLUMN_PTNTREE_MAX,    mascot->frame_max[i_ptn][i_frm],
 		      COLUMN_PTNTREE_BL_NEXT, mascot->frame_loop[i_ptn][i_frm].next,
 		      COLUMN_PTNTREE_BL_MIN,  mascot->frame_loop[i_ptn][i_frm].min,
 		      COLUMN_PTNTREE_BL_MAX,  mascot->frame_loop[i_ptn][i_frm].max,
@@ -12479,8 +12644,7 @@ focus_ptntree_item (GtkWidget *widget, gpointer gdata)
     TestLoadPixmaps(mascot,
 		    mascot->sprites[i_pix].filename,
 		    i_pix);
-    mascot->ptntree_i_ptn=i_ptn;
-    mascot->ptntree_i_frm=i_frm;
+    mascot->ptntree_i_frm[i_ptn]=i_frm;
   }
  
 }
@@ -12513,9 +12677,28 @@ void ptntree_cell_data_func(GtkTreeViewColumn *col ,
 
   switch (index) {
   case COLUMN_PTNTREE_NUMBER:
-    str=g_strdup_printf("%02d", int_value);
+    str=g_strdup_printf("%02d", int_value+1);
     break;
 
+  case COLUMN_PTNTREE_BL_NEXT:
+    if(int_value<0){
+      str=NULL;
+    }
+    else{
+      str=g_strdup_printf("%02d", int_value+1);
+    }
+    break;
+    
+  case COLUMN_PTNTREE_BL_MIN:
+  case COLUMN_PTNTREE_BL_MAX:
+    if(int_value<=0){
+      str=NULL;
+    }
+    else{
+      str=g_strdup_printf("%d", int_value);
+    }
+    break;
+    
   default:
     str=g_strdup_printf("%d", int_value);
     break;
@@ -12523,4 +12706,228 @@ void ptntree_cell_data_func(GtkTreeViewColumn *col ,
 
   g_object_set(renderer, "text", str, NULL);
   if(str)g_free(str);
+}
+
+
+static void
+ptntree_cell_edited (GtkCellRendererText *cell,
+		     const gchar         *path_string,
+		     const gchar         *new_text,
+		     gpointer             gdata)
+{
+  confNum *mptn=(confNum *)gdata;
+  gint i_ptn = mptn->num;
+  typMascot *mascot = mptn->mascot;
+  GtkTreePath *path = gtk_tree_path_new_from_string (path_string);
+  GtkTreeIter iter;
+  GtkTreeModel *model = gtk_tree_view_get_model(GTK_TREE_VIEW(mascot->ptntree[i_ptn]));
+  gint column = GPOINTER_TO_INT (g_object_get_data (G_OBJECT (cell), "column"));
+  gchar *old_text;
+  gint i_frm;
+
+  gtk_tree_model_get_iter (model, &iter, path);
+
+  gtk_tree_model_get (model, &iter, COLUMN_PTNTREE_NUMBER, &i_frm, -1);
+
+  switch (column) {
+  case COLUMN_PTNTREE_IMAGE:
+    {
+      gint i_pix;
+      
+      i_pix=atoi(new_text);
+  
+      if(i_pix<0){
+	i_pix=0;
+      }
+      else if(i_pix>=mascot->nPixmap){
+	i_pix=mascot->nPixmap-1;
+      }
+      
+      mascot->frame_pix[i_ptn][i_frm]=i_pix;
+    }
+    gtk_list_store_set (GTK_LIST_STORE (model), &iter, column,
+			mascot->frame_pix[i_ptn][i_frm], -1);
+    
+    break;
+    
+  case COLUMN_PTNTREE_MIN:
+    {
+      gint min, max, m_tmp;
+      
+      max=mascot->frame_max[i_ptn][i_frm];
+      min=atoi(new_text);
+      if(min<1){
+	min=1;
+      }
+      else if(min > max){
+	m_tmp=min;
+	min=max;
+	max=m_tmp;
+      }
+
+      mascot->frame_min[i_ptn][i_frm]=min;
+      mascot->frame_max[i_ptn][i_frm]=max;
+    }
+    gtk_list_store_set (GTK_LIST_STORE (model), &iter,
+			column, mascot->frame_min[i_ptn][i_frm],
+			COLUMN_PTNTREE_MAX, mascot->frame_max[i_ptn][i_frm],
+			-1);
+    break;
+    
+  case COLUMN_PTNTREE_MAX:
+    {
+      gint min, max, m_tmp;
+      
+      min=mascot->frame_min[i_ptn][i_frm];
+      max=atoi(new_text);
+      if(max<1){
+	max=1;
+      }
+      else if(max < min){
+	m_tmp=max;
+	max=min;
+	min=m_tmp;
+      }
+      
+      mascot->frame_min[i_ptn][i_frm]=min;
+      mascot->frame_max[i_ptn][i_frm]=max;
+    }
+    gtk_list_store_set (GTK_LIST_STORE (model), &iter,
+			column, mascot->frame_max[i_ptn][i_frm],
+			COLUMN_PTNTREE_MIN, mascot->frame_min[i_ptn][i_frm],
+			-1);
+    break;
+
+  case COLUMN_PTNTREE_BL_NEXT:
+    {
+      gint next, min, max;
+
+      next=atoi(new_text)-1;
+      min=mascot->frame_loop[i_ptn][i_frm].min;
+      max=mascot->frame_loop[i_ptn][i_frm].max;
+      
+      if(next>=i_frm){
+	next=i_frm;
+      }
+      
+      if(next<0){
+	next=-1;
+	min=0;
+	max=0;
+      }
+      else{
+	if(next > mascot->frame_num[i_ptn]-1){
+	  next = mascot->frame_num[i_ptn]-1;
+	}
+	if(min<1){
+	  min=1;
+	}
+	if(max<min){
+	  max=min;
+	}
+      }
+      
+      mascot->frame_loop[i_ptn][i_frm].next=next;
+      mascot->frame_loop[i_ptn][i_frm].min=min;
+      mascot->frame_loop[i_ptn][i_frm].max=max;
+    }
+    gtk_list_store_set (GTK_LIST_STORE (model), &iter,
+			column, mascot->frame_loop[i_ptn][i_frm].next,
+			COLUMN_PTNTREE_BL_MIN, mascot->frame_loop[i_ptn][i_frm].min,
+			COLUMN_PTNTREE_BL_MAX, mascot->frame_loop[i_ptn][i_frm].max,
+			-1);
+    break;
+
+  case COLUMN_PTNTREE_BL_MIN:
+    {
+      gint min, max, m_tmp, next;
+      
+      max=mascot->frame_loop[i_ptn][i_frm].max;
+      next=mascot->frame_loop[i_ptn][i_frm].next;
+      min=atoi(new_text);
+
+      if(next<0){
+	min=0;
+	max=0;
+      }
+      else{
+	if(min<1){
+	  min=1;
+	}
+	if(min > max){
+	  m_tmp=min;
+	  min=max;
+	  max=m_tmp;
+	}
+      }
+
+      mascot->frame_loop[i_ptn][i_frm].min=min;
+      mascot->frame_loop[i_ptn][i_frm].max=max;
+    }
+    gtk_list_store_set (GTK_LIST_STORE (model), &iter,
+			column, mascot->frame_loop[i_ptn][i_frm].min,
+			COLUMN_PTNTREE_BL_MAX, mascot->frame_loop[i_ptn][i_frm].max,
+			-1);
+    break;
+
+  case COLUMN_PTNTREE_BL_MAX:
+    {
+      gint min, max, m_tmp, next;
+      
+      min=mascot->frame_loop[i_ptn][i_frm].min;
+      next=mascot->frame_loop[i_ptn][i_frm].next;
+      max=atoi(new_text);
+      
+      if(next<0){
+	min=0;
+	max=0;
+      }
+      else{
+	if(max<1){
+	  max=1;
+	}
+	else if(max < min){
+	  m_tmp=max;
+	  max=min;
+	  min=m_tmp;
+	}
+      }
+
+      mascot->frame_loop[i_ptn][i_frm].min=min;
+      mascot->frame_loop[i_ptn][i_frm].max=max;
+    }
+    gtk_list_store_set (GTK_LIST_STORE (model), &iter,
+			column, mascot->frame_loop[i_ptn][i_frm].max,
+			COLUMN_PTNTREE_BL_MIN, mascot->frame_loop[i_ptn][i_frm].min,
+			-1);
+    break;
+  }
+  
+  gtk_tree_path_free (path);
+  ptntree_update_item(mascot, GTK_TREE_MODEL(model), iter, i_ptn, i_frm);
+}
+
+
+void ptntree_select_frame(GtkWidget *tree, gint set_frm, gint max_frm){
+  GtkTreeModel *model = gtk_tree_view_get_model(GTK_TREE_VIEW(tree));
+  GtkTreePath *path;
+  GtkTreeIter  iter;
+  gint i_frm;
+
+  path=gtk_tree_path_new_first();
+  
+  for(i_frm=0;i_frm<max_frm;i_frm++){
+    gtk_tree_model_get_iter (model, &iter, path);
+    gtk_tree_model_get (model, &iter, COLUMN_PTNTREE_NUMBER, &i_frm, -1);
+    
+    if(i_frm==set_frm){
+      gtk_widget_grab_focus (tree);
+      gtk_tree_view_set_cursor(GTK_TREE_VIEW(tree), path, NULL, FALSE);
+      break;
+    }
+    else{
+      gtk_tree_path_next(path);
+    }
+  }
+  gtk_tree_path_free(path);
 }

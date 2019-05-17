@@ -3971,6 +3971,8 @@ void InitMascot(typMascot *mascot)
   mascot->sdw_height=0;
 #endif
 
+  mascot->test_timer=-1;
+  
   mascot->anime_ptn=0;
   mascot->anime_frm=0;
   mascot->anime_seq=0;
