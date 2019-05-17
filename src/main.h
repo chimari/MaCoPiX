@@ -1034,9 +1034,11 @@ struct _typMascot{
   gint imgtree_i;
 
   gint test_timer;
-  GtkWidget *sw_ptntree[MAX_ANIME_PATTERN];
   GtkWidget *ptntree[MAX_ANIME_PATTERN];
   gint ptntree_i_frm[MAX_ANIME_PATTERN];
+
+  GtkWidget *cattree[MAX_MENU_CATEGORY];
+  gint cattree_i_tgt[MAX_MENU_CATEGORY];
 };
 
 

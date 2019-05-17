@@ -51,6 +51,17 @@ enum
 };
 
 
+enum
+{
+  COLUMN_CATTREE_NUMBER,
+  COLUMN_CATTREE_NAME,
+  COLUMN_CATTREE_FILE,
+  COLUMN_CATTREE_COLFG,
+  COLUMN_CATTREE_COLBG,
+  NUM_CATTREE_COLUMNS
+};
+
+
 
 //Callback受け渡し用抱き合わせ構造体 フォント変更用
 typedef struct{
@@ -117,6 +128,7 @@ gboolean flagChildDialog;
 gboolean flag_make_pixmap_list;
 gboolean flag_make_imgtree;
 gboolean flag_make_ptntree[MAX_ANIME_PATTERN];
+gboolean flag_make_cattree[MAX_MENU_CATEGORY];
 
 // Prototype of Functions in this file
 void MenuSaveRC();
@@ -344,6 +356,15 @@ static void focus_ptntree_item();
 void ptntree_cell_data_func();
 static void ptntree_cell_edited ();
 void ptntree_select_frame();
+
+// Cat Tree
+void make_cat_tree();
+static void cattree_add_columns();
+static GtkTreeModel *cattree_create_items_model ();
+void cattree_update_item();
+static void focus_cattree_item();
+void cattree_cell_data_func();
+static void act_cattree_item();
 
 
 ///// Widget as Global argument /////
@@ -2833,20 +2854,12 @@ static void create_del_frame_dialog(GtkWidget *w, gpointer gdata)
   flagChildDialog=FALSE;
 }
 
-static void create_change_tgt_dialog(GtkWidget *w, gpointer gdata)
+static void create_change_tgt_dialog(typMascot *mascot, gint i_cat, gint i_tgt)
 {
-  confNum2 *mtgt;
-  typMascot *mascot;
-  int i_tmp, i_cat, i_tgt;
+  int i_tmp;
   GtkWidget *fdialog;
   gchar *fname=NULL;
   gchar *dest_file=NULL;
-    
-  mtgt=(confNum2 *)gdata;
-
-  i_cat=mtgt->num;
-  i_tgt=mtgt->num2;
-  mascot=mtgt->mascot;
   
   if(flagChildDialog){
     return;
@@ -2859,7 +2872,7 @@ static void create_change_tgt_dialog(GtkWidget *w, gpointer gdata)
   while (my_main_iteration(FALSE));
 
   fdialog = gtk_file_chooser_dialog_new(_("Select Mascot File"),
-					NULL,
+					GTK_WINDOW(mascot->conf_main),
 					GTK_FILE_CHOOSER_ACTION_OPEN,
 #ifdef USE_GTK3
 					"_Cancel",GTK_RESPONSE_CANCEL,
@@ -2874,7 +2887,6 @@ static void create_change_tgt_dialog(GtkWidget *w, gpointer gdata)
 	       to_utf8(FullPathMascotFile(mascot, mascot->menu_tgt[i_cat][i_tgt])));
   gtk_file_chooser_select_filename (GTK_FILE_CHOOSER (fdialog), 
 	       to_utf8(FullPathMascotFile(mascot, mascot->menu_tgt[i_cat][i_tgt])));
-
 
   my_file_chooser_add_shortcut_folder(fdialog, FOLDER_DEFAULT);
   my_file_chooser_add_filter(fdialog,_("Mascot File"),MASCOT_EXTENSION);
@@ -2896,10 +2908,9 @@ static void create_change_tgt_dialog(GtkWidget *w, gpointer gdata)
       if(mascot->menu_tgt_name[i_cat][i_tgt]) g_free(mascot->menu_tgt_name[i_cat][i_tgt]);
       mascot->menu_tgt_name[i_cat][i_tgt]
 	=ReadMascotName(mascot, mascot->menu_tgt[i_cat][i_tgt]);
-      make_tgt_list(mascot, i_cat);
     }
     else{
-      popup_message(mascot->win_main,
+      popup_message(mascot->conf_main,
 #ifdef USE_GTK3
 		    "dialog-error", 
 #else
@@ -7672,7 +7683,7 @@ void create_config_dialog(GtkWidget *widget, gpointer gdata){
 			 GTK_SHRINK,GTK_SHRINK,0,0);
 #endif
 
-#ifdef USE_WIN32
+#ifdef FG_DRAW
       label = gtkut_label_new (_("Balloon [%]"));
       gtkut_pos(label, POS_START, POS_END);
       gtkut_table_attach(table1, label, 0, 1, 3, 4,
@@ -9665,6 +9676,7 @@ GtkWidget * create_menu_page(typMascot *mascot)
     for(i_cat=0;i_cat<MAX_MENU_CATEGORY;i_cat++){
       flag_make_cat_list[i_cat]=FALSE;
       flag_make_tgt_list[i_cat]=FALSE;
+      flag_make_cattree[i_cat]=FALSE;
     }
     
     for(i_cat=0;i_cat<mascot->menu_cat_max;i_cat++){
@@ -10188,8 +10200,8 @@ void make_cat_list(typMascot *mascot, GtkWidget *cat_note, int i_cat)
 				  GTK_POLICY_NEVER,
 				  GTK_POLICY_ALWAYS);
   
-  make_tgt_list(mascot, i_cat);
-	  
+  //make_tgt_list(mascot, i_cat);
+  make_cat_tree(mascot, i_cat);
 
   hbox = gtkut_hbox_new(FALSE,5);
   gtk_container_set_border_width (GTK_CONTAINER (hbox), 5);
@@ -10476,8 +10488,8 @@ void make_tgt_list(typMascot *mascot, int i_cat)
 #endif
 				      );
     gtk_box_pack_start(GTK_BOX(hbox), button,FALSE, FALSE, 0);
-    my_signal_connect(button,"clicked",create_change_tgt_dialog, 
-		      (gpointer)mtgt[i_cat][i_tgt]);
+    //my_signal_connect(button,"clicked",create_change_tgt_dialog, 
+    //		      (gpointer)mtgt[i_cat][i_tgt]);
     
     if(i_tgt!=mascot->menu_tgt_max[i_cat]-1){
       arrow= gtkut_arrow_new(MY_ARROW_DOWN);
@@ -12307,7 +12319,7 @@ static void act_imgtree_item(GtkTreeView        *treeview,
   
   if (gtk_tree_model_get_iter(model, &iter, path)){
     
-    i_pix = gtk_tree_path_get_indices (path)[0];
+    i_pix = gtk_tree_path_get_indices (path)[COLUMN_IMGTREE_NUMBER];
 
     create_change_image_dialog(mascot, i_pix);
 
@@ -12931,3 +12943,253 @@ void ptntree_select_frame(GtkWidget *tree, gint set_frm, gint max_frm){
   }
   gtk_tree_path_free(path);
 }
+
+
+/// Menu Category
+void make_cat_tree(typMascot *mascot, gint i_cat){
+  GtkWidget *vbox;
+  GtkWidget *hbox;
+  GtkWidget *sw;
+  GtkWidget *button;
+  GtkTreeModel *items_model;
+  
+  if(flag_make_cattree[i_cat]){
+    gtk_widget_destroy(mascot->cattree[i_cat]);
+  }
+  else flag_make_cattree[i_cat]=TRUE;
+
+  items_model = cattree_create_items_model (mascot, i_cat);
+
+  /* create tree view */
+  mascot->cattree[i_cat] = gtk_tree_view_new_with_model (items_model);
+  gtk_tree_selection_set_mode (gtk_tree_view_get_selection (GTK_TREE_VIEW (mascot->cattree[i_cat])),
+			       GTK_SELECTION_SINGLE);
+  cattree_add_columns (mascot, GTK_TREE_VIEW (mascot->cattree[i_cat]), 
+		       items_model, i_cat);
+
+  g_object_unref(items_model);
+  
+#ifdef USE_GTK3
+  gtk_container_add(GTK_CONTAINER(cat_scrwin[i_cat]), mascot->cattree[i_cat]);
+#else
+  gtk_scrolled_window_add_with_viewport(GTK_SCROLLED_WINDOW (cat_scrwin[i_cat]),
+					mascot->ptntree[i_ptn]);
+#endif
+
+  g_signal_connect (mascot->cattree[i_cat], "cursor-changed",
+		    G_CALLBACK (focus_cattree_item), (gpointer)mcat[i_cat]);
+  g_signal_connect(mascot->cattree[i_cat], "row-activated", 
+		   G_CALLBACK (act_cattree_item), (gpointer)mcat[i_cat]);
+  
+  gtk_widget_show_all(mascot->cattree[i_cat]);
+}
+
+
+static void
+cattree_add_columns (typMascot *mascot,
+		     GtkTreeView  *treeview, 
+		     GtkTreeModel *items_model,
+		     gint i_cat)
+{
+  GtkCellRenderer *renderer;
+  GtkTreeViewColumn *column;  
+
+  /* number column */
+  renderer = gtk_cell_renderer_text_new ();
+  g_object_set_data (G_OBJECT (renderer), "column", 
+  		     GINT_TO_POINTER (COLUMN_CATTREE_NUMBER));
+  column=gtk_tree_view_column_new_with_attributes (_("No."),
+						   renderer,
+						   "text",
+						   COLUMN_CATTREE_NUMBER,
+#ifdef USE_GTK3
+						   "foreground-rgba", COLUMN_CATTREE_COLFG,
+						   "background-rgba", COLUMN_CATTREE_COLBG,
+#else
+						   "foreground-gdk", COLUMN_CATTREE_COLFG,
+						   "background-gdk", COLUMN_CATTREE_COLBG,
+#endif
+						   NULL);
+  gtk_tree_view_column_set_cell_data_func(column, renderer,
+					  cattree_cell_data_func,
+					  GUINT_TO_POINTER(COLUMN_CATTREE_NUMBER),
+					  NULL);
+  gtk_tree_view_append_column(GTK_TREE_VIEW (treeview),column);
+
+
+  /* Name column */
+  renderer = gtk_cell_renderer_text_new ();
+  g_object_set_data (G_OBJECT (renderer), "column", 
+  		     GINT_TO_POINTER (COLUMN_CATTREE_NAME));
+  column=gtk_tree_view_column_new_with_attributes (_("Name"),
+						   renderer,
+						   "text", 
+						   COLUMN_CATTREE_NAME,
+#ifdef USE_GTK3
+						   "foreground-rgba", COLUMN_CATTREE_COLFG,
+						   "background-rgba", COLUMN_CATTREE_COLBG,
+#else
+						   "foreground-gdk", COLUMN_CATTREE_COLFG,
+						   "background-gdk", COLUMN_CATTREE_COLBG,
+#endif					   
+						   NULL);
+  gtk_tree_view_append_column(GTK_TREE_VIEW (treeview),column);
+  
+  /* File column */
+  renderer = gtk_cell_renderer_text_new ();
+  g_object_set_data (G_OBJECT (renderer), "column", 
+  		     GINT_TO_POINTER (COLUMN_CATTREE_FILE));
+  column=gtk_tree_view_column_new_with_attributes (_("File"),
+						   renderer,
+						   "text", 
+						   COLUMN_CATTREE_FILE,
+#ifdef USE_GTK3
+						   "foreground-rgba", COLUMN_CATTREE_COLFG,
+						   "background-rgba", COLUMN_CATTREE_COLBG,
+#else
+						   "foreground-gdk", COLUMN_CATTREE_COLFG,
+						   "background-gdk", COLUMN_CATTREE_COLBG,
+#endif					   
+						   NULL);
+  gtk_tree_view_column_set_cell_data_func(column, renderer,
+					  cattree_cell_data_func,
+					  GUINT_TO_POINTER(COLUMN_CATTREE_FILE),
+					  NULL);
+  gtk_tree_view_append_column(GTK_TREE_VIEW (treeview),column);
+}
+
+static GtkTreeModel *
+cattree_create_items_model (typMascot *mascot, gint i_cat)
+{
+  gint i_tgt = 0;
+  GtkListStore *model;
+  GtkTreeIter iter;
+
+  /* create list store */
+  model = gtk_list_store_new (NUM_CATTREE_COLUMNS, 
+			      G_TYPE_INT,     // number
+			      G_TYPE_STRING,  // name
+			      G_TYPE_STRING,  // name
+#ifdef USE_GTK3
+			      GDK_TYPE_RGBA,   //fgcolor
+			      GDK_TYPE_RGBA   //bgcolor
+#else
+			      GDK_TYPE_COLOR,  //fgcolor
+			      GDK_TYPE_COLOR  //bgcolor
+#endif
+			      );  
+
+  //gtk_list_store_set_column_types (GTK_LIST_STORE (model), 1, 
+  //			   (GType []){ G_TYPE_STRING }); // NOTE
+  for (i_tgt = 0; i_tgt < mascot->menu_tgt_max[i_cat]; i_tgt++){
+    gtk_list_store_append (model, &iter);
+    cattree_update_item(mascot, GTK_TREE_MODEL(model), iter, i_cat, i_tgt);
+  }
+  
+  return GTK_TREE_MODEL (model);
+}
+
+
+void cattree_update_item(typMascot *mascot, 
+			 GtkTreeModel *model, 
+			 GtkTreeIter iter,
+			 gint i_cat,
+			 gint i_tgt)
+{
+  gtk_list_store_set (GTK_LIST_STORE(model), &iter,
+		      COLUMN_CATTREE_NUMBER, i_tgt,
+		      COLUMN_CATTREE_NAME,  mascot->menu_tgt_name[i_cat][i_tgt],
+		      COLUMN_CATTREE_FILE,  mascot->menu_tgt[i_cat][i_tgt],
+		      COLUMN_CATTREE_COLFG, &color_black,
+		      COLUMN_CATTREE_COLBG, (i_tgt%2==0) ? &color_white : &color_pale3,
+		      -1);
+}
+
+
+static void
+focus_cattree_item (GtkWidget *widget, gpointer gdata)
+{
+  confNum *mcat=(confNum *)gdata;
+  typMascot *mascot = mcat->mascot;
+  gint i_cat=mcat->num;
+  GtkTreeIter iter;
+  GtkTreeModel *model = gtk_tree_view_get_model (GTK_TREE_VIEW(widget));
+  GtkTreeSelection *selection = gtk_tree_view_get_selection (GTK_TREE_VIEW(widget));
+  gint i_tgt;
+
+  if (gtk_tree_selection_get_selected (selection, NULL, &iter)){
+    GtkTreePath *path;
+    
+    path = gtk_tree_model_get_path (model, &iter);
+    gtk_tree_model_get (model, &iter, COLUMN_CATTREE_NUMBER, &i_tgt, -1);
+    gtk_tree_path_free (path);
+
+    mascot->cattree_i_tgt[i_cat]=i_tgt;
+  }
+ 
+}
+
+
+void cattree_cell_data_func(GtkTreeViewColumn *col , 
+			    GtkCellRenderer *renderer,
+			    GtkTreeModel *model, 
+			    GtkTreeIter *iter,
+			    gpointer user_data)
+{
+  const guint index = GPOINTER_TO_UINT(user_data);
+  guint64 size;
+  gint int_value;
+  gchar *c_buf, *str;
+
+  switch (index) {
+  case COLUMN_CATTREE_NUMBER:
+    gtk_tree_model_get (model, iter, 
+			index, &int_value,
+			-1);
+    break;
+
+  case COLUMN_CATTREE_FILE:
+    gtk_tree_model_get (model, iter, 
+			index, &c_buf,
+			-1);
+    break;
+  }
+
+  switch (index) {
+  case COLUMN_CATTREE_NUMBER:
+    str=g_strdup_printf("%02d", int_value+1);
+    break;
+
+  case COLUMN_CATTREE_FILE:
+    str=g_path_get_basename(c_buf);
+    break;
+     }
+
+  g_object_set(renderer, "text", str, NULL);
+  if(str)g_free(str);
+}
+
+
+static void act_cattree_item(GtkTreeView        *treeview,
+			     GtkTreePath        *path,
+			     GtkTreeViewColumn  *col,
+			     gpointer            gdata){
+  confNum *mcat = (confNum *)gdata;
+  gint i_cat = mcat->num;
+  typMascot *mascot = mcat->mascot;
+  GtkTreeModel *model;
+  GtkTreeIter   iter;
+  gint i_tgt;
+  
+  model = gtk_tree_view_get_model(treeview);
+  
+  if (gtk_tree_model_get_iter(model, &iter, path)){
+    
+    i_tgt = gtk_tree_path_get_indices (path)[COLUMN_CATTREE_NUMBER];
+
+    create_change_tgt_dialog(mascot, i_cat, i_tgt);
+
+    cattree_update_item(mascot, model, iter, i_cat, i_tgt);
+  }
+}
+
