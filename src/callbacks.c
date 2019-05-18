@@ -2846,6 +2846,7 @@ void make_mascot(typMascot *mascot){
 #endif
 #endif
   
+  while (my_main_iteration(FALSE));
 }
 
 void map_balloon(typMascot *mascot, gboolean flag){

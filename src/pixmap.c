@@ -1034,6 +1034,8 @@ void LoadPixmaps(typMascot *mascot){
 #endif  // USE_GTK3
   */
 
+  while (my_main_iteration(FALSE));
+  
 #ifdef USE_GTK_STATUS_ICON
   trayicon_set_tooltip(mascot);
 #endif

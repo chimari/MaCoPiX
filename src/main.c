@@ -4647,6 +4647,11 @@ int main(int argc, char **argv)
   gdk_window_set_cursor(gtk_widget_get_window(Mascot->biff_pix),Mascot->cursor.biff);
 #endif // USE_BIFF
 
+#ifdef FG_DRAW
+  gtk_widget_show_all(Mascot->win_sdw);
+#endif
+  gtk_widget_show_all(Mascot->win_main);
+  map_main(Mascot, TRUE);
 
 #ifdef FG_DRAW
   gtk_widget_show_all(Mascot->balloon_fg);
@@ -4678,11 +4683,6 @@ int main(int argc, char **argv)
 #endif // USE_BIFF
 
 
-#ifdef FG_DRAW
-  gtk_widget_show_all(Mascot->win_sdw);
-#endif
-  gtk_widget_show_all(Mascot->win_main);
-  map_main(Mascot, TRUE);
   
 
 

@@ -118,9 +118,7 @@ typedef struct{
 // *** GLOBAL ARGUMENT ***
 GtkTooltip *tooltip;
 gboolean flag_make_pattern_list[MAX_ANIME_PATTERN];
-gboolean flag_make_frame_list[MAX_ANIME_PATTERN];
 gboolean flag_make_cat_list[MAX_MENU_CATEGORY];
-gboolean flag_make_tgt_list[MAX_MENU_CATEGORY];
 gint selected_smenu;
 
 // Need to Initialize
@@ -189,9 +187,7 @@ static void test_biff_sound();
 static void clear_biff_sound();
 #endif
 
-static void mc_up_tgt();
 static void mc_down_tgt();
-static void mc_up_cat();
 static void mc_down_cat();
 
 #ifdef USE_WIN32
@@ -302,8 +298,6 @@ GtkWidget * create_new_menu_page();
 void make_pixmap_list();
 void make_pattern_list();
 void make_cat_list();
-void make_frame_list();
-void make_tgt_list();
 
 GtkWidget * make_open_menu();
 GtkWidget * make_save_menu();
@@ -365,7 +359,9 @@ void cattree_update_item();
 static void focus_cattree_item();
 void cattree_cell_data_func();
 static void act_cattree_item();
-
+void cattree_select_tgt();
+static void cattree_up_tgt();
+static void cattree_down_tgt();
 
 ///// Widget as Global argument /////
 
@@ -837,90 +833,17 @@ static void clear_biff_sound (GtkWidget *widget,  gpointer gdata)
 #endif
 
 
-static void mc_up_tgt (GtkWidget *widget, gpointer gdata)
-{
-  typMascot *mascot;
-  confNum2 *mtgt;
-  int i_cat, i_tgt;
-  gchar *tmp_menu_tgt=NULL, *tmp_menu_tgt_name=NULL;
-
-  mtgt=(confNum2 *)gdata;
-  
-  i_cat=mtgt->num;
-  i_tgt=mtgt->num2;
-  mascot=mtgt->mascot;
-
-  if(i_tgt<=0) return;
-  
-  tmp_menu_tgt=g_strdup(mascot->menu_tgt[i_cat][i_tgt-1]);
-  tmp_menu_tgt_name=g_strdup(mascot->menu_tgt_name[i_cat][i_tgt-1]);
-
-  if(mascot->menu_tgt[i_cat][i_tgt-1]) g_free(mascot->menu_tgt[i_cat][i_tgt-1]);
-  mascot->menu_tgt[i_cat][i_tgt-1]=g_strdup(mascot->menu_tgt[i_cat][i_tgt]);
-  if(mascot->menu_tgt_name[i_cat][i_tgt-1]) g_free(mascot->menu_tgt_name[i_cat][i_tgt-1]);
-  mascot->menu_tgt_name[i_cat][i_tgt-1]=g_strdup(mascot->menu_tgt_name[i_cat][i_tgt]);
-
-  if(mascot->menu_tgt[i_cat][i_tgt]) g_free(mascot->menu_tgt[i_cat][i_tgt]);
-  mascot->menu_tgt[i_cat][i_tgt]=g_strdup(tmp_menu_tgt);
-  if(mascot->menu_tgt_name[i_cat][i_tgt]) g_free(mascot->menu_tgt_name[i_cat][i_tgt]);
-  mascot->menu_tgt_name[i_cat][i_tgt]=g_strdup(tmp_menu_tgt_name);
-
-  if(tmp_menu_tgt) g_free(tmp_menu_tgt);
-  if(tmp_menu_tgt_name) g_free(tmp_menu_tgt_name);
-
-  make_tgt_list(mascot, i_cat);
-}
-
-static void mc_down_tgt (GtkWidget *widget, gpointer gdata)
-{
-  typMascot *mascot;
-  confNum2 *mtgt;
-  int i_cat, i_tgt;
-  gchar *tmp_menu_tgt=NULL, *tmp_menu_tgt_name=NULL;
-
-  mtgt=(confNum2 *)gdata;
-  
-  i_cat=mtgt->num;
-  i_tgt=mtgt->num2;
-  mascot=mtgt->mascot;
-  
-  if(i_tgt>=MAX_MENU_TARGET) return;
-  
-  tmp_menu_tgt=g_strdup(mascot->menu_tgt[i_cat][i_tgt+1]);
-  tmp_menu_tgt_name=g_strdup(mascot->menu_tgt_name[i_cat][i_tgt+1]);
-  
-  if(mascot->menu_tgt[i_cat][i_tgt+1]) g_free(mascot->menu_tgt[i_cat][i_tgt+1]);
-  mascot->menu_tgt[i_cat][i_tgt+1]=g_strdup(mascot->menu_tgt[i_cat][i_tgt]);
-  if(mascot->menu_tgt_name[i_cat][i_tgt+1]) g_free(mascot->menu_tgt_name[i_cat][i_tgt+1]);
-  mascot->menu_tgt_name[i_cat][i_tgt+1]=g_strdup(mascot->menu_tgt_name[i_cat][i_tgt]);
-  
-  if(mascot->menu_tgt[i_cat][i_tgt]) g_free(mascot->menu_tgt[i_cat][i_tgt]);
-  mascot->menu_tgt[i_cat][i_tgt]=g_strdup(tmp_menu_tgt);
-  if(mascot->menu_tgt_name[i_cat][i_tgt]) g_free(mascot->menu_tgt_name[i_cat][i_tgt]);
-  mascot->menu_tgt_name[i_cat][i_tgt]=g_strdup(tmp_menu_tgt_name);
-  
-  if(tmp_menu_tgt) g_free(tmp_menu_tgt);
-  if(tmp_menu_tgt_name) g_free(tmp_menu_tgt_name);
-  
-  make_tgt_list(mascot,i_cat);
-}
-
-
 static void mc_up_cat (GtkWidget *widget, gpointer gdata)
 {
-  confNum *mcat;
-  typMascot *mascot;
+  typMascot *mascot=(typMascot *)gdata;
   int i_cat, i_tgt;
   gint  tmp_menu_tgt_max;
   gchar *tmp_menu_cat=NULL;
   gchar *tmp_menu_tgt[MAX_MENU_TARGET];
   gchar *tmp_menu_tgt_name[MAX_MENU_TARGET];
 
-  mcat=(confNum *)gdata;
-  
-  i_cat=mcat->num;
-  mascot=mcat->mascot;
-  
+  i_cat = gtk_notebook_get_current_page(GTK_NOTEBOOK(cat_note));
+
   if(i_cat<=0) return;
 
   tmp_menu_tgt_max=mascot->menu_tgt_max[i_cat-1];
@@ -958,7 +881,7 @@ static void mc_up_cat (GtkWidget *widget, gpointer gdata)
   make_cat_list(mascot, cat_note, i_cat-1);
   make_cat_list(mascot, cat_note, i_cat);
 
-  for(i_tgt=0;i_tgt<mascot->menu_tgt_max[i_cat-1];i_tgt++){
+  for(i_tgt=0;i_tgt<tmp_menu_tgt_max;i_tgt++){
     if(tmp_menu_tgt[i_tgt]) g_free(tmp_menu_tgt[i_tgt]);
     if(tmp_menu_tgt_name[i_tgt]) g_free(tmp_menu_tgt_name[i_tgt]);
   }
@@ -966,23 +889,18 @@ static void mc_up_cat (GtkWidget *widget, gpointer gdata)
 
   gtk_notebook_set_current_page(GTK_NOTEBOOK(cat_note), (gint)(i_cat-1));
   gtk_widget_queue_draw(GTK_WIDGET(cat_note));
-
 }
 
 static void mc_down_cat (GtkWidget *widget, gpointer gdata)
 {
-  confNum *mcat;
-  typMascot *mascot;
+  typMascot *mascot = (typMascot *)gdata;
   int i_cat, i_tgt;
   gint  tmp_menu_tgt_max;
   gchar *tmp_menu_cat=NULL;
   gchar *tmp_menu_tgt[MAX_MENU_TARGET];
   gchar *tmp_menu_tgt_name[MAX_MENU_TARGET];
 
-  mcat=(confNum *)gdata;
-  
-  i_cat=mcat->num;
-  mascot=mcat->mascot;
+  i_cat = gtk_notebook_get_current_page(GTK_NOTEBOOK(cat_note));
   
   if(i_cat>=mascot->menu_cat_max-1) return;
 
@@ -1019,7 +937,7 @@ static void mc_down_cat (GtkWidget *widget, gpointer gdata)
   make_cat_list(mascot, cat_note, i_cat);
   make_cat_list(mascot, cat_note, i_cat+1);
 
-  for(i_tgt=0;i_tgt<mascot->menu_tgt_max[i_cat+1];i_tgt++){
+  for(i_tgt=0;i_tgt<tmp_menu_tgt_max;i_tgt++){
     if(tmp_menu_tgt[i_tgt]) g_free(tmp_menu_tgt[i_tgt]);
     if(tmp_menu_tgt_name[i_tgt]) g_free(tmp_menu_tgt_name[i_tgt]);
   }
@@ -1810,7 +1728,7 @@ gchar* create_nkr_change_image_dialog (typMascot *mascot,
   win_title=g_strdup_printf(_("Select New Image for No.%02d"),i_pix);
 
   fdialog = gtk_file_chooser_dialog_new(win_title,
-					NULL,
+					GTK_WINDOW(mascot->conf_main),
 					GTK_FILE_CHOOSER_ACTION_OPEN,
 #ifdef USE_GTK3
 					"_Cancel",GTK_RESPONSE_CANCEL,
@@ -1902,7 +1820,7 @@ static void create_change_biff_image_dialog(GtkWidget *w, gpointer gdata)
   while (my_main_iteration(FALSE));
 
   fdialog = gtk_file_chooser_dialog_new(_("Select New Image for Biff"),
-					NULL,
+					GTK_WINDOW(mascot->conf_main),
 					GTK_FILE_CHOOSER_ACTION_OPEN,
 #ifdef USE_GTK3
 					"_Cancel",GTK_RESPONSE_CANCEL,
@@ -2755,7 +2673,6 @@ static void create_add_frame_dialog(GtkWidget *w, gpointer gdata)
 
     mascot->frame_num[i_ptn]++;
 
-    //make_frame_list(mascot, i_ptn);
     make_ptn_tree(mascot, i_ptn);
   }
   else{
@@ -2848,7 +2765,6 @@ static void create_del_frame_dialog(GtkWidget *w, gpointer gdata)
   
   mascot->frame_num[i_ptn]--;
   
-  //make_frame_list(mascot, i_ptn);
   make_ptn_tree(mascot, i_ptn);
 
   flagChildDialog=FALSE;
@@ -2934,17 +2850,13 @@ static void create_change_tgt_dialog(typMascot *mascot, gint i_cat, gint i_tgt)
 
 static void create_add_tgt_dialog(GtkWidget *w, gpointer gdata)
 {
-  confNum *mcat;
-  typMascot *mascot;
-  int i_cat, i_tgt;
+  confNum *mcat=(confNum *)gdata;
+  gint i_cat = mcat->num;
+  typMascot *mascot = mcat->mascot;
+  gint i_tgt;
   GtkWidget *fdialog;
   gchar *fname=NULL;
   gchar *dest_file=NULL;
-
-  mcat=(confNum *)gdata;
-  
-  i_cat=mcat->num;
-  mascot=mcat->mascot;
 
   if(flagChildDialog){
     return;
@@ -2953,8 +2865,8 @@ static void create_add_tgt_dialog(GtkWidget *w, gpointer gdata)
     flagChildDialog=TRUE;
   }
 
-  if(mascot->menu_tgt_max[i_cat]>=MAX_MENU_TARGET){
-    popup_message(mascot->win_main,
+  if(mascot->menu_tgt_max[i_cat]>=MAX_MENU_TARGET-1){
+    popup_message(mascot->conf_main,
 #ifdef USE_GTK3
 		  "dialog-error", 
 #else
@@ -2965,14 +2877,13 @@ static void create_add_tgt_dialog(GtkWidget *w, gpointer gdata)
 		  " ",
 		  _("The number of mascots maxes out."),
 		  NULL);
+    flagChildDialog=FALSE;
     return;
   }
 
-  // Win構築は重いので先にExposeイベント等をすべて処理してから
-  //while (my_main_iteration(FALSE));
 
   fdialog = gtk_file_chooser_dialog_new(_("Select New Mascot File"),
-					NULL,
+					GTK_WINDOW(mascot->conf_main),
 					GTK_FILE_CHOOSER_ACTION_OPEN,
 #ifdef USE_GTK3
 					"_Cancel",GTK_RESPONSE_CANCEL,
@@ -3017,10 +2928,10 @@ static void create_add_tgt_dialog(GtkWidget *w, gpointer gdata)
       if(mascot->menu_tgt_name[i_cat][i_tgt]) g_free(mascot->menu_tgt_name[i_cat][i_tgt]);
       mascot->menu_tgt_name[i_cat][i_tgt]
 	=ReadMascotName(mascot, mascot->menu_tgt[i_cat][i_tgt]);
-      make_tgt_list(mascot, i_cat);
+      make_cat_tree(mascot, i_cat);
     }
     else{
-      popup_message(mascot->win_main,
+      popup_message(mascot->conf_main,
 #ifdef USE_GTK3
 		    "dialog-error", 
 #else
@@ -3044,15 +2955,12 @@ static void create_add_tgt_dialog(GtkWidget *w, gpointer gdata)
 
 static void create_del_tgt_dialog(GtkWidget *w, gpointer gdata)
 {
-  confNum *mcat;
-  typMascot *mascot;
-  int i_cat, i_tgt, dest_tgt;
-  GtkWidget *dialog;
-  GtkWidget *button;
-  GtkWidget *label;
-  GtkAdjustment *adj;
-  GtkWidget *spinner;
-  GtkWidget *hbox;
+  confNum *mcat=(confNum *)gdata;
+  gint i_cat = mcat->num;
+  typMascot *mascot = mcat->mascot;
+  int  i_tgt, dest_tgt;
+  gchar *tmp;
+  gboolean ret;
 
   mcat=(confNum *)gdata;
   
@@ -3067,7 +2975,7 @@ static void create_del_tgt_dialog(GtkWidget *w, gpointer gdata)
   }
 
   if(mascot->menu_tgt_max[i_cat]==1){
-    popup_message(Mascot->win_main,
+    popup_message(mascot->conf_main,
 #ifdef USE_GTK3
 		  "dialog-error", 
 #else
@@ -3078,59 +2986,49 @@ static void create_del_tgt_dialog(GtkWidget *w, gpointer gdata)
 		  " ",
 		  _("You cannot delete no more mascots."),
 		  NULL);
+    flagChildDialog=FALSE;
     return;
   }
 
 
-  dest_tgt=mascot->menu_tgt_max[i_cat]-1;
+  dest_tgt=mascot->cattree_i_tgt[i_cat];
+  if(dest_tgt<0){
+    dest_tgt=mascot->menu_tgt_max[i_cat]-1;
+  }
 
-  dialog = gtk_dialog_new_with_buttons(_("Select Mascot No. to Remove from the Menu"),
-				       NULL,
-				       GTK_DIALOG_MODAL,
-#ifdef USE_GTK3
-				       "_Cancel",GTK_RESPONSE_CANCEL,
-				       "_OK",GTK_RESPONSE_OK,
-#else
-				       GTK_STOCK_CANCEL,GTK_RESPONSE_CANCEL,
-				       GTK_STOCK_OK,GTK_RESPONSE_OK,
-#endif
-				       NULL);
-  gtk_window_set_position(GTK_WINDOW(dialog), GTK_WIN_POS_CENTER);
-  gtk_container_set_border_width(GTK_CONTAINER(dialog),5);
-
-  hbox=gtkut_hbox_new(FALSE,0);
-  gtk_box_pack_start(GTK_BOX(gtk_dialog_get_content_area(GTK_DIALOG(dialog))),
-		     hbox,TRUE,TRUE,0);
-
-  label=gtkut_label_new(_("Remove Mascot No."));
-  gtk_box_pack_start(GTK_BOX(hbox),label,TRUE,TRUE,0);
-
-  adj = (GtkAdjustment *)gtk_adjustment_new 
-    ((gdouble)dest_tgt, 0,(gdouble)dest_tgt,1.0, 1.0, 0.0);
-  my_signal_connect (adj, "value_changed",cc_get_adj,&dest_tgt);
-  spinner =  gtk_spin_button_new (adj, 0, 0);
-  gtk_spin_button_set_wrap (GTK_SPIN_BUTTON (spinner), FALSE);
-  gtk_box_pack_start(GTK_BOX(hbox), spinner,FALSE, FALSE, 0); 
+  tmp=g_strdup_printf(_("        <b>%02d</b> : <b>%s</b>"),
+		      dest_tgt+1, mascot->menu_tgt_name[i_cat][dest_tgt]);
   
-  gtk_widget_show_all(dialog);
+  ret=popup_ask(mascot->conf_main,
+#ifdef USE_GTK3
+		"dialog-warning", 
+#else
+		GTK_STOCK_DIALOG_WARNING,
+#endif
+		_("Warning: Delete Pattern."),
+		" ",
+		_("Do you really want to delete the mascot?"),
+		" ",
+		tmp,
+		NULL);
+  g_free(tmp);
+  
 
-  if (gtk_dialog_run(GTK_DIALOG(dialog)) == GTK_RESPONSE_OK) {
-    gtk_widget_destroy(dialog);
-
-    mascot->menu_tgt_max[i_cat]--;
-    mascot->menu_total--;
-    for(i_tgt=dest_tgt;i_tgt<mascot->menu_tgt_max[i_cat];i_tgt++){
-      if(mascot->menu_tgt[i_cat][i_tgt]) g_free(mascot->menu_tgt[i_cat][i_tgt]);
-      mascot->menu_tgt[i_cat][i_tgt]=g_strdup(mascot->menu_tgt[i_cat][i_tgt+1]);
-      if(mascot->menu_tgt_name[i_cat][i_tgt]) g_free(mascot->menu_tgt_name[i_cat][i_tgt]);
-      mascot->menu_tgt_name[i_cat][i_tgt]=g_strdup(mascot->menu_tgt_name[i_cat][i_tgt+1]);
-    }
-
-    make_tgt_list(mascot, i_cat);
+  if(!ret){
+    flagChildDialog=FALSE;
+    return;
   }
-  else{
-    gtk_widget_destroy(dialog);
+  
+  mascot->menu_tgt_max[i_cat]--;
+  mascot->menu_total--;
+  for(i_tgt=dest_tgt;i_tgt<mascot->menu_tgt_max[i_cat];i_tgt++){
+    if(mascot->menu_tgt[i_cat][i_tgt]) g_free(mascot->menu_tgt[i_cat][i_tgt]);
+    mascot->menu_tgt[i_cat][i_tgt]=g_strdup(mascot->menu_tgt[i_cat][i_tgt+1]);
+    if(mascot->menu_tgt_name[i_cat][i_tgt]) g_free(mascot->menu_tgt_name[i_cat][i_tgt]);
+    mascot->menu_tgt_name[i_cat][i_tgt]=g_strdup(mascot->menu_tgt_name[i_cat][i_tgt+1]);
   }
+
+  make_cat_tree(mascot, i_cat);
 
   flagChildDialog=FALSE;
   return;
@@ -3139,7 +3037,7 @@ static void create_del_tgt_dialog(GtkWidget *w, gpointer gdata)
 
 static void create_add_cat_dialog(GtkWidget *w, gpointer gdata)
 {
-  typMascot *mascot;
+  typMascot *mascot=(typMascot *)gdata;
   GtkWidget *dialog;
   GtkWidget *button;
   GtkWidget *label;
@@ -3148,9 +3046,7 @@ static void create_add_cat_dialog(GtkWidget *w, gpointer gdata)
   GtkWidget *hbox;
   int i_cat, i_tgt;
   gint dest_cat;
-
-  mascot=(typMascot *)gdata;
-
+ 
   if(flagChildDialog){
     return;
   }
@@ -3159,7 +3055,7 @@ static void create_add_cat_dialog(GtkWidget *w, gpointer gdata)
   }
 
   if(mascot->menu_cat_max>=MAX_MENU_CATEGORY){
-    popup_message(mascot->win_main,
+    popup_message(mascot->conf_main,
 #ifdef USE_GTK3
 		  "dialog-error", 
 #else
@@ -3170,91 +3066,52 @@ static void create_add_cat_dialog(GtkWidget *w, gpointer gdata)
 		  " ",
 		  _("The number of categories maxes out."),
 		  NULL);
+    flagChildDialog=FALSE;
     return;
   }
 
   dest_cat=mascot->menu_cat_max;
 
-  dialog = gtk_dialog_new_with_buttons(_("Select Category No. to Append"),
-				       NULL,
-				       GTK_DIALOG_MODAL,
-#ifdef USE_GTK3
-				       "_Cancel",GTK_RESPONSE_CANCEL,
-				       "_OK",GTK_RESPONSE_OK,
-#else
-				       GTK_STOCK_CANCEL,GTK_RESPONSE_CANCEL,
-				       GTK_STOCK_OK,GTK_RESPONSE_OK,
-#endif
-				       NULL);
-  gtk_window_set_position(GTK_WINDOW(dialog), GTK_WIN_POS_CENTER);
-  gtk_container_set_border_width(GTK_CONTAINER(dialog),5);
-  
-  hbox=gtkut_hbox_new(FALSE,0);
-  gtk_box_pack_start(GTK_BOX(gtk_dialog_get_content_area(GTK_DIALOG(dialog))),
-		     hbox,TRUE,TRUE,0);
 
-  label=gtkut_label_new(_("Append Category No."));
-  gtk_box_pack_start(GTK_BOX(hbox),label,TRUE,TRUE,0);
-
-  adj = (GtkAdjustment *)gtk_adjustment_new 
-    ((gdouble)mascot->menu_cat_max, 0,(gdouble)mascot->menu_cat_max,
-     1.0, 1.0, 0.0);
-  my_signal_connect (adj, "value_changed",cc_get_adj,&dest_cat);
-  spinner =  gtk_spin_button_new (adj, 0, 0);
-  gtk_spin_button_set_wrap (GTK_SPIN_BUTTON (spinner), FALSE);
-  gtk_box_pack_start(GTK_BOX(hbox), spinner,FALSE, FALSE, 0);
-  
- 
-  gtk_widget_show_all(dialog);
-
-  if (gtk_dialog_run(GTK_DIALOG(dialog)) == GTK_RESPONSE_OK) {
-    gtk_widget_destroy(dialog);
-
-    for(i_cat=mascot->menu_cat_max;i_cat>dest_cat;i_cat--){
-      if(mascot->menu_cat[i_cat]) g_free(mascot->menu_cat[i_cat]);
-      mascot->menu_cat[i_cat]=g_strdup(mascot->menu_cat[i_cat-1]);
-      mascot->menu_tgt_max[i_cat]=mascot->menu_tgt_max[i_cat-1];
-      for(i_tgt=0;i_tgt<mascot->menu_tgt_max[i_cat];i_tgt++){
-	if(mascot->menu_tgt[i_cat][i_tgt]) g_free(mascot->menu_tgt[i_cat][i_tgt]);
-	mascot->menu_tgt[i_cat][i_tgt]
-	  =g_strdup(mascot->menu_tgt[i_cat-1][i_tgt]);
-	if(mascot->menu_tgt_name[i_cat][i_tgt]) g_free(mascot->menu_tgt_name[i_cat][i_tgt]);
-	mascot->menu_tgt_name[i_cat][i_tgt]
-	  =g_strdup(mascot->menu_tgt_name[i_cat-1][i_tgt]);
-      }
+  for(i_cat=mascot->menu_cat_max;i_cat>dest_cat;i_cat--){
+    if(mascot->menu_cat[i_cat]) g_free(mascot->menu_cat[i_cat]);
+    mascot->menu_cat[i_cat]=g_strdup(mascot->menu_cat[i_cat-1]);
+    mascot->menu_tgt_max[i_cat]=mascot->menu_tgt_max[i_cat-1];
+    for(i_tgt=0;i_tgt<mascot->menu_tgt_max[i_cat];i_tgt++){
+      if(mascot->menu_tgt[i_cat][i_tgt]) g_free(mascot->menu_tgt[i_cat][i_tgt]);
+      mascot->menu_tgt[i_cat][i_tgt]
+	=g_strdup(mascot->menu_tgt[i_cat-1][i_tgt]);
+      if(mascot->menu_tgt_name[i_cat][i_tgt]) g_free(mascot->menu_tgt_name[i_cat][i_tgt]);
+      mascot->menu_tgt_name[i_cat][i_tgt]
+	=g_strdup(mascot->menu_tgt_name[i_cat-1][i_tgt]);
     }
-
-    if(mascot->menu_cat[dest_cat]) g_free(mascot->menu_cat[dest_cat]);
-    mascot->menu_cat[dest_cat]=g_strdup(TMP_CATEGORY_NAME);
-    mascot->menu_tgt_max[dest_cat]=1;
-
-    if(mascot->menu_tgt[dest_cat][0]) g_free(mascot->menu_tgt[dest_cat][0]);
-    mascot->menu_tgt[dest_cat][0]
-      =g_strdup(my_basename(mascot->file));
-    if(mascot->menu_tgt_name[dest_cat][0]) g_free(mascot->menu_tgt_name[dest_cat][0]);
-    mascot->menu_tgt_name[dest_cat][0]
-      =ReadMascotName(mascot, mascot->file);
-
+  }
+  
+  if(mascot->menu_cat[dest_cat]) g_free(mascot->menu_cat[dest_cat]);
+  mascot->menu_cat[dest_cat]=g_strdup(TMP_CATEGORY_NAME);
+  mascot->menu_tgt_max[dest_cat]=1;
+  
+  if(mascot->menu_tgt[dest_cat][0]) g_free(mascot->menu_tgt[dest_cat][0]);
+  mascot->menu_tgt[dest_cat][0]
+    =g_strdup(my_basename(mascot->file));
+  if(mascot->menu_tgt_name[dest_cat][0]) g_free(mascot->menu_tgt_name[dest_cat][0]);
+  mascot->menu_tgt_name[dest_cat][0]
+    =ReadMascotName(mascot, mascot->file);
     
-    mascot->menu_cat_max++;
-    mascot->menu_total++;
+  mascot->menu_cat_max++;
+  mascot->menu_total++;
 
-    if(dest_cat==mascot->menu_cat_max-1){
-      make_cat_list(mascot, cat_note, dest_cat-1);
-    } // Up/Downタグが付くようになる
+  if(dest_cat==mascot->menu_cat_max-1){
+    make_cat_list(mascot, cat_note, dest_cat-1);
+  } // Up/Downタグが付くようになる
 
-    for(i_cat=dest_cat;i_cat<mascot->menu_cat_max;i_cat++){
-      make_cat_list(mascot, cat_note, i_cat);
-    }
-    gtk_notebook_set_current_page(GTK_NOTEBOOK(cat_note), dest_cat);
-    gtk_widget_queue_draw(GTK_WIDGET(cat_note));
+  for(i_cat=dest_cat;i_cat<mascot->menu_cat_max;i_cat++){
+    make_cat_list(mascot, cat_note, i_cat);
   }
-  else{
-    gtk_widget_destroy(dialog);
-  }
+  gtk_notebook_set_current_page(GTK_NOTEBOOK(cat_note), dest_cat);
+  gtk_widget_queue_draw(GTK_WIDGET(cat_note));
   
   flagChildDialog=FALSE;
-
   return;
 }
 
@@ -3262,7 +3119,7 @@ static void create_add_cat_dialog(GtkWidget *w, gpointer gdata)
 
 static void create_del_cat_dialog(GtkWidget *w, gpointer gdata)
 {
-  typMascot *mascot;
+  typMascot *mascot=(typMascot *)gdata;
   GtkWidget *dialog;
   GtkWidget *button;
   GtkWidget *label;
@@ -3271,8 +3128,8 @@ static void create_del_cat_dialog(GtkWidget *w, gpointer gdata)
   GtkWidget *hbox;
   int i_cat, i_tgt, dest_menu_tgt_max;
   gint dest_cat;
-
-  mascot=(typMascot *)gdata;
+  gboolean ret;
+  gchar *tmp;
 
   if(flagChildDialog){
     return;
@@ -3282,7 +3139,7 @@ static void create_del_cat_dialog(GtkWidget *w, gpointer gdata)
   }
 
   if(mascot->menu_cat_max<=1){
-    popup_message(mascot->win_main,
+    popup_message(mascot->conf_main,
 #ifdef USE_GTK3
 		  "dialog-error", 
 #else
@@ -3291,94 +3148,80 @@ static void create_del_cat_dialog(GtkWidget *w, gpointer gdata)
 		  -1,
 		  _("Error: Delete Category."),
 		  " ",
-		  _("You cannot delete no more categories."),
+		  _("You can delete no more categories."),
 		  NULL);
+    flagChildDialog=FALSE;
     return;
   }
   
+  dest_cat=gtk_notebook_get_current_page(GTK_NOTEBOOK(cat_note));
 
-  dest_cat=mascot->menu_cat_max-1;
+  tmp=g_strdup_printf(_("       Category <b>%02d</b> : <b>%s</b> (%d registered mascots)"),
+		      dest_cat+1,
+		      mascot->menu_cat[dest_cat],
+		      mascot->menu_tgt_max[dest_cat]);
 
-  dialog = gtk_dialog_new_with_buttons(_("Select Category No. to Delete"),
-				       NULL,
-				       GTK_DIALOG_MODAL,
+  ret=popup_ask(mascot->conf_main,
 #ifdef USE_GTK3
-				       "_Cancel",GTK_RESPONSE_CANCEL,
-				       "_OK",GTK_RESPONSE_OK,
+		"dialog-warning", 
 #else
-				       GTK_STOCK_CANCEL,GTK_RESPONSE_CANCEL,
-				       GTK_STOCK_OK,GTK_RESPONSE_OK,
+		GTK_STOCK_DIALOG_WARNING,
 #endif
-				       NULL);
-  gtk_window_set_position(GTK_WINDOW(dialog), GTK_WIN_POS_CENTER);
-  gtk_container_set_border_width(GTK_CONTAINER(dialog),5);
+		_("Warning: Delete Pattern."),
+		" ",
+		_("Do you really want to delete the category?"),
+		" ",
+		tmp,
+		NULL);
+  g_free(tmp);
   
-  hbox=gtkut_hbox_new(FALSE,0);
-  gtk_box_pack_start(GTK_BOX(gtk_dialog_get_content_area(GTK_DIALOG(dialog))),
-		     hbox,TRUE,TRUE,0);
 
-  label=gtkut_label_new(_("Delete Category No."));
-  gtk_box_pack_start(GTK_BOX(hbox),label,TRUE,TRUE,0);
+  if(!ret){
+    flagChildDialog=FALSE;
+    return;
+  }
 
-  adj = (GtkAdjustment *)gtk_adjustment_new 
-    ((gdouble)gtk_notebook_get_current_page(GTK_NOTEBOOK(cat_note)),
-     0,(gdouble)mascot->menu_cat_max-1,
-     1.0, 1.0, 0.0);
-  my_signal_connect (adj, "value_changed",cc_get_adj,&dest_cat);
-  spinner =  gtk_spin_button_new (adj, 0, 0);
-  gtk_spin_button_set_wrap (GTK_SPIN_BUTTON (spinner), FALSE);
-  gtk_box_pack_start(GTK_BOX(hbox), spinner,FALSE, FALSE, 0);
+  dest_menu_tgt_max=mascot->menu_tgt_max[dest_cat];
   
-  gtk_widget_show_all(dialog);
-
-  if (gtk_dialog_run(GTK_DIALOG(dialog)) == GTK_RESPONSE_OK) {
-    gtk_widget_destroy(dialog);
-
-    dest_menu_tgt_max=mascot->menu_tgt_max[dest_cat];
-
-    for(i_cat=dest_cat;i_cat<mascot->menu_cat_max-1;i_cat++){
-      if(mascot->menu_cat[i_cat]) g_free(mascot->menu_cat[i_cat]);
-      mascot->menu_cat[i_cat]
-	=g_strdup(mascot->menu_cat[i_cat+1]);
-      mascot->menu_tgt_max[i_cat]=mascot->menu_tgt_max[i_cat+1];
-      for(i_tgt=0;i_tgt<mascot->menu_tgt_max[i_cat];i_tgt++){
-	if(mascot->menu_tgt[i_cat][i_tgt]) g_free(mascot->menu_tgt[i_cat][i_tgt]);
-	mascot->menu_tgt[i_cat][i_tgt]
-	  =g_strdup(mascot->menu_tgt[i_cat+1][i_tgt]);
-	if(mascot->menu_tgt_name[i_cat][i_tgt]) g_free(mascot->menu_tgt_name[i_cat][i_tgt]);
-	mascot->menu_tgt_name[i_cat][i_tgt]
-	  =g_strdup(mascot->menu_tgt_name[i_cat+1][i_tgt]);
-      }
+  for(i_cat=dest_cat;i_cat<mascot->menu_cat_max-1;i_cat++){
+    if(mascot->menu_cat[i_cat]) g_free(mascot->menu_cat[i_cat]);
+    mascot->menu_cat[i_cat]
+      =g_strdup(mascot->menu_cat[i_cat+1]);
+    mascot->menu_tgt_max[i_cat]=mascot->menu_tgt_max[i_cat+1];
+    for(i_tgt=0;i_tgt<mascot->menu_tgt_max[i_cat];i_tgt++){
+      if(mascot->menu_tgt[i_cat][i_tgt]) g_free(mascot->menu_tgt[i_cat][i_tgt]);
+      mascot->menu_tgt[i_cat][i_tgt]
+	=g_strdup(mascot->menu_tgt[i_cat+1][i_tgt]);
+      if(mascot->menu_tgt_name[i_cat][i_tgt]) g_free(mascot->menu_tgt_name[i_cat][i_tgt]);
+      mascot->menu_tgt_name[i_cat][i_tgt]
+	=g_strdup(mascot->menu_tgt_name[i_cat+1][i_tgt]);
     }
+  }
 
-    gtk_notebook_remove_page(GTK_NOTEBOOK(cat_note),mascot->menu_cat_max-1);
-    flag_make_tgt_list[mascot->menu_cat_max-1]=FALSE;
-    flag_make_cat_list[mascot->menu_cat_max-1]=FALSE;
-    gtk_widget_queue_draw (GTK_WIDGET(cat_note));
+  gtk_widget_destroy(mascot->cattree[mascot->menu_cat_max-1]);
+  flag_make_cattree[mascot->menu_cat_max-1]=FALSE;
+  gtk_notebook_remove_page(GTK_NOTEBOOK(cat_note),mascot->menu_cat_max-1);
+  flag_make_cat_list[mascot->menu_cat_max-1]=FALSE;
+  gtk_widget_queue_draw (GTK_WIDGET(cat_note));
 
-    mascot->menu_cat_max--;
-    mascot->menu_total-=dest_menu_tgt_max;
+  mascot->menu_cat_max--;
+  mascot->menu_total-=dest_menu_tgt_max;
+  
+  for(i_cat=dest_cat;i_cat<mascot->menu_cat_max;i_cat++){
+    make_cat_list(mascot, cat_note, i_cat);
+  }
+  
+  if(dest_cat==mascot->menu_cat_max){
+    make_cat_list(mascot, cat_note, dest_cat-1);
+  }
 
-
-    for(i_cat=dest_cat;i_cat<mascot->menu_cat_max;i_cat++){
-      make_cat_list(mascot, cat_note, i_cat);
-    }
-    
-    if(dest_cat==mascot->menu_cat_max){
-      make_cat_list(mascot, cat_note, dest_cat-1);
-    }
-
-    if(dest_cat<mascot->menu_cat_max){
-      gtk_notebook_set_current_page(GTK_NOTEBOOK(cat_note), dest_cat);
-    }
-    else{
-      gtk_notebook_set_current_page(GTK_NOTEBOOK(cat_note), mascot->menu_cat_max-1);
-    }
-    gtk_widget_queue_draw(GTK_WIDGET(cat_note));
+  if(dest_cat<mascot->menu_cat_max){
+    gtk_notebook_set_current_page(GTK_NOTEBOOK(cat_note), dest_cat);
   }
   else{
-    gtk_widget_destroy(dialog);
+    gtk_notebook_set_current_page(GTK_NOTEBOOK(cat_note), mascot->menu_cat_max-1);
   }
+  gtk_widget_queue_draw(GTK_WIDGET(cat_note));
   
   flagChildDialog=FALSE;
   return;
@@ -3387,7 +3230,7 @@ static void create_del_cat_dialog(GtkWidget *w, gpointer gdata)
 
 static void create_merge_cat_dialog(GtkWidget *w, gpointer gdata)
 {
-  typMascot *mascot;
+  typMascot *mascot=(typMascot *)gdata;
   int i_cat, old_cat_max;
   GtkWidget *fdialog;
   GSList *fnames;
@@ -3397,8 +3240,6 @@ static void create_merge_cat_dialog(GtkWidget *w, gpointer gdata)
   gboolean update;
   gchar *dest_file=NULL;
 
-  mascot=(typMascot *)gdata;
-
   if(flagChildDialog){
     return;
   }
@@ -3407,7 +3248,7 @@ static void create_merge_cat_dialog(GtkWidget *w, gpointer gdata)
   }
 
   if(mascot->menu_cat_max>=MAX_MENU_CATEGORY){
-    popup_message(mascot->win_main,
+    popup_message(mascot->conf_main,
 #ifdef USE_GTK3
 		  "dialog-error", 
 #else
@@ -3418,6 +3259,7 @@ static void create_merge_cat_dialog(GtkWidget *w, gpointer gdata)
 		  " ",
 		  _("The number of categories maxes out."),
 		  NULL);
+    flagChildDialog=FALSE;
     return;
   }
 
@@ -3427,7 +3269,7 @@ static void create_merge_cat_dialog(GtkWidget *w, gpointer gdata)
   while (my_main_iteration(FALSE));
 
   fdialog = gtk_file_chooser_dialog_new(_("Select Menu File to Merge"),
-					NULL,
+					GTK_WINDOW(mascot->conf_main),
 					GTK_FILE_CHOOSER_ACTION_OPEN,
 #ifdef USE_GTK3
 					"_Cancel",GTK_RESPONSE_CANCEL,
@@ -3475,7 +3317,7 @@ static void create_merge_cat_dialog(GtkWidget *w, gpointer gdata)
       }
       else{
 #ifdef GTK_MSG
-	popup_message(mascot->win_main,
+	popup_message(mascot->conf_main,
 #ifdef USE_GTK3
 		      "dialog-error", 
 #else
@@ -3542,7 +3384,7 @@ static void create_change_duet_tgt_dialog(GtkWidget *w, gpointer gdata)
   //while (my_main_iteration(FALSE));
 
   fdialog = gtk_file_chooser_dialog_new(_("Select Mascot File"),
-					NULL,
+					GTK_WINDOW(mascot->conf_main),
 					GTK_FILE_CHOOSER_ACTION_OPEN,
 #ifdef USE_GTK3
 					"_Cancel",GTK_RESPONSE_CANCEL,
@@ -3633,7 +3475,7 @@ static void create_change_click_sound_dialog(GtkWidget *w, gpointer gdata)
   while (my_main_iteration(FALSE));
 
   fdialog = gtk_file_chooser_dialog_new(_("Select Sound File"),
-					NULL,
+ 					GTK_WINDOW(mascot->conf_main),
 					GTK_FILE_CHOOSER_ACTION_OPEN,
 #ifdef USE_GTK3
 					"_Cancel",GTK_RESPONSE_CANCEL,
@@ -3721,7 +3563,7 @@ static void create_change_biff_sound_dialog(GtkWidget *w, gpointer gdata)
   while (my_main_iteration(FALSE));
 
   fdialog = gtk_file_chooser_dialog_new(_("Select Sound File"),
-					NULL,
+ 					GTK_WINDOW(mascot->conf_main),
 					GTK_FILE_CHOOSER_ACTION_OPEN,
 #ifdef USE_GTK3
 					"_Cancel",GTK_RESPONSE_CANCEL,
@@ -3812,7 +3654,7 @@ static void create_mail_file_dialog(GtkWidget *w, gpointer gdata)
   while (my_main_iteration(FALSE));
 
   fdialog = gtk_file_chooser_dialog_new(_("Select the file refered for the mail checking"),
-					NULL,
+ 					GTK_WINDOW(mascot->conf_main),
 					GTK_FILE_CHOOSER_ACTION_OPEN,
 #ifdef USE_GTK3
 					"_Cancel",GTK_RESPONSE_CANCEL,
@@ -3928,7 +3770,7 @@ static void create_mailer_dialog(GtkWidget *w, gpointer gdata)
   while (my_main_iteration(FALSE));
   
   fdialog = gtk_file_chooser_dialog_new(_("Select mailer command"),
-					NULL,
+ 					GTK_WINDOW(mascot->conf_main),
 					GTK_FILE_CHOOSER_ACTION_OPEN,
 #ifdef USE_GTK3
 					"_Cancel",GTK_RESPONSE_CANCEL,
@@ -5391,7 +5233,7 @@ static void create_save_release_mascot_dialog(void)
   label=gtkut_label_new(_("Mascot Name"));
   gtkut_pos(label, POS_CENTER, POS_CENTER);
   gtkut_table_attach(table, label, 0, 1, 0, 1,
-		     GTK_FILL,GTK_SHRINK,0,0);
+		     GTK_SHRINK,GTK_SHRINK,0,0);
 
   entry = gtk_entry_new ();
   if(Mascot->name){
@@ -5401,13 +5243,14 @@ static void create_save_release_mascot_dialog(void)
   else{
     new_name=NULL;
   }
-  gtkut_table_attach_defaults(table, entry, 1, 2, 0, 1);
+  gtkut_table_attach(table, entry, 1, 2, 0, 1,
+		     GTK_FILL|GTK_EXPAND,GTK_SHRINK,0,0);
   my_signal_connect (entry, "changed", cc_get_entry, &new_name);
 
   label=gtkut_label_new(_("Copyright"));
   gtkut_pos(label, POS_CENTER, POS_CENTER);
   gtkut_table_attach(table, label, 0, 1, 1, 2,
-		     GTK_FILL,GTK_SHRINK,0,0);
+		     GTK_SHRINK,GTK_SHRINK,0,0);
 
   entry = gtk_entry_new ();
   if(Mascot->copyright){
@@ -5417,13 +5260,14 @@ static void create_save_release_mascot_dialog(void)
     new_copyright=g_strdup("Copyright (C)");
   }
   gtk_entry_set_text(GTK_ENTRY(entry),new_copyright);
-  gtkut_table_attach_defaults(table, entry, 1, 2, 1, 2);
+  gtkut_table_attach(table, entry, 1, 2, 1, 2,
+		     GTK_FILL|GTK_EXPAND,GTK_SHRINK,0,0);
   my_signal_connect (entry, "changed", cc_get_entry, &new_copyright);
 
   label=gtkut_label_new(_("Character Code"));
   gtkut_pos(label, POS_CENTER, POS_CENTER);
   gtkut_table_attach(table, label, 0, 1, 2, 3,
-		     GTK_FILL,GTK_SHRINK,0,0);
+		     GTK_SHRINK,GTK_SHRINK,0,0);
 
   entry = gtk_entry_new ();
   new_code=g_strdup(DEF_CODE1);
@@ -5980,6 +5824,9 @@ void create_config_dialog(GtkWidget *widget, gpointer gdata){
   mascot->imgtree_i=-1;
   for(i_ptn=0;i_ptn<MAX_ANIME_PATTERN;i_ptn++){
     mascot->ptntree_i_frm[i_ptn]=-1;
+  }
+  for(i_cat=0;i_cat<MAX_MENU_CATEGORY;i_cat++){
+    mascot->cattree_i_tgt[i_cat]=-1;
   }
 
   //conf_main = gtk_window_new(GTK_WINDOW_TOPLEVEL);
@@ -8173,8 +8020,8 @@ void create_config_dialog(GtkWidget *widget, gpointer gdata){
 	gtk_entry_set_text(GTK_ENTRY(entry),
  	                   to_utf8(mascot->rcfile));
       }
-      gtkut_table_attach_defaults(table1, entry, 0, 2, 0, 1);
-      
+      gtkut_table_attach(table1, entry, 0, 2, 0, 1,
+			 GTK_FILL|GTK_EXPAND,GTK_SHRINK,0,0);
 
       frame = gtkut_frame_new (_("Menu File"));
       gtk_container_set_border_width (GTK_CONTAINER (frame), 5);
@@ -8189,7 +8036,8 @@ void create_config_dialog(GtkWidget *widget, gpointer gdata){
 	gtk_entry_set_text(GTK_ENTRY(entry),
                            to_utf8(mascot->menu_file));
       }
-      gtkut_table_attach_defaults(table1, entry, 0, 2, 0, 1);
+      gtkut_table_attach(table1, entry, 0, 2, 0, 1,
+			 GTK_FILL|GTK_EXPAND,GTK_SHRINK,0,0);
       
       label = gtkut_label_new (_("Character Code"));
       gtkut_pos(label, POS_CENTER, POS_CENTER);
@@ -8203,8 +8051,8 @@ void create_config_dialog(GtkWidget *widget, gpointer gdata){
       else{
 	gtk_entry_set_text(GTK_ENTRY(entry),_("(Based on the locale environment)"));
       }
-      gtkut_table_attach_defaults(table1, entry, 1, 2, 1, 2);
-
+      gtkut_table_attach(table1, entry, 1, 2, 1, 2,
+			 GTK_FILL|GTK_EXPAND,GTK_SHRINK,0,0);
 
       table1=gtkut_table_new(1,1,FALSE, 0, 0, 0);
       gtkut_table_attach_defaults(table, table1, 0, 1, 3, 4);
@@ -9207,7 +9055,6 @@ void create_config_dialog(GtkWidget *widget, gpointer gdata){
       // Pattern 収録用notebook
       for(i_ptn=0;i_ptn<MAX_ANIME_PATTERN;i_ptn++){
 	flag_make_pattern_list[i_ptn]=FALSE;
-	//flag_make_frame_list[i_ptn]=FALSE;
 	flag_make_ptntree[i_ptn]=FALSE;
       }
       
@@ -9288,7 +9135,8 @@ void create_config_dialog(GtkWidget *widget, gpointer gdata){
       
       label = gtkut_label_new (_("Image File"));
       gtkut_pos(label, POS_START, POS_CENTER);
-      gtkut_table_attach(table1, label, 0, 1, 0, 1,0,0,0,0);
+      gtkut_table_attach(table1, label, 0, 1, 0, 1,
+			 GTK_SHRINK, GTK_SHRINK, 0, 0);
       
       table2 = gtkut_table_new (2, 1, FALSE,0,0,0);
       gtkut_table_attach (table1, table2,
@@ -9358,8 +9206,9 @@ void create_config_dialog(GtkWidget *widget, gpointer gdata){
       }
 
       hbox = gtkut_hbox_new(FALSE,5);
-      gtkut_table_attach(table1, hbox, 2, 3, 1, 2,0,0,0,0);
-      label = gtkut_label_new (_("X"));
+      gtkut_table_attach(table1, hbox, 2, 3, 1, 2,
+			 GTK_SHRINK,GTK_SHRINK,0,0);
+      label = gtkut_label_new (_("        X"));
       gtkut_pos(label, POS_START, POS_CENTER);
       gtk_box_pack_start(GTK_BOX(hbox), label,FALSE, FALSE, 0);
       
@@ -9374,8 +9223,9 @@ void create_config_dialog(GtkWidget *widget, gpointer gdata){
       
       
       hbox = gtkut_hbox_new(FALSE,5);
-      gtkut_table_attach(table1, hbox, 3, 4, 1, 2,0,0,0,0);
-      label = gtkut_label_new (_("Y"));
+      gtkut_table_attach(table1, hbox, 3, 4, 1, 2,
+			 GTK_SHRINK,GTK_SHRINK,0,0);
+      label = gtkut_label_new (_("  Y"));
       gtkut_pos(label, POS_START, POS_CENTER);
       gtk_box_pack_start(GTK_BOX(hbox), label,FALSE, FALSE, 0);
       
@@ -9391,7 +9241,7 @@ void create_config_dialog(GtkWidget *widget, gpointer gdata){
       label = gtkut_label_new (_("Opacity Alpha[%]"));
       gtkut_pos(label, POS_START, POS_CENTER);
       gtkut_table_attach(table1, label, 0, 1, 2, 3,
-			 GTK_FILL,GTK_SHRINK,0,0);
+			 GTK_SHRINK,GTK_SHRINK,0,0);
       
       adj = (GtkAdjustment *)gtk_adjustment_new 
 	((gdouble)mascot->alpha_biff, 0, 100, 1.0, 10.0, 0.0);
@@ -9418,7 +9268,8 @@ void create_config_dialog(GtkWidget *widget, gpointer gdata){
       
       label = gtkut_label_new (_("Message"));
       gtkut_pos(label, POS_START, POS_CENTER);
-      gtkut_table_attach(table1, label, 0, 1, 0, 1,0,0,0,0);
+      gtkut_table_attach(table1, label, 0, 1, 0, 1,
+			 GTK_SHRINK, GTK_SHRINK, 0, 0);
 	
       entry = gtk_entry_new ();
       if(mascot->mail.word){
@@ -9427,12 +9278,12 @@ void create_config_dialog(GtkWidget *widget, gpointer gdata){
       my_signal_connect (entry,"changed",cc_get_entry,&mascot->mail.word);
       gtkut_table_attach (table1, entry,
 			  1, 2, 0, 1,
-			  GTK_EXPAND | GTK_FILL,
-			  GTK_EXPAND | GTK_FILL,0,0);
+			  GTK_EXPAND|GTK_FILL,GTK_SHRINK,0,0);
       
       label = gtkut_label_new (_("Sound File"));
       gtkut_pos(label, POS_START, POS_CENTER);
-      gtkut_table_attach(table1, label, 0, 1, 1, 2,0,0,0,0);
+      gtkut_table_attach(table1, label, 0, 1, 1, 2,
+			 GTK_SHRINK, GTK_SHRINK, 0, 0);
       
       table2 = gtkut_table_new (4, 1, FALSE,0,0,0);
       gtkut_table_attach (table1, table2,
@@ -9444,7 +9295,7 @@ void create_config_dialog(GtkWidget *widget, gpointer gdata){
       gtkut_table_attach (table2, entry_mail_sound,
 			  0, 1, 0, 1,
 			  GTK_EXPAND | GTK_FILL,
-			  GTK_EXPAND | GTK_FILL,0,0);
+			  GTK_SHRINK,0,0);
       if(mascot->mail.sound){
 	gtk_entry_set_text(GTK_ENTRY(entry_mail_sound), mascot->mail.sound);
       }
@@ -9501,7 +9352,7 @@ void create_config_dialog(GtkWidget *widget, gpointer gdata){
       label = gtkut_label_new (_("Name"));
       gtkut_pos(label, POS_CENTER, POS_CENTER);
       gtkut_table_attach(table1, label, 0, 1, 0, 1,
-			 GTK_FILL,GTK_SHRINK,0,0);
+			 GTK_SHRINK,GTK_SHRINK,0,0);
 
       entry = gtk_entry_new ();
       if(mascot->name){
@@ -9513,7 +9364,7 @@ void create_config_dialog(GtkWidget *widget, gpointer gdata){
       label = gtkut_label_new (_("File"));
       gtkut_pos(label, POS_CENTER, POS_CENTER);
       gtkut_table_attach(table1, label, 0, 1, 1, 2,
-			 GTK_FILL,GTK_SHRINK,0,0);
+			 GTK_SHRINK,GTK_SHRINK,0,0);
 
       entry = gtk_entry_new ();
       gtk_entry_set_text(GTK_ENTRY(entry),
@@ -9524,7 +9375,7 @@ void create_config_dialog(GtkWidget *widget, gpointer gdata){
       label = gtkut_label_new (_("Character Code"));
       gtkut_pos(label, POS_CENTER, POS_CENTER);
       gtkut_table_attach(table1, label, 0, 1, 2, 3,
-			 GTK_FILL,GTK_SHRINK,0,0);
+			 GTK_SHRINK,GTK_SHRINK,0,0);
 
       entry = gtk_entry_new ();
       if(mascot->code){
@@ -9675,7 +9526,6 @@ GtkWidget * create_menu_page(typMascot *mascot)
     
     for(i_cat=0;i_cat<MAX_MENU_CATEGORY;i_cat++){
       flag_make_cat_list[i_cat]=FALSE;
-      flag_make_tgt_list[i_cat]=FALSE;
       flag_make_cattree[i_cat]=FALSE;
     }
     
@@ -9845,7 +9695,6 @@ void make_pattern_list(typMascot *mascot, GtkWidget *ptn_note, int i_ptn)
   if(flag_make_pattern_list[i_ptn]) {
     gtk_widget_destroy(GTK_WIDGET(pattern_table[i_ptn]));
     g_object_unref(GTK_WIDGET(pattern_table[i_ptn]));
-    //flag_make_frame_list[i_ptn]=FALSE;
     flag_make_ptntree[i_ptn]=FALSE;
   }
   else flag_make_pattern_list[i_ptn]=TRUE;
@@ -9869,7 +9718,6 @@ void make_pattern_list(typMascot *mascot, GtkWidget *ptn_note, int i_ptn)
 				  GTK_POLICY_NEVER,
 				  GTK_POLICY_ALWAYS);
 	  
-  //make_frame_list(mascot, i_ptn);
   make_ptn_tree(mascot, i_ptn);
 	  
   hbox = gtkut_hbox_new(FALSE,5);
@@ -10137,59 +9985,57 @@ void make_cat_list(typMascot *mascot, GtkWidget *cat_note, int i_cat)
   gchar bufferl[32];
 
   if(flag_make_cat_list[i_cat]) {
-    //gtk_widget_destroy(GTK_WIDGET(cat_table[i_cat]));
+    gtk_widget_destroy(GTK_WIDGET(mascot->cattree[i_cat]));
+    flag_make_cattree[i_cat]=FALSE;
     gtk_notebook_remove_page (GTK_NOTEBOOK (cat_note), i_cat);
     gtk_widget_queue_draw(GTK_WIDGET(cat_note));
-    flag_make_tgt_list[i_cat]=FALSE;
   }
   else flag_make_cat_list[i_cat]=TRUE;
 
 
   sprintf(bufferl, "C.%02d", i_cat);
   
-  cat_table[i_cat] = gtkut_table_new (4, 4, FALSE,0,0,0);
+  cat_table[i_cat] = gtkut_table_new (4, 4, FALSE, 0, 0, 0);
 
 
   // カテゴリー名
   {
-      if(i_cat!=0){
-	arrow= gtkut_arrow_new(MY_ARROW_LEFT);
-	button = gtk_button_new();
-	gtk_container_add (GTK_CONTAINER (button), arrow);
-	gtkut_table_attach(cat_table[i_cat], button,
-			   0, 1, 0, 1,
-			   GTK_SHRINK,GTK_SHRINK,0,0);
-	my_signal_connect (button,"clicked",mc_up_cat,
-			   (gpointer)mcat[i_cat]);
-      }
-
-      hbox = gtkut_hbox_new(FALSE,5);
-      gtk_container_set_border_width (GTK_CONTAINER (hbox), 5);
-      gtkut_table_attach(cat_table[i_cat], hbox, 1, 3, 0, 1,
-			 GTK_FILL,GTK_SHRINK,0,0);
-
-      label = gtkut_label_new (_("Category"));
-      gtk_box_pack_start(GTK_BOX(hbox), label,FALSE, FALSE, 0);
-      gtkut_pos(label, POS_END, POS_CENTER);
-      entry = gtk_entry_new ();
-      gtk_box_pack_start(GTK_BOX(hbox), entry,FALSE, FALSE, 0);
-      if(mascot->menu_cat[i_cat]){
-	gtk_entry_set_text(GTK_ENTRY(entry),mascot->menu_cat[i_cat]);
-      }
-      my_signal_connect (entry,"changed",cc_get_entry,
-			 &mascot->menu_cat[i_cat]);
-
-      if(i_cat!=mascot->menu_cat_max-1){
-	arrow= gtkut_arrow_new(MY_ARROW_RIGHT);
-	button = gtk_button_new();
-	gtk_container_add (GTK_CONTAINER (button), arrow);
-	gtkut_table_attach(cat_table[i_cat], button,
-			   3, 4, 0, 1,
-			   GTK_SHRINK,GTK_SHRINK,0,0);
-	my_signal_connect (button,"clicked",mc_down_cat,(gpointer)mcat[i_cat]);
-      }
+    arrow= gtkut_arrow_new(MY_ARROW_LEFT);
+    button = gtk_button_new();
+    gtk_container_add (GTK_CONTAINER (button), arrow);
+    gtkut_table_attach(cat_table[i_cat], button,
+		       0, 1, 0, 1,
+		       GTK_SHRINK,GTK_SHRINK,0,0);
+    my_signal_connect (button,"clicked",mc_up_cat,
+		       (gpointer)mascot);
+    if(i_cat<=0){
+      gtk_widget_set_sensitive(button, FALSE);
+    }
     
+    label = gtkut_label_new (_("Category"));
+    gtkut_table_attach(cat_table[i_cat], label, 1, 2, 0, 1,
+		       GTK_SHRINK,GTK_SHRINK,0,0);
+    gtkut_pos(label, POS_END, POS_CENTER);
+    entry = gtk_entry_new ();
+    gtkut_table_attach(cat_table[i_cat], entry, 2, 3, 0, 1,
+		       GTK_FILL|GTK_EXPAND,GTK_SHRINK,0,0);
+    if(mascot->menu_cat[i_cat]){
+      gtk_entry_set_text(GTK_ENTRY(entry),mascot->menu_cat[i_cat]);
+    }
+    my_signal_connect (entry,"changed",cc_get_entry,
+		       &mascot->menu_cat[i_cat]);
     
+    arrow= gtkut_arrow_new(MY_ARROW_RIGHT);
+    button = gtk_button_new();
+    gtk_container_add (GTK_CONTAINER (button), arrow);
+    gtkut_table_attach(cat_table[i_cat], button,
+		       3, 4, 0, 1,
+		       GTK_SHRINK,GTK_SHRINK,0,0);
+    my_signal_connect (button,"clicked",mc_down_cat,
+			   (gpointer)mascot);
+    if(i_cat>=mascot->menu_cat_max-1){
+      gtk_widget_set_sensitive(button, FALSE);
+    }
   }
 
   cat_scrwin[i_cat] = gtk_scrolled_window_new (NULL, NULL);
@@ -10200,13 +10046,27 @@ void make_cat_list(typMascot *mascot, GtkWidget *cat_note, int i_cat)
 				  GTK_POLICY_NEVER,
 				  GTK_POLICY_ALWAYS);
   
-  //make_tgt_list(mascot, i_cat);
   make_cat_tree(mascot, i_cat);
 
   hbox = gtkut_hbox_new(FALSE,5);
   gtk_container_set_border_width (GTK_CONTAINER (hbox), 5);
   gtkut_table_attach(cat_table[i_cat], hbox, 0, 4, 2, 3,
 		     GTK_SHRINK,GTK_SHRINK,0,0);
+
+  arrow= gtkut_arrow_new(MY_ARROW_UP);
+  button = gtk_button_new();
+  gtk_container_add (GTK_CONTAINER (button), arrow);
+  gtk_box_pack_start(GTK_BOX(hbox), button,FALSE, FALSE, 0);
+  my_signal_connect (button,"clicked",cattree_up_tgt,
+		     (gpointer)mcat[i_cat]);
+  
+  arrow= gtkut_arrow_new(MY_ARROW_DOWN);
+  button = gtk_button_new();
+  gtk_container_add (GTK_CONTAINER (button), arrow);
+  gtk_box_pack_start(GTK_BOX(hbox), button,FALSE, FALSE, 0);
+  my_signal_connect (button,"clicked",cattree_down_tgt,
+		     (gpointer)mcat[i_cat]);
+  
   button=gtkut_button_new_with_icon(_("Append Mascot"),
 #ifdef USE_GTK3				       
 				    "list-add"
@@ -10226,7 +10086,8 @@ void make_cat_list(typMascot *mascot, GtkWidget *cat_note, int i_cat)
 #endif
 				    );
   gtk_box_pack_start(GTK_BOX(hbox), button,FALSE, FALSE, 0);
-  my_signal_connect(button,"clicked",create_del_tgt_dialog,i_cat);
+  my_signal_connect(button,"clicked",create_del_tgt_dialog,
+		    (gpointer)mcat[i_cat]);
   
 
   label = gtkut_label_new (bufferl);
@@ -10235,286 +10096,6 @@ void make_cat_list(typMascot *mascot, GtkWidget *cat_note, int i_cat)
   gtk_widget_show_all(cat_note);
   
 }
-
-// パターンないフレームリスト
-void make_frame_list(typMascot *mascot, int i_ptn)
-{
-  int i_frm;
-  int i_pix;
-  char no_tmp[3];
-  GtkWidget *label;
-  GtkWidget *button;
-  GtkAdjustment *adj;
-  GtkWidget *spinner;
-
-  if(flag_make_frame_list[i_ptn]){
-    gtk_widget_destroy(frame_table[i_ptn]);
-    g_object_unref(frame_table[i_ptn]);
-  }
-  else flag_make_frame_list[i_ptn]=TRUE;
-
-  frame_table[i_ptn] = gtkut_table_new (7, MAX_ANIME_FRAME+3, FALSE,0,0,5);
-  //g_object_ref (frame_table[i_ptn]); 
-  //gtk_object_sink (GTK_OBJECT (frame_table[i_ptn]));
-  
-#ifdef USE_GTK3
-  gtk_container_add(GTK_CONTAINER(ptn_scrwin[i_ptn]), frame_table[i_ptn]);
-#else
-  gtk_scrolled_window_add_with_viewport(GTK_SCROLLED_WINDOW (ptn_scrwin[i_ptn]), frame_table[i_ptn]);
-#endif
-  
-  label = gtkut_label_new (_("No."));
-  gtkut_table_attach(frame_table[i_ptn], label, 0, 1, 0, 1,
-		     GTK_FILL,GTK_SHRINK,0,0);
-  gtkut_pos(label, POS_START, POS_START);
-	 
-  label = gtkut_label_new (_("Image"));
-  gtkut_table_attach(frame_table[i_ptn], label, 1, 2, 0, 1,
-		     GTK_FILL,GTK_SHRINK,0,0);
-  gtkut_pos(label, POS_CENTER, POS_START);
-  
-  label = gtkut_label_new (_("Min"));
-  gtkut_table_attach(frame_table[i_ptn], label, 2, 3, 0, 1,
-		     GTK_FILL,GTK_SHRINK,0,0);
-  gtkut_pos(label, POS_CENTER, POS_START);
-  
-  label = gtkut_label_new (_("Max"));
-  gtkut_table_attach(frame_table[i_ptn], label, 3, 4, 0, 1,
-		     GTK_FILL,GTK_SHRINK,0,0);
-  gtkut_pos(label, POS_CENTER, POS_START);
-  
-  label = gtkut_label_new (_("Block Loop"));
-  gtkut_table_attach(frame_table[i_ptn], label, 4, 7, 0, 1,
-		     GTK_FILL,GTK_SHRINK,0,0);
-  gtkut_pos(label, POS_CENTER, POS_START);
-  
-  label = gtkut_label_new (_("Next"));
-  gtkut_table_attach(frame_table[i_ptn], label, 4, 5, 1, 2,
-		     GTK_FILL,GTK_SHRINK,0,0);
-  gtkut_pos(label, POS_CENTER, POS_END);
-  
-  label = gtkut_label_new (_("Min"));
-  gtkut_table_attach(frame_table[i_ptn], label, 5, 6, 1, 2,
-		     GTK_FILL,GTK_SHRINK,0,0);
-  gtkut_pos(label, POS_CENTER, POS_END);
-  
-  label = gtkut_label_new (_("Max"));
-  gtkut_table_attach(frame_table[i_ptn], label, 6, 7, 1, 2,
-		     GTK_FILL,GTK_SHRINK,0,0);
-  gtkut_pos(label, POS_CENTER, POS_END);
-  
-  i_frm=0;
-  for(i_frm=0;i_frm<mascot->frame_num[i_ptn];i_frm++){
-    sprintf(no_tmp,"%02d",i_frm);
-    button = gtk_button_new_with_label(no_tmp);
-    gtkut_table_attach (frame_table[i_ptn],
-			button, 0, 1, i_frm+2, i_frm+3,
-			GTK_FILL,GTK_SHRINK,0,2);
-    my_signal_connect(button,"clicked",TestPut, 
-		      (gpointer)mpix[mascot->frame_pix[i_ptn][i_frm]]);
-
-    // Image
-    adj = (GtkAdjustment *)gtk_adjustment_new 
-      ((gdouble)mascot->frame_pix[i_ptn][i_frm], 0,
-       (gdouble)mascot->nPixmap-1, 1.0, 1.0, 0.0);
-    my_signal_connect (adj, "value_changed",cc_get_adj,
-		       &mascot->frame_pix[i_ptn][i_frm]);
-    spinner =  gtk_spin_button_new (adj, 0, 0);
-    gtk_spin_button_set_wrap (GTK_SPIN_BUTTON (spinner), FALSE);
-    gtkut_table_attach(frame_table[i_ptn], spinner,
-		       1, 2, i_frm+2, i_frm+3,
-		       GTK_FILL,GTK_SHRINK,0,0);
-
-
-    // Min
-    adj = (GtkAdjustment *)gtk_adjustment_new 
-      ((gdouble)mascot->frame_min[i_ptn][i_frm], 1,999, 1.0, 1.0, 0.0);
-    my_signal_connect (adj, "value_changed",cc_get_adj,
-		       &mascot->frame_min[i_ptn][i_frm]);
-    spinner =  gtk_spin_button_new (adj, 0, 0);
-    gtk_spin_button_set_wrap (GTK_SPIN_BUTTON (spinner), FALSE);
-    gtkut_table_attach(frame_table[i_ptn], spinner,
-		       2, 3, i_frm+2, i_frm+3,
-		       GTK_FILL,GTK_SHRINK,0,0);
-    
-  
-    // Max
-    adj = (GtkAdjustment *)gtk_adjustment_new 
-      ((gdouble)mascot->frame_max[i_ptn][i_frm], 1,999, 1.0, 1.0, 0.0);
-    my_signal_connect (adj, "value_changed",cc_get_adj,
-		       &mascot->frame_max[i_ptn][i_frm]);
-    spinner =  gtk_spin_button_new (adj, 0, 0);
-    gtk_spin_button_set_wrap (GTK_SPIN_BUTTON (spinner), FALSE);
-    gtkut_table_attach(frame_table[i_ptn], spinner,
-		       3, 4, i_frm+2, i_frm+3,
-		       GTK_FILL,GTK_SHRINK,0,0);
-
-  
-    // Block Next
-    adj = (GtkAdjustment *)gtk_adjustment_new 
-      ((gdouble)mascot->frame_loop[i_ptn][i_frm].next, -1,
-       mascot->frame_num[i_ptn]-1, 1.0, 1.0, 0.0);
-    my_signal_connect (adj, "value_changed",cc_get_adj,
-		       &mascot->frame_loop[i_ptn][i_frm].next);
-    spinner =  gtk_spin_button_new (adj, 0, 0);
-    gtk_spin_button_set_wrap (GTK_SPIN_BUTTON (spinner), FALSE);
-    gtkut_table_attach(frame_table[i_ptn], spinner,
-		       4, 5, i_frm+2, i_frm+3,
-		       GTK_FILL,GTK_SHRINK,0,0);
-
-    // Block Min
-    adj = (GtkAdjustment *)gtk_adjustment_new 
-      ((gdouble)mascot->frame_loop[i_ptn][i_frm].min, 0,999, 1.0, 1.0, 0.0);
-    my_signal_connect (adj, "value_changed",cc_get_adj,
-		       &mascot->frame_loop[i_ptn][i_frm].min);
-    spinner =  gtk_spin_button_new (adj, 0, 0);
-    gtk_spin_button_set_wrap (GTK_SPIN_BUTTON (spinner), FALSE);
-    gtkut_table_attach(frame_table[i_ptn], spinner,
-		       5, 6, i_frm+2, i_frm+3,
-		       GTK_FILL,GTK_SHRINK,0,0);
-  
-    // Block Max
-    adj = (GtkAdjustment *)gtk_adjustment_new 
-      ((gdouble)mascot->frame_loop[i_ptn][i_frm].max, 0,999, 1.0, 1.0, 0.0);
-    my_signal_connect (adj, "value_changed",cc_get_adj,
-		       &mascot->frame_loop[i_ptn][i_frm].max);
-    spinner =  gtk_spin_button_new (adj, 0, 0);
-    gtk_spin_button_set_wrap (GTK_SPIN_BUTTON (spinner), FALSE);
-    gtkut_table_attach(frame_table[i_ptn], spinner,
-		       6, 7, i_frm+2, i_frm+3,
-		       GTK_FILL,GTK_SHRINK,0,0);
-  
-  }
-  label=gtkut_label_new("");
-  gtkut_table_attach_defaults(frame_table[i_ptn], label, 
-			      0, 7, MAX_ANIME_FRAME+2, MAX_ANIME_FRAME+3);
-
-
-  gtk_widget_show_all(frame_table[i_ptn]);
-}
-
-
-// カテゴリー内ターゲットリスト
-void make_tgt_list(typMascot *mascot, int i_cat)
-{
-  int i_tgt;
-  char no_tmp[3];
-  GtkWidget *label;
-  GtkWidget *button;
-  GtkWidget *entry;
-  GtkWidget *arrow;
-  GtkWidget *hbox;
-
-  
-  if(flag_make_tgt_list[i_cat]){
-    gtk_widget_destroy(tgt_table[i_cat]);
-    g_object_unref(tgt_table[i_cat]);
-  }
-  else flag_make_tgt_list[i_cat]=TRUE;
-
-  tgt_table[i_cat] = gtkut_table_new (5, MAX_MENU_CATEGORY+2, FALSE,0,0,5);
-  //g_object_ref (tgt_table[i_cat]); 
-  //gtk_object_sink (GTK_OBJECT (tgt_table[i_cat]));
-  
-#ifdef USE_GTK3
-  gtk_container_add(GTK_CONTAINER(cat_scrwin[i_cat]), tgt_table[i_cat]);
-#else
-  gtk_scrolled_window_add_with_viewport(GTK_SCROLLED_WINDOW (cat_scrwin[i_cat]), tgt_table[i_cat]);
-#endif
-  
-  label = gtkut_label_new (_("No."));
-  gtkut_table_attach(tgt_table[i_cat], label, 1, 2, 0, 1,
-		     GTK_FILL,GTK_SHRINK,0,0);
-  gtkut_pos(label, POS_START, POS_START);
-	 
-  label = gtkut_label_new (_("Name"));
-  gtkut_table_attach(tgt_table[i_cat], label, 2, 3, 0, 1,
-		     GTK_FILL,GTK_SHRINK,0,0);
-  gtkut_pos(label, POS_CENTER, POS_START);
-  
-  label = gtkut_label_new (_("File"));
-  gtkut_table_attach(tgt_table[i_cat], label, 3, 5, 0, 1,
-		     GTK_FILL,GTK_SHRINK,0,0);
-  gtkut_pos(label, POS_CENTER, POS_START);
-  
-  
-  for(i_tgt=0;i_tgt<mascot->menu_tgt_max[i_cat];i_tgt++){
-    
-    if(i_tgt!=0){
-
-      arrow= gtkut_arrow_new(MY_ARROW_UP);
-      button = gtk_button_new();
-      gtk_container_add (GTK_CONTAINER (button), arrow);
-      gtkut_table_attach(tgt_table[i_cat], button,
-			 0, 1, i_tgt+1, i_tgt+2,
-			 GTK_SHRINK,GTK_SHRINK,0,0);
-      my_signal_connect(button,"clicked",mc_up_tgt, 
-			(gpointer)mtgt[i_cat][i_tgt]);
-    }
-
-    sprintf(no_tmp,"%02d",i_tgt);
-    label = gtkut_label_new (no_tmp);
-    gtkut_table_attach (tgt_table[i_cat],
-			label, 1, 2, i_tgt+1, i_tgt+2,
-			GTK_FILL,GTK_SHRINK,0,2);
-
-    // Name
-    entry = gtk_entry_new ();
-    if(mascot->menu_tgt_name[i_cat][i_tgt]){
-      gtk_entry_set_text(GTK_ENTRY(entry),mascot->menu_tgt_name[i_cat][i_tgt]);
-    }
-    gtkut_table_attach(tgt_table[i_cat], entry,
-		       2, 3, i_tgt+1, i_tgt+2,
-		       GTK_FILL,GTK_SHRINK,0,0);
-
-
-    // File
-    hbox = gtkut_hbox_new(FALSE,0);
-    gtkut_table_attach(tgt_table[i_cat], hbox,
-		       3, 4, i_tgt+1, i_tgt+2,
-		       GTK_FILL,GTK_SHRINK,0,0);
-
-    entry = gtk_entry_new ();
-    if(mascot->menu_tgt[i_cat][i_tgt]){
-      gtk_entry_set_text(GTK_ENTRY(entry),mascot->menu_tgt[i_cat][i_tgt]);
-    }
-    gtk_box_pack_start(GTK_BOX(hbox), entry,FALSE, FALSE, 0);
-    
-    button=gtkut_button_new_with_icon(NULL,
-#ifdef USE_GTK3				       
-				      "document-open"
-#else
-				      GTK_STOCK_OPEN
-#endif
-				      );
-    gtk_box_pack_start(GTK_BOX(hbox), button,FALSE, FALSE, 0);
-    //my_signal_connect(button,"clicked",create_change_tgt_dialog, 
-    //		      (gpointer)mtgt[i_cat][i_tgt]);
-    
-    if(i_tgt!=mascot->menu_tgt_max[i_cat]-1){
-      arrow= gtkut_arrow_new(MY_ARROW_DOWN);
-      button = gtk_button_new();
-      gtk_container_add (GTK_CONTAINER (button), arrow);
-      gtkut_table_attach(tgt_table[i_cat], button,
-			 4, 5, i_tgt+1, i_tgt+2,
-			 GTK_SHRINK,GTK_SHRINK,0,0);
-      my_signal_connect(button,"clicked",mc_down_tgt, 
-			(gpointer)mtgt[i_cat][i_tgt]);
-    }
-
-  }
-
-  label=gtkut_label_new("");
-  gtkut_table_attach_defaults(tgt_table[i_cat], label, 
-			      0, 7, MAX_ANIME_FRAME+2, MAX_ANIME_FRAME+3);
-
-
-  gtk_widget_show_all(tgt_table[i_cat]);
-}
-
-
-  
-
 
 // ポップアップメニューの生成
 GtkWidget * make_popup_menu(typMascot *mascot)
@@ -11917,7 +11498,7 @@ gboolean popup_ask(GtkWidget *parent, gchar* stock_id, ...){
 				       _("_Cancel"),GTK_RESPONSE_CANCEL,
 #else
 				       GTK_STOCK_OK,GTK_RESPONSE_OK,
-				       GTK_STOCK_CANCEL,GTK_RESPONSE_CENCEL,
+				       GTK_STOCK_CANCEL,GTK_RESPONSE_CANCEL,
 #endif
 				       NULL);
   gtk_container_set_border_width(GTK_CONTAINER(dialog),5);
@@ -12507,7 +12088,7 @@ ptntree_add_columns (typMascot *mascot,
   renderer = gtk_cell_renderer_text_new ();
   g_object_set_data (G_OBJECT (renderer), "column", 
   		     GINT_TO_POINTER (COLUMN_PTNTREE_BL_NEXT));
-  column=gtk_tree_view_column_new_with_attributes (_("Block Loop : Next Frame"),
+  column=gtk_tree_view_column_new_with_attributes (NULL,
 						   renderer,
 						   "text", 
 						   COLUMN_PTNTREE_BL_NEXT,
@@ -12519,6 +12100,7 @@ ptntree_add_columns (typMascot *mascot,
 						   "background-gdk", COLUMN_PTNTREE_COLBG,
 #endif					   
 						   NULL);
+  gtkut_tree_view_column_set_markup(column, _("<span size=\"smaller\">Block Loop</span> Next Frame"));
   gtk_tree_view_column_set_cell_data_func(column, renderer,
 					  ptntree_cell_data_func,
 					  GUINT_TO_POINTER(COLUMN_PTNTREE_BL_NEXT),
@@ -12532,7 +12114,7 @@ ptntree_add_columns (typMascot *mascot,
   renderer = gtk_cell_renderer_text_new ();
   g_object_set_data (G_OBJECT (renderer), "column", 
   		     GINT_TO_POINTER (COLUMN_PTNTREE_BL_MIN));
-  column=gtk_tree_view_column_new_with_attributes (_("Block Loop : Min"),
+  column=gtk_tree_view_column_new_with_attributes (NULL,
 						   renderer,
 						   "text", 
 						   COLUMN_PTNTREE_BL_MIN,
@@ -12544,6 +12126,7 @@ ptntree_add_columns (typMascot *mascot,
 						   "background-gdk", COLUMN_PTNTREE_COLBG,
 #endif					   
 						   NULL);
+  gtkut_tree_view_column_set_markup(column, _("<span size=\"smaller\">Block Loop</span> Min"));
   gtk_tree_view_column_set_cell_data_func(column, renderer,
 					  ptntree_cell_data_func,
 					  GUINT_TO_POINTER(COLUMN_PTNTREE_BL_MIN),
@@ -12557,7 +12140,7 @@ ptntree_add_columns (typMascot *mascot,
   renderer = gtk_cell_renderer_text_new ();
   g_object_set_data (G_OBJECT (renderer), "column", 
   		     GINT_TO_POINTER (COLUMN_PTNTREE_BL_MAX));
-  column=gtk_tree_view_column_new_with_attributes (_("Block Loop : Max"),
+  column=gtk_tree_view_column_new_with_attributes (NULL,
 						   renderer,
 						   "text", 
 						   COLUMN_PTNTREE_BL_MAX,
@@ -12569,6 +12152,7 @@ ptntree_add_columns (typMascot *mascot,
 						   "background-gdk", COLUMN_PTNTREE_COLBG,
 #endif					   
 						   NULL);
+  gtkut_tree_view_column_set_markup(column, _("<span size=\"smaller\">Block Loop</span> Max"));
   gtk_tree_view_column_set_cell_data_func(column, renderer,
 					  ptntree_cell_data_func,
 					  GUINT_TO_POINTER(COLUMN_PTNTREE_BL_MAX),
@@ -12973,7 +12557,7 @@ void make_cat_tree(typMascot *mascot, gint i_cat){
   gtk_container_add(GTK_CONTAINER(cat_scrwin[i_cat]), mascot->cattree[i_cat]);
 #else
   gtk_scrolled_window_add_with_viewport(GTK_SCROLLED_WINDOW (cat_scrwin[i_cat]),
-					mascot->ptntree[i_ptn]);
+					mascot->cattree[i_cat]);
 #endif
 
   g_signal_connect (mascot->cattree[i_cat], "cursor-changed",
@@ -13193,3 +12777,103 @@ static void act_cattree_item(GtkTreeView        *treeview,
   }
 }
 
+
+void cattree_select_tgt(GtkWidget *tree, gint set_tgt, gint max_tgt){
+  GtkTreeModel *model = gtk_tree_view_get_model(GTK_TREE_VIEW(tree));
+  GtkTreePath *path;
+  GtkTreeIter  iter;
+  gint i_tgt;
+
+  path=gtk_tree_path_new_first();
+  
+  for(i_tgt=0;i_tgt<max_tgt;i_tgt++){
+    gtk_tree_model_get_iter (model, &iter, path);
+    gtk_tree_model_get (model, &iter, COLUMN_CATTREE_NUMBER, &i_tgt, -1);
+    
+    if(i_tgt==set_tgt){
+      gtk_widget_grab_focus (tree);
+      gtk_tree_view_set_cursor(GTK_TREE_VIEW(tree), path, NULL, FALSE);
+      break;
+    }
+    else{
+      gtk_tree_path_next(path);
+    }
+  }
+  gtk_tree_path_free(path);
+}
+
+
+static void cattree_up_tgt (GtkWidget *widget, gpointer gdata)
+{
+  confNum *mcat = (confNum *)gdata;
+  gint i_cat = mcat->num;
+  typMascot *mascot = mcat->mascot;
+  gint i_tgt;
+  gchar *tmp_menu_tgt=NULL, *tmp_menu_tgt_name=NULL;
+
+  i_tgt = mascot->cattree_i_tgt[i_cat];
+
+  if(i_tgt<=0) return;
+  if(i_tgt>=mascot->menu_tgt_max[i_cat]) return;
+  
+  tmp_menu_tgt=g_strdup(mascot->menu_tgt[i_cat][i_tgt-1]);
+  tmp_menu_tgt_name=g_strdup(mascot->menu_tgt_name[i_cat][i_tgt-1]);
+
+  if(mascot->menu_tgt[i_cat][i_tgt-1]){
+    g_free(mascot->menu_tgt[i_cat][i_tgt-1]);
+  }
+  mascot->menu_tgt[i_cat][i_tgt-1]=g_strdup(mascot->menu_tgt[i_cat][i_tgt]);
+  if(mascot->menu_tgt_name[i_cat][i_tgt-1]){
+    g_free(mascot->menu_tgt_name[i_cat][i_tgt-1]);
+  }
+  mascot->menu_tgt_name[i_cat][i_tgt-1]=g_strdup(mascot->menu_tgt_name[i_cat][i_tgt]);
+
+  if(mascot->menu_tgt[i_cat][i_tgt]){
+    g_free(mascot->menu_tgt[i_cat][i_tgt]);
+  }
+  mascot->menu_tgt[i_cat][i_tgt]=g_strdup(tmp_menu_tgt);
+  if(mascot->menu_tgt_name[i_cat][i_tgt]){
+    g_free(mascot->menu_tgt_name[i_cat][i_tgt]);
+  }
+  mascot->menu_tgt_name[i_cat][i_tgt]=g_strdup(tmp_menu_tgt_name);
+
+  if(tmp_menu_tgt) g_free(tmp_menu_tgt);
+  if(tmp_menu_tgt_name) g_free(tmp_menu_tgt_name);
+
+  make_cat_tree(mascot, i_cat);
+  cattree_select_tgt(mascot->cattree[i_cat], i_tgt-1, mascot->menu_tgt_max[i_cat]);
+}
+
+
+static void cattree_down_tgt (GtkWidget *widget, gpointer gdata)
+{
+  confNum *mcat = (confNum *)gdata;
+  gint i_cat = mcat->num;
+  typMascot *mascot = mcat->mascot;
+  gint i_tgt;
+  gchar *tmp_menu_tgt=NULL, *tmp_menu_tgt_name=NULL;
+
+  i_tgt = mascot->cattree_i_tgt[i_cat];
+
+  if(i_tgt<0) return;
+  if(i_tgt>=mascot->menu_tgt_max[i_cat]-1) return;
+  
+  tmp_menu_tgt=g_strdup(mascot->menu_tgt[i_cat][i_tgt+1]);
+  tmp_menu_tgt_name=g_strdup(mascot->menu_tgt_name[i_cat][i_tgt+1]);
+  
+  if(mascot->menu_tgt[i_cat][i_tgt+1]) g_free(mascot->menu_tgt[i_cat][i_tgt+1]);
+  mascot->menu_tgt[i_cat][i_tgt+1]=g_strdup(mascot->menu_tgt[i_cat][i_tgt]);
+  if(mascot->menu_tgt_name[i_cat][i_tgt+1]) g_free(mascot->menu_tgt_name[i_cat][i_tgt+1]);
+  mascot->menu_tgt_name[i_cat][i_tgt+1]=g_strdup(mascot->menu_tgt_name[i_cat][i_tgt]);
+  
+  if(mascot->menu_tgt[i_cat][i_tgt]) g_free(mascot->menu_tgt[i_cat][i_tgt]);
+  mascot->menu_tgt[i_cat][i_tgt]=g_strdup(tmp_menu_tgt);
+  if(mascot->menu_tgt_name[i_cat][i_tgt]) g_free(mascot->menu_tgt_name[i_cat][i_tgt]);
+  mascot->menu_tgt_name[i_cat][i_tgt]=g_strdup(tmp_menu_tgt_name);
+  
+  if(tmp_menu_tgt) g_free(tmp_menu_tgt);
+  if(tmp_menu_tgt_name) g_free(tmp_menu_tgt_name);
+  
+  make_cat_tree(mascot,i_cat);
+  cattree_select_tgt(mascot->cattree[i_cat], i_tgt+1, mascot->menu_tgt_max[i_cat]);
+}
