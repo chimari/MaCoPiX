@@ -1180,7 +1180,7 @@ void ChangeColorButton(GtkWidget *w, gpointer gdata)
     break;
   case CONF_COLOR_CLKBG:
     gtk_color_chooser_get_rgba(GTK_COLOR_CHOOSER(w),mascot->colclkbg);
-#ifndef USE_WIN32
+#ifndef FG_DRAW
     mascot->alpclkbg=(gint)(mascot->colclkbg->alpha*100);
 #endif    
     break;
@@ -1212,7 +1212,7 @@ void ChangeColorButton(GtkWidget *w, gpointer gdata)
     break;
   case CONF_DEF_COLOR_CLKBG:
     gtk_color_chooser_get_rgba(GTK_COLOR_CHOOSER(w),mascot->def_colclkbg);
-#ifndef USE_WIN32
+#ifndef FG_DRAW
     mascot->def_alpclkbg=(gint)(mascot->def_colclkbg->alpha*100);
 #endif
     break;
@@ -1238,6 +1238,18 @@ void ChangeColorButton(GtkWidget *w, gpointer gdata)
     gtk_color_chooser_get_rgba(GTK_COLOR_CHOOSER(w),mascot->def_colbalbd);
     mascot->def_alpbalbd=(gint)(mascot->def_colbalbd->alpha*100);
     break;
+  case CONF_COLOR_FS_FG0:
+    gtk_color_chooser_get_rgba(GTK_COLOR_CHOOSER(w),mascot->colfsfg0);
+    break;
+  case CONF_COLOR_FS_FG1:
+    gtk_color_chooser_get_rgba(GTK_COLOR_CHOOSER(w),mascot->colfsfg1);
+    break;
+  case CONF_COLOR_FS_BG0:
+    gtk_color_chooser_get_rgba(GTK_COLOR_CHOOSER(w),mascot->colfsbg0);
+    break;
+  case CONF_COLOR_FS_BG1:
+    gtk_color_chooser_get_rgba(GTK_COLOR_CHOOSER(w),mascot->colfsbg1);
+    break;
   }
 
 #else  //////////////  GTK2  //////////////
@@ -1249,7 +1261,7 @@ void ChangeColorButton(GtkWidget *w, gpointer gdata)
     break;
   case CONF_COLOR_CLKBG:
     gtk_color_button_get_color(GTK_COLOR_BUTTON(w),mascot->colclkbg);
-#ifndef USE_WIN32
+#ifndef FG_DRAW
     mascot->alpclkbg=get_alpha;
 #endif
     break;
@@ -1281,7 +1293,7 @@ void ChangeColorButton(GtkWidget *w, gpointer gdata)
     break;
   case CONF_DEF_COLOR_CLKBG:
     gtk_color_button_get_color(GTK_COLOR_BUTTON(w),mascot->def_colclkbg);
-#ifndef USE_WIN32
+#ifndef FG_DRAW
     mascot->def_alpclkbg=get_alpha;
 #endif
     break;
@@ -1306,6 +1318,18 @@ void ChangeColorButton(GtkWidget *w, gpointer gdata)
   case CONF_DEF_COLOR_BALBD:
     gtk_color_button_get_color(GTK_COLOR_BUTTON(w),mascot->def_colbalbd);
     mascot->def_alpbalbd=get_alpha;
+    break;
+  case CONF_COLOR_FS_FG0:
+    gtk_color_button_get_color(GTK_COLOR_BUTTON(w),mascot->colfsfg0);
+    break;
+  case CONF_COLOR_FS_FG1:
+    gtk_color_button_get_color(GTK_COLOR_BUTTON(w),mascot->colfsfg1);
+    break;
+  case CONF_COLOR_FS_BG0:
+    gtk_color_button_get_color(GTK_COLOR_BUTTON(w),mascot->colfsbg0);
+    break;
+  case CONF_COLOR_FS_BG1:
+    gtk_color_button_get_color(GTK_COLOR_BUTTON(w),mascot->colfsbg1);
     break;
   }
 
@@ -1921,9 +1945,6 @@ static void create_add_image_dialog(GtkWidget *widget, gpointer gdata)
 		  NULL);
     return;
   }
-
-  // Win構築は重いので先にExposeイベント等をすべて処理してから
-  //while (my_main_iteration(FALSE));
 
   win_title=g_strdup_printf(_("Select New Image for No.%02d"),
 			    mascot->nPixmap);
@@ -6656,7 +6677,7 @@ void create_config_dialog(GtkWidget *widget, gpointer gdata){
       
       
       label = gtkut_label_new (_("   Password"));
-      gtkut_pos(label, POS_START, POS_CENTER);
+      gtkut_pos(label, POS_END, POS_CENTER);
       gtkut_table_attach(table2, label, 2, 3, 1, 2,0,0,0,0);
       
       entry = gtk_entry_new ();
@@ -7019,9 +7040,93 @@ void create_config_dialog(GtkWidget *widget, gpointer gdata){
       gtk_scale_set_draw_value (GTK_SCALE (scale), TRUE);
       gtk_box_pack_start(GTK_BOX(hbox), scale,TRUE, TRUE, 0);
 
+      
+      frame = gtkut_frame_new (_("Colors for From/Subject List"));
+      gtk_container_set_border_width (GTK_CONTAINER (frame), 5);
+      gtkut_table_attach(table, frame, 0, 1, 4, 5,
+			 GTK_FILL|GTK_EXPAND,GTK_SHRINK,0,0);
+      
+      table1 = gtkut_table_new (4, 1, FALSE, 0, 0, 5);
+      gtk_container_add (GTK_CONTAINER (frame), table1);
 
+      hbox = gtkut_hbox_new(FALSE,0);
+      gtkut_table_attach(table1, hbox, 0, 1, 0, 1,
+			 GTK_FILL, GTK_SHRINK,0,0);
+      label = gtkut_label_new (_("Text (odd)"));
+      gtk_box_pack_start(GTK_BOX(hbox), label,FALSE, FALSE, 0);
+      gtkut_pos(label, POS_END, POS_CENTER);
+
+#ifdef USE_GTK3
+      button = gtk_color_button_new_with_rgba(mascot->colfsfg1);
+      gtk_color_chooser_set_use_alpha(GTK_COLOR_CHOOSER(button), FALSE);
+#else
+      button = gtk_color_button_new_with_color(mascot->colfsfg1);
+      gtk_color_button_set_use_alpha(GTK_COLOR_BUTTON(button),FALSE);
+#endif
+      gtk_box_pack_start(GTK_BOX(hbox), button,FALSE, FALSE, 0);
+      my_signal_connect(button,"color-set",ChangeColorButton, 
+      			(gpointer)cdata[CONF_COLOR_FS_FG1]);
+      
+
+      hbox = gtkut_hbox_new(FALSE,0);
+      gtkut_table_attach(table1, hbox, 1, 2, 0, 1,
+			 GTK_FILL, GTK_SHRINK,0,0);
+      label = gtkut_label_new (_("BG (odd)"));
+      gtk_box_pack_start(GTK_BOX(hbox), label,FALSE, FALSE, 0);
+      gtkut_pos(label, POS_END, POS_CENTER);
+
+#ifdef USE_GTK3
+      button = gtk_color_button_new_with_rgba(mascot->colfsbg1);
+      gtk_color_chooser_set_use_alpha(GTK_COLOR_CHOOSER(button), FALSE);
+#else
+      button = gtk_color_button_new_with_color(mascot->colfsbg1);
+      gtk_color_button_set_use_alpha(GTK_COLOR_BUTTON(button),FALSE);
+#endif
+      gtk_box_pack_start(GTK_BOX(hbox), button,FALSE, FALSE, 0);
+      my_signal_connect(button,"color-set",ChangeColorButton, 
+      			(gpointer)cdata[CONF_COLOR_FS_BG1]);
+      
+      hbox = gtkut_hbox_new(FALSE,0);
+      gtkut_table_attach(table1, hbox, 2, 3, 0, 1,
+			 GTK_FILL, GTK_SHRINK,0,0);
+      label = gtkut_label_new (_("Text (even)"));
+      gtk_box_pack_start(GTK_BOX(hbox), label,FALSE, FALSE, 0);
+      gtkut_pos(label, POS_END, POS_CENTER);
+
+#ifdef USE_GTK3
+      button = gtk_color_button_new_with_rgba(mascot->colfsfg0);
+      gtk_color_chooser_set_use_alpha(GTK_COLOR_CHOOSER(button), FALSE);
+#else
+      button = gtk_color_button_new_with_color(mascot->colfsfg0);
+      gtk_color_button_set_use_alpha(GTK_COLOR_BUTTON(button),FALSE);
+#endif
+      gtk_box_pack_start(GTK_BOX(hbox), button,FALSE, FALSE, 0);
+      my_signal_connect(button,"color-set",ChangeColorButton, 
+      			(gpointer)cdata[CONF_COLOR_FS_FG0]);
+      
+
+      hbox = gtkut_hbox_new(FALSE,0);
+      gtkut_table_attach(table1, hbox, 3, 4, 0, 1,
+			 GTK_FILL, GTK_SHRINK,0,0);
+      label = gtkut_label_new (_("BG (even)"));
+      gtk_box_pack_start(GTK_BOX(hbox), label,FALSE, FALSE, 0);
+      gtkut_pos(label, POS_END, POS_CENTER);
+
+#ifdef USE_GTK3
+      button = gtk_color_button_new_with_rgba(mascot->colfsbg0);
+      gtk_color_chooser_set_use_alpha(GTK_COLOR_CHOOSER(button), FALSE);
+#else
+      button = gtk_color_button_new_with_color(mascot->colfsbg0);
+      gtk_color_button_set_use_alpha(GTK_COLOR_BUTTON(button),FALSE);
+#endif
+      gtk_box_pack_start(GTK_BOX(hbox), button,FALSE, FALSE, 0);
+      my_signal_connect(button,"color-set",ChangeColorButton, 
+      			(gpointer)cdata[CONF_COLOR_FS_BG0]);
+      
+      
+      
       table1=gtkut_table_new(1,1,FALSE, 0, 0, 0);
-      gtkut_table_attach_defaults(table, table1, 0, 1, 4, 5);
+      gtkut_table_attach_defaults(table, table1, 0, 1, 5, 6);
 
       label = gtkut_label_new (_("Biff"));
       gtk_notebook_append_page (GTK_NOTEBOOK (conf_note), table, label);
@@ -7353,12 +7458,12 @@ void create_config_dialog(GtkWidget *widget, gpointer gdata){
 
 #ifdef USE_GTK3
       button = gtk_color_button_new_with_rgba(mascot->def_colclkbg);
-#ifndef USE_WIN32
+#ifndef FG_DRAW
       gtk_color_chooser_set_use_alpha(GTK_COLOR_CHOOSER(button),TRUE);
 #endif
 #else
       button = gtk_color_button_new_with_color(mascot->def_colclkbg);
-#ifndef USE_WIN32
+#ifndef FG_DRAW
       gtk_color_button_set_use_alpha(GTK_COLOR_BUTTON(button),TRUE);
       gtk_color_button_set_alpha(GTK_COLOR_BUTTON(button),
 				 (gint)((gdouble)mascot->def_alpclkbg/100.0*0xFFFF));
@@ -7572,6 +7677,7 @@ void create_config_dialog(GtkWidget *widget, gpointer gdata){
 	gtk_widget_set_sensitive(scale,FALSE);
       }
 #endif
+     
 #endif
 
 #ifdef FG_DRAW
@@ -8519,7 +8625,7 @@ void create_config_dialog(GtkWidget *widget, gpointer gdata){
       gtk_color_chooser_set_use_alpha(GTK_COLOR_CHOOSER(button),TRUE);
 #else
       button = gtk_color_button_new_with_color(mascot->colclkbg);
-#ifndef USE_WIN32
+#ifndef FG_DRAW
       gtk_color_button_set_use_alpha(GTK_COLOR_BUTTON(button),TRUE);
       gtk_color_button_set_alpha(GTK_COLOR_BUTTON(button),
 				 (gint)((gdouble)mascot->alpclkbg/100.0*0xFFFF));

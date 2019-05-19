@@ -459,6 +459,7 @@ static GdkRGBA color_pink2 =   {1.00, 0.80, 0.80, 1};
 static GdkRGBA color_pale =    {0.40, 0.40, 1.00, 1};
 static GdkRGBA color_pale2 =   {0.80, 0.80, 1.00, 1};
 static GdkRGBA color_pale3 =   {0.90, 0.90, 1.00, 1};
+static GdkRGBA color_yellow3 = {1.00, 1.00, 0.90, 1};
 static GdkRGBA color_orange =  {1.00, 0.80, 0.40, 1};
 static GdkRGBA color_orange2 = {1.00, 1.00, 0.80, 1};
 static GdkRGBA color_orange3 = {0.95, 0.45, 0.02, 1};
@@ -487,6 +488,7 @@ static GdkColor color_pink2 = {0, 0xFFFF, 0xCCCC, 0xCCCC};
 static GdkColor color_pale = {0, 0x6666, 0x6666, 0xFFFF};
 static GdkColor color_pale2 = {0, 0xCCCC, 0xCCCC, 0xFFFF};
 static GdkColor color_pale3 = {0, 0xEEEE, 0xEEEE, 0xFFFF};
+static GdkColor color_yellow3 = {0, 0xFFFF, 0xFFFF, 0xEEEE};
 static GdkColor color_orange = {0, 0xFFFF, 0xCCCC, 0x6666};
 static GdkColor color_orange2 = {0, 0xFFFF, 0xFFFF, 0xCCCC};
 static GdkColor color_orange3 = {0, 0xFD00, 0x6A00, 0x0200};
@@ -527,6 +529,10 @@ enum{CONF_COLOR_CLK,
      CONF_DEF_COLOR_BAL,  
      CONF_DEF_COLOR_BALBG,
      CONF_DEF_COLOR_BALBD,
+     CONF_COLOR_FS_FG0,
+     CONF_COLOR_FS_FG1,
+     CONF_COLOR_FS_BG0,
+     CONF_COLOR_FS_BG1,
      NUM_CONF_COLOR
 } GuiColorConf;
 
@@ -570,6 +576,7 @@ enum{ MAIL_PIX_LEFT, MAIL_PIX_RIGHT } MailPixPos;
 
 
 enum{ NO_MAIL, OLD_MAIL, NEW_MAIL, KEEP_NEW_MAIL } MailStatus;
+
 // mail status; array subscripts
 
 #define BIFF_WIN_WIDTH  540  // Default_Size of Biff Window
@@ -862,6 +869,10 @@ struct _typMascot{
   GdkRGBA *colbal;
   GdkRGBA *colbalbg;
   GdkRGBA *colbalbd;
+  GdkRGBA *colfsfg0;
+  GdkRGBA *colfsfg1;
+  GdkRGBA *colfsbg0;
+  GdkRGBA *colfsbg1;
 #else             /////////////// GTK2 ///////////////
   GdkGC *gc_main;
   GdkGC *gc_mainsd;
@@ -888,6 +899,10 @@ struct _typMascot{
   GdkColor *colbal;
   GdkColor *colbalbg;
   GdkColor *colbalbd;
+  GdkColor *colfsfg0;
+  GdkColor *colfsfg1;
+  GdkColor *colfsbg0;
+  GdkColor *colfsbg1;
 #endif
   gint def_alpclk;
   gint def_alpclksd;

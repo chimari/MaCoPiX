@@ -40,11 +40,13 @@ gboolean FlagInstalledMenu;
 // Prototype of functions in this file
 #ifdef USE_GTK3
 void  my_mascot_write_color();
+void  my_mascot_write_color_woa();
 gdouble my_mascot_read_color();
 gboolean my_def_color_check();
 gboolean my_color_equal();
 #else
 void  my_mascot_write_color();
+void  my_mascot_write_color_woa();
 gint my_mascot_read_color();
 gboolean my_def_color_check();
 gboolean my_color_equal();
@@ -132,6 +134,25 @@ void  my_mascot_write_color(ConfigFile * cfg, gchar * section,
 }
 
 
+void  my_mascot_write_color_woa(ConfigFile * cfg, gchar * section,
+				gchar *key_r, gchar *key_g, gchar *key_b, 
+				GdkRGBA *col, GdkRGBA *def_col){
+  if(gdk_rgba_equal(col, def_col)){
+    xmms_cfg_remove_key(cfg, section, key_r);
+    xmms_cfg_remove_key(cfg, section, key_g);
+    xmms_cfg_remove_key(cfg, section, key_b);
+  }
+  else{
+    xmms_cfg_write_int(cfg, section, key_r,
+		       (gint)(col->red*(gdouble)0xFFFF));
+    xmms_cfg_write_int(cfg, section, key_g,
+		       (gint)(col->green*(gdouble)0xFFFF));
+    xmms_cfg_write_int(cfg, section, key_b,
+		       (gint)(col->blue*(gdouble)0xFFFF));
+  }
+}
+
+
 gdouble my_mascot_read_color(ConfigFile * cfg, gchar * section, gchar * key, gdouble def_val){
   gint col_tmp;
   gdouble ret;
@@ -179,6 +200,22 @@ void  my_mascot_write_color(ConfigFile * cfg, gchar * section,
     xmms_cfg_remove_key(cfg, section, key_p);
   else
     xmms_cfg_write_int(cfg, section, key_p, alpha);
+}
+
+
+void  my_mascot_write_color_woa(ConfigFile * cfg, gchar * section,
+				gchar *key_r, gchar *key_g, gchar *key_b, 
+				GdkColor *col, GdkColor *def_col){
+  if(gdk_color_equal(col, def_col)){
+    xmms_cfg_remove_key(cfg, section, key_r);
+    xmms_cfg_remove_key(cfg, section, key_g);
+    xmms_cfg_remove_key(cfg, section, key_b);
+  }
+  else{
+    xmms_cfg_write_int(cfg, section, key_r, col->red);
+    xmms_cfg_write_int(cfg, section, key_g, col->green);
+    xmms_cfg_write_int(cfg, section, key_b, col->blue);
+  }
 }
 
 gint my_mascot_read_color(ConfigFile * cfg, gchar * section, gchar * key, gint def_val){
@@ -979,6 +1016,10 @@ void InitDefCol(typMascot* mascot){
   mascot->def_colbal=gdk_rgba_copy(&init_colbal);
   mascot->def_colbalbg=gdk_rgba_copy(&init_colbalbg);
   mascot->def_colbalbd=gdk_rgba_copy(&init_colbalbd);
+  mascot->colfsfg0=gdk_rgba_copy(&color_black);
+  mascot->colfsfg1=gdk_rgba_copy(&color_black);
+  mascot->colfsbg0=gdk_rgba_copy(&color_pale3);
+  mascot->colfsbg1=gdk_rgba_copy(&color_yellow3);
 #else
   mascot->def_colclk=g_malloc0(sizeof(GdkColor));
   mascot->def_colclksd=g_malloc0(sizeof(GdkColor));
@@ -996,6 +1037,10 @@ void InitDefCol(typMascot* mascot){
   mascot->def_colbal=gdk_color_copy(&init_colbal);
   mascot->def_colbalbg=gdk_color_copy(&init_colbalbg);
   mascot->def_colbalbd=gdk_color_copy(&init_colbalbd);
+  mascot->colfsfg0=gdk_color_copy(&color_black);
+  mascot->colfsfg1=gdk_color_copy(&color_black);
+  mascot->colfsbg0=gdk_color_copy(&color_pale3);
+  mascot->colfsbg1=gdk_color_copy(&color_yellow3);
 #endif 
 
   mascot->def_alpclk  =DEF_ALPHA_OTHER;
@@ -1381,6 +1426,35 @@ void ReadRC(typMascot *mascot, gboolean def_flag)
     if(!xmms_cfg_read_boolean(cfgfile, field_tmp, "tooltips",
 			     &mascot->mail.tooltips_fl))
       mascot->mail.tooltips_fl=BIFF_TOOLTIPS;
+
+    mascot->colfsfg0->red  =my_mascot_read_color(cfgfile, field_tmp, "fg0_r", color_black.red);
+    mascot->colfsfg0->green=my_mascot_read_color(cfgfile, field_tmp, "fg0_g", color_black.green);
+    mascot->colfsfg0->blue =my_mascot_read_color(cfgfile, field_tmp, "fg0_b", color_black.blue);
+#ifdef  USE_GTK3
+    mascot->colfsfg0->alpha=1.0;
+#endif
+
+    mascot->colfsfg1->red  =my_mascot_read_color(cfgfile, field_tmp, "fg1_r", color_black.red);
+    mascot->colfsfg1->green=my_mascot_read_color(cfgfile, field_tmp, "fg1_g", color_black.green);
+    mascot->colfsfg1->blue =my_mascot_read_color(cfgfile, field_tmp, "fg1_b", color_black.blue);
+#ifdef  USE_GTK3
+    mascot->colfsfg0->alpha=1.0;
+#endif
+    
+    mascot->colfsbg0->red  =my_mascot_read_color(cfgfile, field_tmp, "bg0_r", color_pale3.red);
+    mascot->colfsbg0->green=my_mascot_read_color(cfgfile, field_tmp, "bg0_g", color_pale3.green);
+    mascot->colfsbg0->blue =my_mascot_read_color(cfgfile, field_tmp, "bg0_b", color_pale3.blue);
+#ifdef  USE_GTK3
+    mascot->colfsbg0->alpha=1.0;
+#endif
+
+    mascot->colfsbg1->red  =my_mascot_read_color(cfgfile, field_tmp, "bg1_r", color_yellow3.red);
+    mascot->colfsbg1->green=my_mascot_read_color(cfgfile, field_tmp, "bg1_g", color_yellow3.green);
+    mascot->colfsbg1->blue =my_mascot_read_color(cfgfile, field_tmp, "bg1_b", color_yellow3.blue);
+#ifdef  USE_GTK3
+    mascot->colfsbg1->alpha=1.0;
+#endif
+    
 #endif  // USE_BIFF
 
 #ifdef USE_SOCKMSG
@@ -1735,6 +1809,19 @@ void SaveRC(typMascot *mascot,  gboolean def_flag)
   else xmms_cfg_remove_key(cfgfile,field_tmp, "spam-mark");
   xmms_cfg_write_int(cfgfile, field_tmp, "pop-max-fs",mascot->mail.pop_max_fs);
   xmms_cfg_write_boolean(cfgfile, field_tmp, "tooltips",mascot->mail.tooltips_fl);
+
+  my_mascot_write_color_woa(cfgfile, field_tmp,
+			    "fg0_r", "fg0_g", "fg0_b",
+			    mascot->colfsfg0, &color_black);
+  my_mascot_write_color_woa(cfgfile, field_tmp,
+			    "fg1_r", "fg1_g", "fg1_b",
+			    mascot->colfsfg1, &color_black);
+  my_mascot_write_color_woa(cfgfile, field_tmp,
+			    "bg0_r", "bg0_g", "bg0_b",
+			    mascot->colfsbg0, &color_pale3);
+  my_mascot_write_color_woa(cfgfile, field_tmp,
+			    "bg1_r", "bg1_g", "bg1_b",
+			    mascot->colfsbg1, &color_yellow3);
 #endif
 
 #ifdef USE_SOCKMSG
