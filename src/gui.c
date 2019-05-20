@@ -1691,7 +1691,7 @@ static void create_change_image_dialog(typMascot *mascot, gint i_pix)
 	mascot->sprites[i_pix].filename=g_strdup(dest_file);
       }
       else{
-	popup_message(mascot->win_main,
+	popup_message(mascot->conf_main,
 #ifdef USE_GTK3
 		      "dialog-error", 
 #else
@@ -1706,7 +1706,7 @@ static void create_change_image_dialog(typMascot *mascot, gint i_pix)
       
     }
     else{
-      popup_message(Mascot->win_main,
+      popup_message(mascot->conf_main,
 #ifdef USE_GTK3
 		    "dialog-error", 
 #else
@@ -1770,7 +1770,7 @@ gchar* create_nkr_change_image_dialog (typMascot *mascot,
 				 to_utf8(lost_filename));
 
   win_title=g_strdup_printf(_("Please select the image File for No.%d."),i_pix);
-  popup_message(mascot->win_main,
+  popup_message(mascot->conf_main,
 #ifdef USE_GTK3
 		"dialog-warning", 
 #else
@@ -3449,7 +3449,7 @@ static void create_change_duet_tgt_dialog(GtkWidget *w, gpointer gdata)
 			 mascot->duet_tgt[i_ptn]);
     }
     else{
-      popup_message(Mascot->win_main,
+      popup_message(mascot->conf_main,
 #ifdef USE_GTK3
 		    "dialog-error", 
 #else
@@ -3540,7 +3540,7 @@ static void create_change_click_sound_dialog(GtkWidget *w, gpointer gdata)
 			 my_basename(mascot->click_sound[i_ptn]));
     }
     else{
-      popup_message(mascot->win_main,
+      popup_message(mascot->conf_main,
 #ifdef USE_GTK3
 		    "dialog-error", 
 #else
@@ -3626,7 +3626,7 @@ static void create_change_biff_sound_dialog(GtkWidget *w, gpointer gdata)
 			 my_basename(mascot->mail.sound));
     }
     else{
-      popup_message(mascot->win_main,
+      popup_message(mascot->conf_main,
 #ifdef USE_GTK3
 		    "dialog-error", 
 #else
@@ -3749,7 +3749,7 @@ static void create_mail_file_dialog(GtkWidget *w, gpointer gdata)
 			 mascot->mail.file);
     }
     else{
-      popup_message(mascot->win_main,
+      popup_message(mascot->conf_main,
 #ifdef USE_GTK3
 		    "dialog-error", 
 #else
@@ -3832,7 +3832,7 @@ static void create_mailer_dialog(GtkWidget *w, gpointer gdata)
 			 mascot->mail.mailer);
     }
     else{
-      popup_message(mascot->win_main,
+      popup_message(mascot->conf_main,
 #ifdef USE_GTK3
 		    "dialog-error", 
 #else
@@ -4080,7 +4080,7 @@ gchar * create_new_mascot_file_selection_dialog()
       mascot_file=g_strdup(dest_file);
     }
     else{
-      popup_message(Mascot->win_main,
+      popup_message(NULL,
 #ifdef USE_GTK3
 		    "dialog-error", 
 #else
@@ -4155,7 +4155,7 @@ gchar * create_new_mascot_image_selection_dialog(gchar *mascot_file){
       image_file=g_strdup(dest_file);
     }
     else{
-      popup_message(Mascot->win_main,
+      popup_message(NULL,
 #ifdef USE_GTK3
 		    "dialog-error", 
 #else
@@ -4499,7 +4499,7 @@ static void create_file_selection_dialog(GtkWidget *widget, gint gdata)
     break;
   case MENU_INSTALL_USER:
   case START_MENU_INSTALL_USER:
-    popup_message(Mascot->win_main,
+    popup_message(NULL,
 #ifdef USE_GTK3
 		  "dialog-warning", 
 #else
@@ -4528,7 +4528,7 @@ static void create_file_selection_dialog(GtkWidget *widget, gint gdata)
 #ifdef USE_COMMON
   case MENU_INSTALL_COMMON:
   case START_MENU_INSTALL_COMMON:
-    popup_message(Mascot->win_main,
+    popup_message(NULL,
 #ifdef USE_GTK3
 		  "dialog-warning", 
 #else
@@ -4609,7 +4609,7 @@ static void create_file_selection_dialog(GtkWidget *widget, gint gdata)
       }
     }
     else{
-      popup_message(Mascot->win_main,
+      popup_message(NULL,
 #ifdef USE_GTK3
 		    "dialog-error", 
 #else
@@ -4675,7 +4675,7 @@ static void create_menu_selection_dialog(GtkWidget *widget, gint gdata)
     break;
   case MENU_INSTALL_USER:
   case START_MENU_INSTALL_USER:
-    popup_message(Mascot->win_main,
+    popup_message(NULL,
 #ifdef USE_GTK3
 		  "dialog-warning", 
 #else
@@ -4701,7 +4701,7 @@ static void create_menu_selection_dialog(GtkWidget *widget, gint gdata)
 #ifdef USE_COMMON
   case MENU_INSTALL_COMMON:
   case START_MENU_INSTALL_COMMON:
-    popup_message(Mascot->win_main,
+    popup_message(NULL,
 #ifdef USE_GTK3
 		  "dialog-warning", 
 #else
@@ -4790,7 +4790,7 @@ static void create_menu_selection_dialog(GtkWidget *widget, gint gdata)
       Mascot->PopupMenu=make_popup_menu(Mascot);
     }
     else{
-      popup_message(Mascot->win_main,
+      popup_message(NULL,
 #ifdef USE_GTK3
 		    "dialog-error", 
 #else
@@ -4880,7 +4880,7 @@ static void create_nkr_selection_dialog(void)
       NkrChangeMascot();
     }
     else{
-      popup_message(Mascot->win_main,
+      popup_message(NULL,
 #ifdef USE_GTK3
 		    "dialog-error", 
 #else
@@ -4971,7 +4971,7 @@ static void create_new_menu_selection_dialog(void)
 
     }
     else{
-      popup_message(Mascot->win_main,
+      popup_message(NULL,
 #ifdef USE_GTK3
 		    "dialog-error", 
 #else
@@ -5850,12 +5850,13 @@ void create_config_dialog(GtkWidget *widget, gpointer gdata){
     mascot->cattree_i_tgt[i_cat]=-1;
   }
 
-  //conf_main = gtk_window_new(GTK_WINDOW_TOPLEVEL);
+  //mascot->conf_main = gtk_window_new(GTK_WINDOW_TOPLEVEL);
+
   mascot->conf_main = gtk_dialog_new_with_buttons(_("Config for MaCoPiX"),
 						  NULL,
-						  GTK_DIALOG_MODAL,
+						  GTK_DIALOG_MODAL | GTK_DIALOG_DESTROY_WITH_PARENT,
 #ifdef USE_GTK3
-						  "_OK", GTK_RESPONSE_OK,
+						  _("OK"), GTK_RESPONSE_OK,
 #else
 						  GTK_STOCK_OK,GTK_RESPONSE_OK,
 #endif
@@ -5866,17 +5867,19 @@ void create_config_dialog(GtkWidget *widget, gpointer gdata){
 							   GTK_RESPONSE_OK));
   gtk_container_set_border_width(GTK_CONTAINER(mascot->conf_main),5);
 
+  
   //gtk_window_set_title(GTK_WINDOW(mascot->conf_main), 
-  //		       _("Config for MaCoPiX"));
-  //gtk_widget_realize(conf_main);
-  //my_signal_connect(conf_main,"destroy",close_conf, GTK_WIDGET(conf_main));
-  //gtk_container_set_border_width (GTK_CONTAINER (conf_main), 5);
+  //		       _("MaCoPiX : Config Window"));
+  //gtk_widget_realize(mascot->conf_main);
+  //my_signal_connect(mascot->conf_main,"destroy", gtk_main_quit, NULL);
+  //gtk_container_set_border_width (GTK_CONTAINER (mascot->conf_main), 5);
+  
   
   // 3x6のテーブル
   conf_tbl = gtkut_table_new (3, 6, FALSE, 0, 0, 0);
-  //gtk_container_add (GTK_CONTAINER (conf_main), conf_tbl);
+  //gtk_container_add (GTK_CONTAINER (mascot->conf_main), conf_tbl);
   gtk_box_pack_start(GTK_BOX(gtk_dialog_get_content_area(GTK_DIALOG(mascot->conf_main))),
-		     conf_tbl,FALSE, FALSE, 5);
+  		     conf_tbl,FALSE, FALSE, 5);
 
 
   all_note = gtk_notebook_new ();
@@ -5905,7 +5908,6 @@ void create_config_dialog(GtkWidget *widget, gpointer gdata){
   gtkut_table_attach(conf_tbl, button, 4, 5, 1, 2,
 		     GTK_SHRINK,GTK_SHRINK,0,0);
 
-
   my_signal_connect(button,"clicked",close_conf, GTK_WIDGET(conf_main));
 
   button=gtkut_button_new_with_icon(_("OK"),
@@ -5917,7 +5919,7 @@ void create_config_dialog(GtkWidget *widget, gpointer gdata){
 				    );
   gtkut_table_attach(conf_tbl, button, 5, 6, 1, 2,
 		     GTK_SHRINK,GTK_SHRINK,0,0);
-  my_signal_connect(button,"clicked",conf_change, GTK_WIDGET(conf_main));
+  my_signal_connect(button,"clicked",gtk_widget_destroy, (gpointer)mascot->conf_main);
   */
   
   // ノートブックの生成
@@ -9535,17 +9537,23 @@ void create_config_dialog(GtkWidget *widget, gpointer gdata){
 
   gtk_dialog_run(GTK_DIALOG(mascot->conf_main));
 
-  if(GTK_IS_WIDGET(mascot->imgtree)) gtk_widget_destroy(mascot->imgtree);
+  //if(GTK_IS_WIDGET(mascot->conf_main))
+  while (my_main_iteration(FALSE));
+  gdk_display_flush(gtk_widget_get_display(mascot->win_main));
+  gtk_widget_destroy(mascot->conf_main);
+  while (my_main_iteration(FALSE));
+  gdk_display_flush(gtk_widget_get_display(mascot->win_main));
+  
   flag_make_imgtree=FALSE;
 
   for(i_ptn=0;i_ptn<MAX_ANIME_PATTERN;i_ptn++){
     flag_make_ptntree[i_ptn]=FALSE;
   }
+ 
 
   if(mascot->test_timer>0) g_source_remove(mascot->test_timer);
   mascot->test_timer=-1;
   
-  if(GTK_IS_WIDGET(mascot->conf_main)) gtk_widget_destroy(mascot->conf_main);
   
   //InitMascot(mascot);
 
@@ -9553,6 +9561,8 @@ void create_config_dialog(GtkWidget *widget, gpointer gdata){
   SetMailChecker(mascot);
 #endif   // USE_BIFF
 
+  gdk_display_flush(gtk_widget_get_display(mascot->win_main));
+  
   InitComposite(mascot);
   LoadPixmaps(mascot);
 #ifndef USE_GTK3
@@ -11132,7 +11142,6 @@ void create_smenu_dialog(typMascot *mascot, gboolean flag_popup)
     
   }
   else{
-
     if(flag_popup){
       gtk_window_set_title(GTK_WINDOW(main), 
 			   _("MaCoPiX : Launcher Menu Selection"));
@@ -11396,7 +11405,7 @@ void do_select_mascot(GtkWidget *w, gpointer gdata){
 void make_smenu_list(GtkWidget *scrwin, typScanMenu *smenu)
 {
   int i_menu;
-  gchar tmp[15];
+  gchar *tmp;
   GtkWidget *check;
   GtkWidget *label;
   GtkWidget *button;
@@ -11471,12 +11480,13 @@ void make_smenu_list(GtkWidget *scrwin, typScanMenu *smenu)
 
 
     if(smenu->flag_combine[i_menu]){
-      sprintf(tmp, _("%4d categories"),smenu->num[i_menu]);
+      tmp=g_strdup_printf(_("%4d categories"),smenu->num[i_menu]);
     }
     else{
-      sprintf(tmp, _("%4d mascots"),smenu->num[i_menu]);
+      tmp=g_strdup_printf(_("%4d mascots"),smenu->num[i_menu]);
     }
     label = gtkut_label_new (tmp);
+    g_free(tmp);
     gtkut_table_attach(smenu_table, label,
 		       3, 4, i_menu+1, i_menu+2,
 		       GTK_FILL,GTK_SHRINK,0,2);
@@ -11499,7 +11509,6 @@ void make_smenu_list(GtkWidget *scrwin, typScanMenu *smenu)
   gtkut_table_attach_defaults(smenu_table, label, 
 			    0, 3, MAX_MENU_CATEGORY2+1, MAX_MENU_CATEGORY2+2);
   gtk_widget_show_all(smenu_table);
-
 }
 
 
@@ -11518,10 +11527,12 @@ void popup_message(GtkWidget *parent, gchar* stock_id,gint delay, ...){
 
   if(delay>0){
     dialog = gtk_dialog_new();
+    gtk_window_set_transient_for(GTK_WINDOW(dialog),(parent) ? GTK_WINDOW(parent) : NULL);
+    gtk_window_set_title(GTK_WINDOW(dialog),"MaCoPiX : Message");
   }
   else{
     dialog = gtk_dialog_new_with_buttons("MaCoPiX : Message",
-					 GTK_WINDOW(parent),
+					 (parent) ? GTK_WINDOW(parent) : NULL,
 					 GTK_DIALOG_MODAL,
 #ifdef USE_GTK3
 					 _("_OK"),GTK_RESPONSE_OK,
@@ -11531,8 +11542,6 @@ void popup_message(GtkWidget *parent, gchar* stock_id,gint delay, ...){
 					 NULL);
   }
   gtk_container_set_border_width(GTK_CONTAINER(dialog),5);
-  gtk_window_set_transient_for(GTK_WINDOW(dialog),GTK_WINDOW(parent));
-  gtk_window_set_title(GTK_WINDOW(dialog),"MaCoPiX : Message");
 
   if(delay>0){
     timer=g_timeout_add(delay*1000, (GSourceFunc)close_popup,
@@ -11746,7 +11755,7 @@ gint select_menu_from_ext(typMascot *mascot, gchar *dest_file){
    }
 
   if(!hit_flag){
-    popup_message(mascot->win_main,
+    popup_message(NULL,
 #ifdef USE_GTK3
 		  "dialog-warning", 
 #else

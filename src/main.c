@@ -1213,6 +1213,7 @@ void ReadRC(typMascot *mascot, gboolean def_flag)
     mascot->def_colclkbg->alpha=(gdouble)mascot->def_alpclkbg/100.0;
 #endif
 
+
     mascot->def_colclkbd->red  =my_mascot_read_color(cfgfile, field_tmp, "border_r", init_colclkbd.red);
     mascot->def_colclkbd->green=my_mascot_read_color(cfgfile, field_tmp, "border_g", init_colclkbd.green);
     mascot->def_colclkbd->blue =my_mascot_read_color(cfgfile, field_tmp, "border_b", init_colclkbd.blue);
@@ -4659,11 +4660,11 @@ int main(int argc, char **argv)
   gtk_window_set_default_icon(icon);
 #endif
 
-
   // Imlibを使用した場合
   //gdk_imlib_init();
   //gtk_widget_push_visual(gdk_imlib_get_visual());
   //gtk_widget_push_colormap(gdk_imlib_get_colormap());
+
 
   // メニューの読み込みと作成
   Mascot->installed_menu_dir=NULL;
@@ -4678,6 +4679,7 @@ int main(int argc, char **argv)
     else{
       // 起動メニュー選択
       create_smenu_dialog(Mascot,FALSE);
+
       if(Mascot->menu_file){
 	ReadMenu(Mascot,0,NULL);
 	Mascot->PopupMenu=make_popup_menu(Mascot);
@@ -4685,8 +4687,9 @@ int main(int argc, char **argv)
       }
     }
   }
+ 
 
-  make_mascot(Mascot);
+ make_mascot(Mascot);
   
   make_balloon(Mascot);
 #ifdef FG_DRAW

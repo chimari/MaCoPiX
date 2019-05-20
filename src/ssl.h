@@ -95,6 +95,12 @@ SSL *ssl_init_socket_with_method	(gint fd,
 					 SSLMethod method);
 void ssl_done_socket			(SSL *ssl);
 
+
+#ifdef USE_GNUTLS
+X509* X509_dup(const X509* cert);
+int X509_cmp(const X509* cert1,const X509* cert2);
+#endif //USE_GNUTLS
+
 #endif /* USE_SSL */
 
 #endif /* __SSL_H__ */

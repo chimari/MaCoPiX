@@ -548,7 +548,7 @@ enum{ MAIL_NO, MAIL_LOCAL, MAIL_POP3, MAIL_APOP, MAIL_QMAIL, MAIL_PROCMAIL } Mai
 
 enum{ MAIL_PIX_LEFT, MAIL_PIX_RIGHT } MailPixPos;
 
-#undef POP_DEBUG  /* pop3 debugging mode */
+#define POP_DEBUG  /* pop3 debugging mode */
 
 #define POP3_PORT_NO         110       /* pop3 port */
 #ifdef USE_SSL

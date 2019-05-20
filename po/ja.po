@@ -2032,15 +2032,15 @@ msgstr "最大"
 
 #: src/gui.c:12209
 msgid "<span size=\"smaller\">Block Loop</span> Next Frame"
-msgstr ""
+msgstr "<span size=\"smaller\">ブロックループ</span> 次のフレーム"
 
 #: src/gui.c:12235
 msgid "<span size=\"smaller\">Block Loop</span> Min"
-msgstr ""
+msgstr "<span size=\"smaller\">ブロックループ</span> 最小ループ"
 
 #: src/gui.c:12261
 msgid "<span size=\"smaller\">Block Loop</span> Max"
-msgstr ""
+msgstr "<span size=\"smaller\">ブロックループ</span> 最大ループ"
 
 #: src/pixmap.c:518 src/nokkari.c:99
 #, c-format

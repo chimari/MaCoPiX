@@ -42,11 +42,14 @@
 #include <signal.h>
 #include "codeconv.h"
 
-#define BUFFSIZE 1024
-#define BUFFSIZE5 1024
-#define HEADER_MAX 1024
-#define MIME_BUFFSIZE 8192
-
+#define BUFFSIZE 200
+#define BUFFSIZE5 1000
+#define HEADER_MAX 256
+#define MIME_BUFFSIZE 1024
+//#define BUFFSIZE 1024
+//#define BUFFSIZE5 1024
+//#define HEADER_MAX 1024
+//#define MIME_BUFFSIZE 8192
 
 void biff_init();
 

@@ -2225,7 +2225,7 @@ void sound_play(typMascot *mascot, char *wav_name)
   }
 #else
   static pid_t pid;
-  gchar cmdline[1024];
+  gchar *cmdline;
   gchar *filename1;
   gint ret;
   
@@ -2234,13 +2234,14 @@ void sound_play(typMascot *mascot, char *wav_name)
 
     if(!(filename1=FullPathSoundFile(mascot, wav_name, FALSE))) return;
 
-    sprintf(cmdline,mascot->sound_command,filename1);
+    cmdline=g_strdup_printf(mascot->sound_command,filename1);
     waitpid(pid,0,WNOHANG);
     if( (pid = fork()) == 0 ){
       ret=system(cmdline);
       _exit(-1);
       signal(SIGCHLD,ChildTerm);
     }
+    g_free(cmdline);
   }
 #endif // USE_WIN32
 }

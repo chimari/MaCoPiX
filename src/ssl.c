@@ -167,7 +167,11 @@ void ssl_init(void)
 			g_warning("SSLv23 SSL_CTX_load_verify_locations failed.\n");
 	}
 
+#ifdef USE_GNUTLS	
+	ssl_ctx_TLSv12 = SSL_CTX_new(TLSv1_client_method());
+#else
 	ssl_ctx_TLSv12 = SSL_CTX_new(TLS_client_method());
+#endif
 	//ssl_ctx_TLSv12 = SSL_CTX_new(TLSv1_2_client_method());
 	if (ssl_ctx_TLSv12 == NULL) {
 		pop_debug_print("TLSv1 or 2 not available\n");
