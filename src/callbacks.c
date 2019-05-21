@@ -199,11 +199,7 @@ void MoveMascot(typMascot *mascot, gint x, gint y)
   gtk_menu_popdown(GTK_MENU(mascot->PopupMenu));
 #endif
 
-#ifdef USE_GTK3	    
-  gdk_display_flush(gdk_display_get_default());
-#else	    
-  gdk_flush();
-#endif	    
+  gdkut_flush(mascot);
 }
 
 #ifdef USE_BIFF
@@ -228,11 +224,7 @@ void MoveBiffPix(typMascot *mascot, gint x, gint y)
   }
   g_free(allocation);
 
-#ifdef USE_GTK3	    
-  gdk_display_flush(gdk_display_get_default());
-#else	    
-  gdk_flush();
-#endif	    
+  gdkut_flush(mascot);
 }
 #endif
 
@@ -265,11 +257,7 @@ void MoveBalloon(typMascot *mascot, gint x, gint y)
 		    bal_y);
   }
 
-#ifdef USE_GTK3	    
-  gdk_display_flush(gdk_display_get_default());
-#else	    
-  gdk_flush();
-#endif	    
+  gdkut_flush(mascot);
 }
 
 void ResizeMoveBalloon(typMascot *mascot, gint x, gint y, gint w, gint h)
@@ -304,11 +292,7 @@ void ResizeMoveBalloon(typMascot *mascot, gint x, gint y, gint w, gint h)
 			   w,h);
   }
 
-#ifdef USE_GTK3	    
-  gdk_display_flush(gdk_display_get_default());
-#else	    
-  gdk_flush();
-#endif	    
+  gdkut_flush(mascot);
 }
 
 // フォーカスWindow追従型移動
@@ -491,7 +475,7 @@ int MoveToFocus(typMascot *mascot, gboolean force_fl)
 	  if(parent == rootwin){
 	    if(win_bar_size==0){
 	      win_bar_size
-		+=Get_Window_Bar_Size(GDK_WINDOW_XDISPLAY(gtk_widget_get_window(mascot->win_main)),
+		+=Get_Window_Bar_Size(mascot, GDK_WINDOW_XDISPLAY(gtk_widget_get_window(mascot->win_main)),
 				     wf);
 	    }
 
@@ -514,7 +498,7 @@ int MoveToFocus(typMascot *mascot, gboolean force_fl)
   	  if(win_bar_size==0){
 	    //printf("aho0\n");
 	    win_bar_size
-	      +=Get_Window_Bar_Size(GDK_WINDOW_XDISPLAY(gtk_widget_get_window(mascot->win_main)),
+	      +=Get_Window_Bar_Size(mascot, GDK_WINDOW_XDISPLAY(gtk_widget_get_window(mascot->win_main)),
 				   wf);
 	    //printf("%d bar_size=%d\n", (int)wf, win_bar_size);
 	    //printf("aho1\n\n");
@@ -788,11 +772,7 @@ int MoveToFocus(typMascot *mascot, gboolean force_fl)
   }
 
   while (my_main_iteration(FALSE));
-#ifdef USE_GTK3	    
-  gdk_display_flush(gdk_display_get_default());
-#else	    
-  gdk_flush();
-#endif	    
+  gdkut_flush(mascot);
   return(1); 
 }
 
@@ -924,11 +904,10 @@ void drag_end(GtkWidget * widget, GdkEventButton * event, gpointer gdata)
   gdk_window_set_cursor(gtk_widget_get_window(widget),mascot->cursor.normal);
 #ifdef USE_GTK3	    
   gdk_seat_ungrab(mascot->seat);
-  gdk_display_flush(gdk_display_get_default());
 #else	    
   gdk_pointer_ungrab(GDK_CURRENT_TIME);
-  gdk_flush();
 #endif	    
+  gdkut_flush(mascot);
 }
 
 // 時計  マウスボタンをおしたときのイベントCallback
@@ -963,13 +942,12 @@ void clk_drag_begin(GtkWidget * widget, GdkEventButton * event, gpointer gdata)
     gdk_seat_grab (mascot->seat, gtk_widget_get_window(widget),
 		   GDK_SEAT_CAPABILITY_POINTER,
 		   TRUE, NULL, c_eve, NULL, NULL);
-    gdk_display_flush(gdk_display_get_default());
 #else	    
     gdk_pointer_grab(gtk_widget_get_window(widget), 
 		     FALSE, GDK_BUTTON_MOTION_MASK | GDK_BUTTON_RELEASE_MASK,
 		     NULL, NULL, GDK_CURRENT_TIME);
-    gdk_flush();
 #endif	    
+    gdkut_flush(mascot);
   }
 }
 
@@ -1003,11 +981,10 @@ void clk_drag_end(GtkWidget * widget, GdkEventButton * event, gpointer gdata)
 
 #ifdef USE_GTK3	    
   gdk_seat_ungrab(mascot->seat);
-  gdk_display_flush(gdk_display_get_default());
 #else	    
   gdk_pointer_ungrab(GDK_CURRENT_TIME);
-  gdk_flush();
 #endif	    
+  gdkut_flush(mascot);
 }
 
 
@@ -1044,13 +1021,12 @@ void biff_drag_begin(GtkWidget * widget, GdkEventButton * event, gpointer gdata)
     gdk_seat_grab (mascot->seat, gtk_widget_get_window(widget),
 		   GDK_SEAT_CAPABILITY_POINTER,
 		   TRUE, NULL, c_eve, NULL, NULL);
-    gdk_display_flush(gdk_display_get_default());
 #else	    
     gdk_pointer_grab(gtk_widget_get_window(widget), 
 		     FALSE, GDK_BUTTON_MOTION_MASK | GDK_BUTTON_RELEASE_MASK,
 		     NULL, NULL, GDK_CURRENT_TIME);
-    gdk_flush();
 #endif	    
+    gdkut_flush(mascot);
   }
 }
 
@@ -1092,11 +1068,10 @@ void biff_drag_end(GtkWidget * widget, GdkEventButton * event, gpointer gdata)
 
 #ifdef USE_GTK3	    
   gdk_seat_ungrab(mascot->seat);
-  gdk_display_flush(gdk_display_get_default());
 #else	    
   gdk_pointer_ungrab(GDK_CURRENT_TIME);
-  gdk_flush();
 #endif	    
+  gdkut_flush(mascot);
 }
 #endif
 
@@ -1746,13 +1721,11 @@ void biff_window_motion(GtkWidget * widget, GdkEventMotion * event, gpointer gda
 #endif
 
 
-void focus_in(GtkWidget * widget, GdkEventMotion * event)
+void focus_in(GtkWidget * widget, GdkEventMotion * event, gpointer gdata)
 {
-#ifdef USE_GTK3	    
-  gdk_display_flush(gdk_display_get_default());
-#else	    
-  gdk_flush();
-#endif	    
+  typMascot *mascot = (typMascot *)gdata;
+
+  gdkut_flush(mascot);
 }
 
 void focus_out(GtkWidget * widget, GdkEventMotion * event, gpointer gdata)
@@ -1762,11 +1735,10 @@ void focus_out(GtkWidget * widget, GdkEventMotion * event, gpointer gdata)
   
 #ifdef USE_GTK3	    
   gdk_seat_ungrab(mascot->seat);
-  gdk_display_flush(gdk_display_get_default());
 #else	    
   gdk_pointer_ungrab(GDK_CURRENT_TIME);
-  gdk_flush();
 #endif	    
+  gdkut_flush(mascot);
 }
 
 
@@ -1960,11 +1932,7 @@ gboolean time_update(gpointer gdata)
 
   if(mascot->raise_force) raise_all(mascot);
     
-#ifdef USE_GTK3	    
-  //gdk_display_flush(gtk_widget_get_display(mascot->win_main));
-#else	    
-  gdk_flush();
-#endif	    
+  gdkut_flush(mascot);
   
   return(TRUE);
 
@@ -2038,11 +2006,10 @@ void clock_update(typMascot *mascot, gboolean force_flag){
 	  }
 #ifdef USE_GTK3	    
 	  gdk_seat_ungrab(mascot->seat);
-	  gdk_display_flush(gdk_display_get_default());
 #else	    
 	  gdk_pointer_ungrab(GDK_CURRENT_TIME);
-	  gdk_flush();
 #endif	    
+	  gdkut_flush(mascot);
 	  break;
 	case SIGACT_CHANGE:
 	  if(mascot->menu_file){
@@ -2402,9 +2369,7 @@ gchar* Get_Window_Name(dpy, top)
 //*********************************************************
 // X Window  現在のっかっているWindowのBar Size
 //*********************************************************
-gint Get_Window_Bar_Size(dpy, top)
-     Display *dpy;
-     Window top;
+gint Get_Window_Bar_Size(typMascot *mascot, Display *dpy, Window top)
 {
   Atom type, atom;
   int format;
@@ -2420,8 +2385,10 @@ gint Get_Window_Bar_Size(dpy, top)
 
   bar_size=0;
 
-#ifndef USE_GTK3
-  //gdk_error_trap_push ();
+#ifdef USE_GTK3  
+  gdk_x11_display_error_trap_push (gtk_widget_get_display(mascot->win_main));
+#else
+  gdk_error_trap_push ();
 #endif
   type = None;
 
@@ -2432,8 +2399,10 @@ gint Get_Window_Bar_Size(dpy, top)
 			    XA_CARDINAL,
 			    &type, &format, &nitems,
 			    &bytes_after, &prop.prop_ch);
-#ifndef USE_GTK3
-  //error = gdk_error_trap_pop ();
+#ifdef USE_GTK3
+  error=   gdk_x11_display_error_trap_pop (gtk_widget_get_display(mascot->win_main));
+#else
+  error = gdk_error_trap_pop ();
 #endif
 
   if (error || result != Success){
@@ -2447,6 +2416,12 @@ gint Get_Window_Bar_Size(dpy, top)
   if (prop.prop_ch)
     XFree (prop.prop_ch);
 
+#ifdef USE_GTK3  
+  gdk_x11_display_error_trap_push (gtk_widget_get_display(mascot->win_main));
+#else
+  gdk_error_trap_push ();
+#endif
+
   atom=XInternAtom(dpy,"_NET_WM_OPAQUE_REGION", False); // for Windows w/ GTK3 GtkHeadBar
   result=XGetWindowProperty(dpy, top,
 			    atom,
@@ -2454,8 +2429,10 @@ gint Get_Window_Bar_Size(dpy, top)
 			    XA_CARDINAL,
 			    &type, &format, &nitems,
 			    &bytes_after, &prop.prop_ch);
-#ifndef USE_GTK3
-  // error = gdk_error_trap_pop ();
+#ifdef USE_GTK3
+  error=   gdk_x11_display_error_trap_pop (gtk_widget_get_display(mascot->win_main));
+#else
+  error = gdk_error_trap_pop ();
 #endif
 
   if (error || result != Success){
@@ -2809,7 +2786,7 @@ void make_mascot(typMascot *mascot){
   mascot->cursor.clk   =gdk_cursor_new(CURSOR_CLK);
 #endif  // USE_GTK3
 
-  my_signal_connect(ebox, "focus_in_event",focus_in, NULL);
+  my_signal_connect(ebox, "focus_in_event",focus_in, (gpointer)mascot);
   my_signal_connect(ebox, "focus_out_event",focus_out, (gpointer)mascot);
   my_signal_connect(ebox, "button_press_event",drag_begin,
 		    (gpointer)mascot);
