@@ -1,5 +1,13 @@
-2019.X.XX   ver3.0.0  - Support Gtk+3 (default).
-     	              - Lots of code refining.
+2019.X.XX   ver3.0.0  - Support Gtk+3 (default: 3.22 or later).
+	                Gtk+2 can be chosen with "--with-gtk2" option in
+	                configure (2.24 or later).
+	                Removed Gtk+1.2 support.
+     	              - Lots of codes have been refined.
+	              - Composite support for Windows. (Alpha channeled
+	                mascot's edge drawing with magnification etc.)
+                      - Gtk TreeView support for Image/Anime/Menu list
+	                in the config window.
+                      - fixed bugs (buffer overflow) for POP3 biff.
 
 2008.6.24   ver1.7.4  - Fixed a bug on compilation under Gtk+2.10 or earlier.
 

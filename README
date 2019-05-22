@@ -1,10 +1,10 @@
 ##################################################################
         Desktop Mascot Program for UNIX                           
       macopix : Mascot Constructive Pilot for X                   
-						     ver 1.7.4    
+						     ver 3.0.0    
                       Document in English : README                
                                                                   
-                             2008.06.24  Kurumi Chimari           
+                             2019.05.22  Kurumi Chimari           
                              chimari@rosegray.sakura.ne.jp        
                              http://rosegray.sakura.ne.jp/        
 ##################################################################
@@ -31,13 +31,12 @@
 
 
 **About this program
-  This is a desktop mascot program running under UNIX / X window
-  systems.
-
-  With ver1.6.0 or later, MaCoPiX can be avairable also on Microsoft 
-  Windows, using Gtk+/Win32 (all Gtk+ libraries are included in Win
-  binary version).
-  This Windows version is distributed as compiled (binary) package.
+  MaCoPiX is a Gtk based desktop mascot program running under
+    - UNIX (X window systems)
+    - Microsoft Windows (7 or later)
+  .
+  
+  The Windows version is distributed as compiled (binary) package.
   Most of the text in this document describes about MaCoPiX UNIX
   version. So, fo windows, please see Readme-win32.jp (sorry, Japanese
   only, yet).
@@ -64,10 +63,10 @@
 **Environment
   Basically, MaCoPiX needs UNIX / X window system or Microsoft Windows.
     [for UNIX]
-     - Gtk+        > ver1.2.0   (or Gtk+ > ver2.0.0)
-     - gdk-pixbuf  > ver0.7.0   (or Gtk+ > ver2.0.0)
-     - libpng .                 (or Gtk+ > ver2.0.0)
+     - Gtk+3       > ver3.22    (or Gtk+2 > ver2.24)
+     - glib        > ver2.32
      - gettext     > ver0.10   
+     - openssl     > ver1.0     (or gnutls > ver1.4)
      are necessary.
      MaCoPiX can be load all image types supported by gdk-pixbuf.
      But, you need libraries to support each types of images
@@ -75,8 +74,8 @@
      The official MaCoPiX mascots are served in PNG files now.
 
    [for Microsoft Windows (binary package)]
-     - Windows2000,XP or later (Still unconfirmed on Vista)
-     - Including TAR32.DLL(GPL) in the binary distribution.
+     - Windows7 or later (64 / 32 bit)
+     - Including TAR64.DLL / TAR32.DLL (GPL) in the binary distribution.
         * You can dounload it (free-software, GPL) form the HP of
           "Common Archiver Library Project".
            URL  http://www.csdinc.co.jp/archiver/index-e.html
@@ -89,19 +88,18 @@
   2. ./configure 
        ##################################################################
         ./configure options
-         [Gtk+] (default is for Gtk+2.x)
-           ./configure --with-gtk1      (use Gtk+1.2)
-         [Cairo]  (default is on)
-           ./configure --disable-cairo  (not use cairo)
+         [Gtk+] (default is for Gtk+3)
+           ./configure --with-gtk2      (use Gtk+2)
          [SSL] (default is OpenSSL)
            ./configure --with-gnutls    (use GNUTLS instead of OpenSSL)
-           ./configure --disable-ssl    (none support for SSL)
+           ./configure --disable-ssl    (none support for SSL; not recommended)
          [Win32]  (default is for UNIX)
            ./configure --with-win32     (making for Win32)
          [TAR32]  (default is off)
-           ./configure --with-tar32     (use TAR32.DLL)
+           ./configure --with-tar64     (use TAR64.DLL for 64bit)
+           ./configure --with-tar32     (use TAR32.DLL for 32bit)
          [UNLHA32]   (default is  off)
-           ./configure --with-unlha32   (use UNLHA32.DLL)
+           ./configure --with-unlha32   (use UNLHA32.DLL for 32bit)
        ##################################################################
   3. make
   4. su
@@ -194,7 +192,7 @@
   RPM package etc.
 
   You should take care of the locale of your system to use mascots.
-  Mascot files should be written in one of the locale (in Gtk+1.2).
+  Mascot files are recommended to be written in one of the locale.
   If you use the mascot in the different locale environment, balloons
   and menus could not be presented correctly.
   The author of this application will release his mascots in "ja"
@@ -321,36 +319,6 @@
       But, if the former is stopped or changed, this pipe should be closed.
 
 
-
-**Nokkari-chara Support
-  Now data conversion from/to Nokkari-Chara (an Window sitter
-  application for MS Windows) is supported.
-  But it is very experimental one and maybe for mascots developers.
-  Please read NKR.README.jp in this archive (sorry, only in Japanese).
-
-
-
-**Difference between Gtk+2.x / Gtk+-1.2 version
-  Now, there are some difference points between Gtk+2.x and Gtk+1.2
-  version of MaCoPiX including anti-alias effects in their font display.
-    - Character Code
-       In Gtk+1.2, you should select same locale as the character code
-       in  mascots/menus files for your environment.
-       In the case of Gtk+2.x version, the character code of mascot
-       file should be understood, according to the following priority.
-          1. [General] code=xxxx  setting in .mcpx file
-          2. current locale environment
-          3. MaCoPiX default (EUC-JP)
-       If MaCoPiX cannot understand the character code, you should
-       find "Invalid Character Code" display in Gtk+2.x version.
-    - Font selection
-       Fonts to be selected is difference in each Gtk+ versions.
-       If you find any alert, you should select suitable fonts for
-       your systems, using the font selection dialog of MaCoPiX.
-  Of course, Gtk+2.x version requires much memory area. compared with
-  Gtk+1.2 version.
-
-
 **SSL Support
   This program can compile with a link to OpenSSL or GNUTLS libraries 
   (or without either) to support POP over SSL on its biff function.
@@ -365,12 +333,9 @@
     - without SSL  (./configure --disable-ssl)
   When your environment for gnutls development does not satisfy to make
   this program, OpenSSL will be used instead of GNUTLS.
-  (I confirmed a build completion with gnutls-1.4.1, but I couldn't with
-   gnutls-1.0.2 .)
 
   In actual operation, GNUTLS version has some different points, compared 
   with OpenSSL ver.
-    - GNUTLS does not support SSL v2.
     - GNUTLS ver. always skippes confirmation on SSL certification.
   If you neglect the license matter, I recommend to use OpenSSL rather
   than GNUTLS.
@@ -409,12 +374,6 @@
   This mode automatically turns off with non-composited environment
   (Gtk+2.10 or later).
 
-  For Windows version of MaCoPiX, it already has translucent rendering 
-  function using Windows native API. So, you are never required any
-  special environments.
-  In Windows' cairo redndering, opacities of background colors will be
-  ignored and used ordinal Balloon/Panel clock opacities instead of it.
-
 
 **To Do
   - Sockmsg mode for Windows?
@@ -423,11 +382,11 @@
 
 
 **Copyright
-   The code in this distribution is Copyright 2002-2008 by Kurumi Chimari.
+   The code in this distribution is Copyright 2002 by Kurumi Chimari.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
-   the Free Software Foundation; either version 2, or (at your option)
+   the Free Software Foundation; either version 3, or (at your option)
    any later version.
 
    This program is distributed in the hope that it will be useful,

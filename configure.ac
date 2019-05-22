@@ -4,7 +4,7 @@ AC_INIT(src/main.c)
 PACKAGE=macopix
 
 dnl version number
-MAJOR_VERSION=2
+MAJOR_VERSION=3
 MINOR_VERSION=0
 MICRO_VERSION=0
 BUILD_REVISION=0
@@ -135,7 +135,15 @@ UNLHA32_LIBS=""
 fi
 AC_SUBST(UNLHA32_LIBS)
 
-dnl TAR32
+dnl TAR64/32
+AC_ARG_WITH(tar64,
+		 AC_HELP_STRING([--with-tar64],
+		            [Make with TAR64 for Win32]),
+			    [use_tar64=yes])
+if test x"${use_tar64}" = "xyes"; then
+AC_DEFINE(USE_TAR32,[], [Make with TAR32 for Win32])
+TAR32_LIBS="-L. -ltar64"
+else
 AC_ARG_WITH(tar32,
 		 AC_HELP_STRING([--with-tar32],
 		            [Make with TAR32 for Win32]),
@@ -145,6 +153,7 @@ AC_DEFINE(USE_TAR32,[], [Make with TAR32 for Win32])
 TAR32_LIBS="-L. -ltar32"
 else
 TAR32_LIBS=""
+fi
 fi
 AC_SUBST(TAR32_LIBS)
 

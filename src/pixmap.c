@@ -442,7 +442,6 @@ gboolean TestLoadPixmaps(typMascot *mascot, gchar *filename, gint i_pix)
 
 void LoadPixmaps(typMascot *mascot){
   int i=0;
-  //GdkImlibImage* im = NULL;
   GdkPixbuf *pixbuf = NULL, *pixbuf2 = NULL;
   gint w=0,h=0;
   gint ipstyle;
@@ -510,10 +509,9 @@ void LoadPixmaps(typMascot *mascot){
 #endif
 #endif  // USE_GTK3
 
-    //im = gdk_imlib_load_image(mascot->sprites[i].filename);
     tmp_open=to_utf8(mascot->sprites[i].filename);
     pixbuf = gdk_pixbuf_new_from_file(tmp_open, NULL);
-    // if(im==NULL){
+
     if(pixbuf==NULL){
       g_print (_("Cannot Load Image %s\n"), tmp_open);
       g_free(tmp_open);
@@ -635,6 +633,7 @@ void LoadPixmaps(typMascot *mascot){
 
       cairo_destroy (cr);
       mascot->sprites[i].pixbuf = gdk_pixbuf_get_from_surface(surface, 0, 0, w, h);
+      cairo_surface_destroy(surface);
     }
     else{// for Win32 and non-composited Gtk+2.8 or later
 #ifdef FG_DRAW
@@ -869,7 +868,6 @@ void LoadPixmaps(typMascot *mascot){
   if(mascot->fontclk==NULL){
     mascot->fontclk=pango_font_description_from_string(mascot->deffontname_clk);
     while(mascot->fontclk==NULL){
-      //create_default_font_selection_dialog(mascot,INIT_DEF_FONT_CLK);
       if(mascot->deffontname_clk) g_free(mascot->deffontname_clk);
       mascot->deffontname_clk=g_strdup(FONT_CLK);
       mascot->fontclk=pango_font_description_from_string(mascot->deffontname_clk);
@@ -961,6 +959,7 @@ void LoadPixmaps(typMascot *mascot){
   mascot->drag=FALSE;
   if(!mascot->digit)  strcpy(mascot->digit,"00:00:00");
 
+  // 未使用バッファをクリア
   for(i=mascot->nPixmap;i<MAX_PIXMAP;i++){
     if(mascot->sprites[i].filename){
       g_free(mascot->sprites[i].filename);
@@ -983,57 +982,6 @@ void LoadPixmaps(typMascot *mascot){
 #endif
   }
   
-  // 初回フレーム用マスク切出し
-
-  /*
-#ifdef USE_GTK3   /////////////  GTK3  ////////////////
-#ifdef USE_WIN32
-  if(mascot->sdw_flag){
-    gdk_window_shape_combine_region(gtk_widget_get_window(mascot->win_sdw),
-				    region_sdw, 0, 0 );
-    cairo_region_destroy(region_sdw);
-    cairo_surface_destroy(surface_sdw);
-  }
-  gdk_window_shape_combine_region(gtk_widget_get_window(mascot->win_main),
-				  region, 0, 0 );
-  cairo_region_destroy(region);
-  cairo_surface_destroy(surface);
-#else
-  region = get_cairo_region_from_pixbuf(mascot->sprites[mascot->frame_pix[0][0]].pixbuf,
-					mascot->width, mascot->height, 0, 0);
-  if(flag_img_cairo_go){
-    gdk_window_input_shape_combine_region(gtk_widget_get_window(mascot->win_main),
-					  region, 0, 0 );
-    gdk_window_set_cursor(gtk_widget_get_window(mascot->win_main),
-			  mascot->cursor.normal);
-  }
-  else{
-    gdk_window_shape_combine_region(gtk_widget_get_window(mascot->win_main),
-					  region, 0, 0 );
-  }
-
-  cairo_region_destroy(region);
-  cairo_surface_destroy(surface);
-#endif
-
-#else  /////////////  GTK2  ////////////////
-  if(flag_img_cairo_go){
-    gdk_window_input_shape_combine_mask
-      ( gtk_widget_get_window(mascot->win_main), 
-  	mascot->sprites[mascot->frame_pix[0][0]].mask,
- 	0, 0 ); 
-    gdk_window_set_cursor(gtk_widget_get_window(mascot->win_main),
-			  mascot->cursor.normal);
-  }
-  else{
-    gdk_window_shape_combine_mask
-      ( gtk_widget_get_window(mascot->win_main), 
-  	mascot->sprites[mascot->frame_pix[0][0]].mask,
- 	0, 0 ); 
-  }
-#endif  // USE_GTK3
-  */
-
   while (my_main_iteration(FALSE));
   
 #ifdef USE_GTK_STATUS_ICON

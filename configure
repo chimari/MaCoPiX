@@ -874,6 +874,7 @@ with_sysroot
 enable_libtool_lock
 with_win32
 with_unlha32
+with_tar64
 with_tar32
 enable_glibtest
 with_gtk2
@@ -1574,6 +1575,7 @@ Optional Packages:
                           compiler's sysroot if not specified).
   --with-win32            Make for Win32
   --with-unlha32          Make with UNLHA32 for Win32
+  --with-tar64            Make with TAR64 for Win32
   --with-tar32            Make with TAR32 for Win32
   --with-gtk2             use Gtk+2 instead of Gtk+3
   --with-gnu-ld           assume the C compiler uses GNU ld [default=no]
@@ -2686,7 +2688,7 @@ ac_compiler_gnu=$ac_cv_c_compiler_gnu
 
 PACKAGE=macopix
 
-MAJOR_VERSION=2
+MAJOR_VERSION=3
 MINOR_VERSION=0
 MICRO_VERSION=0
 BUILD_REVISION=0
@@ -15459,6 +15461,18 @@ fi
 
 
 
+# Check whether --with-tar64 was given.
+if test "${with_tar64+set}" = set; then :
+  withval=$with_tar64; use_tar64=yes
+fi
+
+if test x"${use_tar64}" = "xyes"; then
+
+$as_echo "#define USE_TAR32 /**/" >>confdefs.h
+
+TAR32_LIBS="-L. -ltar64"
+else
+
 # Check whether --with-tar32 was given.
 if test "${with_tar32+set}" = set; then :
   withval=$with_tar32; use_tar32=yes
@@ -15471,6 +15485,7 @@ $as_echo "#define USE_TAR32 /**/" >>confdefs.h
 TAR32_LIBS="-L. -ltar32"
 else
 TAR32_LIBS=""
+fi
 fi
 
 

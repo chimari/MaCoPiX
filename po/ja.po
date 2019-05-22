@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: macopix 1.6.2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-05-21 19:08-1000\n"
+"POT-Creation-Date: 2019-05-22 12:19-1000\n"
 "PO-Revision-Date: 2008-05-23 19:29-1000\n"
 "Last-Translator: Kurumi Chimari <chimari@rosegray.sakura.ne.jp>\n"
 "Language-Team: Japansese <chimari@rosegray.sakura.ne.jp>\n"
@@ -2052,9 +2052,10 @@ msgstr "最大ループ"
 
 #: src/gui.c:12759
 msgid "Mascot File <span size=\"smaller\">(Double-Click to change)</span>"
-msgstr "マスコットファイル <span size=\"smaller\">(ダブルクリックで変更)</span>"
+msgstr ""
+"マスコットファイル <span size=\"smaller\">(ダブルクリックで変更)</span>"
 
-#: src/pixmap.c:518 src/nokkari.c:99
+#: src/pixmap.c:516 src/nokkari.c:99
 #, c-format
 msgid "Cannot Load Image %s\n"
 msgstr "画像 %s をロードできません\n"
