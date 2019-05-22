@@ -150,20 +150,20 @@ AC_SUBST(TAR32_LIBS)
 
 AM_PATH_GLIB_2_0(2.32.0,, AC_MSG_ERROR([glib-2.x is required]), gthread gobject)
 dnl GTK 3 or 2 
-AC_ARG_WITH(gtk3,
-             AC_HELP_STRING([--with-gtk3],
-                        [use Gtk+3 instead of Gtk+2]),
-                        [use_gtk3=yes])
-if test x"${use_gtk3}" = "xyes"; then
-GTK3_CFLAGS="`pkg-config gtk+-3.0 --cflags`"
-GTK3_LIBS="`pkg-config gtk+-3.0 --libs`"
-dnl    AM_PATH_GTK_3_0(3.22.0,, AC_MSG_ERROR([gtk+-2.x is required]), gthread gobject)
-AC_DEFINE([USE_GTK3],[],[Use Gtk+3.x instead of Gtk+2])
-else
+AC_ARG_WITH(gtk2,
+             AC_HELP_STRING([--with-gtk2],
+                        [use Gtk+2 instead of Gtk+3]),
+                        [use_gtk2=yes])
+if test x"${use_gtk2}" = "xyes"; then
 AM_PATH_GTK_2_0(2.24.0,, AC_MSG_ERROR([gtk+-2.x is required]), gthread gobject)
 AC_DEFINE([USE_GTK2],[],[Use Gtk+2.x instead of Gtk+3])
 GTK3_CFLAGS=""
 GTK3_LIBS=""
+else
+GTK3_CFLAGS="`pkg-config gtk+-3.0 --cflags`"
+GTK3_LIBS="`pkg-config gtk+-3.0 --libs`"
+dnl    AM_PATH_GTK_3_0(3.22.0,, AC_MSG_ERROR([gtk+-2.x is required]), gthread gobject)
+AC_DEFINE([USE_GTK3],[],[Use Gtk+3.x instead of Gtk+2])
 fi
 AC_SUBST(GTK3_LIBS)
 AC_SUBST(GTK3_CFLAGS)
@@ -402,10 +402,10 @@ echo "##########################################################################
 if test x"${use_win32}" = "xyes"; then
 echo " $PACKAGE $VERSION build for Win32 "
 fi
-if test x"${use_gtk3}" = "xyes"; then
-echo " $PACKAGE $VERSION  with Gtk+3 "
-else
+if test x"${use_gtk2}" = "xyes"; then
 echo " $PACKAGE $VERSION  with Gtk+2 "
+else
+echo " $PACKAGE $VERSION  with Gtk+3 "
 fi
 echo ""
 if test $ac_cv_enable_ssl = yes; then

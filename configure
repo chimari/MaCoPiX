@@ -876,7 +876,7 @@ with_win32
 with_unlha32
 with_tar32
 enable_glibtest
-with_gtk3
+with_gtk2
 enable_gtktest
 enable_rpath
 with_libiconv_prefix
@@ -1575,7 +1575,7 @@ Optional Packages:
   --with-win32            Make for Win32
   --with-unlha32          Make with UNLHA32 for Win32
   --with-tar32            Make with TAR32 for Win32
-  --with-gtk3             use Gtk+3 instead of Gtk+2
+  --with-gtk2             use Gtk+2 instead of Gtk+3
   --with-gnu-ld           assume the C compiler uses GNU ld [default=no]
   --with-libiconv-prefix[=DIR]  search for libiconv in DIR/include and DIR/lib
   --without-libiconv-prefix     don't search for libiconv in includedir and libdir
@@ -15828,18 +15828,12 @@ rm -f core conftest.err conftest.$ac_objext \
   rm -f conf.glibtest
 
 
-# Check whether --with-gtk3 was given.
-if test "${with_gtk3+set}" = set; then :
-  withval=$with_gtk3; use_gtk3=yes
+# Check whether --with-gtk2 was given.
+if test "${with_gtk2+set}" = set; then :
+  withval=$with_gtk2; use_gtk2=yes
 fi
 
-if test x"${use_gtk3}" = "xyes"; then
-GTK3_CFLAGS="`pkg-config gtk+-3.0 --cflags`"
-GTK3_LIBS="`pkg-config gtk+-3.0 --libs`"
-
-$as_echo "#define USE_GTK3 /**/" >>confdefs.h
-
-else
+if test x"${use_gtk2}" = "xyes"; then
 # Check whether --enable-gtktest was given.
 if test "${enable_gtktest+set}" = set; then :
   enableval=$enable_gtktest;
@@ -16172,6 +16166,12 @@ $as_echo "#define USE_GTK2 /**/" >>confdefs.h
 
 GTK3_CFLAGS=""
 GTK3_LIBS=""
+else
+GTK3_CFLAGS="`pkg-config gtk+-3.0 --cflags`"
+GTK3_LIBS="`pkg-config gtk+-3.0 --libs`"
+
+$as_echo "#define USE_GTK3 /**/" >>confdefs.h
+
 fi
 
 
@@ -24690,10 +24690,10 @@ echo "##########################################################################
 if test x"${use_win32}" = "xyes"; then
 echo " $PACKAGE $VERSION build for Win32 "
 fi
-if test x"${use_gtk3}" = "xyes"; then
-echo " $PACKAGE $VERSION  with Gtk+3 "
-else
+if test x"${use_gtk2}" = "xyes"; then
 echo " $PACKAGE $VERSION  with Gtk+2 "
+else
+echo " $PACKAGE $VERSION  with Gtk+3 "
 fi
 echo ""
 if test $ac_cv_enable_ssl = yes; then

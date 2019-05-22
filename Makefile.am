@@ -8,7 +8,8 @@ EXTRA_DIST =  config.rpath\
 	NKR.README.ja \
 	autogen.sh\
 	macopix.1\
-	makewin32.sh
+	makewin32.sh\
+	macopix.spec
 
 man_MANS = macopix.1
 

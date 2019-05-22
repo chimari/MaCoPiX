@@ -711,11 +711,7 @@ void ReadMenu(typMascot *mascot, gint offset_i_cat, gchar *merge_file)
 	    g_free(progress_txt);
 	    progress_txt=NULL;
 	    while (my_main_iteration(FALSE));
-#ifdef USE_GTK3	    
-	    gdk_display_flush(gdk_display_get_default());
-#else	    
-	    gdk_flush();
-#endif	    
+	    gdkut_flush();
 	    usleep(INTERVAL*1e3);
 	  }
 	  mascot->menu_total++;

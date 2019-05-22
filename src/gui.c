@@ -8128,6 +8128,7 @@ void create_config_dialog(GtkWidget *widget, gpointer gdata){
 	gtk_entry_set_text(GTK_ENTRY(entry),
  	                   to_utf8(mascot->rcfile));
       }
+      gtk_editable_set_editable(GTK_EDITABLE(entry), FALSE);
       gtkut_table_attach(table1, entry, 0, 2, 0, 1,
 			 GTK_FILL|GTK_EXPAND,GTK_SHRINK,0,0);
 
@@ -8144,6 +8145,7 @@ void create_config_dialog(GtkWidget *widget, gpointer gdata){
 	gtk_entry_set_text(GTK_ENTRY(entry),
                            to_utf8(mascot->menu_file));
       }
+      gtk_editable_set_editable(GTK_EDITABLE(entry), FALSE);
       gtkut_table_attach(table1, entry, 0, 2, 0, 1,
 			 GTK_FILL|GTK_EXPAND,GTK_SHRINK,0,0);
       
@@ -8159,6 +8161,7 @@ void create_config_dialog(GtkWidget *widget, gpointer gdata){
       else{
 	gtk_entry_set_text(GTK_ENTRY(entry),_("(Based on the locale environment)"));
       }
+      gtk_editable_set_editable(GTK_EDITABLE(entry), FALSE);
       gtkut_table_attach(table1, entry, 1, 2, 1, 2,
 			 GTK_FILL|GTK_EXPAND,GTK_SHRINK,0,0);
 
@@ -9477,6 +9480,7 @@ void create_config_dialog(GtkWidget *widget, gpointer gdata){
       entry = gtk_entry_new ();
       gtk_entry_set_text(GTK_ENTRY(entry),
                          to_utf8(mascot->file));
+      gtk_editable_set_editable(GTK_EDITABLE(entry), FALSE);
       gtkut_table_attach_defaults(table1, entry, 1, 2, 1, 2);
 
 
@@ -9492,6 +9496,7 @@ void create_config_dialog(GtkWidget *widget, gpointer gdata){
       else{
 	gtk_entry_set_text(GTK_ENTRY(entry),_("(Based on the locale environment)"));
       }
+      gtk_editable_set_editable(GTK_EDITABLE(entry), FALSE);
       gtkut_table_attach_defaults(table1, entry, 1, 2, 2, 3);
 
 
@@ -11911,7 +11916,7 @@ imgtree_add_columns (typMascot *mascot,
   renderer = gtk_cell_renderer_text_new ();
   g_object_set_data (G_OBJECT (renderer), "column", 
   		     GINT_TO_POINTER (COLUMN_IMGTREE_FILENAME));
-  column=gtk_tree_view_column_new_with_attributes (_("Image File Name"),
+  column=gtk_tree_view_column_new_with_attributes (NULL,
 						   renderer,
 						   "text", 
 						   COLUMN_IMGTREE_FILENAME,
@@ -11924,6 +11929,7 @@ imgtree_add_columns (typMascot *mascot,
 #endif
 						   
 						   NULL);
+  gtkut_tree_view_column_set_markup(column, _("Image File <span size=\"smaller\">(Double-Click to change)</span>"));
   gtk_tree_view_column_set_cell_data_func(column, renderer,
 					  imgtree_cell_data_func,
 					  GUINT_TO_POINTER(COLUMN_IMGTREE_FILENAME),
@@ -12105,7 +12111,7 @@ ptntree_add_columns (typMascot *mascot,
   renderer = gtk_cell_renderer_text_new ();
   g_object_set_data (G_OBJECT (renderer), "column", 
   		     GINT_TO_POINTER (COLUMN_PTNTREE_NUMBER));
-  column=gtk_tree_view_column_new_with_attributes (_("No."),
+  column=gtk_tree_view_column_new_with_attributes (_("Frame No."),
 						   renderer,
 						   "text",
 						   COLUMN_PTNTREE_NUMBER,
@@ -12128,7 +12134,7 @@ ptntree_add_columns (typMascot *mascot,
   renderer = gtk_cell_renderer_text_new ();
   g_object_set_data (G_OBJECT (renderer), "column", 
   		     GINT_TO_POINTER (COLUMN_PTNTREE_IMAGE));
-  column=gtk_tree_view_column_new_with_attributes (_("Image"),
+  column=gtk_tree_view_column_new_with_attributes (_("Image No."),
 						   renderer,
 						   "text", 
 						   COLUMN_PTNTREE_IMAGE,
@@ -12153,7 +12159,7 @@ ptntree_add_columns (typMascot *mascot,
   renderer = gtk_cell_renderer_text_new ();
   g_object_set_data (G_OBJECT (renderer), "column", 
   		     GINT_TO_POINTER (COLUMN_PTNTREE_MIN));
-  column=gtk_tree_view_column_new_with_attributes (_("Min"),
+  column=gtk_tree_view_column_new_with_attributes (_("Min Stay"),
 						   renderer,
 						   "text", 
 						   COLUMN_PTNTREE_MIN,
@@ -12178,7 +12184,7 @@ ptntree_add_columns (typMascot *mascot,
   renderer = gtk_cell_renderer_text_new ();
   g_object_set_data (G_OBJECT (renderer), "column", 
   		     GINT_TO_POINTER (COLUMN_PTNTREE_MAX));
-  column=gtk_tree_view_column_new_with_attributes (_("Max"),
+  column=gtk_tree_view_column_new_with_attributes (_("Max Stay"),
 						   renderer,
 						   "text", 
 						   COLUMN_PTNTREE_MAX,
@@ -12241,7 +12247,7 @@ ptntree_add_columns (typMascot *mascot,
 						   "background-gdk", COLUMN_PTNTREE_COLBG,
 #endif					   
 						   NULL);
-  gtkut_tree_view_column_set_markup(column, _("<span size=\"smaller\">Block Loop</span> Min"));
+  gtkut_tree_view_column_set_markup(column, _("Min Loop"));
   gtk_tree_view_column_set_cell_data_func(column, renderer,
 					  ptntree_cell_data_func,
 					  GUINT_TO_POINTER(COLUMN_PTNTREE_BL_MIN),
@@ -12267,7 +12273,7 @@ ptntree_add_columns (typMascot *mascot,
 						   "background-gdk", COLUMN_PTNTREE_COLBG,
 #endif					   
 						   NULL);
-  gtkut_tree_view_column_set_markup(column, _("<span size=\"smaller\">Block Loop</span> Max"));
+  gtkut_tree_view_column_set_markup(column, _("Max Loop"));
   gtk_tree_view_column_set_cell_data_func(column, renderer,
 					  ptntree_cell_data_func,
 					  GUINT_TO_POINTER(COLUMN_PTNTREE_BL_MAX),
@@ -12738,7 +12744,7 @@ cattree_add_columns (typMascot *mascot,
   renderer = gtk_cell_renderer_text_new ();
   g_object_set_data (G_OBJECT (renderer), "column", 
   		     GINT_TO_POINTER (COLUMN_CATTREE_FILE));
-  column=gtk_tree_view_column_new_with_attributes (_("File"),
+  column=gtk_tree_view_column_new_with_attributes (NULL,
 						   renderer,
 						   "text", 
 						   COLUMN_CATTREE_FILE,
@@ -12750,6 +12756,7 @@ cattree_add_columns (typMascot *mascot,
 						   "background-gdk", COLUMN_CATTREE_COLBG,
 #endif					   
 						   NULL);
+  gtkut_tree_view_column_set_markup(column, _("Mascot File <span size=\"smaller\">(Double-Click to change)</span>"));
   gtk_tree_view_column_set_cell_data_func(column, renderer,
 					  cattree_cell_data_func,
 					  GUINT_TO_POINTER(COLUMN_CATTREE_FILE),

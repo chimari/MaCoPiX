@@ -1,3 +1,6 @@
+2019.X.XX   ver3.0.0  - Support Gtk+3 (default).
+     	              - Lots of code refining.
+
 2008.6.24   ver1.7.4  - Fixed a bug on compilation under Gtk+2.10 or earlier.
 
 2008.5.24   ver1.7.3  - "Drop Shadow of Mascot" is  now avairable also on

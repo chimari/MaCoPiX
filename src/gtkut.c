@@ -445,7 +445,7 @@ GtkWidget * gtkut_menu_item_new_with_icon(const gchar *stock_or_icon_name,
 
 void gdkut_flush(typMascot *mascot){
 #ifdef USE_GTK3
-  gdk_display_flush(gtk_widget_get_display(mascot->win_main));
+  //gdk_display_flush(gtk_widget_get_display(mascot->win_main));
 #else
   gdk_flush();
 #endif
