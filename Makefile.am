@@ -14,6 +14,8 @@ EXTRA_DIST =  config.rpath\
 
 man_MANS = macopix.1
 
+CLEANFILES      = *~ libnova/*~ icons/*~ debian/*~
+DISTCLEANFILES  = 
 AM_CPPFLAGS = -DLOCALEDIR=\""$(localedir)"\"
 
 BZIP2_ENV =
