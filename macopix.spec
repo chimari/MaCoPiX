@@ -11,11 +11,9 @@ BuildRoot: %{_tmppath}/%{name}-%{version}-buildroot
 Vendor: RoseGray Society
 Requires:	gtk3 
 Requires:	cairo
-Requires:       libssh2
 Requires:       openssl
 BuildRequires:	gtk3-devel
 BuildRequires:	cairo-devel
-BuildRequires:  libssh2-devel
 BuildRequires:  openssl-devel
 
 %description
@@ -46,9 +44,10 @@ make DESTDIR=$RPM_BUILD_ROOT install
 rm -rf %{buildroot}
 
 %files
-/usr/local/bin/hoe
+/usr/local/bin/macopix
+/usr/local/share/locale/ja/LC_MESSAGES/macopix.mo
 /usr/local/share/man/man1/macopix.1
 
 %changelog
-* Fri May 21 2019 Kurumi Chimari <chimari@rosegray.sakura.ne.jp>
+* Wed May 22 2019 Kurumi Chimari <chimari@rosegray.sakura.ne.jp>
 - first release for version 3.0.0
