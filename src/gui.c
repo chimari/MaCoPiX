@@ -6645,9 +6645,10 @@ void create_config_dialog(GtkWidget *widget, gpointer gdata){
       table2 = gtkut_table_new (4, 4, FALSE, 5, 5, 5);
       gtk_container_add (GTK_CONTAINER (frame1), table2);
 
-      label = gtkut_label_new (_("Address"));
+      label = gtkut_label_new (_("Server Address"));
       gtkut_pos(label, POS_START, POS_CENTER);
-      gtkut_table_attach(table2, label, 0, 1, 0, 1,0,0,0,0);
+      gtkut_table_attach(table2, label, 0, 1, 0, 1,
+			 GTK_SHRINK, GTK_SHRINK,0,0);
       
       entry = gtk_entry_new ();
       if(mascot->mail.pop_server){
@@ -6663,7 +6664,8 @@ void create_config_dialog(GtkWidget *widget, gpointer gdata){
       
       label = gtkut_label_new (_("User ID"));
       gtkut_pos(label, POS_START, POS_CENTER);
-      gtkut_table_attach(table2, label, 0, 1, 1, 2,0,0,0,0);
+      gtkut_table_attach(table2, label, 0, 1, 1, 2,
+			 GTK_SHRINK, GTK_SHRINK,0,0);
       
       entry = gtk_entry_new ();
       if(mascot->mail.pop_id){
@@ -6716,8 +6718,9 @@ void create_config_dialog(GtkWidget *widget, gpointer gdata){
 #ifdef USE_SSL
       
       label = gtkut_label_new ("SSL");
-      gtkut_pos(label, POS_END, POS_CENTER);
-      gtkut_table_attach(table2, label, 0, 1, 2, 3,0,0,0,0);
+      gtkut_pos(label, POS_START, POS_CENTER);
+      gtkut_table_attach(table2, label, 0, 1, 2, 3,
+			 GTK_SHRINK,GTK_SHRINK,0,0);
       
       {
 	GtkListStore *store;
