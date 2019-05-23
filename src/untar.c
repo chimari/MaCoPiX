@@ -169,7 +169,7 @@ gchar* untar_menu(typMascot *mascot, gchar *tarfile)
 
 
 void untar_fail(gchar* tarfile){
-  popup_message(Mascot->win_main,
+  popup_message(NULL,
 #ifdef USE_GTK3
 		"dialog-error", 
 #else
@@ -184,7 +184,7 @@ void untar_fail(gchar* tarfile){
 }
 
 void menu_fail(gchar* tarfile){
-  popup_message(Mascot->win_main,
+  popup_message(NULL,
 #ifdef USE_GTK3
 		"dialog-error", 
 #else

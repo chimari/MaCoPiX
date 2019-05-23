@@ -2626,9 +2626,7 @@ void InitMascot0(typMascot *mascot){
 #endif  // USE_SOCKMSG
   }
 
-  create_conf_num(mascot);
   InitMascot(mascot);
-
 }
 
 
@@ -2754,7 +2752,7 @@ void make_mascot(typMascot *mascot){
                         | GTK_DEST_DEFAULT_HIGHLIGHT | GTK_DEST_DEFAULT_DROP,
 		     drag_types, 1, GDK_ACTION_COPY);
   my_signal_connect (mascot->win_main, "drag-data-received",
-		     signal_drag_data_received, NULL);
+		     signal_drag_data_received, (gpointer)mascot);
 
   InitMascot0(mascot);
   ReadMascot(mascot,FALSE);
@@ -2797,7 +2795,7 @@ void make_mascot(typMascot *mascot){
   
   // Window作成・変形
   my_signal_connect(mascot->dw_main, "configure_event",dw_configure_main,
-  		    (gpointer)Mascot);
+  		    (gpointer)mascot);
   // 重なった場合の再描画関連
 #ifdef USE_GTK3
   my_signal_connect(mascot->dw_main, "draw",dw_expose_main,

@@ -736,7 +736,7 @@ void ReadMenu(typMascot *mascot, gint offset_i_cat, gchar *merge_file)
 
   mascot->flag_consow=FALSE;
   if(mascot->installed_menu_dir){
-    unlink_all(mascot->installed_menu_dir);
+    unlink_all(mascot, mascot->installed_menu_dir);
     mascot->installed_menu_dir=NULL;
   }
   FlagInstalledMenu=FALSE;
@@ -4391,7 +4391,7 @@ void get_option(int argc, char **argv, typMascot *mascot)
     // 定型以外のオプション
     else{
       // MascotFileであるかどうかのチェック
-      // Mascot->file への書き込みを行う
+      // mascot->file への書き込みを行う
       if(!FullPathMascotCheck(mascot,argv[i_opt])){
 	g_print(_("Option \"%s\" is not found. Ignoring...\n"),argv[i_opt]);
       }
@@ -4575,7 +4575,7 @@ int main(int argc, char **argv)
 
   if (sockmsg_flag){
     //if(msg_expire<=0){
-    //  msg_expire=(Mascot->sockmsg_expire_def)*(INTERVAL);
+    //  msg_expire=(mascot->sockmsg_expire_def)*(INTERVAL);
     //}
 
     sockres = sockmsg_init();
@@ -4661,6 +4661,7 @@ int main(int argc, char **argv)
   //gtk_widget_push_visual(gdk_imlib_get_visual());
   //gtk_widget_push_colormap(gdk_imlib_get_colormap());
 
+  create_conf_num(Mascot);
 
   // メニューの読み込みと作成
   Mascot->installed_menu_dir=NULL;
@@ -4767,9 +4768,6 @@ int main(int argc, char **argv)
   gtk_widget_show_all(Mascot->biff_pix);
   map_biff(Mascot, FALSE);
 #endif // USE_BIFF
-
-
-  
 
 
 #ifndef USE_WIN32

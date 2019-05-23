@@ -833,7 +833,6 @@ void CodeHenkanEUC(typMascot *mascot){
 // のっかり変換ログの生成
 void create_nkr_dialog(typMascot *mascot)
 {
-  GtkWidget *nkr_main;
   GtkWidget *nkr_tbl;
   GtkWidget *nkr_text;
   GtkWidget *button;
@@ -847,18 +846,19 @@ void create_nkr_dialog(typMascot *mascot)
   mascot->flag_menu=TRUE;
 
   
-  nkr_main = gtk_window_new(GTK_WINDOW_TOPLEVEL);
+  mascot->nkr_main = gtk_window_new(GTK_WINDOW_TOPLEVEL);
   text_buffer = gtk_text_buffer_new(NULL);
 
-  gtk_window_set_title(GTK_WINDOW(nkr_main), 
+  gtk_window_set_title(GTK_WINDOW(mascot->nkr_main), 
 		       _("MaCoPiX <--> Nokkari-Chara Convert Log"));
-  gtk_widget_realize(nkr_main);
-  my_signal_connect(nkr_main,"destroy",close_nkr, GTK_WIDGET(nkr_main));
-  gtk_container_set_border_width (GTK_CONTAINER (nkr_main), 5);
+  gtk_widget_realize(mascot->nkr_main);
+  my_signal_connect(mascot->nkr_main,"destroy",close_nkr,
+		    (gpointer)mascot);
+  gtk_container_set_border_width (GTK_CONTAINER (mascot->nkr_main), 5);
   
   // 6x3のテーブル
   nkr_tbl = gtkut_table_new (6, 3, FALSE, 0, 0, 0);
-  gtk_container_add (GTK_CONTAINER (nkr_main), nkr_tbl);
+  gtk_container_add (GTK_CONTAINER (mascot->nkr_main), nkr_tbl);
 
   nkr_scroll = gtk_scrolled_window_new(NULL, NULL);
   gtk_scrolled_window_set_policy(GTK_SCROLLED_WINDOW(nkr_scroll),
@@ -896,19 +896,19 @@ void create_nkr_dialog(typMascot *mascot)
 				    );
   gtkut_table_attach(nkr_tbl, button, 4, 5, 2, 3,
 		     GTK_FILL,GTK_SHRINK,0,0);
-  my_signal_connect(button,"clicked",close_nkr, GTK_WIDGET(nkr_main));
+  my_signal_connect(button,"clicked",close_nkr, (gpointer)mascot);
   
-  gtk_widget_show_all(nkr_main);
+  gtk_widget_show_all(mascot->nkr_main);
 }
 
 
-static void close_nkr(GtkWidget *w, GtkWidget *dialog)
+static void close_nkr(GtkWidget *w, gpointer gdata)
 {
-  //gdk_pointer_ungrab(GDK_CURRENT_TIME);
+  typMascot *mascot = (typMascot *)gdata;
 
   while (my_main_iteration(FALSE));
-  gtk_widget_destroy(GTK_WIDGET(dialog));
+  gtk_widget_destroy(GTK_WIDGET(mascot->nkr_main));
   while (my_main_iteration(FALSE));
  
-  Mascot->flag_menu=FALSE;
+  mascot->flag_menu=FALSE;
 }

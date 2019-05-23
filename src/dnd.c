@@ -41,8 +41,10 @@ signal_drag_data_received (GtkWidget        *widget,
                            gint              y,
                            GtkSelectionData *selection_data,
                            guint             info,
-                           guint             time)
+                           guint             time,
+			   gpointer          gdata)
 {
+  typMascot *mascot = (typMascot *)gdata;
   gchar *file, *file0, **files;
   gint i;
   gboolean flag_install, installing;
@@ -60,9 +62,9 @@ signal_drag_data_received (GtkWidget        *widget,
 	  if(strcmp(file+strlen(file)-strlen(LZH_EXTENSION)+1,
 		    LZH_EXTENSION+1)==0){
 #ifdef USE_LHA32
-	    if(create_dnd_confirm_window(file0)){
-	      Mascot->menu_file=unlha_menu(file);
-	      Mascot->installed_menu_dir=my_dirname(Mascot->menu_file);
+	    if(create_dnd_confirm_window(mascot, file0)){
+	      mascot->menu_file=unlha_menu(file);
+	      mascot->installed_menu_dir=my_dirname(mascot->menu_file);
 	      installing=TRUE;
 	    }
 #endif
@@ -70,9 +72,9 @@ signal_drag_data_received (GtkWidget        *widget,
 	  else if(strcmp(file+strlen(file)-strlen(TAR_EXTENSION)+1,
 			 TAR_EXTENSION+1)==0){
 #if defined(USE_GTAR) || defined(USE_TAR32)
-	    if(create_dnd_confirm_window(file0)){
-	      Mascot->menu_file=untar_menu(Mascot,file);
-	      Mascot->installed_menu_dir=my_dirname(Mascot->menu_file);
+	    if(create_dnd_confirm_window(mascot, file0)){
+	      mascot->menu_file=untar_menu(mascot,file);
+	      mascot->installed_menu_dir=my_dirname(mascot->menu_file);
 	      installing=TRUE;
 	    }
 #endif
@@ -80,22 +82,22 @@ signal_drag_data_received (GtkWidget        *widget,
 	}
 	
 	if(installing){
-	  flag_install=Mascot->flag_install;
+	  flag_install=mascot->flag_install;
 	  
-	  Mascot->flag_install=TRUE;
-	  Mascot->flag_common=FALSE;
-	  Mascot->flag_ow=TRUE;
-	  Mascot->flag_ow_ini=TRUE;
+	  mascot->flag_install=TRUE;
+	  mascot->flag_common=FALSE;
+	  mascot->flag_ow=TRUE;
+	  mascot->flag_ow_ini=TRUE;
 	  
-	  gtk_widget_destroy(Mascot->PopupMenu);
-	  ReadMenu(Mascot,0,NULL);
-	  Mascot->PopupMenu=make_popup_menu(Mascot);
+	  gtk_widget_destroy(mascot->PopupMenu);
+	  ReadMenu(mascot,0,NULL);
+	  mascot->PopupMenu=make_popup_menu(mascot);
 	  
-	  Mascot->flag_menu=FALSE;
-	  Mascot->flag_install=flag_install;
-	  Mascot->flag_common=FALSE;
-	  Mascot->flag_ow=FALSE;
-	  Mascot->flag_ow_ini=FALSE;
+	  mascot->flag_menu=FALSE;
+	  mascot->flag_install=flag_install;
+	  mascot->flag_common=FALSE;
+	  mascot->flag_ow=FALSE;
+	  mascot->flag_ow_ini=FALSE;
 	}
       
 	//g_print (" -> %s", file);
@@ -115,16 +117,17 @@ signal_drag_data_received_smenu (GtkWidget        *widget,
 				 gint              y,
 				 GtkSelectionData *selection_data,
 				 guint             info,
-				 guint             time)
+				 guint             time,
+				 gpointer          gdata)
 {
   signal_drag_data_received(widget, context, x, y, selection_data,
-			    info, time);
+			    info, time, gdata);
 
   gtk_main_quit();
 }
 
 
-gboolean create_dnd_confirm_window (gchar *file)
+gboolean create_dnd_confirm_window (typMascot *mascot, gchar *file)
 {
   GtkWidget *main;
   GtkWidget *button;
@@ -140,7 +143,7 @@ gboolean create_dnd_confirm_window (gchar *file)
   
   while (my_main_iteration(FALSE));
 
-  Mascot->flag_menu=TRUE;
+  mascot->flag_menu=TRUE;
   result=FALSE;
 
 #ifdef USE_WIN32
@@ -217,7 +220,7 @@ gboolean create_dnd_confirm_window (gchar *file)
 
   gtk_widget_destroy(main);
 
-  Mascot->flag_menu=FALSE;
+  mascot->flag_menu=FALSE;
 
   return (result);
 }

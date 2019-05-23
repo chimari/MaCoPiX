@@ -199,7 +199,7 @@ void DrawPanelClock2(typMascot *mascot)
 
   cairo_destroy(cr);
 #ifdef USE_GTK3
-    cairo_surface_destroy(surface);
+  cairo_surface_destroy(surface);
 #endif
   
   new_w=clk_width+(mascot->clktext_x+mascot->wclkbd)*2;

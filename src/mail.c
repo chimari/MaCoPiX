@@ -125,7 +125,7 @@ void biff_init(typMascot *mascot)
   if((mascot->mail.type==MAIL_POP3)||(mascot->mail.type==MAIL_APOP)){
     if(mascot->mail.pop_pass==NULL){
       if((mascot->mail.pop_server!=NULL)&&(mascot->mail.pop_id!=NULL)){
-	create_pop_pass_dialog();
+	create_pop_pass_dialog(mascot);
 	// Get Pop Pass from GUI
       }
     }
@@ -716,7 +716,7 @@ unsigned __stdcall get_pop3(LPVOID lpvPipe)
 		   mascot->mail.ssl_mode, mascot->mail.ssl_nonblock, 
 		   mascot->mail.ssl_cert_res,
 		   &mascot->mail.ssl_sub, &mascot->mail.ssl_iss,
-		   &mascot->mail.ssl_verify);
+		   &mascot->mail.ssl_verify, mascot->mail.type);
 
   if( ret != 0 ){
     if(apop_key) g_free(apop_key);
@@ -738,7 +738,7 @@ unsigned __stdcall get_pop3(LPVOID lpvPipe)
 
   pop_debug_print("POP LOGIN %s %s %s\n",mascot->mail.pop_id, mascot->mail.pop_pass,
 	 apop_key);
-  ret = popLogin(mascot->mail.pop_id, mascot->mail.pop_pass, apop_key, mascot->mail.ssl_mode);
+  ret = popLogin(mascot->mail.pop_id, mascot->mail.pop_pass, apop_key, mascot->mail.ssl_mode, mascot->mail.type);
   if( ret != 0 ){
     if(apop_key) g_free(apop_key);
     fprintf(stderr, "ERR: popLogin() [ret=%d]\n", ret);
@@ -945,7 +945,7 @@ int get_pop3(typMascot *mascot)
 		   mascot->mail.ssl_mode, mascot->mail.ssl_nonblock, 
 		   mascot->mail.ssl_cert_res,
 		   &mascot->mail.ssl_sub, &mascot->mail.ssl_iss,
-		   &mascot->mail.ssl_verify);
+		   &mascot->mail.ssl_verify, mascot->mail.type);
   if( ret != 0 ){
     if(apop_key) g_free(apop_key);
     if(ret==-(30+4)){
@@ -963,7 +963,7 @@ int get_pop3(typMascot *mascot)
   pop_debug_print("POP LOGIN %s %s %s\n",mascot->mail.pop_id, mascot->mail.pop_pass,
 	 apop_key);
 
-  ret = popLogin(mascot->mail.pop_id, mascot->mail.pop_pass, apop_key, mascot->mail.ssl_mode);
+  ret = popLogin(mascot->mail.pop_id, mascot->mail.pop_pass, apop_key, mascot->mail.ssl_mode, mascot->mail.type);
   if( ret != 0 ){
     fprintf(stderr, "ERR: popLogin() [ret=%d]\n", ret);
     mascot->mail.status = POP3_ERROR;
@@ -1066,7 +1066,6 @@ void pop3_error(typMascot *mascot){
 
 #ifndef USE_WIN32
 void pop3_signal(int sig){
-
   pop_debug_print("get child end\n");
 
   pop3_data_read(Mascot);
@@ -2308,7 +2307,6 @@ void make_fs_max(GtkWidget *widget, typMascot *mascot){
 // メイル着信リストの生成
 void create_biff_dialog(typMascot *mascot)
 {
-  GtkWidget *biff_main;
   GtkWidget *biff_tbl;
   GtkWidget *biff_text;
   GtkWidget *button;
@@ -2330,10 +2328,10 @@ void create_biff_dialog(typMascot *mascot)
   mascot->flag_menu=TRUE;
 
   
-  biff_main = gtk_window_new(GTK_WINDOW_TOPLEVEL);
+  mascot->biff_main = gtk_window_new(GTK_WINDOW_TOPLEVEL);
   text_buffer = gtk_text_buffer_new(NULL);
 
-  gtk_widget_set_size_request (biff_main, mascot->mail.win_width, 
+  gtk_widget_set_size_request (mascot->biff_main, mascot->mail.win_width, 
 			       mascot->mail.win_height);
   if(mascot->mail.type==MAIL_POP3|MAIL_APOP){
     tmp=g_strconcat(_("MaCoPiX : Arrived mail list"),"  [",
@@ -2342,15 +2340,16 @@ void create_biff_dialog(typMascot *mascot)
   else{
     tmp=g_strdup(_("MaCoPiX : Arrived mail list"));
   }
-  gtk_window_set_title(GTK_WINDOW(biff_main), tmp);
+  gtk_window_set_title(GTK_WINDOW(mascot->biff_main), tmp);
   g_free(tmp);
-  gtk_widget_realize(biff_main);
-  my_signal_connect(biff_main,"destroy",close_biff, GTK_WIDGET(biff_main));
-  gtk_container_set_border_width (GTK_CONTAINER (biff_main), 5);
+  gtk_widget_realize(mascot->biff_main);
+  my_signal_connect(mascot->biff_main,"destroy",close_biff,
+		    (gpointer)mascot);
+  gtk_container_set_border_width (GTK_CONTAINER (mascot->biff_main), 5);
   
   // 6x3のテーブル
   biff_tbl = gtkut_table_new (6, 3, FALSE, 0, 0, 0);
-  gtk_container_add (GTK_CONTAINER (biff_main), biff_tbl);
+  gtk_container_add (GTK_CONTAINER (mascot->biff_main), biff_tbl);
 
   biff_scroll = gtk_scrolled_window_new(NULL, NULL);
   gtk_scrolled_window_set_policy(GTK_SCROLLED_WINDOW(biff_scroll),
@@ -2501,7 +2500,8 @@ void create_biff_dialog(typMascot *mascot)
 				    );
   gtkut_table_attach(biff_tbl, button, 0, 1, 2, 3,
 		     GTK_FILL,GTK_SHRINK,0,0);
-  my_signal_connect(button,"clicked",mailer_start, GTK_WIDGET(biff_main));
+  my_signal_connect(button,"clicked",mailer_start,
+		    (gpointer)mascot);
 
 
   button=gtkut_button_new_with_icon(_("Close"),
@@ -2513,34 +2513,39 @@ void create_biff_dialog(typMascot *mascot)
 				    );
   gtkut_table_attach(biff_tbl, button, 4, 5, 2, 3,
 		     GTK_FILL,GTK_SHRINK,0,0);
-  my_signal_connect(button,"clicked",close_biff, GTK_WIDGET(biff_main));
+  my_signal_connect(button,"clicked",close_biff,
+		    (gpointer)mascot);
   
-  gtk_widget_show_all(biff_main);
+  gtk_widget_show_all(mascot->biff_main);
   
   gdkut_flush(mascot);
 }
 
 
-static void close_biff(GtkWidget *w, GtkWidget *dialog)
+static void close_biff(GtkWidget *w, gpointer gdata)
 {
+  typMascot *mascot = (typMascot *)gdata;
+  
   while (my_main_iteration(FALSE));
-  gtk_widget_destroy(GTK_WIDGET(dialog));
+  gtk_widget_destroy(GTK_WIDGET(mascot->biff_main));
   while (my_main_iteration(FALSE));
 
-  Mascot->flag_menu=FALSE;
+  mascot->flag_menu=FALSE;
 }
 
 
 // Biff winからのメイラ起動
-static void mailer_start(GtkWidget *w, GtkWidget *dialog)
+static void mailer_start(GtkWidget *w, gpointer gdata)
 {
+  typMascot *mascot = (typMascot *)gdata;
+  
   while (my_main_iteration(FALSE));
-  gtk_widget_destroy(GTK_WIDGET(dialog));
+  gtk_widget_destroy(GTK_WIDGET(mascot->biff_main));
   while (my_main_iteration(FALSE));
  
-  Mascot->flag_menu=FALSE;
+  mascot->flag_menu=FALSE;
 
-  ext_play(Mascot,Mascot->mail.mailer);
+  ext_play(mascot, mascot->mail.mailer);
 }
 
 

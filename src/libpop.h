@@ -66,8 +66,9 @@ int popConnect(char *server,
 	       gint ssl_cert_res,
 	       gchar **subject,
 	       gchar **issue,
-	       glong *verify);
-int popLogin(char *user, char *pass, char *apop_key, guint ssl_mode);
+	       glong *verify,
+	       gint type);
+int popLogin(char *user, char *pass, char *apop_key, guint ssl_mode, gint type);
 int popCheckMailNum(int *number, char *uidl, int *num, guint ssl_mode);
 int popGetMail(int number, FILE *fp, char *uidl, guint ssl_mode);
 int popClose();

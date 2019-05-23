@@ -1038,7 +1038,7 @@ popQuit(guint ssl_mode)
 /*============================================================================*/
 int
 popConnect(char *server, int port, char *apop_key, guint ssl_mode, gboolean ssl_nonblock,
-	   gint ssl_cert_res, gchar **subject, gchar **issue, glong *verify)
+	   gint ssl_cert_res, gchar **subject, gchar **issue, glong *verify, gint type)
 {
   int    funcret;
   struct hostent *host;
@@ -1196,7 +1196,7 @@ popConnect(char *server, int port, char *apop_key, guint ssl_mode, gboolean ssl_
   /*--------------------------------------------------------------------------*/
   /* Get apop auth key.                                                       */
   /*--------------------------------------------------------------------------*/
-  if(Mascot->mail.type==MAIL_APOP){
+  if(type==MAIL_APOP){
     funcret = popApopGetKey(buffer, apop_key);
     if( funcret != 0 ){
       return(7);
@@ -1213,11 +1213,11 @@ popConnect(char *server, int port, char *apop_key, guint ssl_mode, gboolean ssl_
 /* Login pop server                                                           */
 /*============================================================================*/
 int
-popLogin(char *user, char *pass, char *apop_key, guint ssl_mode)
+popLogin(char *user, char *pass, char *apop_key, guint ssl_mode, gint type)
 {
   int funcret;
 
-  if(Mascot->mail.type==MAIL_APOP){
+  if(type==MAIL_APOP){
   /*------------------------------------------------------------------------*/
   /* Try to APOP login                                                      */
   /*------------------------------------------------------------------------*/
@@ -1226,7 +1226,7 @@ popLogin(char *user, char *pass, char *apop_key, guint ssl_mode)
       return(0);
     }
   }
-  else if(Mascot->mail.type==MAIL_POP3){
+  else if(type==MAIL_POP3){
   /*------------------------------------------------------------------------*/
   /* Try to Normal Login                                                    */
   /*------------------------------------------------------------------------*/

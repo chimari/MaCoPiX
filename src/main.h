@@ -370,11 +370,12 @@ enum{ CLOCK_TYPE_24S,
 
 // Install mode
 enum{   MENU_SELECT, 
-	  MENU_INSTALL_USER,
-	  MENU_INSTALL_COMMON,
-	  START_MENU_SELECT,
-	  START_MENU_INSTALL_USER,
-	  START_MENU_INSTALL_COMMON,
+	MENU_INSTALL_USER,
+	MENU_INSTALL_COMMON,
+	START_MENU_SELECT,
+	START_MENU_INSTALL_USER,
+	START_MENU_INSTALL_COMMON,
+	NUM_INSTALL_MODE
  } MenuSelect;
 
 //DEFAULT Alpha
@@ -1043,6 +1044,8 @@ struct _typMascot{
   gint sdw_y_int;
 
   GtkWidget *conf_main;
+  GtkWidget *biff_main;
+  GtkWidget *nkr_main;
 
   GtkWidget *sw_imgtree;
   GtkWidget *imgtree;

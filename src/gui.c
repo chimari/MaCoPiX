@@ -111,6 +111,7 @@ typedef struct{
   gchar *filename;
   gboolean flag_ow;
   gboolean flag_auto;
+  typMascot *mascot;
 }consType;
 
 
@@ -221,7 +222,6 @@ void ChangeMailer();
 #endif  // USE_BIFF
 
 
-static void close_dialog();
 #ifdef USE_COMMON
 static void close_cons();
 static void ow_cons();
@@ -417,11 +417,11 @@ GtkWidget *entry_deffontname_clk;
 GtkWidget *entry_deffontname_bal;
 
 static confNum  *cdata[NUM_CONF_COLOR], *mcat[MAX_MENU_CATEGORY],
-  *mptn[MAX_ANIME_PATTERN], *mpix[MAX_PIXMAP];
+  *mptn[MAX_ANIME_PATTERN], *mpix[MAX_PIXMAP], *minst[NUM_INSTALL_MODE];
 static confNum2 *mtgt[MAX_MENU_CATEGORY][MAX_MENU_TARGET];
 
 void create_conf_num(typMascot *mascot){
-  gint i_col, i_cat, i_tgt, i_ptn, i_pix;
+  gint i_col, i_cat, i_tgt, i_ptn, i_pix, i_inst;
 
   for(i_col=0; i_col<NUM_CONF_COLOR; i_col++){
     cdata[i_col]=g_malloc0(sizeof(confNum));
@@ -452,84 +452,96 @@ void create_conf_num(typMascot *mascot){
     mpix[i_pix]->mascot=mascot;
     mpix[i_pix]->num=i_pix;
   }
+  
+  for(i_inst=0; i_inst<NUM_INSTALL_MODE; i_inst++){
+    minst[i_inst]=g_malloc0(sizeof(confNum));
+    minst[i_inst]->mascot=mascot;
+    minst[i_inst]->num=i_inst;
+  }
 }
 
 
-void MenuSaveRC(void){
+void MenuSaveRC(typMascot *mascot){
   //MoveTmpDataRC();
-  SaveRC(Mascot,FALSE);
+  SaveRC(mascot,FALSE);
   {
     gchar *buf;
-    buf=g_strdup_printf(_("Saved Resource as ...%%n    \"%s\""),Mascot->rcfile);
-    DoSysBalloon(Mascot,buf);
+    buf=g_strdup_printf(_("Saved Resource as ...%%n    \"%s\""),mascot->rcfile);
+    DoSysBalloon(mascot,buf);
     g_free(buf);
   }
 }
 
-void MenuSaveMascot(void){
-  //MoveTmpDataMascot();
-  SaveMascot(Mascot,FALSE);
+void MenuSaveMascot(GtkWidget *w, gpointer gdata){
+  typMascot *mascot = (typMascot *)gdata;
+
+  SaveMascot(mascot,FALSE);
   {
     gchar *buf;
-    buf=g_strdup_printf(_("Saved Mascot as ...%%n    \"%s\""),Mascot->file);
-    DoSysBalloon(Mascot,buf);
+    buf=g_strdup_printf(_("Saved Mascot as ...%%n    \"%s\""), mascot->file);
+    DoSysBalloon(mascot,buf);
     g_free(buf);
   }
 }
 
-void MenuSaveDefMenu(void){
-  //MoveTmpDataRC();
-  SaveDefMenu(Mascot,FALSE);
+void MenuSaveDefMenu(GtkWidget *w, gpointer gdata){
+  typMascot *mascot = (typMascot *)gdata;
+  
+  SaveDefMenu(mascot,FALSE);
   {
     gchar *buf;
-    if( Mascot->menu_total>0){
-      buf=g_strdup_printf(_("Set Default Menu as ...%%n    \"%s\""),Mascot->menu_file);
+    if( mascot->menu_total>0){
+      buf=g_strdup_printf(_("Set Default Menu as ...%%n    \"%s\""),
+			  mascot->menu_file);
     }
     else{
       buf=g_strdup(_("Remove Default Menu from Resource Setting"));
     }
-    DoSysBalloon(Mascot,buf);
+    DoSysBalloon(mascot,buf);
     g_free(buf);
   }
 }
 
-void MenuDelDefMenu(void){
-  Mascot->menu_total=0;
-  Mascot->menu_file=NULL;
-  SaveDefMenu(Mascot,FALSE);
+void MenuDelDefMenu(GtkWidget *w, gpointer gdata){
+  typMascot *mascot = (typMascot *)gdata;
+  
+  mascot->menu_total=0;
+  mascot->menu_file=NULL;
+  SaveDefMenu(mascot,FALSE);
   {
     gchar *buf;
     buf=g_strdup(_("Remove Default Menu from Resource Setting"));
-    DoSysBalloon(Mascot,buf);
+    DoSysBalloon(mascot,buf);
     g_free(buf);
   }
 
-  gtk_widget_destroy(Mascot->PopupMenu);
-  ReadMenu(Mascot,0,NULL);
-  Mascot->PopupMenu=make_popup_menu(Mascot);
+  gtk_widget_destroy(mascot->PopupMenu);
+  ReadMenu(mascot,0,NULL);
+  mascot->PopupMenu=make_popup_menu(mascot);
 }
 
 
-void MenuSaveAll(void){
+void MenuSaveAll(GtkWidget *w, gpointer gdata){
+  typMascot *mascot = (typMascot *)gdata;
   gchar *buf, *buf1, *buf2, *buf3, *buf4;
 
-  SaveMascot(Mascot,FALSE);
-  buf1=g_strdup_printf(_("Saved Mascot as ...%%n    \"%s\""),Mascot->file);
+  SaveMascot(mascot,FALSE);
+  buf1=g_strdup_printf(_("Saved Mascot as ...%%n    \"%s\""), mascot->file);
 
-  SaveRC(Mascot,FALSE);
-  buf2=g_strdup_printf(_("%%aSaved Resource as ...%%n    \"%s\""),Mascot->rcfile);
+  SaveRC(mascot,FALSE);
+  buf2=g_strdup_printf(_("%%aSaved Resource as ...%%n    \"%s\""), mascot->rcfile);
 
-  if(Mascot->menu_total>0){
-    SaveMenu(Mascot);
-    buf3=g_strdup_printf(_("%%aSaved Menu as ...%%n    \"%s\""),Mascot->menu_file);
-    buf4=g_strdup_printf(_("%%aSet Default Menu as ...%%n    \"%s\""),Mascot->menu_file);
+  if(mascot->menu_total>0){
+    SaveMenu(mascot);
+    buf3=g_strdup_printf(_("%%aSaved Menu as ...%%n    \"%s\""), mascot->menu_file);
+    buf4=g_strdup_printf(_("%%aSet Default Menu as ...%%n    \"%s\""), mascot->menu_file);
   }
   else{
     buf3=NULL;
     buf4=g_strdup_printf(_("%%aRemove Default Menu from Resource Setting"));
   }
 
-  SaveDefMenu(Mascot,FALSE);
+  SaveDefMenu(mascot, FALSE);
 
   if(buf3){
     buf=g_strconcat(buf1,buf2,buf3,buf4,NULL);
@@ -545,7 +557,7 @@ void MenuSaveAll(void){
     g_free(buf4);
   }
 
-  DoSysBalloon(Mascot, buf);
+  DoSysBalloon(mascot, buf);
   g_free(buf);
 }
 
@@ -767,15 +779,17 @@ static void check_menu_get_smenu (GtkWidget * widget, gint gdata)
 
 
 #ifdef USE_BIFF
-static void mail_flag_toggle (GtkWidget * widget)
+static void mail_flag_toggle (GtkWidget * widget, gpointer gdata)
 {
+  typMascot *mascot = (typMascot *)gdata;
+  
   if(gtk_check_menu_item_get_active(GTK_CHECK_MENU_ITEM(widget))){
-    Mascot->mail.flag=TRUE;
+    mascot->mail.flag=TRUE;
   }
   else{
-    Mascot->mail.flag=FALSE;
+    mascot->mail.flag=FALSE;
   }
-  SetMailChecker(Mascot);
+  SetMailChecker(mascot);
 }
 #endif  // USE_BIFF
 
@@ -1085,34 +1099,44 @@ void my_file_chooser_set_current_folder(GtkWidget *dialog, gint mode)
 
 
 // クイックメニューからのマスコットの変更
-void ChangeMascotMenu(GtkWidget *widget, gchar *mascotfile)
-{ 
-  Mascot->file=g_strdup(mascotfile);
+void ChangeMascotMenu(GtkWidget *widget, gpointer gdata)
+{
+  confNum2 *mtgt = (confNum2 *)gdata;
+  gint i_cat=mtgt->num;
+  gint i_tgt=mtgt->num2;
+  typMascot *mascot = mtgt->mascot;
+
+  if(mascot->file) g_free(mascot->file);
+  mascot->file=g_strdup(mascot->menu_tgt[i_cat][i_tgt]);
   
-  ChangeMascot();
+  ChangeMascot(mascot);
 }
 
 // クイックメニューからのマスコットのカテゴリー内ランダム変更
-void CatRandomChangeMascotMenu(GtkWidget *widget, gint gdata)
+void CatRandomChangeMascotMenu(GtkWidget *widget, gpointer gdata)
 {
-  int i_cat,i_tgt;
+  confNum *mcat=(confNum *)gdata;
+  gint i_cat = mcat->num;
+  typMascot *mascot = mcat->mascot;
+  gint i_tgt;
 
-  i_cat=(gint)gdata;
-  
-  i_tgt=RANDOM(Mascot->menu_tgt_max[i_cat]);
- 
-  Mascot->file=g_strdup(Mascot->menu_tgt[i_cat][i_tgt]);
-      
-  ChangeMascot();
+  i_tgt=RANDOM(mascot->menu_tgt_max[i_cat]);
+
+  if(mascot->file) g_free(mascot->file);
+  mascot->file=g_strdup(mascot->menu_tgt[i_cat][i_tgt]);
+
+  ChangeMascot(mascot);
 }
 
 // クイックメニューからのマスコットの全ランダム変更
-void AllRandomChangeMascotMenu(GtkWidget *widget)
+void AllRandomChangeMascotMenu(GtkWidget *widget, gpointer gdata)
 {
+  typMascot *mascot = (typMascot *)gdata;
 
-  Mascot->file=g_strdup(all_random_menu_mascot_file(Mascot));
+  if(mascot->file) g_free(mascot->file);
+  mascot->file=g_strdup(all_random_menu_mascot_file(mascot));
   
-  ChangeMascot();
+  ChangeMascot(mascot);
 
 }
 
@@ -1337,58 +1361,47 @@ void ChangeColorButton(GtkWidget *w, gpointer gdata)
 }
 
 
-static void close_dialog(GtkWidget *w, GtkWidget *dialog)
-{
-  //gdk_pointer_ungrab(GDK_CURRENT_TIME);
-
-  gtk_main_quit();
-  gtk_widget_destroy(dialog);
-
-  Mascot->flag_menu=FALSE;
-}
-
 #ifdef USE_COMMON
-static void close_cons(GtkWidget *w, GtkWidget *dialog)
+static void close_cons(GtkWidget *w, gpointer gdata)
 {
-  //gdk_pointer_ungrab(GDK_CURRENT_TIME);
+  consType *ccons=(consType *)gdata;
+  typMascot *mascot = ccons->mascot;
 
-  gtk_widget_destroy(dialog);
+  gtk_widget_destroy(ccons->dialog);
   gtk_main_quit();
 
-  Mascot->flag_menu=FALSE;
+  mascot->flag_menu=FALSE;
 }
 
 static void ow_cons(GtkWidget *w, gpointer gdata)
 {
-  consType *cdata;
+  consType *ccons=(consType *)gdata;
+  typMascot *mascot = ccons->mascot;
 
-  cdata=(consType *)gdata;
-
-  cdata->flag_auto=
-    gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(cdata->auto_check));
-  cdata->flag_ow=TRUE;
+  ccons->flag_auto=
+    gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(ccons->auto_check));
+  ccons->flag_ow=TRUE;
   
-  gtk_widget_destroy(cdata->dialog);
+  gtk_widget_destroy(ccons->dialog);
   gtk_main_quit();
 
-  Mascot->flag_menu=FALSE;
+  mascot->flag_menu=FALSE;
 }
 
 
 static void noow_cons(GtkWidget *w, gpointer gdata)
 {
-  consType *cdata;
+  consType *ccons=(consType *)gdata;
+  typMascot *mascot = ccons->mascot;
 
-  cdata=(consType *)gdata;
-
-  cdata->flag_auto=
-    gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(cdata->auto_check));
-  cdata->flag_ow=FALSE;
+  ccons->flag_auto=
+    gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(ccons->auto_check));
+  ccons->flag_ow=FALSE;
   
-  gtk_widget_destroy(cdata->dialog);
+  gtk_widget_destroy(ccons->dialog);
   gtk_main_quit();
 
-  Mascot->flag_menu=FALSE;
+  mascot->flag_menu=FALSE;
 }
 #endif
 
@@ -1421,49 +1434,22 @@ static void destroy_popup(GtkWidget *w, guint data)
   gtk_main_quit();
 }
 
-/*
-static void close_conf(GtkWidget *w, GtkWidget *dialog)
+
+void quit_all(GtkWidget *w, gpointer gdata)
 {
-  //gdk_pointer_ungrab(GDK_CURRENT_TIME);
-
-  if(flagChildDialog){
-    return;
-  }
-
-  LoadPixmaps(Mascot);
-  DrawMascot0(Mascot);
-
-  // テスト表示でShapeが変わった場合のための対応
-  if(Mascot->clkmode==CLOCK_PIXMAP){ 
-    DrawMascotWithDigit(Mascot);
-  }
-  else{
-    DrawMascot(Mascot, Mascot->frame_pix[Mascot->anime_ptn][Mascot->anime_frm]);
-  }
-
-
-  gtk_widget_destroy(GTK_WIDGET(dialog));
-
-  flag_make_pixmap_list=FALSE;
-  Mascot->flag_menu=FALSE;
-
-  //gdkut_flush(Mascot);
-}
-*/
-
-void quit_all(void)
-{
+  typMascot *mascot = (typMascot *)gdata;
+  
 #ifdef USE_GTK_STATUS_ICON
-	trayicon_hide(Mascot);
-	trayicon_destroy(Mascot);
+  trayicon_hide(mascot);
+  trayicon_destroy(mascot);
 #endif
 #ifdef USE_BIFF
 #ifndef USE_WIN32
-	kill_pop3();
+  kill_pop3();
 #endif
 #endif
-	gtk_main_quit();
-	exit(0);
+  gtk_main_quit();
+  exit(0);
 }
 
 static void close_smenu(GtkWidget *w, GtkWidget *dialog)
@@ -1824,14 +1810,12 @@ gchar* create_nkr_change_image_dialog (typMascot *mascot,
 #ifdef USE_BIFF
 static void create_change_biff_image_dialog(GtkWidget *w, gpointer gdata)
 {
-  typMascot *mascot;
+  typMascot *mascot = (typMascot *)gdata;
   GtkWidget *fdialog;
   GtkWidget *button;
   GtkWidget *hbox;
   gchar *fname=NULL;
   gchar *dest_file=NULL;
-
-  mascot=(typMascot *)gdata;
 
   if(flagChildDialog){
     return;
@@ -2100,6 +2084,7 @@ static void create_del_image_dialog(GtkWidget *widget, gpointer gdata)
     }
     
     for(i_pix=del_pix;i_pix<mascot->nPixmap-1;i_pix++){
+      if(mascot->sprites[i_pix].filename) g_free(mascot->sprites[i_pix].filename);
       mascot->sprites[i_pix].filename=g_strdup(mascot->sprites[i_pix+1].filename);
     }
     if(mascot->sprites[mascot->nPixmap-1].filename) g_free(mascot->sprites[mascot->nPixmap-1].filename);
@@ -3857,15 +3842,16 @@ static void create_mailer_dialog(GtkWidget *w, gpointer gdata)
 #endif  // USE_BIFF
 
 
-static void MakeNewMascot(gchar *mascot_file, gchar *image_file, gchar *copyright){
+static void MakeNewMascot(typMascot *mascot, gchar *mascot_file,
+			  gchar *image_file, gchar *copyright){
   int i_pix;
   gchar *tmp_file;
   gboolean tmp_flag;
   gchar *buf;
   
-  InitMascot(Mascot);
+  InitMascot(mascot);
   
-  Mascot->file=mascot_file;
+  mascot->file=mascot_file;
   if(strcmp(my_dirname(mascot_file),my_dirname(image_file))){
 #ifdef USE_WIN32
     tmp_file=g_strconcat(get_win_home(), G_DIR_SEPARATOR_S,USER_DIR, PIXDIR, NULL);
@@ -3890,142 +3876,146 @@ static void MakeNewMascot(gchar *mascot_file, gchar *image_file, gchar *copyrigh
     
     g_print(_("Installing %s -> %s\n"),image_file,tmp_file);
     copy_file(image_file,tmp_file);
-    Mascot->sprites[0].filename=tmp_file;
+    mascot->sprites[0].filename=tmp_file;
   }
   else{
-    Mascot->sprites[0].filename=image_file;
+    mascot->sprites[0].filename=image_file;
     
   }
   
   if(copyright){
-    Mascot->copyright=copyright;
+    mascot->copyright=copyright;
   }
   
-  Mascot->random_total=0;
-  Mascot->click_total=0;
-  
-  Mascot->name=NULL;
-  Mascot->move=MOVE_FIX;
-  Mascot->xoff=0;
-  Mascot->yoff=0;
-  Mascot->x=0;
-  Mascot->y=0;
+  mascot->random_total=0;
+  mascot->click_total=0;
 
-  Mascot->clk_x=INIT_CLK_POS;
-  Mascot->clk_y=INIT_CLK_POS;
-  Mascot->clktext_x=INIT_CLK_TEXT;
-  Mascot->clktext_y=INIT_CLK_TEXT;
-  Mascot->clksd_x=INIT_CLK_SD;
-  Mascot->clksd_y=INIT_CLK_SD;
-  Mascot->wclkbd=INIT_CLK_BORDER;
-  Mascot->clkmode=CLOCK_NO;
-  Mascot->clktype=CLOCK_TYPE_24S;
-  Mascot->flag_clksd=TRUE;
-  Mascot->flag_clkrd=TRUE;
+  if(mascot->name) g_free(mascot->name);
+  mascot->name=NULL;
+  mascot->move=MOVE_FIX;
+  mascot->xoff=0;
+  mascot->yoff=0;
+  mascot->x=0;
+  mascot->y=0;
+
+  mascot->clk_x=INIT_CLK_POS;
+  mascot->clk_y=INIT_CLK_POS;
+  mascot->clktext_x=INIT_CLK_TEXT;
+  mascot->clktext_y=INIT_CLK_TEXT;
+  mascot->clksd_x=INIT_CLK_SD;
+  mascot->clksd_y=INIT_CLK_SD;
+  mascot->wclkbd=INIT_CLK_BORDER;
+  mascot->clkmode=CLOCK_NO;
+  mascot->clktype=CLOCK_TYPE_24S;
+  mascot->flag_clksd=TRUE;
+  mascot->flag_clkrd=TRUE;
 #ifdef FG_DRAW
-  Mascot->flag_clkfg=TRUE;
+  mascot->flag_clkfg=TRUE;
 #endif
-  Mascot->fontname_clk=Mascot->deffontname_clk;
+  mascot->fontname_clk=mascot->deffontname_clk;
   
-  Mascot->baltext_x=INIT_BAL_TEXT;
-  Mascot->baltext_y=INIT_BAL_TEXT;
-  Mascot->wbalbd=INIT_BAL_BORDER;
-  Mascot->bal_defpos=BAL_POS_LEFT;
-  Mascot->fontname_bal=Mascot->deffontname_bal;
+  mascot->baltext_x=INIT_BAL_TEXT;
+  mascot->baltext_y=INIT_BAL_TEXT;
+  mascot->wbalbd=INIT_BAL_BORDER;
+  mascot->bal_defpos=BAL_POS_LEFT;
+  mascot->fontname_bal=mascot->deffontname_bal;
 #ifdef FG_DRAW
-  Mascot->flag_balfg=TRUE;
+  mascot->flag_balfg=TRUE;
 #endif
   
 #ifdef USE_GTK3  
-  Mascot->colclk=gdk_rgba_copy(Mascot->def_colclk);
-  Mascot->colclksd=gdk_rgba_copy(Mascot->def_colclksd);
-  Mascot->colclkbg=gdk_rgba_copy(Mascot->def_colclkbg);
-  Mascot->colclkbd=gdk_rgba_copy(Mascot->def_colclkbd);
+  mascot->colclk=gdk_rgba_copy(mascot->def_colclk);
+  mascot->colclksd=gdk_rgba_copy(mascot->def_colclksd);
+  mascot->colclkbg=gdk_rgba_copy(mascot->def_colclkbg);
+  mascot->colclkbd=gdk_rgba_copy(mascot->def_colclkbd);
   
-  Mascot->colbal=gdk_rgba_copy(Mascot->def_colbal);
-  Mascot->colbalbg=gdk_rgba_copy(Mascot->def_colbalbg);
-  Mascot->colbalbd=gdk_rgba_copy(Mascot->def_colbalbd);
+  mascot->colbal=gdk_rgba_copy(mascot->def_colbal);
+  mascot->colbalbg=gdk_rgba_copy(mascot->def_colbalbg);
+  mascot->colbalbd=gdk_rgba_copy(mascot->def_colbalbd);
 #else
-  Mascot->colclk=gdk_color_copy(Mascot->def_colclk);
-  Mascot->colclksd=gdk_color_copy(Mascot->def_colclksd);
-  Mascot->colclkbg=gdk_color_copy(Mascot->def_colclkbg);
-  Mascot->colclkbd=gdk_color_copy(Mascot->def_colclkbd);
+  mascot->colclk=gdk_color_copy(mascot->def_colclk);
+  mascot->colclksd=gdk_color_copy(mascot->def_colclksd);
+  mascot->colclkbg=gdk_color_copy(mascot->def_colclkbg);
+  mascot->colclkbd=gdk_color_copy(mascot->def_colclkbd);
 
-  Mascot->colbal=gdk_color_copy(Mascot->def_colbal);
-  Mascot->colbalbg=gdk_color_copy(Mascot->def_colbalbg);
-  Mascot->colbalbd=gdk_color_copy(Mascot->def_colbalbd);
+  mascot->colbal=gdk_color_copy(mascot->def_colbal);
+  mascot->colbalbg=gdk_color_copy(mascot->def_colbalbg);
+  mascot->colbalbd=gdk_color_copy(mascot->def_colbalbd);
 #endif
   
 #ifdef USE_BIFF
   //// Biff
-  Mascot->mail.pix_file=NULL;
-  Mascot->mail.pix_pos=MAIL_PIX_RIGHT;
-  Mascot->mail.pix_x=0;
-  Mascot->mail.pix_y=0;
-  Mascot->mail.word=NULL;
-  Mascot->mail.sound=NULL;
+  if(mascot->mail.pix_file) g_free(mascot->mail.pix_file);
+  mascot->mail.pix_file=NULL;
+  mascot->mail.pix_pos=MAIL_PIX_RIGHT;
+  mascot->mail.pix_x=0;
+  mascot->mail.pix_y=0;
+  if(mascot->mail.word) g_free(mascot->mail.word);
+  mascot->mail.word=NULL;
+  if(mascot->mail.sound) g_free(mascot->mail.sound);
+  mascot->mail.sound=NULL;
 #endif  // USE_BIFF
 
-  Mascot->alpha_main=100;
+  mascot->alpha_main=100;
 #ifdef USE_BIFF
-  Mascot->alpha_biff=100;
+  mascot->alpha_biff=100;
 #endif
 #ifdef USE_WIN32
-  Mascot->alpha_bal=100;
-  Mascot->alpha_clk=100;
+  mascot->alpha_bal=100;
+  mascot->alpha_clk=100;
 #endif  
   
   for(i_pix=1;i_pix<MAX_PIXMAP;i_pix++){
-    if(Mascot->sprites[i_pix].filename) g_free(Mascot->sprites[i_pix].filename);
-    Mascot->sprites[i_pix].filename=NULL;
+    if(mascot->sprites[i_pix].filename) g_free(mascot->sprites[i_pix].filename);
+    mascot->sprites[i_pix].filename=NULL;
   }
 
-  Mascot->frame_num[0]=1;
-  Mascot->frame_pix[0][0]=0;
-  Mascot->frame_min[0][0]=1;
-  Mascot->frame_max[0][0]=100;
+  mascot->frame_num[0]=1;
+  mascot->frame_pix[0][0]=0;
+  mascot->frame_min[0][0]=1;
+  mascot->frame_max[0][0]=100;
   
-  SaveMascot(Mascot,FALSE);
+  SaveMascot(mascot,FALSE);
 
-  tmp_flag=Mascot->flag_install;
-  Mascot->flag_install=FALSE;
-  ReadMascot(Mascot,FALSE);
-  InitComposite(Mascot);
-  LoadPixmaps(Mascot);
+  tmp_flag=mascot->flag_install;
+  mascot->flag_install=FALSE;
+  ReadMascot(mascot,FALSE);
+  InitComposite(mascot);
+  LoadPixmaps(mascot);
 #ifndef USE_GTK3
-  ReInitGC(Mascot);
+  ReInitGC(mascot);
 #endif
-  map_balloon(Mascot, FALSE);
+  map_balloon(mascot, FALSE);
   flag_balloon=FALSE;
 #ifdef USE_BIFF
-  LoadBiffPixmap(Mascot->biff_pix, Mascot);
+  LoadBiffPixmap(mascot->biff_pix, mascot);
 #endif  // USE_BIFF
 
  
-  if(Mascot->clkmode!=CLOCK_NO) clock_update(Mascot, TRUE);
+  if(mascot->clkmode!=CLOCK_NO) clock_update(mascot, TRUE);
 
-  if(Mascot->clkmode==CLOCK_PANEL){
-    map_clock(Mascot, TRUE);
+  if(mascot->clkmode==CLOCK_PANEL){
+    map_clock(mascot, TRUE);
   }
   else{
-    map_clock(Mascot, FALSE);
+    map_clock(mascot, FALSE);
   }
   
-  map_main(Mascot, TRUE);
+  map_main(mascot, TRUE);
   
-  if(Mascot->clkmode!=CLOCK_NO) clock_update(Mascot, TRUE);
+  if(mascot->clkmode!=CLOCK_NO) clock_update(mascot, TRUE);
   
-  if(Mascot->move==MOVE_FIX){
-  MoveMascot(Mascot,Mascot->xfix,Mascot->yfix);
+  if(mascot->move==MOVE_FIX){
+  MoveMascot(mascot,mascot->xfix,mascot->yfix);
   }
   else{
-    MoveToFocus(Mascot,TRUE);
+    MoveToFocus(mascot,TRUE);
   }
   
   
-  Mascot->flag_install=tmp_flag;
-  buf=g_strdup_printf(_("Created New Mascot ...%%n    \"%s\""), Mascot->file);
-  DoSysBalloon(Mascot,buf);
+  mascot->flag_install=tmp_flag;
+  buf=g_strdup_printf(_("Created New Mascot ...%%n    \"%s\""), mascot->file);
+  DoSysBalloon(mascot,buf);
   g_free(buf);
 
   return;
@@ -4180,6 +4170,7 @@ gchar * create_new_mascot_image_selection_dialog(gchar *mascot_file){
 
 static void create_new_mascot_dialog(GtkWidget *w, gpointer gdata)
 {
+  typMascot *mascot = (typMascot *)gdata;
   GtkWidget *dialog;
   GtkWidget *button_cancel;
   GtkWidget *button_ok;
@@ -4193,7 +4184,7 @@ static void create_new_mascot_dialog(GtkWidget *w, gpointer gdata)
   
   
 
-  Mascot->flag_menu=TRUE;
+  mascot->flag_menu=TRUE;
 
   mascot_file=NULL;
   image_file=NULL;
@@ -4238,14 +4229,14 @@ static void create_new_mascot_dialog(GtkWidget *w, gpointer gdata)
     
     mascot_file=create_new_mascot_file_selection_dialog();
     if(!mascot_file){
-      Mascot->flag_menu=FALSE;
+      mascot->flag_menu=FALSE;
       return;
     }
   }
   else{
     // Mascot File選択 : Cancelが押されていたら終了
     gtk_widget_destroy(dialog);
-    Mascot->flag_menu=FALSE;
+    mascot->flag_menu=FALSE;
     return;
   }
 
@@ -4289,7 +4280,7 @@ static void create_new_mascot_dialog(GtkWidget *w, gpointer gdata)
     image_file=create_new_mascot_image_selection_dialog(mascot_file);
     if(!image_file){
       if(mascot_file) g_free(mascot_file);
-      Mascot->flag_menu=FALSE;
+      mascot->flag_menu=FALSE;
       return;
     }
   }
@@ -4297,7 +4288,7 @@ static void create_new_mascot_dialog(GtkWidget *w, gpointer gdata)
     // Mascot Image選択 : Cancelが押されていたら終了
     if(mascot_file) g_free(mascot_file);
     gtk_widget_destroy(dialog);
-    Mascot->flag_menu=FALSE;
+    mascot->flag_menu=FALSE;
     return;
   }
 
@@ -4360,7 +4351,7 @@ static void create_new_mascot_dialog(GtkWidget *w, gpointer gdata)
   if (gtk_dialog_run(GTK_DIALOG(dialog)) == GTK_RESPONSE_OK) {
     gtk_widget_destroy(dialog);
 
-    MakeNewMascot(mascot_file, image_file, copyright);
+    MakeNewMascot(mascot, mascot_file, image_file, copyright);
   }
   else{
     gtk_widget_destroy(dialog);
@@ -4370,12 +4361,12 @@ static void create_new_mascot_dialog(GtkWidget *w, gpointer gdata)
   if(image_file) g_free(image_file);
   if(copyright) g_free(copyright);
 
-  Mascot->flag_menu=FALSE;
+  mascot->flag_menu=FALSE;
   return;
 }
 
 
-void create_pop_pass_dialog(void)
+void create_pop_pass_dialog(typMascot *mascot)
 {
   GtkWidget *dialog;
   GtkWidget *button_cancel;
@@ -4385,7 +4376,7 @@ void create_pop_pass_dialog(void)
   GtkWidget *entry;
   gchar *tmp;
 
-  Mascot->flag_menu=TRUE;
+  mascot->flag_menu=TRUE;
 
   dialog = gtk_dialog_new_with_buttons(_("Please Input POP Password"),
 				       NULL,
@@ -4411,15 +4402,15 @@ void create_pop_pass_dialog(void)
   gtk_box_pack_start(GTK_BOX(gtk_dialog_get_content_area(GTK_DIALOG(dialog))),
 		     label,TRUE,TRUE,0);
 
-  if(Mascot->mail.pop_server!=NULL){
-    tmp=g_strdup_printf(_("Server : %s"),Mascot->mail.pop_server);
+  if(mascot->mail.pop_server!=NULL){
+    tmp=g_strdup_printf(_("Server : %s"),mascot->mail.pop_server);
     label=gtkut_label_new(tmp);
     g_free(tmp);
     gtk_box_pack_start(GTK_BOX(gtk_dialog_get_content_area(GTK_DIALOG(dialog))),
 		       label,TRUE,TRUE,0);
   }
-  if(Mascot->mail.pop_id!=NULL){
-    tmp=g_strdup_printf(_("User ID : %s"),Mascot->mail.pop_id);
+  if(mascot->mail.pop_id!=NULL){
+    tmp=g_strdup_printf(_("User ID : %s"),mascot->mail.pop_id);
     label=gtkut_label_new(tmp);
     g_free(tmp);
     gtk_box_pack_start(GTK_BOX(gtk_dialog_get_content_area(GTK_DIALOG(dialog))),
@@ -4441,14 +4432,14 @@ void create_pop_pass_dialog(void)
   entry = gtk_entry_new ();
   gtk_box_pack_start(GTK_BOX(hbox),entry,TRUE,TRUE,0);
   gtk_entry_set_visibility(GTK_ENTRY(entry), FALSE);
-  if(Mascot->mail.pop_pass!=NULL)
-    gtk_entry_set_text(GTK_ENTRY(entry),Mascot->mail.pop_pass);
+  if(mascot->mail.pop_pass!=NULL)
+    gtk_entry_set_text(GTK_ENTRY(entry),mascot->mail.pop_pass);
 
   gtk_widget_show_all(dialog);
 
   if (gtk_dialog_run(GTK_DIALOG(dialog)) == GTK_RESPONSE_OK) {
-    if(Mascot->mail.pop_pass) g_free(Mascot->mail.pop_pass);
-    Mascot->mail.pop_pass=
+    if(mascot->mail.pop_pass) g_free(mascot->mail.pop_pass);
+    mascot->mail.pop_pass=
       g_strdup(gtk_entry_get_text(GTK_ENTRY(entry)));
     
     gtk_widget_destroy(dialog);
@@ -4457,28 +4448,26 @@ void create_pop_pass_dialog(void)
     gtk_widget_destroy(dialog);
   }
 
-  Mascot->flag_menu=FALSE;
+  mascot->flag_menu=FALSE;
   return;
 }
 
 
-static void create_file_selection_dialog(GtkWidget *widget, gint gdata)
+static void create_file_selection_dialog(GtkWidget *widget, gpointer gdata)
 {
+  confNum *minst = (confNum *)gdata;
+  gint  mode = minst->num;
+  typMascot *mascot = minst->mascot;
   GtkWidget *fdialog;
-  gint  mode;
   gchar *fname=NULL;
   gboolean flag_install;
   gchar *dest_file=NULL;
-
-    
-  
-  mode=(gint) gdata;
 
   // Win構築は重いので先にExposeイベント等をすべて処理してから
   while (my_main_iteration(FALSE));
 
 
-  Mascot->flag_menu=TRUE;
+  mascot->flag_menu=TRUE;
   
 
   switch(mode){
@@ -4557,11 +4546,11 @@ static void create_file_selection_dialog(GtkWidget *widget, gint gdata)
   }
 
   if(mode==MENU_SELECT){
-    if(Mascot->file){
+    if(mascot->file){
       gtk_file_chooser_set_filename (GTK_FILE_CHOOSER (fdialog), 
-				     to_utf8(Mascot->file));
+				     to_utf8(mascot->file));
       gtk_file_chooser_select_filename (GTK_FILE_CHOOSER (fdialog), 
-					to_utf8(Mascot->file));
+					to_utf8(mascot->file));
     }
   }
 
@@ -4580,32 +4569,33 @@ static void create_file_selection_dialog(GtkWidget *widget, gint gdata)
     dest_file = to_locale(fname);
     if(fname) g_free(fname);
     
-    flag_install=Mascot->flag_install;
+    flag_install=mascot->flag_install;
     
     if(access(dest_file,F_OK)==0){
-      Mascot->file=g_strdup(dest_file);
+      if(mascot->file) g_free(mascot->file);
+      mascot->file=g_strdup(dest_file);
       
       switch(mode){
       case MENU_INSTALL_USER:
       case START_MENU_INSTALL_USER:
-	Mascot->flag_install=TRUE;
-	Mascot->flag_common=FALSE;
-	Mascot->flag_ow=TRUE;
-	Mascot->flag_ow_ini=TRUE;
+	mascot->flag_install=TRUE;
+	mascot->flag_common=FALSE;
+	mascot->flag_ow=TRUE;
+	mascot->flag_ow_ini=TRUE;
 	break;
       case MENU_INSTALL_COMMON:
       case START_MENU_INSTALL_COMMON:
-	Mascot->flag_install=TRUE;
-	Mascot->flag_common=TRUE;
-	Mascot->flag_ow=TRUE;
-	Mascot->flag_ow_ini=TRUE;
+	mascot->flag_install=TRUE;
+	mascot->flag_common=TRUE;
+	mascot->flag_ow=TRUE;
+	mascot->flag_ow_ini=TRUE;
       }
       
       switch(mode){
       case MENU_SELECT:
       case MENU_INSTALL_USER:
       case MENU_INSTALL_COMMON:
-	ChangeMascot();
+	ChangeMascot(mascot);
       }
     }
     else{
@@ -4622,41 +4612,41 @@ static void create_file_selection_dialog(GtkWidget *widget, gint gdata)
 		    NULL);
     }
 
-    Mascot->flag_menu=FALSE;
+    mascot->flag_menu=FALSE;
 
-    Mascot->flag_install=flag_install;
-    Mascot->flag_common=FALSE;
+    mascot->flag_install=flag_install;
+    mascot->flag_common=FALSE;
     switch(mode){
     case MENU_INSTALL_USER:
     case MENU_INSTALL_COMMON:
-      Mascot->flag_ow=FALSE;
-      Mascot->flag_ow_ini=FALSE;
+      mascot->flag_ow=FALSE;
+      mascot->flag_ow_ini=FALSE;
     }
   }
   else {
     gtk_widget_destroy(fdialog);
-    Mascot->flag_menu=FALSE;
+    mascot->flag_menu=FALSE;
   }
 
   if(dest_file) g_free(dest_file);
 }
 
   
-static void create_menu_selection_dialog(GtkWidget *widget, gint gdata)
+static void create_menu_selection_dialog(GtkWidget *widget, gpointer gdata)
 {
+  confNum *minst = (confNum *)gdata;
+  typMascot *mascot = minst->mascot;
+  gint  mode=minst->num;
   GtkWidget *fdialog;
   gchar *filepath;
-  gint  mode;
   gchar *fname=NULL;
   gboolean flag_install;
   gchar *dest_file=NULL;
     
-  mode=(gint) gdata;
-
   // Win構築は重いので先にExposeイベント等をすべて処理してから
   //while (my_main_iteration(FALSE));
 
-  Mascot->flag_menu=TRUE;
+  mascot->flag_menu=TRUE;
   
   switch(mode){
   case MENU_SELECT:
@@ -4728,11 +4718,11 @@ static void create_menu_selection_dialog(GtkWidget *widget, gint gdata)
 
 
   if(mode==MENU_SELECT){
-    if(Mascot->menu_file){
+    if(mascot->menu_file){
       gtk_file_chooser_set_filename (GTK_FILE_CHOOSER (fdialog), 
-				     to_utf8(Mascot->menu_file));
+				     to_utf8(mascot->menu_file));
       gtk_file_chooser_select_filename (GTK_FILE_CHOOSER (fdialog), 
-					to_utf8(Mascot->menu_file));
+					to_utf8(mascot->menu_file));
     }
     else{
       my_file_chooser_set_current_folder(fdialog, FOLDER_DEFAULT); 
@@ -4762,32 +4752,33 @@ static void create_menu_selection_dialog(GtkWidget *widget, gint gdata)
     dest_file=to_locale(fname);
     if(fname) g_free(fname);
     
-    flag_install=Mascot->flag_install;
+    flag_install=mascot->flag_install;
 
     if(access(dest_file,F_OK)==0){
       switch(mode){
       case MENU_INSTALL_USER:
       case START_MENU_INSTALL_USER:
-	select_menu_from_ext(Mascot,dest_file);
-	Mascot->flag_install=TRUE;
-	Mascot->flag_common=FALSE;
-	Mascot->flag_ow=TRUE;
-	Mascot->flag_ow_ini=TRUE;
+	select_menu_from_ext(mascot,dest_file);
+	mascot->flag_install=TRUE;
+	mascot->flag_common=FALSE;
+	mascot->flag_ow=TRUE;
+	mascot->flag_ow_ini=TRUE;
 	break;
       case MENU_INSTALL_COMMON:
       case START_MENU_INSTALL_COMMON:
-	select_menu_from_ext(Mascot,dest_file);
-	Mascot->flag_install=TRUE;
-	Mascot->flag_common=TRUE;
-	Mascot->flag_ow=TRUE;
-	Mascot->flag_ow_ini=TRUE;
+	select_menu_from_ext(mascot,dest_file);
+	mascot->flag_install=TRUE;
+	mascot->flag_common=TRUE;
+	mascot->flag_ow=TRUE;
+	mascot->flag_ow_ini=TRUE;
 	break;
       default:
-	Mascot->menu_file=g_strdup(dest_file);
+	if(mascot->menu_file) g_free(mascot->menu_file);
+	mascot->menu_file=g_strdup(dest_file);
       }
-      gtk_widget_destroy(Mascot->PopupMenu);
-      ReadMenu(Mascot,0,NULL);
-      Mascot->PopupMenu=make_popup_menu(Mascot);
+      gtk_widget_destroy(mascot->PopupMenu);
+      ReadMenu(mascot,0,NULL);
+      mascot->PopupMenu=make_popup_menu(mascot);
     }
     else{
       popup_message(NULL,
@@ -4804,42 +4795,44 @@ static void create_menu_selection_dialog(GtkWidget *widget, gint gdata)
     }
 
   
-    Mascot->flag_menu=FALSE;
+    mascot->flag_menu=FALSE;
 
-    Mascot->flag_install=flag_install;
-    Mascot->flag_common=FALSE;
+    mascot->flag_install=flag_install;
+    mascot->flag_common=FALSE;
     switch(mode){
     case MENU_INSTALL_USER:
     case MENU_INSTALL_COMMON:
-      Mascot->flag_ow=FALSE;
-      Mascot->flag_ow_ini=FALSE;
+      mascot->flag_ow=FALSE;
+      mascot->flag_ow_ini=FALSE;
     }
   }
   else {
     gtk_widget_destroy(fdialog);
-    Mascot->flag_menu=FALSE;
+    mascot->flag_menu=FALSE;
   }
 
   if(dest_file) g_free(dest_file);
 }
 
 
-static void create_smenu_dialog2(void)
+static void create_smenu_dialog2(GtkWidget *w, gpointer gdata)
 {
+  typMascot *mascot = (typMascot *)gdata;
+  
   // Win構築は重いので先にExposeイベント等をすべて処理してから
   while (my_main_iteration(FALSE));
 
+  mascot->flag_menu=TRUE;
 
-  Mascot->flag_menu=TRUE;
+  create_smenu_dialog(mascot,TRUE);
 
-  create_smenu_dialog(Mascot,TRUE);
-
-  Mascot->flag_menu=FALSE;
+  mascot->flag_menu=FALSE;
 }
 
 
-static void create_nkr_selection_dialog(void)
+static void create_nkr_selection_dialog(GtkWidget *w, gpointer gdata)
 {
+  typMascot *mascot = (typMascot *)gdata;
   GtkWidget *fdialog;
   gchar *fname=NULL;
   gchar *dest_file=NULL;
@@ -4875,9 +4868,10 @@ static void create_nkr_selection_dialog(void)
     if(fname) g_free(fname);
     
     if(access(dest_file,F_OK)==0){
-      Mascot->inifile=g_strdup(dest_file);
+      if(mascot->inifile) g_free(mascot->inifile);
+      mascot->inifile=g_strdup(dest_file);
       
-      NkrChangeMascot();
+      NkrChangeMascot(mascot);
     }
     else{
       popup_message(NULL,
@@ -4893,19 +4887,20 @@ static void create_nkr_selection_dialog(void)
 		    NULL);
     }
 
-    create_save_mascot_dialog();
+    create_save_mascot_dialog(NULL, mascot);
   }
   else {
     gtk_widget_destroy(fdialog);
-    Mascot->flag_menu=FALSE;
+    mascot->flag_menu=FALSE;
   }
 
   if(dest_file) g_free(dest_file);
 }
 
   
-static void create_new_menu_selection_dialog(void)
+static void create_new_menu_selection_dialog(GtkWidget *w, gpointer gdata)
 {
+  typMascot *mascot = (typMascot *)gdata;
   GtkWidget *fdialog;
   gchar *fname=NULL;
   gchar *dest_file=NULL;
@@ -4917,7 +4912,7 @@ static void create_new_menu_selection_dialog(void)
   while (my_main_iteration(FALSE));
 
 
-  Mascot->flag_menu=TRUE;
+  mascot->flag_menu=TRUE;
   
   fdialog = gtk_file_chooser_dialog_new(_("Select New Launcher Menu File to Create"),					NULL,
 					GTK_FILE_CHOOSER_ACTION_SAVE,
@@ -4948,26 +4943,30 @@ static void create_new_menu_selection_dialog(void)
 
     if((fp_test=fopen(dest_file,"w"))!=NULL){
       fclose(fp_test);
-      Mascot->menu_file=g_strdup(dest_file);
+      if(mascot->menu_file) g_free(mascot->menu_file);
+      mascot->menu_file=g_strdup(dest_file);
 
-      Mascot->menu_cat[0]=g_strdup(TMP_CATEGORY_NAME);
-      Mascot->menu_tgt_max[0]=1;
-      
-      Mascot->menu_tgt[0][0]
-	=g_strdup(my_basename(Mascot->file));
-      Mascot->menu_tgt_name[0][0]=ReadMascotName(Mascot, Mascot->file);
-      
-      Mascot->menu_cat_max=1;
-      Mascot->menu_total=1;
-      
-      SaveMenu(Mascot);
+      if(mascot->menu_cat[0]) g_free(mascot->menu_cat[0]);
+      mascot->menu_cat[0]=g_strdup(TMP_CATEGORY_NAME);
+      mascot->menu_tgt_max[0]=1;
 
-      tmp=g_strdup_printf(_("Created Menu File%%n    \"%s\""),Mascot->menu_file);
-      DoSysBalloon(Mascot,tmp);
+      if(mascot->menu_tgt[0][0]) g_free(mascot->menu_tgt[0][0]);
+      mascot->menu_tgt[0][0]
+	=g_strdup(my_basename(mascot->file));
+      mascot->menu_tgt_name[0][0]=ReadMascotName(mascot, mascot->file);
+      
+      mascot->menu_cat_max=1;
+      mascot->menu_total=1;
+      
+      SaveMenu(mascot);
+
+      tmp=g_strdup_printf(_("Created Menu File%%n    \"%s\""),
+			  mascot->menu_file);
+      DoSysBalloon(mascot,tmp);
       g_free(tmp);
 
-      gtk_widget_destroy(Mascot->PopupMenu);
-      Mascot->PopupMenu=make_popup_menu(Mascot);
+      gtk_widget_destroy(mascot->PopupMenu);
+      mascot->PopupMenu=make_popup_menu(mascot);
 
     }
     else{
@@ -4984,19 +4983,20 @@ static void create_new_menu_selection_dialog(void)
 		    NULL);
     }
 
-    Mascot->flag_menu=FALSE;
+    mascot->flag_menu=FALSE;
   }
   else {
     gtk_widget_destroy(fdialog);
-    Mascot->flag_menu=FALSE;
+    mascot->flag_menu=FALSE;
   }
 
   if(dest_file) g_free(dest_file);
 }
 
   
-static void create_save_mascot_dialog(void)
+static void create_save_mascot_dialog(GtkWidget *w, gpointer gdata)
 {
+  typMascot *mascot = (typMascot *)gdata;
   GtkWidget *fdialog;
   gchar *fname=NULL;
   GtkWidget *dialog;
@@ -5008,7 +5008,7 @@ static void create_save_mascot_dialog(void)
   // Win構築は重いので先にExposeイベント等をすべて処理してから
   //while (my_main_iteration(FALSE));
 
-  Mascot->flag_menu=TRUE;
+  mascot->flag_menu=TRUE;
   
   fdialog = gtk_file_chooser_dialog_new(_("Save Mascot to Other File"),
 					NULL,
@@ -5023,9 +5023,9 @@ static void create_save_mascot_dialog(void)
 					NULL);				
 
   gtk_file_chooser_set_filename (GTK_FILE_CHOOSER (fdialog), 
-				   to_utf8(Mascot->file));
+				   to_utf8(mascot->file));
   gtk_file_chooser_select_filename (GTK_FILE_CHOOSER (fdialog), 
-				    to_utf8(Mascot->file));
+				    to_utf8(mascot->file));
 
   my_file_chooser_add_shortcut_folder(fdialog, FOLDER_DEFAULT);
   my_file_chooser_add_shortcut_folder(fdialog, FOLDER_CURRENT);
@@ -5040,7 +5040,7 @@ static void create_save_mascot_dialog(void)
   }
   else {
     gtk_widget_destroy(fdialog);
-    Mascot->flag_menu=FALSE;
+    mascot->flag_menu=FALSE;
     return;
   }
 
@@ -5075,11 +5075,12 @@ static void create_save_mascot_dialog(void)
 
     if (gtk_dialog_run(GTK_DIALOG(dialog)) == GTK_RESPONSE_OK) {
       gtk_widget_destroy(dialog);
-      
-      Mascot->file=g_strdup(dest_file);
-      SaveMascot(Mascot,FALSE);
-      tmp=g_strdup_printf(_("Saved Mascot as ...%%n    \"%s\""),Mascot->file);
-      DoSysBalloon(Mascot, tmp);
+
+      if(mascot->file) g_free(mascot->file);
+      mascot->file=g_strdup(dest_file);
+      SaveMascot(mascot,FALSE);
+      tmp=g_strdup_printf(_("Saved Mascot as ...%%n    \"%s\""),mascot->file);
+      DoSysBalloon(mascot, tmp);
       g_free(tmp);
     }
     else{
@@ -5087,21 +5088,23 @@ static void create_save_mascot_dialog(void)
     }    
   }
   else{
-    Mascot->file=g_strdup(dest_file);
-    SaveMascot(Mascot,FALSE);
-    tmp=g_strdup_printf(_("Saved Mascot as ...%%n    \"%s\""),Mascot->file);
-    DoSysBalloon(Mascot,tmp);
+    if(mascot->file) g_free(mascot->file);
+    mascot->file=g_strdup(dest_file);
+    SaveMascot(mascot,FALSE);
+    tmp=g_strdup_printf(_("Saved Mascot as ...%%n    \"%s\""),mascot->file);
+    DoSysBalloon(mascot,tmp);
     g_free(tmp);
   }
 
   if(dest_file) g_free(dest_file);
-  Mascot->flag_menu=FALSE;
+  mascot->flag_menu=FALSE;
   return;
 }
 
 
-static void create_save_nokkari_dialog(void)
+static void create_save_nokkari_dialog(GtkWidget *w, gpointer gdata)
 {
+  typMascot *mascot = (typMascot *)gdata;
   GtkWidget *fdialog;
   gchar *fname=NULL;
   GtkWidget *dialog;
@@ -5113,7 +5116,7 @@ static void create_save_nokkari_dialog(void)
   // Win構築は重いので先にExposeイベント等をすべて処理してから
   //while (my_main_iteration(FALSE));
 
-  Mascot->flag_menu=TRUE;
+  mascot->flag_menu=TRUE;
   
   fdialog = gtk_file_chooser_dialog_new(_("Convert Mascot to Nokkari-Chara"),
 					NULL,
@@ -5140,7 +5143,7 @@ static void create_save_nokkari_dialog(void)
   }
   else {
     gtk_widget_destroy(fdialog);
-    Mascot->flag_menu=FALSE;
+    mascot->flag_menu=FALSE;
     return;
   }
 
@@ -5175,8 +5178,9 @@ static void create_save_nokkari_dialog(void)
 
     if (gtk_dialog_run(GTK_DIALOG(dialog)) == GTK_RESPONSE_OK) {
       gtk_widget_destroy(dialog);
-      Mascot->inifile=g_strdup(dest_file);
-      NkrSave(Mascot);
+      if(mascot->inifile) g_free(mascot->inifile);
+      mascot->inifile=g_strdup(dest_file);
+      NkrSave(mascot);
     }
     else{
       gtk_widget_destroy(dialog);
@@ -5184,17 +5188,19 @@ static void create_save_nokkari_dialog(void)
     
   }
   else{
-    Mascot->inifile=g_strdup(dest_file);
-    NkrSave(Mascot);
+    if(mascot->inifile) g_free(mascot->inifile);
+    mascot->inifile=g_strdup(dest_file);
+    NkrSave(mascot);
   }
 
   if(dest_file) g_free(dest_file);  
-  Mascot->flag_menu=FALSE;
+  mascot->flag_menu=FALSE;
   return;
 }
 
-static void create_save_release_mascot_dialog(void)
+static void create_save_release_mascot_dialog(GtkWidget *w, gpointer gdata)
 {
+  typMascot *mascot = (typMascot *)gdata;
   GtkWidget *fdialog;
   GtkWidget *dialog;
   GtkWidget *table;
@@ -5216,7 +5222,7 @@ static void create_save_release_mascot_dialog(void)
   int i_pix;
 
 
-  Mascot->flag_menu=TRUE;
+  mascot->flag_menu=TRUE;
 
   // Win構築は重いので先にExposeイベント等をすべて処理してから
   //while (my_main_iteration(FALSE));
@@ -5257,8 +5263,8 @@ static void create_save_release_mascot_dialog(void)
 		     GTK_SHRINK,GTK_SHRINK,0,0);
 
   entry = gtk_entry_new ();
-  if(Mascot->name){
-    new_name=g_strdup(Mascot->name);
+  if(mascot->name){
+    new_name=g_strdup(mascot->name);
     gtk_entry_set_text(GTK_ENTRY(entry), new_name);
   }
   else{
@@ -5274,8 +5280,8 @@ static void create_save_release_mascot_dialog(void)
 		     GTK_SHRINK,GTK_SHRINK,0,0);
 
   entry = gtk_entry_new ();
-  if(Mascot->copyright){
-    new_copyright=g_strdup(Mascot->copyright);
+  if(mascot->copyright){
+    new_copyright=g_strdup(mascot->copyright);
   }
   else{
     new_copyright=g_strdup("Copyright (C)");
@@ -5328,7 +5334,7 @@ static void create_save_release_mascot_dialog(void)
   else{
     // Mascot File選択 : Cancelが押されていたら終了
     gtk_widget_destroy(dialog);
-    Mascot->flag_menu=FALSE;
+    mascot->flag_menu=FALSE;
     return;
   }
   
@@ -5355,7 +5361,7 @@ static void create_save_release_mascot_dialog(void)
   my_file_chooser_add_filter(fdialog,_("Mascot File"),MASCOT_EXTENSION);
   my_file_chooser_add_filter(fdialog,_("All File"),"*");
   gtk_file_chooser_set_current_name (GTK_FILE_CHOOSER (fdialog), 
-				     my_basename(to_utf8(Mascot->file)));
+				     my_basename(to_utf8(mascot->file)));
   
 
   gtk_widget_show_all(fdialog);
@@ -5366,7 +5372,7 @@ static void create_save_release_mascot_dialog(void)
   }
   else {
     gtk_widget_destroy(fdialog);
-    Mascot->flag_menu=FALSE;
+    mascot->flag_menu=FALSE;
     return;
   }
 
@@ -5405,49 +5411,54 @@ static void create_save_release_mascot_dialog(void)
     }
     else {
       gtk_widget_destroy(dialog);
-      Mascot->flag_menu=FALSE;
+      mascot->flag_menu=FALSE;
       return;
     }
 
+    if(mascot->copyright) g_free(mascot->copyright);
     if(new_copyright){
-      Mascot->copyright=g_strdup(new_copyright);
+      mascot->copyright=g_strdup(new_copyright);
     }
     else{
-      Mascot->copyright=NULL;
+      mascot->copyright=NULL;
     }
-    if(new_name){
-      Mascot->name=g_strdup(new_name);
-    }
-    else{
-      Mascot->name=NULL;
-    }
-    if(new_code){
-      Mascot->code=g_strdup(new_code);
-    }
-    else{
-      Mascot->code=NULL;
-    }
-    Mascot->file=g_strdup(dest_file);
-    SaveMascot(Mascot,TRUE);
-    SaveMascot(Mascot,FALSE);
 
-    tmp=g_strdup_printf(_("Saved Mascot as ...%%n    \"%s\""),Mascot->file);
-    DoSysBalloon(Mascot,tmp);
+    if(mascot->name) g_free(mascot->name);
+    if(new_name){
+      mascot->name=g_strdup(new_name);
+    }
+    else{
+      mascot->name=NULL;
+    }
+
+    if(mascot->code) g_free(mascot->code);
+    if(new_code){
+      mascot->code=g_strdup(new_code);
+    }
+    else{
+      mascot->code=NULL;
+    }
+    mascot->file=g_strdup(dest_file);
+    SaveMascot(mascot,TRUE);
+    SaveMascot(mascot,FALSE);
+
+    tmp=g_strdup_printf(_("Saved Mascot as ...%%n    \"%s\""),mascot->file);
+    DoSysBalloon(mascot,tmp);
     g_free(tmp);
       
-    SetFontForReleaseData(Mascot,TRUE, SET_RELEASE_CLOCK, clk_font_flag);
-    SetFontForReleaseData(Mascot,FALSE,SET_RELEASE_CLOCK, clk_font_flag);
+    SetFontForReleaseData(mascot,TRUE, SET_RELEASE_CLOCK, clk_font_flag);
+    SetFontForReleaseData(mascot,FALSE,SET_RELEASE_CLOCK, clk_font_flag);
 
-    SetFontForReleaseData(Mascot,TRUE, SET_RELEASE_BALLOON,bal_font_flag);
-    SetFontForReleaseData(Mascot,FALSE,SET_RELEASE_BALLOON,bal_font_flag);
+    SetFontForReleaseData(mascot,TRUE, SET_RELEASE_BALLOON,bal_font_flag);
+    SetFontForReleaseData(mascot,FALSE,SET_RELEASE_BALLOON,bal_font_flag);
     
-    SetColorForReleaseData(Mascot,TRUE, SET_RELEASE_CLOCK, clk_color_flag);
-    SetColorForReleaseData(Mascot,FALSE,SET_RELEASE_CLOCK, clk_color_flag);
+    SetColorForReleaseData(mascot,TRUE, SET_RELEASE_CLOCK, clk_color_flag);
+    SetColorForReleaseData(mascot,FALSE,SET_RELEASE_CLOCK, clk_color_flag);
       
-    SetColorForReleaseData(Mascot,TRUE,SET_RELEASE_BALLOON, bal_color_flag);
-    SetColorForReleaseData(Mascot,FALSE,SET_RELEASE_BALLOON,bal_color_flag);
+    SetColorForReleaseData(mascot,TRUE,SET_RELEASE_BALLOON, bal_color_flag);
+    SetColorForReleaseData(mascot,FALSE,SET_RELEASE_BALLOON,bal_color_flag);
       
-    tmp_file = g_strconcat(my_dirname(Mascot->file),G_DIR_SEPARATOR_S,NULL);
+    tmp_file = g_strconcat(my_dirname(mascot->file),G_DIR_SEPARATOR_S,NULL);
 #ifdef USE_WIN32
     tmp_file1 = g_strconcat(get_win_home(),G_DIR_SEPARATOR_S,USER_DIR, NULL);
 #else
@@ -5461,58 +5472,65 @@ static void create_save_release_mascot_dialog(void)
 #else
     if((strcmp(tmp_file,tmp_file1)!=0)){
 #endif
-      for(i_pix=0;i_pix<Mascot->nPixmap;i_pix++){
-        tmp_file=g_strconcat(my_dirname(Mascot->file),G_DIR_SEPARATOR_S,
-			     my_basename(Mascot->sprites[i_pix].filename),
+      for(i_pix=0;i_pix<mascot->nPixmap;i_pix++){
+        tmp_file=g_strconcat(my_dirname(mascot->file),G_DIR_SEPARATOR_S,
+			     my_basename(mascot->sprites[i_pix].filename),
 			     NULL);
 	  
 	if(access(tmp_file,F_OK)!=0){
-	  copy_file(Mascot->sprites[i_pix].filename,tmp_file);
+	  copy_file(mascot->sprites[i_pix].filename,tmp_file);
 	}
       }
     }
   }
   else{
+    if(mascot->copyright) g_free(mascot->copyright);
     if(new_copyright){
-      Mascot->copyright=g_strdup(new_copyright);
+      mascot->copyright=g_strdup(new_copyright);
     }
     else{
-      Mascot->copyright=NULL;
+      mascot->copyright=NULL;
     }
-    if(new_name){
-      Mascot->name=g_strdup(new_name);
-    }
-    else{
-      Mascot->name=NULL;
-    }
-    if(new_code){
-      Mascot->code=g_strdup(new_code);
-    }
-    else{
-      Mascot->code=NULL;
-    }
-    Mascot->file=g_strdup(dest_file);
-    SaveMascot(Mascot,TRUE);
-    SaveMascot(Mascot,FALSE);
 
-    tmp=g_strdup_printf(_("Saved Mascot as ...%%n    \"%s\""),Mascot->file);
-    DoSysBalloon(Mascot,tmp);
+    if(mascot->name) g_free(mascot->name);
+    if(new_name){
+      mascot->name=g_strdup(new_name);
+    }
+    else{
+      mascot->name=NULL;
+    }
+
+    if(mascot->code) g_free(mascot->code);
+    if(new_code){
+      mascot->code=g_strdup(new_code);
+    }
+    else{
+      mascot->code=NULL;
+    }
+
+    if(mascot->file) g_free(mascot->file);
+    mascot->file=g_strdup(dest_file);
+    SaveMascot(mascot,TRUE);
+    SaveMascot(mascot,FALSE);
+
+    tmp=g_strdup_printf(_("Saved Mascot as ...%%n    \"%s\""),mascot->file);
+    DoSysBalloon(mascot,tmp);
     g_free(tmp);
       
-    SetFontForReleaseData(Mascot,TRUE, SET_RELEASE_CLOCK, clk_font_flag);
-    SetFontForReleaseData(Mascot,FALSE,SET_RELEASE_CLOCK, clk_font_flag);
+    SetFontForReleaseData(mascot,TRUE, SET_RELEASE_CLOCK, clk_font_flag);
+    SetFontForReleaseData(mascot,FALSE,SET_RELEASE_CLOCK, clk_font_flag);
 
-    SetFontForReleaseData(Mascot,TRUE, SET_RELEASE_BALLOON, bal_font_flag);
-    SetFontForReleaseData(Mascot,FALSE,SET_RELEASE_BALLOON, bal_font_flag);
+    SetFontForReleaseData(mascot,TRUE, SET_RELEASE_BALLOON, bal_font_flag);
+    SetFontForReleaseData(mascot,FALSE,SET_RELEASE_BALLOON, bal_font_flag);
       
-    SetColorForReleaseData(Mascot,TRUE, SET_RELEASE_CLOCK, clk_color_flag);
-    SetColorForReleaseData(Mascot,FALSE,SET_RELEASE_CLOCK, clk_color_flag);
+    SetColorForReleaseData(mascot,TRUE, SET_RELEASE_CLOCK, clk_color_flag);
+    SetColorForReleaseData(mascot,FALSE,SET_RELEASE_CLOCK, clk_color_flag);
 
-    SetColorForReleaseData(Mascot,TRUE, SET_RELEASE_BALLOON, bal_color_flag);
-    SetColorForReleaseData(Mascot,FALSE,SET_RELEASE_BALLOON, bal_color_flag);
+    SetColorForReleaseData(mascot,TRUE, SET_RELEASE_BALLOON, bal_color_flag);
+    SetColorForReleaseData(mascot,FALSE,SET_RELEASE_BALLOON, bal_color_flag);
     
     
-    tmp_file = g_strconcat(my_dirname(Mascot->file),G_DIR_SEPARATOR_S,NULL);
+    tmp_file = g_strconcat(my_dirname(mascot->file),G_DIR_SEPARATOR_S,NULL);
 #ifdef USE_WIN32
     tmp_file1 = g_strconcat(get_win_home(),G_DIR_SEPARATOR_S,USER_DIR, NULL);
 #else
@@ -5526,26 +5544,27 @@ static void create_save_release_mascot_dialog(void)
 #else
     if((strcmp(tmp_file,tmp_file1)!=0)){
 #endif
-      for(i_pix=0;i_pix<Mascot->nPixmap;i_pix++){
+      for(i_pix=0;i_pix<mascot->nPixmap;i_pix++){
 	  
-	tmp_file=g_strconcat(my_dirname(Mascot->file),G_DIR_SEPARATOR_S,
-			     my_basename(Mascot->sprites[i_pix].filename),
+	tmp_file=g_strconcat(my_dirname(mascot->file),G_DIR_SEPARATOR_S,
+			     my_basename(mascot->sprites[i_pix].filename),
 			     NULL);
 	
 	if(access(tmp_file,F_OK)!=0){
-	  copy_file(Mascot->sprites[i_pix].filename,tmp_file);
+	  copy_file(mascot->sprites[i_pix].filename,tmp_file);
 	}
       }
     }
   }
 
-  Mascot->flag_menu=FALSE;
+  mascot->flag_menu=FALSE;
   if(dest_file) g_free(dest_file);
   return;
 }
 
-static void create_save_menu_dialog(void)
+static void create_save_menu_dialog(GtkWidget *w, gpointer gdata)
 {
+  typMascot *mascot = (typMascot *)gdata;
   GtkWidget *fdialog;
   gchar *fname=NULL;
   GtkWidget *dialog;
@@ -5557,7 +5576,7 @@ static void create_save_menu_dialog(void)
   // Win構築は重いので先にExposeイベント等をすべて処理してから
   //while (my_main_iteration(FALSE));
 
-  Mascot->flag_menu=TRUE;
+  mascot->flag_menu=TRUE;
   
   fdialog = gtk_file_chooser_dialog_new(_("Save Menu to File"),
 					NULL,
@@ -5571,11 +5590,11 @@ static void create_save_menu_dialog(void)
 #endif
 					NULL);				
 
-  if(Mascot->menu_file){
+  if(mascot->menu_file){
     gtk_file_chooser_set_filename (GTK_FILE_CHOOSER (fdialog), 
-				     to_utf8(Mascot->menu_file));
+				   to_utf8(mascot->menu_file));
     gtk_file_chooser_select_filename (GTK_FILE_CHOOSER (fdialog), 
-				     to_utf8(Mascot->menu_file));
+				     to_utf8(mascot->menu_file));
   }
 
   my_file_chooser_add_shortcut_folder(fdialog, FOLDER_DEFAULT);
@@ -5591,7 +5610,7 @@ static void create_save_menu_dialog(void)
   }
   else {
     gtk_widget_destroy(fdialog);
-    Mascot->flag_menu=FALSE;
+    mascot->flag_menu=FALSE;
     return;
   }
 
@@ -5627,35 +5646,38 @@ static void create_save_menu_dialog(void)
     if (gtk_dialog_run(GTK_DIALOG(dialog)) == GTK_RESPONSE_OK) {    
       gtk_widget_destroy(dialog);
 
-      Mascot->menu_file=g_strdup(dest_file);
-      SaveMenu(Mascot);
+      if(mascot->menu_file) g_free(mascot->menu_file);
+      mascot->menu_file=g_strdup(dest_file);
+      SaveMenu(mascot);
 
-      tmp=g_strdup_printf(_("Saved Menu as ...%%n    \"%s\""),Mascot->menu_file);
-      DoSysBalloon(Mascot,tmp);
+      tmp=g_strdup_printf(_("Saved Menu as ...%%n    \"%s\""),mascot->menu_file);
+      DoSysBalloon(mascot,tmp);
       g_free(tmp);
     }
     else {
       gtk_widget_destroy(dialog);
-      Mascot->flag_menu=FALSE;
+      mascot->flag_menu=FALSE;
       return;
     }
   }
   else{
-    Mascot->menu_file=g_strdup(dest_file);
-    SaveMenu(Mascot);
+    if(mascot->menu_file) g_free(mascot->menu_file);
+    mascot->menu_file=g_strdup(dest_file);
+    SaveMenu(mascot);
 
-    tmp=g_strdup_printf(_("Saved Menu as ...%%n    \"%s\""),Mascot->menu_file);
-    DoSysBalloon(Mascot,tmp);
+    tmp=g_strdup_printf(_("Saved Menu as ...%%n    \"%s\""),mascot->menu_file);
+    DoSysBalloon(mascot,tmp);
     g_free(tmp);
   }
 
   if(dest_file) g_free(dest_file);
-  Mascot->flag_menu=FALSE;
+  mascot->flag_menu=FALSE;
   return;
 }
 
-static void create_save_rc_dialog(void)
+ static void create_save_rc_dialog(GtkWidget *w, gpointer gdata)
 {
+  typMascot *mascot = (typMascot *)gdata;
   GtkWidget *fdialog;
   gchar *fname=NULL;
   GtkWidget *dialog;
@@ -5667,7 +5689,7 @@ static void create_save_rc_dialog(void)
   // Win構築は重いので先にExposeイベント等をすべて処理してから
   while (my_main_iteration(FALSE));
 
-  Mascot->flag_menu=TRUE;
+  mascot->flag_menu=TRUE;
   
   fdialog = gtk_file_chooser_dialog_new(_("Save Resource to File"),
 					NULL,
@@ -5681,11 +5703,11 @@ static void create_save_rc_dialog(void)
 #endif					
 					NULL);				
 
-  if(Mascot->rcfile){
+  if(mascot->rcfile){
     gtk_file_chooser_set_filename (GTK_FILE_CHOOSER (fdialog), 
-				      to_utf8(Mascot->rcfile));
+				      to_utf8(mascot->rcfile));
     gtk_file_chooser_select_filename (GTK_FILE_CHOOSER (fdialog), 
-				      to_utf8(Mascot->rcfile));
+				      to_utf8(mascot->rcfile));
   }
 
   my_file_chooser_add_shortcut_folder(fdialog, FOLDER_DEFAULT);
@@ -5700,7 +5722,7 @@ static void create_save_rc_dialog(void)
   }
   else {
     gtk_widget_destroy(fdialog);
-    Mascot->flag_menu=FALSE;
+    mascot->flag_menu=FALSE;
     return;
   }
 
@@ -5737,31 +5759,34 @@ static void create_save_rc_dialog(void)
     if (gtk_dialog_run(GTK_DIALOG(dialog)) == GTK_RESPONSE_OK) {    
       gtk_widget_destroy(dialog);
 
-      Mascot->rcfile=g_strdup(dest_file);
-      SaveRC(Mascot,FALSE);
+      if(mascot->rcfile) g_free(mascot->rcfile);
+      mascot->rcfile=g_strdup(dest_file);
+      SaveRC(mascot,FALSE);
       
-      tmp=g_strdup_printf(_("Saved Resource as ...%%n    \"%s\""),Mascot->rcfile);
-      DoSysBalloon(Mascot,tmp);
+      tmp=g_strdup_printf(_("Saved Resource as ...%%n    \"%s\""),
+			  mascot->rcfile);
+      DoSysBalloon(mascot,tmp);
       g_free(tmp);
     }
     else {
       gtk_widget_destroy(dialog);
-      Mascot->flag_menu=FALSE;
+      mascot->flag_menu=FALSE;
       return;
     }
   }      
   else{
-    Mascot->rcfile=g_strdup(dest_file);
-    SaveRC(Mascot,TRUE);
-    SaveRC(Mascot,FALSE);
+    if(mascot->rcfile) g_free(mascot->rcfile);
+    mascot->rcfile=g_strdup(dest_file);
+    SaveRC(mascot,TRUE);
+    SaveRC(mascot,FALSE);
 
-    tmp=g_strdup_printf(_("Saved Resource as ...%%n    \"%s\""),Mascot->rcfile);
-    DoSysBalloon(Mascot,tmp);
+    tmp=g_strdup_printf(_("Saved Resource as ...%%n    \"%s\""),mascot->rcfile);
+    DoSysBalloon(mascot,tmp);
     g_free(tmp);
   }
 
   if(dest_file) g_free(dest_file);
-  Mascot->flag_menu=FALSE;
+  mascot->flag_menu=FALSE;
   return;
 }
 
@@ -10241,7 +10266,7 @@ GtkWidget * make_popup_menu(typMascot *mascot)
   popup_menu = gtk_menu_new();
   gtk_widget_show(popup_menu);
 
-  open_menu=make_open_menu();
+  open_menu=make_open_menu(mascot);
   gtk_widget_show(open_menu);
 
   popup_button=gtkut_menu_item_new_with_icon(
@@ -10255,7 +10280,7 @@ GtkWidget * make_popup_menu(typMascot *mascot)
   gtk_container_add (GTK_CONTAINER (popup_menu), popup_button);
   gtk_menu_item_set_submenu(GTK_MENU_ITEM(popup_button),open_menu);
 
-  save_menu=make_save_menu();
+  save_menu=make_save_menu(mascot);
   gtk_widget_show(save_menu);
 
   popup_button=gtkut_menu_item_new_with_icon(
@@ -10269,7 +10294,7 @@ GtkWidget * make_popup_menu(typMascot *mascot)
   gtk_container_add (GTK_CONTAINER (popup_menu), popup_button);
   gtk_menu_item_set_submenu(GTK_MENU_ITEM(popup_button),save_menu);
 
-  new_menu=make_new_menu();
+  new_menu=make_new_menu(mascot);
   gtk_widget_show(new_menu);
 
   popup_button=gtkut_menu_item_new_with_icon(
@@ -10283,7 +10308,7 @@ GtkWidget * make_popup_menu(typMascot *mascot)
   gtk_container_add (GTK_CONTAINER (popup_menu), popup_button);
   gtk_menu_item_set_submenu(GTK_MENU_ITEM(popup_button),new_menu);
 
-  install_menu=make_install_menu();
+  install_menu=make_install_menu(mascot);
   gtk_widget_show(install_menu);
 
   popup_button=gtkut_menu_item_new_with_icon(
@@ -10318,13 +10343,14 @@ GtkWidget * make_popup_menu(typMascot *mascot)
   biff_check =gtk_check_menu_item_new_with_label (_("Biff Check"));
   gtk_widget_show (biff_check);
   gtk_container_add (GTK_CONTAINER (popup_menu), biff_check);
-  if(Mascot->mail.flag){
+  if(mascot->mail.flag){
     gtk_check_menu_item_set_active(GTK_CHECK_MENU_ITEM(biff_check),TRUE);
   }
   else{
     gtk_check_menu_item_set_active(GTK_CHECK_MENU_ITEM(biff_check),FALSE);
   }
-  my_signal_connect (biff_check, "toggled",mail_flag_toggle,NULL);
+  my_signal_connect (biff_check, "toggled",mail_flag_toggle,
+		     (gpointer)mascot);
 
   bar =gtk_menu_item_new();
   gtk_widget_show (bar);
@@ -10334,21 +10360,21 @@ GtkWidget * make_popup_menu(typMascot *mascot)
   sig_check =gtk_check_menu_item_new_with_label (_("Time Signal"));
   gtk_widget_show (sig_check);
   gtk_container_add (GTK_CONTAINER (popup_menu), sig_check);
-  if(Mascot->signal.flag){
+  if(mascot->signal.flag){
     gtk_check_menu_item_set_active(GTK_CHECK_MENU_ITEM(sig_check),TRUE);
   }
   else{
     gtk_check_menu_item_set_active(GTK_CHECK_MENU_ITEM(sig_check),FALSE);
   }
   my_signal_connect (sig_check, "toggled",check_menu_get_toggle,
-		     &Mascot->signal.flag);
+		     &mascot->signal.flag);
 
 
   bar =gtk_menu_item_new();
   gtk_widget_show (bar);
   gtk_container_add (GTK_CONTAINER (popup_menu), bar);
 
-  cat_menu=make_cat_menu();
+  cat_menu=make_cat_menu(mascot);
   gtk_widget_show(cat_menu);
 
   popup_button=gtkut_menu_item_new_with_icon(
@@ -10361,7 +10387,7 @@ GtkWidget * make_popup_menu(typMascot *mascot)
   gtk_widget_show (popup_button);
   gtk_container_add (GTK_CONTAINER (popup_menu), popup_button);
   gtk_menu_item_set_submenu(GTK_MENU_ITEM(popup_button),cat_menu);
-  if(Mascot->menu_total==0){
+  if(mascot->menu_total==0){
     gtk_widget_set_sensitive(popup_button, FALSE);
   }
 
@@ -10378,14 +10404,15 @@ GtkWidget * make_popup_menu(typMascot *mascot)
 					 GTK_ICON_SIZE_MENU, _("Exit"));
   gtk_widget_show (popup_button);
   gtk_container_add (GTK_CONTAINER (popup_menu), popup_button);
-  my_signal_connect (popup_button, "activate",quit_all,NULL);
+  my_signal_connect (popup_button, "activate",quit_all,
+		     (gpointer)mascot);
 
   gtk_widget_show_all(popup_menu);
 
   return(popup_menu);
 }
 
-GtkWidget * make_open_menu(void)
+GtkWidget * make_open_menu(typMascot *mascot)
 {
   GtkWidget *popup_menu; 
   GtkWidget *popup_button;
@@ -10400,13 +10427,13 @@ GtkWidget * make_open_menu(void)
   gtk_widget_show (popup_button);
   gtk_container_add (GTK_CONTAINER (popup_menu), popup_button);
   my_signal_connect (popup_button, "activate",create_file_selection_dialog,
-		     (gpointer)MENU_SELECT);
+		     (gpointer)minst[MENU_SELECT]);
 
   bar =gtk_menu_item_new();
   gtk_widget_show (bar);
   gtk_container_add (GTK_CONTAINER (popup_menu), bar);
 
-  launcher_menu=make_open_launcher_menu();
+  launcher_menu=make_open_launcher_menu(mascot);
   gtk_widget_show (launcher_menu);
 
   popup_button =gtk_menu_item_new_with_label (_("Launcher Menu"));
@@ -10419,7 +10446,7 @@ GtkWidget * make_open_menu(void)
   gtk_widget_show (bar);
   gtk_container_add (GTK_CONTAINER (popup_menu), bar);
 
-  develop_menu=make_open_develop_menu();
+  develop_menu=make_open_develop_menu(mascot);
   gtk_widget_show (develop_menu);
 
   popup_button =gtk_menu_item_new_with_label (_("For Developper"));
@@ -10430,7 +10457,7 @@ GtkWidget * make_open_menu(void)
   return(popup_menu);
 }
 
-GtkWidget * make_save_menu(void)
+GtkWidget * make_save_menu(typMascot *mascot)
 {
   GtkWidget *popup_menu; 
   GtkWidget *menu_menu; 
@@ -10444,7 +10471,7 @@ GtkWidget * make_save_menu(void)
   popup_button =gtk_menu_item_new_with_label (_("Save All"));
   gtk_widget_show (popup_button);
   gtk_container_add (GTK_CONTAINER (popup_menu), popup_button);
-  my_signal_connect (popup_button, "activate",MenuSaveAll,NULL);
+  my_signal_connect (popup_button, "activate",MenuSaveAll, (gpointer)mascot);
 
   bar =gtk_menu_item_new();
   gtk_widget_show (bar);
@@ -10453,18 +10480,19 @@ GtkWidget * make_save_menu(void)
   popup_button =gtk_menu_item_new_with_label (_("Save Mascot"));
   gtk_widget_show (popup_button);
   gtk_container_add (GTK_CONTAINER (popup_menu), popup_button);
-  my_signal_connect (popup_button, "activate",MenuSaveMascot,NULL);
+  my_signal_connect (popup_button, "activate",MenuSaveMascot, (gpointer)mascot);
 
   popup_button =gtk_menu_item_new_with_label (_("Save Mascot As..."));
   gtk_widget_show (popup_button);
   gtk_container_add (GTK_CONTAINER (popup_menu), popup_button);
-  my_signal_connect (popup_button, "activate",create_save_mascot_dialog,NULL);
+  my_signal_connect (popup_button, "activate",create_save_mascot_dialog,
+		     (gpointer)mascot);
 
   bar =gtk_menu_item_new();
   gtk_widget_show (bar);
   gtk_container_add (GTK_CONTAINER (popup_menu), bar);
 
-  menu_menu=make_menu_menu();
+  menu_menu=make_menu_menu(mascot);
   gtk_widget_show (menu_menu);
   
   popup_button =gtk_menu_item_new_with_label (_("Launcher Menu"));
@@ -10480,13 +10508,14 @@ GtkWidget * make_save_menu(void)
   popup_button =gtk_menu_item_new_with_label (_("Save Resource"));
   gtk_widget_show (popup_button);
   gtk_container_add (GTK_CONTAINER (popup_menu), popup_button);
-  my_signal_connect (popup_button, "activate",create_save_rc_dialog,NULL);
+  my_signal_connect (popup_button, "activate",create_save_rc_dialog,
+		     (gpointer)mascot);
 
   bar =gtk_menu_item_new();
   gtk_widget_show (bar);
   gtk_container_add (GTK_CONTAINER (popup_menu), bar);
 
-  develop_menu=make_develop_menu();
+  develop_menu=make_develop_menu(mascot);
   gtk_widget_show (develop_menu);
 
   popup_button =gtk_menu_item_new_with_label (_("For Developper"));
@@ -10499,7 +10528,7 @@ GtkWidget * make_save_menu(void)
 }
 
 
-GtkWidget * make_new_menu(void)
+GtkWidget * make_new_menu(typMascot *mascot)
 {
   GtkWidget *popup_menu; 
   GtkWidget *popup_button;
@@ -10511,7 +10540,8 @@ GtkWidget * make_new_menu(void)
   popup_button =gtk_menu_item_new_with_label (_("Create New Mascot"));
   gtk_widget_show (popup_button);
   gtk_container_add (GTK_CONTAINER (popup_menu), popup_button);
-  my_signal_connect (popup_button, "activate",create_new_mascot_dialog,NULL);
+  my_signal_connect (popup_button, "activate",create_new_mascot_dialog,
+		     (gpointer)mascot);
 
   bar =gtk_menu_item_new();
   gtk_widget_show (bar);
@@ -10521,13 +10551,13 @@ GtkWidget * make_new_menu(void)
   gtk_widget_show (popup_button);
   gtk_container_add (GTK_CONTAINER (popup_menu), popup_button);
   my_signal_connect (popup_button, "activate",create_new_menu_selection_dialog,
-		     NULL);
+		     (gpointer)mascot);
 
   return(popup_menu);
 }
 
 
-GtkWidget * make_install_menu(void)
+GtkWidget * make_install_menu(typMascot *mascot)
 {
   GtkWidget *popup_menu; 
   GtkWidget *popup_button;
@@ -10540,14 +10570,14 @@ GtkWidget * make_install_menu(void)
   gtk_widget_show (popup_button);
   gtk_container_add (GTK_CONTAINER (popup_menu), popup_button);
   my_signal_connect (popup_button, "activate",create_menu_selection_dialog,
-		     (gpointer)MENU_INSTALL_USER);
+		     (gpointer)minst[MENU_INSTALL_USER]);
 
 #ifdef USE_COMMON
   popup_button =gtk_menu_item_new_with_label (_("Launcher Menu [Common]"));
   gtk_widget_show (popup_button);
   gtk_container_add (GTK_CONTAINER (popup_menu), popup_button);
   my_signal_connect (popup_button, "activate",create_menu_selection_dialog,
-		     (gpointer)MENU_INSTALL_COMMON);
+		     (gpointer)minst[MENU_INSTALL_COMMON]);
   if(!check_common_dir2()){
     gtk_widget_set_sensitive(popup_button, FALSE);
   }
@@ -10561,14 +10591,14 @@ GtkWidget * make_install_menu(void)
   gtk_widget_show (popup_button);
   gtk_container_add (GTK_CONTAINER (popup_menu), popup_button);
   my_signal_connect (popup_button, "activate",create_file_selection_dialog,
-		     (gpointer)MENU_INSTALL_USER);
+		     (gpointer)minst[MENU_INSTALL_USER]);
 
 #ifdef USE_COMMON
   popup_button =gtk_menu_item_new_with_label (_("Mascot [Common]"));
   gtk_widget_show (popup_button);
   gtk_container_add (GTK_CONTAINER (popup_menu), popup_button);
   my_signal_connect (popup_button, "activate",create_file_selection_dialog,
-		     (gpointer)MENU_INSTALL_COMMON);
+		     (gpointer)minst[MENU_INSTALL_COMMON]);
   if(!check_common_dir2()){
     gtk_widget_set_sensitive(popup_button, FALSE);
   }
@@ -10578,7 +10608,7 @@ GtkWidget * make_install_menu(void)
 }
 
 
-GtkWidget * make_menu_menu(void)
+GtkWidget * make_menu_menu(typMascot *mascot)
 {
   GtkWidget *popup_menu; 
   GtkWidget *popup_button;
@@ -10589,29 +10619,32 @@ GtkWidget * make_menu_menu(void)
   popup_button =gtk_menu_item_new_with_label (_("Save"));
   gtk_widget_show (popup_button);
   gtk_container_add (GTK_CONTAINER (popup_menu), popup_button);
-  my_signal_connect (popup_button, "activate",create_save_menu_dialog,NULL);
-  if(Mascot->menu_total==0){
+  my_signal_connect (popup_button, "activate",create_save_menu_dialog,
+		     (gpointer)mascot);
+  if(mascot->menu_total==0){
     gtk_widget_set_sensitive(popup_button, FALSE);
   }
 
   popup_button =gtk_menu_item_new_with_label (_("Set as Default"));
   gtk_widget_show (popup_button);
   gtk_container_add (GTK_CONTAINER (popup_menu), popup_button);
-  my_signal_connect (popup_button, "activate",MenuSaveDefMenu,NULL);
-  if(Mascot->menu_total==0){
+  my_signal_connect (popup_button, "activate",MenuSaveDefMenu,
+		     (gpointer)mascot);
+  if(mascot->menu_total==0){
     gtk_widget_set_sensitive(popup_button, FALSE);
   }
 
   popup_button =gtk_menu_item_new_with_label (_("Remove from Default"));
   gtk_widget_show (popup_button);
   gtk_container_add (GTK_CONTAINER (popup_menu), popup_button);
-  my_signal_connect (popup_button, "activate",MenuDelDefMenu,NULL);
+  my_signal_connect (popup_button, "activate",MenuDelDefMenu,
+		     (gpointer)mascot);
 
   return(popup_menu);
 }
 
 
-GtkWidget * make_open_launcher_menu(void)
+GtkWidget * make_open_launcher_menu(typMascot *mascot)
 {
   GtkWidget *popup_menu; 
   GtkWidget *popup_button;
@@ -10623,18 +10656,19 @@ GtkWidget * make_open_launcher_menu(void)
   gtk_widget_show (popup_button);
   gtk_container_add (GTK_CONTAINER (popup_menu), popup_button);
   my_signal_connect (popup_button, "activate",create_menu_selection_dialog,
-		     (gpointer)MENU_SELECT);
+		     (gpointer)minst[MENU_SELECT]);
 
   popup_button =gtk_menu_item_new_with_label (_("Launcher"));
   gtk_widget_show (popup_button);
   gtk_container_add (GTK_CONTAINER (popup_menu), popup_button);
-  my_signal_connect (popup_button, "activate",create_smenu_dialog2,NULL);
+  my_signal_connect (popup_button, "activate",create_smenu_dialog2,
+		     (gpointer)mascot);
 
   return(popup_menu);
 }
 
 
-GtkWidget * make_open_develop_menu(void)
+GtkWidget * make_open_develop_menu(typMascot *mascot)
 {
   GtkWidget *popup_menu; 
   GtkWidget *popup_button;
@@ -10646,13 +10680,13 @@ GtkWidget * make_open_develop_menu(void)
   gtk_widget_show (popup_button);
   gtk_container_add (GTK_CONTAINER (popup_menu), popup_button);
   my_signal_connect (popup_button, "activate",create_nkr_selection_dialog,
-		     NULL);
+		     (gpointer)mascot);
 
   return(popup_menu);
 }
 
 
-GtkWidget * make_develop_menu(void)
+GtkWidget * make_develop_menu(typMascot *mascot)
 {
   GtkWidget *popup_menu; 
   GtkWidget *popup_button;
@@ -10664,20 +10698,20 @@ GtkWidget * make_develop_menu(void)
   gtk_widget_show (popup_button);
   gtk_container_add (GTK_CONTAINER (popup_menu), popup_button);
   my_signal_connect (popup_button, "activate",
-		     create_save_release_mascot_dialog,NULL);
+		     create_save_release_mascot_dialog, (gpointer)mascot);
 
   popup_button =gtk_menu_item_new_with_label (_("Convert to Nokkari-Chara"));
   gtk_widget_show (popup_button);
   gtk_container_add (GTK_CONTAINER (popup_menu), popup_button);
   my_signal_connect (popup_button, "activate",create_save_nokkari_dialog,
-		     NULL);
+		     (gpointer)mascot);
 
   return(popup_menu);
 }
 
 
 
-GtkWidget * make_cat_menu(void)
+GtkWidget * make_cat_menu(typMascot *mascot)
 {
   GtkWidget *popup_menu; 
   GtkWidget *popup_button;
@@ -10693,17 +10727,17 @@ GtkWidget * make_cat_menu(void)
   gtk_widget_show (popup_button);
   gtk_container_add (GTK_CONTAINER (popup_menu), popup_button);
   my_signal_connect (popup_button, "activate",AllRandomChangeMascotMenu,
-		     NULL);
+		     (gpointer)mascot);
 
   bar =gtk_menu_item_new();
   gtk_widget_show (bar);
   gtk_container_add (GTK_CONTAINER (popup_menu), bar);
 
-  for(i_cat=0;i_cat<Mascot->menu_cat_max;i_cat++){
-    tgt_menu=make_tgt_menu(i_cat);
+  for(i_cat=0;i_cat<mascot->menu_cat_max;i_cat++){
+    tgt_menu=make_tgt_menu(mascot, i_cat);
     gtk_widget_show (tgt_menu);
 
-    popup_button =gtk_menu_item_new_with_label (Mascot->menu_cat[i_cat]);
+    popup_button =gtk_menu_item_new_with_label (mascot->menu_cat[i_cat]);
     gtk_widget_show (popup_button);
     gtk_container_add (GTK_CONTAINER (popup_menu), popup_button);
     gtk_menu_item_set_submenu(GTK_MENU_ITEM(popup_button),tgt_menu);
@@ -10712,7 +10746,7 @@ GtkWidget * make_cat_menu(void)
   return(popup_menu);
 }
 
-GtkWidget * make_tgt_menu(int i_cat)
+GtkWidget * make_tgt_menu(typMascot *mascot, int i_cat)
 {
   GtkWidget *popup_menu; 
   GtkWidget *popup_button;
@@ -10727,126 +10761,126 @@ GtkWidget * make_tgt_menu(int i_cat)
   gtk_widget_show (popup_button);
   gtk_container_add (GTK_CONTAINER (popup_menu), popup_button);
   my_signal_connect (popup_button, "activate",CatRandomChangeMascotMenu,
-		     i_cat);
+		     (gpointer)mcat[i_cat]);
 
 
   bar =gtk_menu_item_new();
   gtk_widget_show (bar);
   gtk_container_add (GTK_CONTAINER (popup_menu), bar);
 
-  for(i_tgt=0;i_tgt<Mascot->menu_tgt_max[i_cat];i_tgt++){
+  for(i_tgt=0;i_tgt<mascot->menu_tgt_max[i_cat];i_tgt++){
     popup_button 
-      =gtk_menu_item_new_with_label(Mascot->menu_tgt_name[i_cat][i_tgt]);
+      =gtk_menu_item_new_with_label(mascot->menu_tgt_name[i_cat][i_tgt]);
     gtk_widget_show (popup_button);
     gtk_container_add (GTK_CONTAINER (popup_menu), popup_button);
     my_signal_connect (popup_button, "activate",ChangeMascotMenu,
-		       Mascot->menu_tgt[i_cat][i_tgt]);
+		       (gpointer)mtgt[i_cat][i_tgt]);
   }
 
   return(popup_menu);
 }
 
 //マスコット変更
-void ChangeMascot(){
+void ChangeMascot(typMascot *mascot){
 
 #ifdef USE_GTK3
-  gdk_rgba_free(Mascot->colclk);
-  gdk_rgba_free(Mascot->colclkbg);
-  gdk_rgba_free(Mascot->colclkbd);
-  gdk_rgba_free(Mascot->colclksd);
-  gdk_rgba_free(Mascot->colbal);
-  gdk_rgba_free(Mascot->colbalbd);
-  gdk_rgba_free(Mascot->colbalbg);
+  gdk_rgba_free(mascot->colclk);
+  gdk_rgba_free(mascot->colclkbg);
+  gdk_rgba_free(mascot->colclkbd);
+  gdk_rgba_free(mascot->colclksd);
+  gdk_rgba_free(mascot->colbal);
+  gdk_rgba_free(mascot->colbalbd);
+  gdk_rgba_free(mascot->colbalbg);
 #else
-  gdk_color_free(Mascot->colclk);
-  gdk_color_free(Mascot->colclkbg);
-  gdk_color_free(Mascot->colclkbd);
-  gdk_color_free(Mascot->colclksd);
-  gdk_color_free(Mascot->colbal);
-  gdk_color_free(Mascot->colbalbd);
-  gdk_color_free(Mascot->colbalbg);
+  gdk_color_free(mascot->colclk);
+  gdk_color_free(mascot->colclkbg);
+  gdk_color_free(mascot->colclkbd);
+  gdk_color_free(mascot->colclksd);
+  gdk_color_free(mascot->colbal);
+  gdk_color_free(mascot->colbalbd);
+  gdk_color_free(mascot->colbalbg);
 #endif
 
-  InitMascot(Mascot);
-  ReadMascot(Mascot,FALSE);
-  InitComposite(Mascot);
-  LoadPixmaps(Mascot);
+  InitMascot(mascot);
+  ReadMascot(mascot,FALSE);
+  InitComposite(mascot);
+  LoadPixmaps(mascot);
 #ifndef USE_GTK3
-  ReInitGC(Mascot);
+  ReInitGC(mascot);
 #endif
-  map_balloon(Mascot, FALSE);
+  map_balloon(mascot, FALSE);
   flag_balloon=FALSE;
 #ifdef USE_BIFF
-  map_biff(Mascot, FALSE);
-  LoadBiffPixmap(Mascot->biff_pix, Mascot);
-  remap_biff_pix(Mascot);
+  map_biff(mascot, FALSE);
+  LoadBiffPixmap(mascot->biff_pix, mascot);
+  remap_biff_pix(mascot);
 #endif  // USE_BIFF
 
-  //if(Mascot->clkmode!=CLOCK_NO) clock_update(Mascot, TRUE);
+  //if(mascot->clkmode!=CLOCK_NO) clock_update(mascot, TRUE);
 
-  if(Mascot->clkmode==CLOCK_PANEL){
-    map_clock(Mascot, TRUE);
+  if(mascot->clkmode==CLOCK_PANEL){
+    map_clock(mascot, TRUE);
   }
   else{
-    map_clock(Mascot, FALSE);
+    map_clock(mascot, FALSE);
   }
 
-  map_main(Mascot, TRUE);
+  map_main(mascot, TRUE);
 
-  if(Mascot->clkmode!=CLOCK_NO) clock_update(Mascot, TRUE); 
+  if(mascot->clkmode!=CLOCK_NO) clock_update(mascot, TRUE); 
 
-  if(Mascot->move==MOVE_FIX){
-    MoveMascot(Mascot,Mascot->xfix,Mascot->yfix);
+  if(mascot->move==MOVE_FIX){
+    MoveMascot(mascot,mascot->xfix,mascot->yfix);
   }
   else{
-    MoveToFocus(Mascot,TRUE);
+    MoveToFocus(mascot,TRUE);
   }
 
   // DrawingArea のrealize
-  gtk_widget_realize(Mascot->dw_main);
-  gtk_widget_realize(Mascot->dw_balloon);
-  gtk_widget_realize(Mascot->dw_clock);
-  gtk_widget_realize(Mascot->dw_biff);
+  gtk_widget_realize(mascot->dw_main);
+  gtk_widget_realize(mascot->dw_balloon);
+  gtk_widget_realize(mascot->dw_clock);
+  gtk_widget_realize(mascot->dw_biff);
 #ifdef FG_DRAW
-  gtk_widget_realize(Mascot->dw_sdw);
-  gtk_widget_realize(Mascot->dw_clkfg);
-  gtk_widget_realize(Mascot->dw_balfg);
+  gtk_widget_realize(mascot->dw_sdw);
+  gtk_widget_realize(mascot->dw_clkfg);
+  gtk_widget_realize(mascot->dw_balfg);
 #endif
 }
 
 
 // のっかりキャラへマスコット変更
-void NkrChangeMascot(){
-  InitMascot(Mascot);
+void NkrChangeMascot(typMascot *mascot){
+  InitMascot(mascot);
 
-  NkrRead(Mascot);
+  NkrRead(mascot);
 
-  InitComposite(Mascot);
-  LoadPixmaps(Mascot);
+  InitComposite(mascot);
+  LoadPixmaps(mascot);
 #ifndef USE_GTK3
-  ReInitGC(Mascot);
+  ReInitGC(mascot);
 #endif
-  map_balloon(Mascot, FALSE);
+  map_balloon(mascot, FALSE);
   flag_balloon=FALSE;
 #ifdef USE_BIFF
-  map_biff(Mascot, FALSE);
-  LoadBiffPixmap(Mascot->biff_pix, Mascot);
+  map_biff(mascot, FALSE);
+  LoadBiffPixmap(mascot->biff_pix, mascot);
 #endif  // USE_BIFF
   
-  Mascot->yoff=Mascot->height - Mascot->yoff;
+  mascot->yoff=mascot->height - mascot->yoff;
 
-  map_clock(Mascot, FALSE);
-  MoveToFocus(Mascot,TRUE);
+  map_clock(mascot, FALSE);
+  MoveToFocus(mascot,TRUE);
 
   // DrawingArea のrealize
-  gtk_widget_realize(Mascot->dw_main);
-  gtk_widget_realize(Mascot->dw_balloon);
-  gtk_widget_realize(Mascot->dw_clock);
-  gtk_widget_realize(Mascot->dw_biff);
+  gtk_widget_realize(mascot->dw_main);
+  gtk_widget_realize(mascot->dw_balloon);
+  gtk_widget_realize(mascot->dw_clock);
+  gtk_widget_realize(mascot->dw_biff);
 #ifdef FG_DRAW
-  gtk_widget_realize(Mascot->dw_sdw);
-  gtk_widget_realize(Mascot->dw_clkfg);
-  gtk_widget_realize(Mascot->dw_balfg);
+  gtk_widget_realize(mascot->dw_sdw);
+  gtk_widget_realize(mascot->dw_clkfg);
+  gtk_widget_realize(mascot->dw_balfg);
 #endif
 }
 
@@ -10871,15 +10905,15 @@ void create_cons_dialog(typMascot *mascot,
   gchar *tmp_text=NULL;
   gchar tmp_time[128];
   struct tm *tm_ptr;
-  consType *cdata;
+  consType *ccons;
 
 
   // Win構築は重いので先にExposeイベント等をすべて処理してから
   while (my_main_iteration(FALSE));
 
-  Mascot->flag_menu=TRUE;
+  mascot->flag_menu=TRUE;
 
-  cdata=g_malloc0(sizeof(consType));
+  ccons=g_malloc0(sizeof(consType));
 
   cons_main = gtk_window_new(GTK_WINDOW_TOPLEVEL);
 
@@ -10888,8 +10922,6 @@ void create_cons_dialog(typMascot *mascot,
   gtk_window_set_title(GTK_WINDOW(cons_main), 
 		       _("MaCoPiX : Consistency Check for Common & User Dir."));
   gtk_widget_realize(cons_main);
-  my_signal_connect(cons_main,"destroy",close_cons, 
-		    GTK_WIDGET(cons_main));
   gtk_container_set_border_width (GTK_CONTAINER (cons_main), 5);
   
   // 6x3のテーブル
@@ -10966,12 +10998,16 @@ void create_cons_dialog(typMascot *mascot,
   gtk_box_pack_start(GTK_BOX(vbox), check, FALSE, FALSE, 0);
   gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(check),FALSE);
 
-  cdata->dialog=GTK_WIDGET(cons_main);
-  cdata->auto_check=GTK_WIDGET(check);
-  cdata->filename=target_file;
-  cdata->flag_ow=FALSE;
-  cdata->flag_auto=FALSE;
+  ccons->dialog=GTK_WIDGET(cons_main);
+  ccons->auto_check=GTK_WIDGET(check);
+  ccons->filename=target_file;
+  ccons->flag_ow=FALSE;
+  ccons->flag_auto=FALSE;
+  ccons->mascot=mascot;
 
+  my_signal_connect(cons_main,"destroy",close_cons, 
+		    (gpointer)ccons);
+  
   button=gtkut_button_new_with_icon(_("Cancel"),
 #ifdef USE_GTK3
 				    "process-stop"
@@ -10981,7 +11017,7 @@ void create_cons_dialog(typMascot *mascot,
 				    );
   gtkut_table_attach(cons_tbl, button, 4, 5, 2, 3,
 		     GTK_FILL|GTK_EXPAND,GTK_SHRINK,0,0);
-  my_signal_connect(button,"clicked",noow_cons, (gpointer)cdata);
+  my_signal_connect(button,"clicked",noow_cons, (gpointer)ccons);
 
   button=gtkut_button_new_with_icon(_("OK"),
 #ifdef USE_GTK3
@@ -10992,7 +11028,7 @@ void create_cons_dialog(typMascot *mascot,
 				    );
   gtkut_table_attach(cons_tbl, button, 5, 6, 2, 3,
 		     GTK_FILL|GTK_EXPAND,GTK_SHRINK,0,0);
-  my_signal_connect(button,"clicked",ow_cons, (gpointer)cdata);
+  my_signal_connect(button,"clicked",ow_cons, (gpointer)ccons);
 
   
   gtk_widget_show_all(cons_main);
@@ -11001,8 +11037,8 @@ void create_cons_dialog(typMascot *mascot,
 
   gdkut_flush(mascot);
 
-  mascot->flag_consow=cdata->flag_ow;
-  if(cdata->flag_auto){
+  mascot->flag_consow=ccons->flag_ow;
+  if(ccons->flag_auto){
     if(mascot->flag_consow){
       mascot->cons_check_mode=CONS_AUTOOW;
     }
@@ -11014,7 +11050,7 @@ void create_cons_dialog(typMascot *mascot,
     mascot->cons_check_mode=CONS_MANUAL;
   }
 
-  g_free(cdata);
+  g_free(ccons);
 }
 #endif
 
@@ -11060,7 +11096,7 @@ void create_smenu_dialog(typMascot *mascot, gboolean flag_popup)
 		       | GTK_DEST_DEFAULT_HIGHLIGHT | GTK_DEST_DEFAULT_DROP,
 		       drag_types, 1, GDK_ACTION_COPY);
     my_signal_connect (main, "drag-data-received",
-		       signal_drag_data_received_smenu, NULL);
+		       signal_drag_data_received_smenu, (gpointer)mascot);
 
     gtk_window_set_title(GTK_WINDOW(main), 
 			 _("MaCoPiX : Starting up"));
@@ -11142,9 +11178,9 @@ void create_smenu_dialog(typMascot *mascot, gboolean flag_popup)
     
     gtk_main();
     
-    gdkut_flush(Mascot);
+    gdkut_flush(mascot);
     
-    if((!Mascot->file)&&(!Mascot->menu_file)) exit(1);
+    if((!mascot->file)&&(!mascot->menu_file)) exit(1);
 
     gtk_widget_destroy(main);
     
@@ -11212,6 +11248,7 @@ void create_smenu_dialog(typMascot *mascot, gboolean flag_popup)
       if(!flag_popup) exit(1);
     }
     else{
+      if(mascot->menu_file) g_free(mascot->menu_file);
       if(smenu->dir[selected_smenu]==SMENU_DIR_USER){
 #ifdef USE_WIN32
 	mascot->menu_file=g_strconcat(get_win_home(),G_DIR_SEPARATOR_S,USER_DIR,
@@ -11355,7 +11392,8 @@ void do_install_user_menu(GtkWidget *w, gpointer gdata){
 
   mascot=(typMascot *)gdata;
   
-  create_menu_selection_dialog(NULL,START_MENU_INSTALL_USER);
+  create_menu_selection_dialog(NULL,
+			       (gpointer)minst[START_MENU_INSTALL_USER]);
 
   gtk_main_quit();
 }
@@ -11367,7 +11405,8 @@ void do_install_common_menu(GtkWidget *w, gpointer gdata){
 
   mascot=(typMascot *)gdata;
   
-  create_menu_selection_dialog(NULL,START_MENU_INSTALL_COMMON);
+  create_menu_selection_dialog(NULL,
+			       (gpointer)minst[START_MENU_INSTALL_COMMON]);
 
   gtk_main_quit();
 }
@@ -11378,7 +11417,8 @@ void do_install_user_mascot(GtkWidget *w, gpointer gdata){
 
   mascot=(typMascot *)gdata;
   
-  create_file_selection_dialog(NULL,START_MENU_INSTALL_USER);
+  create_file_selection_dialog(NULL,
+			       (gpointer)minst[START_MENU_INSTALL_USER]);
 
   gtk_main_quit();
 }
@@ -11390,7 +11430,8 @@ void do_install_common_mascot(GtkWidget *w, gpointer gdata){
 
   mascot=(typMascot *)gdata;
   
-  create_file_selection_dialog(NULL,START_MENU_INSTALL_COMMON);
+  create_file_selection_dialog(NULL,
+			       (gpointer)minst[START_MENU_INSTALL_COMMON]);
 
   gtk_main_quit();
 }
@@ -11401,7 +11442,7 @@ void do_select_mascot(GtkWidget *w, gpointer gdata){
 
   mascot=(typMascot *)gdata;
   
-  create_file_selection_dialog(NULL,START_MENU_SELECT);
+  create_file_selection_dialog(NULL,(gpointer)minst[START_MENU_SELECT]);
 
   gtk_main_quit();
 }
@@ -11757,6 +11798,7 @@ gint select_menu_from_ext(typMascot *mascot, gchar *dest_file){
 #endif
   }
    else{
+     if(mascot->menu_file) g_free(mascot->menu_file);
      mascot->menu_file=g_strdup(dest_file);
      hit_flag=TRUE;
      menu_ext=MENU_MENU;
@@ -11780,7 +11822,7 @@ gint select_menu_from_ext(typMascot *mascot, gchar *dest_file){
 
 }
 
-void unlink_all(gchar *dirname)
+void unlink_all(typMascot *mascot, gchar *dirname)
 {
   struct dirent *entry;
   DIR *dirp;
@@ -11790,7 +11832,7 @@ void unlink_all(gchar *dirname)
   GtkWidget *button;
   gchar *tmp;
   
-  Mascot->flag_menu=TRUE;
+  mascot->flag_menu=TRUE;
   
   dialog = gtk_dialog_new_with_buttons(_("MaCoPiX : Deletion of temporay files"),
 				       NULL,
@@ -11838,11 +11880,11 @@ void unlink_all(gchar *dirname)
   }
   else {
     gtk_widget_destroy(dialog);
-    Mascot->flag_menu=FALSE;
+    mascot->flag_menu=FALSE;
     return;
   }
   
-  Mascot->flag_menu=FALSE;
+  mascot->flag_menu=FALSE;
   return;
 }
 
