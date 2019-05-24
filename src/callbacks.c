@@ -318,9 +318,9 @@ int MoveToFocus(typMascot *mascot, gboolean force_fl)
 #endif
   gboolean eflag=FALSE;
   gint flag_homepos=HOMEPOS_NEVER;
-
   gint oxpop,oypop;
-
+  int error=0;
+    
 #ifdef USE_WIN32
   /* for Windows */
   hWnd = GetForegroundWindow();
@@ -342,6 +342,13 @@ int MoveToFocus(typMascot *mascot, gboolean force_fl)
   }
 #else
   win_bar_size=0;
+
+#ifdef USE_GTK3  
+  gdk_x11_display_error_trap_push (gtk_widget_get_display(mascot->win_main));
+#else
+  gdk_error_trap_push ();
+#endif
+
   XGetInputFocus(GDK_WINDOW_XDISPLAY(gtk_widget_get_window(mascot->win_main)),
 		 &wf, &i);
   XGetGeometry(GDK_WINDOW_XDISPLAY(gtk_widget_get_window(mascot->win_main)),
@@ -354,6 +361,16 @@ int MoveToFocus(typMascot *mascot, gboolean force_fl)
 	       &border,
 	       &depth);
 
+#ifdef USE_GTK3
+  error=   gdk_x11_display_error_trap_pop (gtk_widget_get_display(mascot->win_main));
+#else
+  error = gdk_error_trap_pop ();
+#endif
+
+  if(G_UNLIKELY(error == BadWindow)){
+    g_warning("BadWindow error");
+  }
+  
   parent = 0;
 #endif
 
@@ -496,12 +513,10 @@ int MoveToFocus(typMascot *mascot, gboolean force_fl)
 	  }
 
   	  if(win_bar_size==0){
-	    //printf("aho0\n");
 	    win_bar_size
 	      +=Get_Window_Bar_Size(mascot, GDK_WINDOW_XDISPLAY(gtk_widget_get_window(mascot->win_main)),
 				   wf);
 	    //printf("%d bar_size=%d\n", (int)wf, win_bar_size);
-	    //printf("aho1\n\n");
 	  }
 	  
 	  if(mascot->bar_offset!=0){
@@ -2013,7 +2028,7 @@ void clock_update(typMascot *mascot, gboolean force_flag){
 	  break;
 	case SIGACT_CHANGE:
 	  if(mascot->menu_file){
-	    AllRandomChangeMascotMenu(NULL);
+	    AllRandomChangeMascotMenu(NULL, (gpointer)mascot);
 	  }
 	  break;
 	}

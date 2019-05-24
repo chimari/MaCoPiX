@@ -11491,10 +11491,10 @@ void make_smenu_list(GtkWidget *scrwin, typScanMenu *smenu)
 
   
   for(i_menu=0;i_menu<smenu->max_menu;i_menu++){
-    check = gtk_radio_button_new(group);
+    check = gtk_radio_button_new_with_label(group, smenu->file[i_menu]);
     group=gtk_radio_button_get_group(GTK_RADIO_BUTTON(check));
     gtkut_table_attach (smenu_table,
-			check, 0, 1, i_menu+1, i_menu+2,
+			check, 0, 2, i_menu+1, i_menu+2,
 			GTK_SHRINK,GTK_SHRINK,0,2);
     my_signal_connect (check, "toggled",check_menu_get_smenu,
 		       i_menu);
@@ -11505,12 +11505,6 @@ void make_smenu_list(GtkWidget *scrwin, typScanMenu *smenu)
       gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(check),FALSE);
     }
 
-    label = gtkut_label_new (smenu->file[i_menu]);
-    gtkut_table_attach(smenu_table, label,
-		       1, 2, i_menu+1, i_menu+2,
-		       GTK_FILL,GTK_SHRINK,0,2);
-    gtkut_pos(label, POS_START, POS_START);
-	   
     if(smenu->dir[i_menu]==SMENU_DIR_USER){
       label = gtkut_label_new (_("User"));
     }
