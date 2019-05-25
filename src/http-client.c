@@ -5,6 +5,7 @@
 #include "main.h"
 
 #ifdef USE_WIN32
+#include <ws2tcpip.h>
 #define BUF_LEN 65535             /* バッファのサイズ */
 #else
 #define BUF_LEN 65535             /* バッファのサイズ */
@@ -279,11 +280,11 @@ int get_mascot_list(typMascot *mascot){
 #ifdef USE_WIN32
   DWORD dwErrorNumber;
 
-  mascot->hThread_fcdb = (HANDLE)_beginthreadex(NULL,0,
+  mascot->hThread_http = (HANDLE)_beginthreadex(NULL,0,
 						http_c_nonssl,
 						(LPVOID)mascot,
 						0,
-						&nascit->dwThreadID_http);
+						&mascot->dwThreadID_http);
   if (mascot->hThread_http == NULL) {
     dwErrorNumber = GetLastError();
     fprintf(stderr,"_beginthreadex() error(%ld).\n", dwErrorNumber);
@@ -845,9 +846,15 @@ void dl_mascot_list(typMascot *mascot,  gboolean flag_popup){
   mascot->http_path=g_strconcat(HTTP_MASCOT_PATH, HTTP_MASCOT_FILE, NULL);
 
   if(mascot->http_dlfile) g_free(mascot->http_dlfile);
+#ifdef USE_WIN32
+  mascot->http_dlfile=g_strconcat("%s%s%s",
+				      g_get_tmp_dir(), G_DIR_SEPARATOR_S,
+				  HTTP_MASCOT_FILE, NULL);
+#else
   mascot->http_dlfile=g_strdup_printf("%s%s%s-%d",
 				      g_get_tmp_dir(), G_DIR_SEPARATOR_S,
 				      HTTP_MASCOT_FILE,   getuid());
+#endif
 
   dialog = gtk_dialog_new();
   
