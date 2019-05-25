@@ -11133,17 +11133,23 @@ void create_smenu_dialog(typMascot *mascot, gboolean flag_popup)
     gtk_box_pack_start(GTK_BOX(vbox2),
 		       label,TRUE,TRUE,0);
 
-    label=gtkut_label_new(_(" or appoint a mascot file in option in order to start MaCoPiX!"));
+    label=gtkut_label_new(_("You can appoint a mascot file in option in order to start MaCoPiX,"));
     gtkut_pos(label, POS_START, POS_CENTER);
     gtk_box_pack_start(GTK_BOX(vbox2),
 		       label,TRUE,TRUE,0);
 
-    label=gtkut_label_new(_(" or directly download &amp; install them from MaCoPiX official web."));
+    label=gtkut_label_new(_("or directly download &amp; install them from MaCoPiX official web."));
     gtkut_pos(label, POS_START, POS_CENTER);
     gtk_box_pack_start(GTK_BOX(vbox2),
 		       label,TRUE,TRUE,0);
 
-    button = gtk_button_new_with_label(_("Download & install MaCoPiX official mascots."));
+    button=gtkut_button_new_with_icon(_("Download & install MaCoPiX official mascots."),
+#ifdef USE_GTK3
+				      "document-save"
+#else
+				      GTK_STOCK_SAVE
+#endif				     
+				      );
     gtk_box_pack_start(GTK_BOX(vbox2), button, TRUE, FALSE, 0);
     gtk_button_set_relief(GTK_BUTTON(button), GTK_RELIEF_NONE);
     my_signal_connect(button,"clicked", smenu_dl_mascot_list, (gpointer)mascot);
@@ -11153,7 +11159,7 @@ void create_smenu_dialog(typMascot *mascot, gboolean flag_popup)
     gtk_box_pack_start(GTK_BOX(vbox2),
 		       label,TRUE,TRUE,0);
 
-    label=gtkut_label_new(_("See more details in MaCoPiX official web."));
+    label=gtkut_label_new(_("See more details of the mascots in MaCoPiX official web."));
     gtkut_pos(label, POS_START, POS_CENTER);
     gtk_box_pack_start(GTK_BOX(vbox2),
 		       label,TRUE,TRUE,0);

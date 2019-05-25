@@ -4026,23 +4026,29 @@ void create_dl_smenu_dialog(typMascot *mascot, gboolean flag_popup){
     gtk_window_set_title(GTK_WINDOW(dialog),"MaCoPiX : Downloading Official Mascot List");
     gtk_window_set_decorated(GTK_WINDOW(dialog),TRUE);
 
-    label=gtkut_label_new(("Select a mascot file to download &amp; install to your system."));
-#ifdef USE_GTK3
-    gtk_widget_set_halign (label, GTK_ALIGN_START);
-    gtk_widget_set_valign (label, GTK_ALIGN_CENTER);
+    label=gtkut_label_new(_("Select a mascot file to download &amp; install into your <i>User directory</i>."));
+    gtkut_pos(label, POS_START, POS_CENTER);
+    gtk_box_pack_start(GTK_BOX(gtk_dialog_get_content_area(GTK_DIALOG(dialog))),
+		       label,FALSE,FALSE, 0);
+
+#ifdef USE_WIN32
+    tmp = g_strconcat(get_win_home(),G_DIR_SEPARATOR_S,USER_DIR, NULL);
 #else
-    gtk_misc_set_alignment (GTK_MISC (label), 0.0, 0.5);
+    tmp = g_strconcat(g_get_home_dir(),G_DIR_SEPARATOR_S,USER_DIR, NULL);
 #endif
+    label=gtkut_label_new(tmp);
+    gtkut_pos(label, POS_CENTER, POS_CENTER);
+    gtk_box_pack_start(GTK_BOX(gtk_dialog_get_content_area(GTK_DIALOG(dialog))),
+		       label,FALSE,FALSE, 0);
+    g_free(tmp);
+
+    label=gtkut_label_new(_("<span color=\"#FF0000\"><b>Please note that all existing files will be overwritten.</b></span>"));
+    gtkut_pos(label, POS_START, POS_CENTER);
     gtk_box_pack_start(GTK_BOX(gtk_dialog_get_content_area(GTK_DIALOG(dialog))),
 		       label,FALSE,FALSE, 0);
     
     label=gtkut_label_new("");
-#ifdef USE_GTK3
-    gtk_widget_set_halign (label, GTK_ALIGN_START);
-    gtk_widget_set_valign (label, GTK_ALIGN_CENTER);
-#else
-    gtk_misc_set_alignment (GTK_MISC (label), 0.0, 0.5);
-#endif
+    gtkut_pos(label, POS_START, POS_CENTER);
     gtk_box_pack_start(GTK_BOX(gtk_dialog_get_content_area(GTK_DIALOG(dialog))),
 		       label,TRUE,TRUE,0);
 
@@ -4180,22 +4186,12 @@ void create_dl_smenu_dialog(typMascot *mascot, gboolean flag_popup){
       gtk_widget_show_all(rb[i_list]);
     
       label=gtk_label_new(ename);
-#ifdef USE_GTK3
-      gtk_widget_set_halign (label, GTK_ALIGN_START);
-      gtk_widget_set_valign (label, GTK_ALIGN_CENTER);
-#else
-      gtk_misc_set_alignment (GTK_MISC (label), 0.0, 0.5);
-#endif
+      gtkut_pos(label, POS_START, POS_CENTER);
       gtkut_table_attach(table, label, 1, 2, i_list+1, i_list+2,
 			 GTK_EXPAND|GTK_FILL,GTK_SHRINK,0,0);
 
       label=gtk_label_new(lname);
-#ifdef USE_GTK3
-      gtk_widget_set_halign (label, GTK_ALIGN_START);
-      gtk_widget_set_valign (label, GTK_ALIGN_CENTER);
-#else
-      gtk_misc_set_alignment (GTK_MISC (label), 0.0, 0.5);
-#endif
+      gtkut_pos(label, POS_START, POS_CENTER);
       gtkut_table_attach(table, label, 2, 3, i_list+1, i_list+2,
 			 GTK_EXPAND|GTK_FILL,GTK_SHRINK,0,0);
       
@@ -4206,43 +4202,23 @@ void create_dl_smenu_dialog(typMascot *mascot, gboolean flag_popup){
 	tmp=g_strdup(_("<i>unkown</i>"));
       }
       label=gtk_label_new(_(tmp));
-#ifdef USE_GTK3
-      gtk_widget_set_halign (label, GTK_ALIGN_CENTER);
-      gtk_widget_set_valign (label, GTK_ALIGN_CENTER);
-#else
-      gtk_misc_set_alignment (GTK_MISC (label), 0.0, 0.5);
-#endif
+      gtkut_pos(label, POS_CENTER, POS_CENTER);
       gtkut_table_attach(table, label, 3, 4, i_list+1, i_list+2,
 			 GTK_SHRINK,GTK_SHRINK,0,0);
       g_free(tmp);
       
       label=gtk_label_new(ver);
-#ifdef USE_GTK3
-      gtk_widget_set_halign (label, GTK_ALIGN_CENTER);
-      gtk_widget_set_valign (label, GTK_ALIGN_CENTER);
-#else
-      gtk_misc_set_alignment (GTK_MISC (label), 0.0, 0.5);
-#endif
+      gtkut_pos(label, POS_CENTER, POS_CENTER);
       gtkut_table_attach(table, label, 4, 5, i_list+1, i_list+2,
 			 GTK_SHRINK,GTK_SHRINK,0,0);
       
       label=gtk_label_new(date);
-#ifdef USE_GTK3
-      gtk_widget_set_halign (label, GTK_ALIGN_CENTER);
-      gtk_widget_set_valign (label, GTK_ALIGN_CENTER);
-#else
-      gtk_misc_set_alignment (GTK_MISC (label), 0.0, 0.5);
-#endif
+      gtkut_pos(label, POS_CENTER, POS_CENTER);
       gtkut_table_attach(table, label, 5, 6, i_list+1, i_list+2,
 			 GTK_SHRINK,GTK_SHRINK,0,0);
 
       label=gtk_label_new(code);
-#ifdef USE_GTK3
-      gtk_widget_set_halign (label, GTK_ALIGN_CENTER);
-      gtk_widget_set_valign (label, GTK_ALIGN_CENTER);
-#else
-      gtk_misc_set_alignment (GTK_MISC (label), 0.0, 0.5);
-#endif
+      gtkut_pos(label, POS_CENTER, POS_CENTER);
       gtkut_table_attach(table, label, 6, 7, i_list+1, i_list+2,
 			 GTK_SHRINK,GTK_SHRINK,0,0);
       
@@ -4308,15 +4284,11 @@ void create_dl_smenu_dialog(typMascot *mascot, gboolean flag_popup){
 	mascot->flag_ow=TRUE;
 	mascot->flag_ow_ini=TRUE;
 	
+	gtk_widget_destroy(mascot->PopupMenu);
+	ReadMenu(mascot,0,NULL);
+	mascot->PopupMenu=make_popup_menu(mascot);
 	if(flag_popup){// Popup¤«¤é
-	  gtk_widget_destroy(mascot->PopupMenu);
-	  ReadMenu(mascot,0,NULL);
-	  mascot->PopupMenu=make_popup_menu(mascot);
 	  AllRandomChangeMascotMenu(NULL, (gpointer)mascot);
-	}
-	else{
-	  ReadMenu(mascot,0,NULL);
-	  mascot->PopupMenu=make_popup_menu(mascot);
 	}
 	
 	unlink(mascot->http_dlfile);
@@ -4337,7 +4309,7 @@ void create_dl_smenu_dialog(typMascot *mascot, gboolean flag_popup){
 		      GTK_STOCK_DIALOG_ERROR,
 #endif
 		      -1,
-		      _("Error : Cannot download the mascot archive file (tar.gz)."),
+		      _("Error : Failed to download the mascot archive file (tar.gz)."),
 		      " ",
 		      tmp,
 		      NULL);
@@ -5041,6 +5013,21 @@ int main(int argc, char **argv)
   ReadMenu(Mascot,0,NULL);
   Mascot->PopupMenu=make_popup_menu(Mascot);
   
+#ifdef USE_WIN32   // Initialize Winsock2
+  nErrorStatus = WSAStartup(MAKEWORD(2,0), &wsaData);
+  if(atexit((void (*)(void))(WSACleanup))){
+    fprintf(stderr, "WSACleanup() : Failed\n");
+    exit(-1);
+  }
+  if (nErrorStatus!=0) {
+      fprintf(stderr, "WSAStartup() : Failed\n");
+      exit(-1);
+  }
+#endif
+#ifdef USE_SSL
+  ssl_init();
+#endif
+    
   if(!Mascot->file){
     if(Mascot->menu_file){
       Mascot->file=g_strdup(all_random_menu_mascot_file(Mascot));
@@ -5058,7 +5045,7 @@ int main(int argc, char **argv)
   }
  
 
- make_mascot(Mascot);
+  make_mascot(Mascot);
   
   make_balloon(Mascot);
 #ifdef FG_DRAW
@@ -5147,20 +5134,6 @@ int main(int argc, char **argv)
 #endif
 
 #ifdef USE_BIFF
-#ifdef USE_WIN32   // Initialize Winsock2
-    nErrorStatus = WSAStartup(MAKEWORD(2,0), &wsaData);
-    if(atexit((void (*)(void))(WSACleanup))){
-      fprintf(stderr, "WSACleanup() : Failed\n");
-      exit(-1);
-    }
-    if (nErrorStatus!=0) {
-      fprintf(stderr, "WSAStartup() : Failed\n");
-      exit(-1);
-    }
-#endif
-#ifdef USE_SSL
-    ssl_init();
-#endif
   SetMailChecker((gpointer)Mascot);
 #endif
 

@@ -59,7 +59,11 @@ void httpdl_signal();
 
 void dl_mascot_list();
 
+#ifdef POP_DEBUG
 gboolean debug_flg=TRUE;
+#else
+gboolean debug_flg=FALSE;
+#endif
 
 void check_msg_from_parent(){
 #ifdef USE_WIN32
@@ -326,7 +330,7 @@ void unchunk(gchar *dss_tmp){
   
   fp_read=fopen(dss_tmp,"r");
   unchunk_tmp=g_strconcat(dss_tmp,"_unchunked",NULL);
-  fp_write=fopen(unchunk_tmp,"w");
+  fp_write=fopen(unchunk_tmp,"wb");
   
   while(!feof(fp_read)){
     if(fgets(cbuf,BUFFSIZE-1,fp_read)){
@@ -580,7 +584,7 @@ int http_c_nonssl(typMascot *mascot)
   sprintf(send_mesg, "\r\n");
   write_to_server(command_socket, send_mesg);
 
-  if((fp_write=fopen(mascot->http_dlfile,"w"))==NULL){
+  if((fp_write=fopen(mascot->http_dlfile,"wb"))==NULL){
     fprintf(stderr," File Write Error  \"%s\" \n", mascot->http_dlfile);
     return(MACOPIX_HTTP_ERROR_TEMPFILE);
   }
@@ -744,7 +748,7 @@ int http_c_ssl(typMascot *mascot)
   sprintf(send_mesg, "\r\n");
   write_to_SSLserver(ssl, send_mesg);
 
-  if((fp_write=fopen(mascot->http_dlfile,"w"))==NULL){
+  if((fp_write=fopen(mascot->http_dlfile,"wb"))==NULL){
     fprintf(stderr," File Write Error  \"%s\" \n", mascot->http_dlfile);
     return(MACOPIX_HTTP_ERROR_TEMPFILE);
   }
@@ -838,6 +842,7 @@ void dl_mascot_list(typMascot *mascot,  gboolean flag_popup){
 #ifndef USE_WIN32
   static struct sigaction act;
 #endif
+  gchar *tmp;
 
   if(mascot->http_host) g_free(mascot->http_host);
   mascot->http_host=g_strdup(HTTP_MASCOT_HOST);
@@ -847,8 +852,7 @@ void dl_mascot_list(typMascot *mascot,  gboolean flag_popup){
 
   if(mascot->http_dlfile) g_free(mascot->http_dlfile);
 #ifdef USE_WIN32
-  mascot->http_dlfile=g_strconcat("%s%s%s",
-				      g_get_tmp_dir(), G_DIR_SEPARATOR_S,
+  mascot->http_dlfile=g_strconcat(g_get_tmp_dir(), G_DIR_SEPARATOR_S,
 				  HTTP_MASCOT_FILE, NULL);
 #else
   mascot->http_dlfile=g_strdup_printf("%s%s%s-%d",
@@ -937,6 +941,21 @@ void dl_mascot_list(typMascot *mascot,  gboolean flag_popup){
     create_dl_smenu_dialog(mascot, flag_popup);
   }
   else{
+    tmp=g_strconcat(mascot->http_host,
+		    mascot->http_path,
+		    NULL);
+    popup_message(NULL,
+#ifdef USE_GTK3
+		  "dialog-error", 
+#else
+		  GTK_STOCK_DIALOG_ERROR,
+#endif
+		  -1,
+		  _("Error : Failed to download the mascot archive file (tar.gz)."),
+		  " ",
+		  tmp,
+		  NULL);
+    g_free(tmp);
   }
 }
 
