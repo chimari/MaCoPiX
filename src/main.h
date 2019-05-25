@@ -160,6 +160,28 @@
 // Homepage URL
 #define DEFAULT_URL "http://rosegray.sakura.ne.jp/"
 
+#define HTTP_MASCOT_HOST "rosegray.sakura.ne.jp"
+#define HTTP_MASCOT_PATH  "/macopix/"
+#define HTTP_MASCOT_FILE "macopix_mascot_list.ini"
+
+#define MAX_TGZ_FILE 100
+
+#ifdef SIGRTMIN
+#define SIGHTTPDL SIGRTMIN+1
+#else
+#define SIGHTTPDL SIGUSR2
+#endif
+
+#define MACOPIX_HTTP_ERROR_GETHOST  -1
+#define MACOPIX_HTTP_ERROR_SOCKET   -2
+#define MACOPIX_HTTP_ERROR_CONNECT  -3
+#define MACOPIX_HTTP_ERROR_TEMPFILE -4
+#ifdef USE_SSL
+#define MACOPIX_HTTP_ERROR_SSL -5
+#endif
+#define MACOPIX_HTTP_ERROR_FORK -6
+
+
 // ポップアップメッセージ
 #define GTK_MSG
 
@@ -1057,6 +1079,15 @@ struct _typMascot{
 
   GtkWidget *cattree[MAX_MENU_CATEGORY];
   gint cattree_i_tgt[MAX_MENU_CATEGORY];
+
+  gchar *http_host;
+  gchar *http_path;
+  gchar *http_dlfile;
+  GtkWidget *pbar;
+#ifdef USE_WIN32
+  HANDLE hThread_http;
+  unsigned int dwThreadID_http;
+#endif
 };
 
 
@@ -1092,9 +1123,12 @@ gboolean supports_alpha;
 gboolean flag_balloon;
 typMascot *Mascot;
 
+pid_t http_pid;
+
 
 ///////////   Proto types   //////////
 // main.c
+gchar *x_locale_to_utf8();
 #ifdef USE_GTK3
 void css_change_col();
 void css_change_font();
@@ -1117,7 +1151,9 @@ void InitMascot();
 void ReadMascot();
 gchar* ReadMascotName();
 void ScanMenu();
+void create_dl_smenu_dialog();
 
+		    
 // alpha.c
 #ifdef USE_WIN32
 void GdkWinSetAlpha();
@@ -1197,6 +1233,7 @@ void signal_drag_data_received();
 void signal_drag_data_received_smenu();
 
 // gui.c
+void cc_radio();
 void create_conf_num();
 void NkrChangeMascot();
 GtkWidget * make_popup_menu();
@@ -1215,7 +1252,7 @@ void create_pop_pass_dialog();
 gchar* create_nkr_change_image_dialog();
 void MenuSaveAll();
 void quit_all();
-
+gint select_menu_from_ext();
 
 // mail.c
 #ifdef USE_BIFF
@@ -1327,5 +1364,19 @@ gchar* GetCurrentWMName();
 gchar* WindowsVersion();
 #endif
 void pop_debug_print (const gchar *format, ...) G_GNUC_PRINTF(1, 2);
-gchar *fgets_new();
 
+// http-client.c
+void popup_dl_mascot_list();
+void smenu_dl_mascot_list();
+void dl_mascot_tgz();
+
+//pop.c
+gint fd_recv();
+gint fd_gets();
+gint fd_write();
+#ifdef USE_SSL
+gint ssl_read();
+gint ssl_peek();
+gint ssl_gets();
+gint ssl_write();
+#endif

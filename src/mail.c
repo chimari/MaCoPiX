@@ -1244,199 +1244,6 @@ void pop3_data_read(typMascot *mascot)
   }
 }
 
-
-void pop3_data_read_new(typMascot *mascot)
-{
-  FILE *fp;
-  gchar *buf=NULL;
-  int pre_mail_count;
-  gint i_step;
-  pid_t child_pid=0;
-  
-  if(mascot->mail.pop_child_fl){
-    pre_mail_count = mascot->mail.count;  // store mail count
-
-    pop_debug_print("Parent: pop3 data read\n");
-
-    if(close(pop3_fd[1])==-1) fprintf(stderr,"pipe close error\n");
-    pop_debug_print("Parent: pop3_fd[1] closed\n");
-    if( (fp = fdopen( pop3_fd[0], "r" )) == NULL ){
-      fprintf(stderr,"pipe open error\n");    
-    }
-    else{
-      //if(fgets( buf,BUFFSIZE-1,fp )==NULL) exit(1);  // read mail status
-      if((buf=fgets_new(fp))==NULL) exit(1);  // read mail status
-      mascot->mail.status = atoi(buf);
-      g_free(buf);
-      buf=NULL;
-      if( mascot->mail.status == POP3_ERROR){  // POP3 status is ERR
-	pop3_error(mascot);
-      }
-#ifdef USE_SSL
-      else if( mascot->mail.status == POP3_SSL_CERT){  // SSL Certification
-	if(mascot->mail.ssl_sub) g_free(mascot->mail.ssl_sub);
-	//if(fgets( buf,BUFFSIZE-1,fp )==NULL) exit(1);
-	if((buf=fgets_new(fp))==NULL) exit(1);
-	if(strlen(buf)>=2){
-	  mascot->mail.ssl_sub = g_strdup(buf);
-	  strip_last_ret(mascot->mail.ssl_sub);
-	}
-	else{
-	  mascot->mail.ssl_sub = NULL;
-	}
-	g_free(buf);
-	buf=NULL;
-
-	if(mascot->mail.ssl_iss) g_free(mascot->mail.ssl_iss);
-	//if(fgets( buf,BUFFSIZE-1,fp )==NULL) exit(1);
-	if((buf=fgets_new(fp))==NULL) exit(1);
-	if(strlen(buf)>=2){
-	  mascot->mail.ssl_iss = g_strdup(buf);
-	  strip_last_ret(mascot->mail.ssl_iss);
-	}
-	else{
-	  mascot->mail.ssl_iss = NULL;
-	}
-	g_free(buf);
-	buf=NULL;
-	
-	//if(fgets( buf,BUFFSIZE-1,fp )==NULL) exit(1);  // SSL verify_result
-	if((buf=fgets_new(fp))==NULL) exit(1);  // SSL verify_result
-	mascot->mail.ssl_verify = atoi(buf);
-      }
-#endif
-      else{
-	//if(fgets( buf,BUFFSIZE-1,fp )==NULL) exit(1);  // read total mail count
-	if((buf=fgets_new(fp))==NULL) exit(1);  // read total mail count
-	mascot->mail.count = atoi(buf);
-	g_free(buf);
-	buf=NULL;
-	//if(fgets( buf,BUFFSIZE-1,fp )==NULL) exit(1);  // read fetched mail count
-	if((buf=fgets_new(fp))==NULL) exit(1);  // read fetched mail count
-	mascot->mail.fetched_count = atoi(buf);
-	g_free(buf);
-	buf=NULL;
-	//if(fgets( buf,BUFFSIZE-1,fp )==NULL) exit(1);  // read pop status
-	if((buf=fgets_new(fp))==NULL) exit(1);  // read pop status
-	mascot->mail.pop3_fs_status = atoi(buf);
-	g_free(buf);
-	buf=NULL;
-	//if(fgets( buf,BUFFSIZE-1,fp )==NULL) exit(1);  // read SPAM count
-	if((buf=fgets_new(fp))==NULL) exit(1);  // read SPAM count
-	mascot->mail.spam_count = atoi(buf);
-	g_free(buf);
-	buf=NULL;
-
-	//if(fgets( buf,BUFFSIZE-1,fp )==NULL) exit(1);  // Last From
-	if((buf=fgets_new(fp))==NULL) exit(1);  // Last From
-	if(mascot->mail.last_f) g_free(mascot->mail.last_f);  
-	if(strlen(buf)>=2){
-	  if(g_utf8_validate(buf,-1,NULL)){
-	    mascot->mail.last_f = g_strdup(buf);
-	    strip_last_ret(mascot->mail.last_f);
-	  }
-	  else{
-	    mascot->mail.last_f = g_strdup(_("(Decode Error)"));
-	  }
-	}
-	else{
-	  mascot->mail.last_f = NULL;
-	}
-	g_free(buf);
-	buf=NULL;
-	//if(fgets( buf,BUFFSIZE-1,fp )==NULL) exit(1);  // Last Sub
-	if((buf=fgets_new(fp))==NULL) exit(1);  // Last Sub
-	if(mascot->mail.last_s) g_free(mascot->mail.last_s);  
-	if(strlen(buf)>=2){
-	  if(g_utf8_validate(buf,-1,NULL)){
-	    mascot->mail.last_s = g_strdup(buf);
-	    strip_last_ret(mascot->mail.last_s);
-	  }
-	  else{
-	    mascot->mail.last_s = g_strdup(_("(Decode Error)"));
-	  }
-	}
-	else{
-	  mascot->mail.last_s = NULL;
-	}
-	g_free(buf);
-	buf=NULL;
-
-	if(mascot->mail.count == 0){
-	  if(pop_froms) g_free(pop_froms);  // fs data clear
- 	  pop_froms = strbuf(NULL);
-	  mascot->mail.displayed_count = 0;
-	}
-	else {
-	  if(mascot->mail.pop3_fs_status == POP3_OK_NORMAL){
-	    if(pre_mail_count > mascot->mail.count){  //メール減った
-	      // メール減った場合は全部取り直しなので fs clear
-	      mascot->mail.displayed_count = mascot->mail.fetched_count; 
-	      if(pop_froms) g_free(pop_froms);
-	      pop_froms = strbuf(NULL);
-	    } 
-	    else {
-	      mascot->mail.displayed_count += mascot->mail.fetched_count; 
-	    }
-
-	    while((buf=fgets_new(fp)) != NULL ){
-	      if(strlen(buf)<5){
-		pop_debug_print("Parent: abnormal prms?\n");
-		break;
-	      }
-	      pop_froms = strbuf( buf );
-	      g_free(buf);
-	      buf=NULL;
-	    }
-	  }
-	  else if(mascot->mail.pop3_fs_status == POP3_OK_FS_OVER){
-	    //ここは無条件で fs clear してよい
-	    mascot->mail.displayed_count = mascot->mail.fetched_count; 
-
-	    if(pop_froms) g_free(pop_froms);    // fs data clear
-	    pop_froms = strbuf(NULL);
-	    sprintf(buf,_(" \n     ***** %d mails are skipped *****\n \n"),
-		    mascot->mail.count - mascot->mail.displayed_count);
-	    pop_froms = strbuf( buf );
-	    while((buf=fgets_new(fp)) != NULL ){
-	      if(strlen(buf)<5){
-		pop_debug_print("Parent: abnormal prms?\n");
-		break;
-	      }
-	      pop_froms = strbuf( buf );
-	      g_free(buf);
-	      buf=NULL;
-	    }
-	  }
-	}
-      }
-      if(close(pop3_fd[0])==-1) fprintf(stderr,"pipe close error\n");
-      fclose( fp );
-    }
-
-    mascot->mail.pop_child_fl=FALSE;
-    mascot->mail.pop_readed=TRUE;
-
-
-    pop_debug_print("Parent: status = %d\n",mascot->mail.status);
-    pop_debug_print("Parent: pop3 fs status = %d\n",mascot->mail.pop3_fs_status);
-    pop_debug_print("Parent: count = %d\n",mascot->mail.count);
-    pop_debug_print("Parent: fetched count = %d\n",mascot->mail.fetched_count);
-    pop_debug_print("Parent: disped count = %d\n",mascot->mail.displayed_count);
-    pop_debug_print("Parent: spam count = %d\n",mascot->mail.spam_count);
-    if(mascot->mail.last_f!=NULL)
-      pop_debug_print("Last From:       %s\n",mascot->mail.last_f);
-    if(mascot->mail.last_s!=NULL)
-      pop_debug_print("Last Subject:    %s\n",mascot->mail.last_s);
-    if(pop_froms!=NULL)
-      pop_debug_print("data2 = %s\n",pop_froms);
-
-    do{
-      int child_ret;
-      child_pid=waitpid(pop3_pid, &child_ret,WNOHANG);
-    } while((child_pid>0)||(child_pid!=-1));
-  }
-}
 #endif
 
 // メールボックスから From: Subject: を取得
@@ -1548,7 +1355,7 @@ gchar * fs_get_mbox(typMascot *mascot){
 	    g_free(f);
 	  }
 	  else{
-	    froms=strbuf("From: (no From: in original)\n");
+	    froms=strbuf(_("From: (no From: in original)\n"));
 	  }
 	  if (s) {
 	    froms=strbuf(" ");
@@ -1557,7 +1364,7 @@ gchar * fs_get_mbox(typMascot *mascot){
 	    g_free(s);
 	  }
 	  else{
-	    froms=strbuf(" Subject: (no Subject: in original)\n");
+	    froms=strbuf(_(" Subject: (no Subject: in original)\n"));
 	  }
 	}
 ed_fl = FALSE;  /* tnaka */
@@ -1668,7 +1475,7 @@ gchar *  fs_get_procmail(typMascot  *mascot){
 		  g_free(f);
 		}
 		else{
-		    froms=strbuf("From: (no From: in original)\n");
+		  froms=strbuf(_("From: (no From: in original)\n"));
 		}
 		if (s) {
 		  froms=strbuf(" ");
@@ -1677,7 +1484,7 @@ gchar *  fs_get_procmail(typMascot  *mascot){
 		  g_free(s);
 		}
 		else{
-		    froms=strbuf(" Subject: (no Subject: in original)\n");
+		  froms=strbuf(_(" Subject: (no Subject: in original)\n"));
 		}
 	    }
 	}
@@ -1809,7 +1616,7 @@ gchar * fs_get_qmail(typMascot *mascot){
 		  g_free(f);
 		}
 		else{
-		    froms=strbuf("From: (no From: in original)\n");
+		  froms=strbuf(_("From: (no From: in original)\n"));
 		}
 		if (s) {
 		    froms=strbuf(" ");
@@ -1818,7 +1625,7 @@ gchar * fs_get_qmail(typMascot *mascot){
 		    g_free(s);
 		}
 		else{
-		    froms=strbuf(" Subject: (no Subject: in original)\n");
+		  froms=strbuf(_(" Subject: (no Subject: in original)\n"));
 		}
 
 	    }
@@ -1983,9 +1790,9 @@ void fs_get_pop3(int num, typMascot *mascot){
     }
     else{
 #ifdef USE_WIN32
-      pop_froms=strbuf("From: (no From: in original)\n");
+      pop_froms=strbuf(_("From: (no From: in original)\n"));
 #else
-      tmp_froms=strbuf("From: (no From: in original)\n");
+      tmp_froms=strbuf(_("From: (no From: in original)\n"));
 #endif
     }
     if (s) {
@@ -2019,9 +1826,9 @@ void fs_get_pop3(int num, typMascot *mascot){
     else{
       pop_debug_print("s=!!!! No Subject !!!!\n");
 #ifdef USE_WIN32
-      pop_froms=strbuf(" Subject: (no Subject: in original)\n");
+      pop_froms=strbuf(_(" Subject: (no Subject: in original)\n"));
 #else
-      tmp_froms=strbuf(" Subject: (no Subject: in original)\n");
+      tmp_froms=strbuf(_(" Subject: (no Subject: in original)\n"));
 #endif
     }
   }
@@ -2187,9 +1994,9 @@ void fs_get_pop3_old(int num, typMascot *mascot){
     }
     else{
 #ifdef USE_WIN32
-      pop_froms=strbuf("From: (no From: in original)\n");
+      pop_froms=strbuf(_("From: (no From: in original)\n"));
 #else
-      tmp_froms=strbuf("From: (no From: in original)\n");
+      tmp_froms=strbuf(_("From: (no From: in original)\n"));
 #endif
     }
     if (s) {
@@ -2223,9 +2030,9 @@ void fs_get_pop3_old(int num, typMascot *mascot){
     else{
       pop_debug_print("s=!!!! No Subject !!!!\n");
 #ifdef USE_WIN32
-      pop_froms=strbuf(" Subject: (no Subject: in original)\n");
+      pop_froms=strbuf(_(" Subject: (no Subject: in original)\n"));
 #else
-      tmp_froms=strbuf(" Subject: (no Subject: in original)\n");
+      tmp_froms=strbuf(_(" Subject: (no Subject: in original)\n"));
 #endif
     }
   }

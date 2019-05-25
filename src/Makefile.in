@@ -111,7 +111,7 @@ am_macopix_OBJECTS = main.$(OBJEXT) callbacks.$(OBJEXT) \
 	unmime.$(OBJEXT) base64.$(OBJEXT) quoted-printable.$(OBJEXT) \
 	unlha.$(OBJEXT) untar.$(OBJEXT) trayicon.$(OBJEXT) \
 	alpha.$(OBJEXT) ssl.$(OBJEXT) sslmanager.$(OBJEXT) \
-	dnd.$(OBJEXT) resources.$(OBJEXT)
+	dnd.$(OBJEXT) resources.$(OBJEXT) http-client.$(OBJEXT)
 macopix_OBJECTS = $(am_macopix_OBJECTS)
 macopix_LDADD = $(LDADD)
 am__DEPENDENCIES_1 =
@@ -451,7 +451,7 @@ top_builddir = @top_builddir@
 top_srcdir = @top_srcdir@
 SUBDIRS = icons
 macopix_SOURCES = \
-	 main.c callbacks.c pixmap.c gui.c balloon.c clock.c configfile.c utils.c gtkut.c mail.c pop.c md5c.c md5ify.c nokkari.c bmp.c bmpwrite.c sockmsg.c codeconv.c unmime.c base64.c quoted-printable.c unlha.c untar.c trayicon.c alpha.c ssl.c sslmanager.c dnd.c resources.c intl.h main.h configfile.h libpop.h md5.h nokkari.h gtkut.h bmp.h sockmsg.h codeconv.h unmime.h base64.h quoted-printable.h tar32api.h ssl.h resources.h
+	 main.c callbacks.c pixmap.c gui.c balloon.c clock.c configfile.c utils.c gtkut.c mail.c pop.c md5c.c md5ify.c nokkari.c bmp.c bmpwrite.c sockmsg.c codeconv.c unmime.c base64.c quoted-printable.c unlha.c untar.c trayicon.c alpha.c ssl.c sslmanager.c dnd.c resources.c http-client.c intl.h main.h configfile.h libpop.h md5.h nokkari.h gtkut.h bmp.h sockmsg.h codeconv.h unmime.h base64.h quoted-printable.h tar32api.h ssl.h resources.h
 
 @HAVE_WINDRES_FALSE@MACOPIX_RES = 
 @HAVE_WINDRES_TRUE@MACOPIX_RES = macopix.res
@@ -584,6 +584,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/dnd.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/gtkut.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/gui.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/http-client.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/mail.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/main.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/md5c.Po@am__quote@

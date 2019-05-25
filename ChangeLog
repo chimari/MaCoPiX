@@ -8,6 +8,8 @@
                       - Gtk TreeView support for Image/Anime/Menu list
 	                in the config window.
                       - fixed bugs (buffer overflow) for POP3 biff.
+                      - Direct Download & Install of official mascots from
+                        official web.
 
 2008.6.24   ver1.7.4  - Fixed a bug on compilation under Gtk+2.10 or earlier.
 

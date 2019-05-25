@@ -455,9 +455,23 @@ int MoveToFocus(typMascot *mascot, gboolean force_fl)
     if(mascot->focus_autobar!=AUTOBAR_MANUAL){ 
       // タイトルバーのサイズを自動検出 
       if(errflag ==0){
+#ifdef USE_GTK3  
+	gdk_x11_display_error_trap_push (gtk_widget_get_display(mascot->win_main));
+#else
+	gdk_error_trap_push ();
+#endif
 	XQueryTree(GDK_WINDOW_XDISPLAY(gtk_widget_get_window(mascot->win_main)),
 		   wf,&rootwin,&parent,&children,&nchildren);
 	if(errflag ==0)  XFree(children);
+#ifdef USE_GTK3
+	error=   gdk_x11_display_error_trap_pop (gtk_widget_get_display(mascot->win_main));
+#else
+	error = gdk_error_trap_pop ();
+#endif
+
+	if(G_UNLIKELY(error == BadWindow)){
+	  g_warning("BadWindow error");
+	}
       }
       else{
 	errflag = 0;
@@ -466,9 +480,23 @@ int MoveToFocus(typMascot *mascot, gboolean force_fl)
       
       if(wf == rootwin){
 	if(errflag ==0){
+#ifdef USE_GTK3  
+	  gdk_x11_display_error_trap_push (gtk_widget_get_display(mascot->win_main));
+#else
+	  gdk_error_trap_push ();
+#endif
 	  XQueryTree(GDK_WINDOW_XDISPLAY(gtk_widget_get_window(mascot->win_main)),
 		     wf,&rootwin,&parent,&children,&nchildren);
 	  if(errflag ==0)  XFree(children);
+#ifdef USE_GTK3
+	  error=   gdk_x11_display_error_trap_pop (gtk_widget_get_display(mascot->win_main));
+#else
+	  error = gdk_error_trap_pop ();
+#endif
+	  
+	  if(G_UNLIKELY(error == BadWindow)){
+	    g_warning("BadWindow error");
+	  }
 	}
 	else{
 	  errflag = 0;
@@ -521,9 +549,23 @@ int MoveToFocus(typMascot *mascot, gboolean force_fl)
 	  
 	  if(mascot->bar_offset!=0){
 	    if(errflag ==0){
+#ifdef USE_GTK3  
+	      gdk_x11_display_error_trap_push (gtk_widget_get_display(mascot->win_main));
+#else
+	      gdk_error_trap_push ();
+#endif
 	      XQueryPointer(GDK_WINDOW_XDISPLAY(gtk_widget_get_window(mascot->win_main)),
 			    wf, &rootwin, &child, &rx, &ry,
 			    &wx, &wy, &mask_return);
+#ifdef USE_GTK3
+	      error=   gdk_x11_display_error_trap_pop (gtk_widget_get_display(mascot->win_main));
+#else
+	      error = gdk_error_trap_pop ();
+#endif
+
+	      if(G_UNLIKELY(error == BadWindow)){
+		g_warning("BadWindow error");
+	      }
 	    }
 	    else{
 	      errflag = 0;
@@ -535,9 +577,23 @@ int MoveToFocus(typMascot *mascot, gboolean force_fl)
 	  wf = parent;
 
 	  if(errflag ==0){
+#ifdef USE_GTK3  
+	    gdk_x11_display_error_trap_push (gtk_widget_get_display(mascot->win_main));
+#else
+	    gdk_error_trap_push ();
+#endif
 	    XQueryTree(GDK_WINDOW_XDISPLAY(gtk_widget_get_window(mascot->win_main)),
 	    	       wf,&rootwin,&parent,&children,&nchildren);
 	    if(errflag ==0)  XFree(children);
+#ifdef USE_GTK3
+	      error=   gdk_x11_display_error_trap_pop (gtk_widget_get_display(mascot->win_main));
+#else
+	      error = gdk_error_trap_pop ();
+#endif
+
+	      if(G_UNLIKELY(error == BadWindow)){
+		g_warning("BadWindow error");
+	      }
 	  }
 	  else{
 	    errflag = 0;
@@ -601,8 +657,22 @@ int MoveToFocus(typMascot *mascot, gboolean force_fl)
       }
 
       if(width==1){  // 直接 Focused Windowのサイズがとれていない
+#ifdef USE_GTK3  
+	gdk_x11_display_error_trap_push (gtk_widget_get_display(mascot->win_main));
+#else
+	gdk_error_trap_push ();
+#endif
 	XQueryTree(GDK_WINDOW_XDISPLAY(gtk_widget_get_window(mascot->win_main)),
 		   wf,&rootwin,&parent,&children,&nchildren);
+#ifdef USE_GTK3
+	error=   gdk_x11_display_error_trap_pop (gtk_widget_get_display(mascot->win_main));
+#else
+	error = gdk_error_trap_pop ();
+#endif
+
+	if(G_UNLIKELY(error == BadWindow)){
+	  g_warning("BadWindow error");
+	}
 	wf=parent;
 	if(errflag ==0){
 	  XGetGeometry(GDK_WINDOW_XDISPLAY(gtk_widget_get_window(mascot->win_main)),
@@ -615,9 +685,23 @@ int MoveToFocus(typMascot *mascot, gboolean force_fl)
       }
 
       if(errflag ==0){
+#ifdef USE_GTK3  
+	gdk_x11_display_error_trap_push (gtk_widget_get_display(mascot->win_main));
+#else
+	gdk_error_trap_push ();
+#endif
 	XQueryPointer(GDK_WINDOW_XDISPLAY(gtk_widget_get_window(mascot->win_main)),
 		      wf, &rootwin, &child, &rx, &ry,
 		      &wx, &wy, &mask_return);
+#ifdef USE_GTK3
+	error=   gdk_x11_display_error_trap_pop (gtk_widget_get_display(mascot->win_main));
+#else
+	error = gdk_error_trap_pop ();
+#endif
+
+	if(G_UNLIKELY(error == BadWindow)){
+	  g_warning("BadWindow error");
+	}
       }
       else{
 	errflag = 0;

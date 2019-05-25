@@ -32,7 +32,6 @@
 
 #include "main.h"
 
-
 // *** GLOBAL ARGUMENT ***
 
 gboolean FlagInstalledMenu;
@@ -68,44 +67,44 @@ void print_common_dir();
 
 
 #ifdef USE_GTK3
-  GdkRGBA init_colclk = {(gdouble)COLOR_CLK_R/(gdouble)0xFFFF,
-			 (gdouble)COLOR_CLK_G/(gdouble)0xFFFF,
-			 (gdouble)COLOR_CLK_B/(gdouble)0xFFFF,
+GdkRGBA init_colclk = {(gdouble)COLOR_CLK_R/(gdouble)0xFFFF,
+		       (gdouble)COLOR_CLK_G/(gdouble)0xFFFF,
+		       (gdouble)COLOR_CLK_B/(gdouble)0xFFFF,
+		       (gdouble)DEF_ALPHA_OTHER/100.0};
+GdkRGBA init_colclksd = {(gdouble)COLOR_CLKSD_R/(gdouble)0xFFFF,
+			 (gdouble)COLOR_CLKSD_G/(gdouble)0xFFFF,
+			 (gdouble)COLOR_CLKSD_B/(gdouble)0xFFFF,
+			 (gdouble)DEF_ALPHA_SDW/100.0};
+GdkRGBA init_colclkbg = {(gdouble)COLOR_CLKBG_R/(gdouble)0xFFFF,
+			 (gdouble)COLOR_CLKBG_G/(gdouble)0xFFFF,
+			 (gdouble)COLOR_CLKBG_B/(gdouble)0xFFFF,
+			 (gdouble)DEF_ALPHA_CLK/100.0};
+GdkRGBA init_colclkbd = {(gdouble)COLOR_CLKBD_R/(gdouble)0xFFFF,
+			 (gdouble)COLOR_CLKBD_G/(gdouble)0xFFFF,
+			 (gdouble)COLOR_CLKBD_B/(gdouble)0xFFFF,
 			 (gdouble)DEF_ALPHA_OTHER/100.0};
-  GdkRGBA init_colclksd = {(gdouble)COLOR_CLKSD_R/(gdouble)0xFFFF,
-			   (gdouble)COLOR_CLKSD_G/(gdouble)0xFFFF,
-			   (gdouble)COLOR_CLKSD_B/(gdouble)0xFFFF,
-			   (gdouble)DEF_ALPHA_SDW/100.0};
-  GdkRGBA init_colclkbg = {(gdouble)COLOR_CLKBG_R/(gdouble)0xFFFF,
-			   (gdouble)COLOR_CLKBG_G/(gdouble)0xFFFF,
-			   (gdouble)COLOR_CLKBG_B/(gdouble)0xFFFF,
-			   (gdouble)DEF_ALPHA_CLK/100.0};
-  GdkRGBA init_colclkbd = {(gdouble)COLOR_CLKBD_R/(gdouble)0xFFFF,
-			   (gdouble)COLOR_CLKBD_G/(gdouble)0xFFFF,
-			   (gdouble)COLOR_CLKBD_B/(gdouble)0xFFFF,
-			   (gdouble)DEF_ALPHA_OTHER/100.0};
-  
-  GdkRGBA init_colbal = {(gdouble)COLOR_BAL_R/(gdouble)0xFFFF,
-			 (gdouble)COLOR_BAL_G/(gdouble)0xFFFF,
-			 (gdouble)COLOR_BAL_B/(gdouble)0xFFFF,
-			 (gdouble)DEF_ALPHA_OTHER/100.0};
-  GdkRGBA init_colbalbg = {(gdouble)COLOR_BALBG_R/(gdouble)0xFFFF,
-			   (gdouble)COLOR_BALBG_G/(gdouble)0xFFFF,
-			   (gdouble)COLOR_BALBG_B/(gdouble)0xFFFF,
+
+GdkRGBA init_colbal = {(gdouble)COLOR_BAL_R/(gdouble)0xFFFF,
+		       (gdouble)COLOR_BAL_G/(gdouble)0xFFFF,
+		       (gdouble)COLOR_BAL_B/(gdouble)0xFFFF,
+		       (gdouble)DEF_ALPHA_OTHER/100.0};
+GdkRGBA init_colbalbg = {(gdouble)COLOR_BALBG_R/(gdouble)0xFFFF,
+			 (gdouble)COLOR_BALBG_G/(gdouble)0xFFFF,
+			 (gdouble)COLOR_BALBG_B/(gdouble)0xFFFF,
 			   (gdouble)DEF_ALPHA_BAL/100.0};
-  GdkRGBA init_colbalbd = {(gdouble)COLOR_BALBD_R/(gdouble)0xFFFF,
-			   (gdouble)COLOR_BALBD_G/(gdouble)0xFFFF,
-			   (gdouble)COLOR_BALBD_B/(gdouble)0xFFFF,
-			   (gdouble)DEF_ALPHA_OTHER/100.0}; 
+GdkRGBA init_colbalbd = {(gdouble)COLOR_BALBD_R/(gdouble)0xFFFF,
+			 (gdouble)COLOR_BALBD_G/(gdouble)0xFFFF,
+			 (gdouble)COLOR_BALBD_B/(gdouble)0xFFFF,
+			 (gdouble)DEF_ALPHA_OTHER/100.0}; 
 #else
-  GdkColor init_colclk = {0, COLOR_CLK_R, COLOR_CLK_G, COLOR_CLK_B};
-  GdkColor init_colclksd = {0, COLOR_CLKSD_R, COLOR_CLKSD_G, COLOR_CLKSD_B};
-  GdkColor init_colclkbg = {0, COLOR_CLKBG_R, COLOR_CLKBG_G, COLOR_CLKBG_B};
-  GdkColor init_colclkbd = {0, COLOR_CLKBD_R, COLOR_CLKBD_G, COLOR_CLKBD_B};
-  
-  GdkColor init_colbal = {0, COLOR_BAL_R, COLOR_BAL_G, COLOR_BAL_B};
-  GdkColor init_colbalbg = {0, COLOR_BALBG_R, COLOR_BALBG_G, COLOR_BALBG_B};
-  GdkColor init_colbalbd = {0, COLOR_BALBD_R, COLOR_BALBD_G, COLOR_BALBD_B};
+GdkColor init_colclk = {0, COLOR_CLK_R, COLOR_CLK_G, COLOR_CLK_B};
+GdkColor init_colclksd = {0, COLOR_CLKSD_R, COLOR_CLKSD_G, COLOR_CLKSD_B};
+GdkColor init_colclkbg = {0, COLOR_CLKBG_R, COLOR_CLKBG_G, COLOR_CLKBG_B};
+GdkColor init_colclkbd = {0, COLOR_CLKBD_R, COLOR_CLKBD_G, COLOR_CLKBD_B};
+
+GdkColor init_colbal = {0, COLOR_BAL_R, COLOR_BAL_G, COLOR_BAL_B};
+GdkColor init_colbalbg = {0, COLOR_BALBG_R, COLOR_BALBG_G, COLOR_BALBG_B};
+GdkColor init_colbalbd = {0, COLOR_BALBD_R, COLOR_BALBD_G, COLOR_BALBD_B};
 #endif 
 
 #ifdef USE_GTK3
@@ -315,69 +314,69 @@ void exit_w_msg(gchar *s){
 gchar *x_locale_to_utf8(gchar *srcstr, gssize len,
 	gsize *r, gsize *w, GError **error, gchar *locale)
 {
-	gchar *res;
-	GIConv converter;
-
-	// Default Code described in mascot file
-	if(locale){
-	  converter = g_iconv_open ("UTF-8//IGNORE", locale);
-	  res = g_convert_with_iconv (srcstr, len, converter, r, w, error);
-	  g_iconv_close(converter);
-	  if (res){
-	    return res;
-	  }
-	}
-
-	// 2nd  current locale
-	res = g_locale_to_utf8 (srcstr, len, r, w, error);
-	if (res) {
-	  locale=NULL;
-	  return res;
-	}
-	
-	// 3rd  MaCoPiX default (EUC-JP)
-	converter = g_iconv_open ("UTF-8//IGNORE", DEF_CODE1);
-	res = g_convert_with_iconv (srcstr, len, converter, r, w, error);
-	g_iconv_close(converter);
-	if (res) {
-	  locale=g_strdup(DEF_CODE1);
-	  return (res);
-	}
-	else{
-	  return (srcstr);
-	}
+  gchar *res;
+  GIConv converter;
+  
+  // Default Code described in mascot file
+  if(locale){
+    converter = g_iconv_open ("UTF-8//IGNORE", locale);
+    res = g_convert_with_iconv (srcstr, len, converter, r, w, error);
+    g_iconv_close(converter);
+    if (res){
+      return res;
+    }
+  }
+  
+  // 2nd  current locale
+  res = g_locale_to_utf8 (srcstr, len, r, w, error);
+  if (res) {
+    locale=NULL;
+    return res;
+  }
+  
+  // 3rd  MaCoPiX default (EUC-JP)
+  converter = g_iconv_open ("UTF-8//IGNORE", DEF_CODE1);
+  res = g_convert_with_iconv (srcstr, len, converter, r, w, error);
+  g_iconv_close(converter);
+  if (res) {
+    locale=g_strdup(DEF_CODE1);
+    return (res);
+  }
+  else{
+    return (srcstr);
+  }
 }
 
 gchar *x_locale_from_utf8(gchar *srcstr, gssize len,
 	gsize *r, gsize *w, GError **error, gchar *locale)
 {
-	gchar *res;
-	gchar *tmp_locale;
-	GIConv converter;
-	
-	
-	// Default Code described in mascot file
-	if(locale){
-	  tmp_locale=g_strconcat(locale,"//IGNORE",NULL);
-	  converter = g_iconv_open (tmp_locale,"UTF-8");
-	  g_free(tmp_locale);
-	  res = g_convert_with_iconv (srcstr, len, converter, r, w, error);
-	  g_iconv_close(converter);
-	  if (res) 
-	    return res;
-	}
-
-	// 2nd  current locale
-	res = g_locale_to_utf8 (srcstr, len, r, w, error);
-	if (res) 
-		return res;
-	
-	// 3rd  MaCoPiX default (EUC-JP)
-	converter = g_iconv_open (DEF_CODE1 "//IGNORE","UTF-8");
-	res = g_convert_with_iconv (srcstr, len, converter, r, w, error);
-	g_iconv_close(converter);
-	if (res) return res;
-	else return (srcstr);
+  gchar *res;
+  gchar *tmp_locale;
+  GIConv converter;
+  
+  
+  // Default Code described in mascot file
+  if(locale){
+    tmp_locale=g_strconcat(locale,"//IGNORE",NULL);
+    converter = g_iconv_open (tmp_locale,"UTF-8");
+    g_free(tmp_locale);
+    res = g_convert_with_iconv (srcstr, len, converter, r, w, error);
+    g_iconv_close(converter);
+    if (res) 
+      return res;
+  }
+  
+  // 2nd  current locale
+  res = g_locale_to_utf8 (srcstr, len, r, w, error);
+  if (res) 
+    return res;
+  
+  // 3rd  MaCoPiX default (EUC-JP)
+  converter = g_iconv_open (DEF_CODE1 "//IGNORE","UTF-8");
+  res = g_convert_with_iconv (srcstr, len, converter, r, w, error);
+  g_iconv_close(converter);
+  if (res) return res;
+  else return (srcstr);
 }
 
 gchar* to_utf8(gchar *input){
@@ -4000,6 +3999,375 @@ void SetColorForReleaseData(typMascot *mascot, gboolean def_flag,
 }
 
 
+  
+void create_dl_smenu_dialog(typMascot *mascot, gboolean flag_popup){
+  ConfigFile *cfgfile;
+  FILE *fp;
+  GtkWidget *dialog, *vbox, *label, *button, *bar, *table, *scrwin, *rb[MAX_TGZ_FILE];
+  gchar *menu_code, *list_tmp=NULL;
+  gint i_list=0, i_list_max, i_selected=0;
+  gchar *tgz_file[MAX_TGZ_FILE];
+  gchar *ename=NULL, *lname=NULL, *code=NULL, *ver=NULL, *date=NULL;
+  gint num;
+  gchar *dummy=NULL;
+  gchar *tmp;
+  gboolean flag_install;
+
+  cfgfile = xmms_cfg_open_file(mascot->http_dlfile);
+
+  if (cfgfile) {
+    if(!xmms_cfg_read_string(cfgfile, "General", "code",&menu_code)){
+      menu_code = NULL;
+    }
+
+    dialog = gtk_dialog_new();
+    gtk_window_set_title(GTK_WINDOW(dialog), _("MaCoPiX : Download & Install Mascot"));
+    gtk_container_set_border_width(GTK_CONTAINER(gtk_dialog_get_content_area(GTK_DIALOG(dialog))),5);
+    gtk_window_set_title(GTK_WINDOW(dialog),"MaCoPiX : Downloading Official Mascot List");
+    gtk_window_set_decorated(GTK_WINDOW(dialog),TRUE);
+
+    label=gtkut_label_new(("Select a mascot file to download &amp; install to your system."));
+#ifdef USE_GTK3
+    gtk_widget_set_halign (label, GTK_ALIGN_START);
+    gtk_widget_set_valign (label, GTK_ALIGN_CENTER);
+#else
+    gtk_misc_set_alignment (GTK_MISC (label), 0.0, 0.5);
+#endif
+    gtk_box_pack_start(GTK_BOX(gtk_dialog_get_content_area(GTK_DIALOG(dialog))),
+		       label,FALSE,FALSE, 0);
+    
+    label=gtkut_label_new("");
+#ifdef USE_GTK3
+    gtk_widget_set_halign (label, GTK_ALIGN_START);
+    gtk_widget_set_valign (label, GTK_ALIGN_CENTER);
+#else
+    gtk_misc_set_alignment (GTK_MISC (label), 0.0, 0.5);
+#endif
+    gtk_box_pack_start(GTK_BOX(gtk_dialog_get_content_area(GTK_DIALOG(dialog))),
+		       label,TRUE,TRUE,0);
+
+    
+    scrwin= gtk_scrolled_window_new (NULL, NULL);
+    gtk_widget_set_size_request (scrwin, 400, 250);
+    gtk_box_pack_start(GTK_BOX(gtk_dialog_get_content_area(GTK_DIALOG(dialog))),
+		       scrwin,TRUE,TRUE,0);
+    gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW(scrwin),
+				    GTK_POLICY_NEVER,
+				    GTK_POLICY_AUTOMATIC);
+    
+    table = gtkut_table_new (7, MAX_TGZ_FILE, FALSE, 10, 10, 10);
+#ifdef USE_GTK3
+    gtk_container_add(GTK_CONTAINER(scrwin),table);
+#else
+    gtk_scrolled_window_add_with_viewport(GTK_SCROLLED_WINDOW (scrwin), table);
+#endif
+    
+    label=gtk_label_new(_("File"));
+#ifdef USE_GTK3
+    gtk_widget_set_halign (label, GTK_ALIGN_CENTER);
+    gtk_widget_set_valign (label, GTK_ALIGN_CENTER);
+#else
+    gtk_misc_set_alignment (GTK_MISC (label), 0.0, 0.5);
+#endif
+    gtkut_table_attach(table, label, 0, 1, 0, 1,
+		       GTK_SHRINK,GTK_SHRINK,0,0);
+
+    label=gtk_label_new(_("Name (E)"));
+#ifdef USE_GTK3
+    gtk_widget_set_halign (label, GTK_ALIGN_CENTER);
+    gtk_widget_set_valign (label, GTK_ALIGN_CENTER);
+#else
+    gtk_misc_set_alignment (GTK_MISC (label), 0.0, 0.5);
+#endif
+    gtkut_table_attach(table, label, 1, 2, 0, 1,
+		       GTK_SHRINK,GTK_SHRINK,0,0);
+
+    tmp=g_strdup_printf(_("Name (%s)"), menu_code);
+    label=gtk_label_new(tmp);
+#ifdef USE_GTK3
+    gtk_widget_set_halign (label, GTK_ALIGN_CENTER);
+    gtk_widget_set_valign (label, GTK_ALIGN_CENTER);
+#else
+    gtk_misc_set_alignment (GTK_MISC (label), 0.0, 0.5);
+#endif
+    gtkut_table_attach(table, label, 2, 3, 0, 1,
+		       GTK_SHRINK,GTK_SHRINK,0,0);
+    g_free(tmp);
+
+    label=gtk_label_new(_("Registered"));
+#ifdef USE_GTK3
+    gtk_widget_set_halign (label, GTK_ALIGN_CENTER);
+    gtk_widget_set_valign (label, GTK_ALIGN_CENTER);
+#else
+    gtk_misc_set_alignment (GTK_MISC (label), 0.0, 0.5);
+#endif
+    gtkut_table_attach(table, label, 3, 4, 0, 1,
+		       GTK_SHRINK,GTK_SHRINK,0,0);
+
+    label=gtk_label_new(_("Ver."));
+#ifdef USE_GTK3
+    gtk_widget_set_halign (label, GTK_ALIGN_CENTER);
+    gtk_widget_set_valign (label, GTK_ALIGN_CENTER);
+#else
+    gtk_misc_set_alignment (GTK_MISC (label), 0.0, 0.5);
+#endif
+    gtkut_table_attach(table, label, 4, 5, 0, 1,
+		       GTK_SHRINK,GTK_SHRINK,0,0);
+
+    label=gtk_label_new(_("Date"));
+#ifdef USE_GTK3
+    gtk_widget_set_halign (label, GTK_ALIGN_CENTER);
+    gtk_widget_set_valign (label, GTK_ALIGN_CENTER);
+#else
+    gtk_misc_set_alignment (GTK_MISC (label), 0.0, 0.5);
+#endif
+    gtkut_table_attach(table, label, 5, 6, 0, 1,
+		       GTK_SHRINK,GTK_SHRINK,0,0);
+
+    label=gtk_label_new(_("Code"));
+#ifdef USE_GTK3
+    gtk_widget_set_halign (label, GTK_ALIGN_CENTER);
+    gtk_widget_set_valign (label, GTK_ALIGN_CENTER);
+#else
+    gtk_misc_set_alignment (GTK_MISC (label), 0.0, 0.5);
+#endif
+    gtkut_table_attach(table, label, 6, 7, 0, 1,
+		       GTK_SHRINK,GTK_SHRINK,0,0);
+
+
+    list_tmp=g_strdup_printf("list-%03d", i_list);
+
+    while((xmms_cfg_read_string(cfgfile, list_tmp, "file", &tgz_file[i_list])) && (i_list<MAX_TGZ_FILE-1)){
+
+      if(!xmms_cfg_read_string(cfgfile, list_tmp, "ename", &ename)){
+	ename=g_strdup("(<i>Not found</i>)");
+      }
+
+      if(!xmms_cfg_read_string(cfgfile, list_tmp, "lname", &dummy)){
+	dummy=NULL;
+      }
+      if(dummy){
+	dummy=x_locale_to_utf8(dummy,-1,NULL,NULL,NULL,menu_code);
+	if(!dummy) dummy=g_strdup(_("(<i>Invalid Character Code</i>)"));
+      }
+      else{
+	dummy=g_strdup(_("(<i>Invalid Character Code</i>)"));
+      }
+      lname=g_strdup(dummy);
+
+      if(!xmms_cfg_read_string(cfgfile, list_tmp, "date", &date)){
+	date=g_strdup("(<i>Not found</i>)");
+      }
+      
+      if(!xmms_cfg_read_string(cfgfile, list_tmp, "ver", &ver)){
+	ver=g_strdup("(<i>Not found</i>)");
+      }
+
+      if(!xmms_cfg_read_string(cfgfile, list_tmp, "code", &code)){
+	code=g_strdup("(<i>Not found</i>)");
+      }
+
+      if(!xmms_cfg_read_int(cfgfile, list_tmp, "num", &num)){
+	num=-1;
+      }
+
+      rb[i_list] = gtk_radio_button_new_with_label_from_widget ((i_list==0) ? NULL : GTK_RADIO_BUTTON(rb[0]),
+								tgz_file[i_list]);
+      gtkut_table_attach(table, rb[i_list], 0, 1, i_list+1, i_list+2,
+			 GTK_FILL|GTK_EXPAND,GTK_SHRINK,0,0);
+      gtk_widget_show (rb[i_list]);
+      my_signal_connect (rb[i_list], "toggled", cc_radio, &i_selected);
+      gtk_widget_show_all(rb[i_list]);
+    
+      label=gtk_label_new(ename);
+#ifdef USE_GTK3
+      gtk_widget_set_halign (label, GTK_ALIGN_START);
+      gtk_widget_set_valign (label, GTK_ALIGN_CENTER);
+#else
+      gtk_misc_set_alignment (GTK_MISC (label), 0.0, 0.5);
+#endif
+      gtkut_table_attach(table, label, 1, 2, i_list+1, i_list+2,
+			 GTK_EXPAND|GTK_FILL,GTK_SHRINK,0,0);
+
+      label=gtk_label_new(lname);
+#ifdef USE_GTK3
+      gtk_widget_set_halign (label, GTK_ALIGN_START);
+      gtk_widget_set_valign (label, GTK_ALIGN_CENTER);
+#else
+      gtk_misc_set_alignment (GTK_MISC (label), 0.0, 0.5);
+#endif
+      gtkut_table_attach(table, label, 2, 3, i_list+1, i_list+2,
+			 GTK_EXPAND|GTK_FILL,GTK_SHRINK,0,0);
+      
+      if(num>0){
+	tmp=g_strdup_printf(_("%d mascot"), num);
+      }
+      else{
+	tmp=g_strdup(_("<i>unkown</i>"));
+      }
+      label=gtk_label_new(_(tmp));
+#ifdef USE_GTK3
+      gtk_widget_set_halign (label, GTK_ALIGN_CENTER);
+      gtk_widget_set_valign (label, GTK_ALIGN_CENTER);
+#else
+      gtk_misc_set_alignment (GTK_MISC (label), 0.0, 0.5);
+#endif
+      gtkut_table_attach(table, label, 3, 4, i_list+1, i_list+2,
+			 GTK_SHRINK,GTK_SHRINK,0,0);
+      g_free(tmp);
+      
+      label=gtk_label_new(ver);
+#ifdef USE_GTK3
+      gtk_widget_set_halign (label, GTK_ALIGN_CENTER);
+      gtk_widget_set_valign (label, GTK_ALIGN_CENTER);
+#else
+      gtk_misc_set_alignment (GTK_MISC (label), 0.0, 0.5);
+#endif
+      gtkut_table_attach(table, label, 4, 5, i_list+1, i_list+2,
+			 GTK_SHRINK,GTK_SHRINK,0,0);
+      
+      label=gtk_label_new(date);
+#ifdef USE_GTK3
+      gtk_widget_set_halign (label, GTK_ALIGN_CENTER);
+      gtk_widget_set_valign (label, GTK_ALIGN_CENTER);
+#else
+      gtk_misc_set_alignment (GTK_MISC (label), 0.0, 0.5);
+#endif
+      gtkut_table_attach(table, label, 5, 6, i_list+1, i_list+2,
+			 GTK_SHRINK,GTK_SHRINK,0,0);
+
+      label=gtk_label_new(code);
+#ifdef USE_GTK3
+      gtk_widget_set_halign (label, GTK_ALIGN_CENTER);
+      gtk_widget_set_valign (label, GTK_ALIGN_CENTER);
+#else
+      gtk_misc_set_alignment (GTK_MISC (label), 0.0, 0.5);
+#endif
+      gtkut_table_attach(table, label, 6, 7, i_list+1, i_list+2,
+			 GTK_SHRINK,GTK_SHRINK,0,0);
+      
+           
+      g_free(ename);
+      g_free(lname);
+      g_free(date);
+      g_free(ver);
+      g_free(code);
+      g_free(list_tmp);
+
+      i_list++;
+      list_tmp=g_strdup_printf("list-%03d", i_list);
+    }
+
+    gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(rb[0]),TRUE);
+    i_list_max=i_list;
+    g_free(list_tmp);
+
+    xmms_cfg_free(cfgfile);
+    
+#ifdef USE_GTK3
+    button=gtkut_button_new_from_icon_name(_("Download / Install"), "document-save");
+#else
+    button=gtkut_button_new_from_stock(_("Download / Install"), GTK_STOCK_OK);
+#endif
+    gtk_dialog_add_action_widget(GTK_DIALOG(dialog),button,GTK_RESPONSE_OK);
+
+#ifdef USE_GTK3
+    button=gtkut_button_new_from_icon_name(_("Cancel"), "process-stop");
+#else
+    button=gtkut_button_new_from_stock(_("Cancel"), GTK_STOCK_CANCEL);
+#endif
+    gtk_dialog_add_action_widget(GTK_DIALOG(dialog),button,GTK_RESPONSE_CANCEL);
+    
+    gtk_widget_show_all(dialog);
+
+    if (gtk_dialog_run(GTK_DIALOG(dialog)) == GTK_RESPONSE_OK) {
+      gtk_widget_destroy(dialog);
+
+      if(access(mascot->http_dlfile,F_OK)==0){
+	unlink(mascot->http_dlfile);
+      }
+
+      if(mascot->http_host) g_free(mascot->http_host);
+      mascot->http_host=g_strdup(HTTP_MASCOT_HOST);
+      
+      if(mascot->http_path) g_free(mascot->http_path);
+      mascot->http_path=g_strconcat(HTTP_MASCOT_PATH, tgz_file[i_selected], NULL);
+      
+      if(mascot->http_dlfile) g_free(mascot->http_dlfile);
+      mascot->http_dlfile=g_strdup_printf("%s%s%s",
+					  g_get_tmp_dir(), G_DIR_SEPARATOR_S,
+					  tgz_file[i_selected]);
+      dl_mascot_tgz(mascot);
+
+      if(access(mascot->http_dlfile,F_OK)==0){
+	flag_install=mascot->flag_install;
+	
+	select_menu_from_ext(mascot, mascot->http_dlfile);
+	mascot->flag_install=TRUE;
+	mascot->flag_common=FALSE;
+	mascot->flag_ow=TRUE;
+	mascot->flag_ow_ini=TRUE;
+	
+	if(flag_popup){// Popup¤«¤é
+	  gtk_widget_destroy(mascot->PopupMenu);
+	  ReadMenu(mascot,0,NULL);
+	  mascot->PopupMenu=make_popup_menu(mascot);
+	  AllRandomChangeMascotMenu(NULL, (gpointer)mascot);
+	}
+	else{
+	  ReadMenu(mascot,0,NULL);
+	  mascot->PopupMenu=make_popup_menu(mascot);
+	}
+	
+	unlink(mascot->http_dlfile);
+	
+	mascot->flag_menu=FALSE;
+
+	mascot->flag_install=flag_install;
+	mascot->flag_common=FALSE;
+      }
+      else{
+	tmp=g_strconcat(mascot->http_host,
+			mascot->http_path,
+			NULL);
+	popup_message(NULL,
+#ifdef USE_GTK3
+		      "dialog-error", 
+#else
+		      GTK_STOCK_DIALOG_ERROR,
+#endif
+		      -1,
+		      _("Error : Cannot download the mascot archive file (tar.gz)."),
+		      " ",
+		      tmp,
+		      NULL);
+	g_free(tmp);
+      }
+   }
+    else{
+      gtk_widget_destroy(dialog);
+      
+      if(access(mascot->http_dlfile,F_OK)==0){
+	unlink(mascot->http_dlfile);
+      }
+    }
+  }
+  else{
+    popup_message(NULL,
+#ifdef USE_GTK3
+		  "dialog-error", 
+#else
+		  GTK_STOCK_DIALOG_ERROR,
+#endif
+		  -1,
+		  _("Error : Cannot read the downloaded mascot list."),
+		  " ",
+		  mascot->http_dlfile,
+		  NULL);
+  }
+}
+
+
 void InitMascot(typMascot *mascot)
 {
   int i_ptn,i_frm, i_pix;
@@ -4638,6 +5006,10 @@ int main(int argc, char **argv)
 
   ReadRC(Mascot,FALSE);
 
+  Mascot->http_host=NULL;
+  Mascot->http_path=NULL;
+  Mascot->http_dlfile=NULL;
+
 #ifdef USE_BIFF
   Mascot->mail.flag=FALSE;
 #endif
@@ -4809,5 +5181,4 @@ int main(int argc, char **argv)
 
   return 0;
 }
-  
   

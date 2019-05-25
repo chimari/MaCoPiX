@@ -65,15 +65,15 @@ SSL *ssl;
 gint sock_gets();
 gint sock_write();
 gint sock_write_all();
-gint fd_recv();
-gint fd_write();
+//gint fd_recv();
+//gint fd_write();
 gint fd_write_all();
-gint fd_gets();
+//gint fd_gets();
 #ifdef USE_SSL
-gint ssl_read();
-gint ssl_peek();
-gint ssl_gets();
-gint ssl_write();
+//gint ssl_read();
+//gint ssl_peek();
+//gint ssl_gets();
+//gint ssl_write();
 gint ssl_write_all();
 static gint set_nonblocking_mode(gint fd, gboolean nonblock);
 #endif

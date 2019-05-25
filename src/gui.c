@@ -146,7 +146,6 @@ static void cc_get_combo_box_boolean();
 static void cc_move();
 static void cc_clkmode ();
 static void cc_clktype ();
-void cc_radio();
 static void cc_homepos ();
 static void cc_autobar ();
 static void cc_ip_style();
@@ -328,8 +327,6 @@ void do_install_user_mascot();
 void do_install_common_mascot();
 #endif
 void do_select_mascot();
-
-gint select_menu_from_ext();
 
 
 // Img Tree
@@ -10604,6 +10601,16 @@ GtkWidget * make_install_menu(typMascot *mascot)
   }
 #endif
 
+  bar =gtk_menu_item_new();
+  gtk_widget_show (bar);
+  gtk_container_add (GTK_CONTAINER (popup_menu), bar);
+  
+  popup_button =gtk_menu_item_new_with_label (_("Download Official Mascots"));
+  gtk_widget_show (popup_button);
+  gtk_container_add (GTK_CONTAINER (popup_menu), popup_button);
+  my_signal_connect (popup_button, "activate", popup_dl_mascot_list,
+		     (gpointer)mascot);
+  
   return(popup_menu);
 }
 
@@ -11131,12 +11138,22 @@ void create_smenu_dialog(typMascot *mascot, gboolean flag_popup)
     gtk_box_pack_start(GTK_BOX(vbox2),
 		       label,TRUE,TRUE,0);
 
+    label=gtkut_label_new(_(" or directly download &amp; install them from MaCoPiX official web."));
+    gtkut_pos(label, POS_START, POS_CENTER);
+    gtk_box_pack_start(GTK_BOX(vbox2),
+		       label,TRUE,TRUE,0);
+
+    button = gtk_button_new_with_label(_("Download & install MaCoPiX official mascots."));
+    gtk_box_pack_start(GTK_BOX(vbox2), button, TRUE, FALSE, 0);
+    gtk_button_set_relief(GTK_BUTTON(button), GTK_RELIEF_NONE);
+    my_signal_connect(button,"clicked", smenu_dl_mascot_list, (gpointer)mascot);
+
     label=gtkut_label_new("");
     gtkut_pos(label, POS_START, POS_CENTER);
     gtk_box_pack_start(GTK_BOX(vbox2),
 		       label,TRUE,TRUE,0);
 
-    label=gtkut_label_new(_("You can download mascot files from MaCoPiX official web."));
+    label=gtkut_label_new(_("See more details in MaCoPiX official web."));
     gtkut_pos(label, POS_START, POS_CENTER);
     gtk_box_pack_start(GTK_BOX(vbox2),
 		       label,TRUE,TRUE,0);
@@ -11151,7 +11168,7 @@ void create_smenu_dialog(typMascot *mascot, gboolean flag_popup)
     my_signal_connect(button,"clicked",uri_clicked, NULL);
 #else
     label = gtkut_label_new (DEFAULT_URL);
-    gtkut_pos(label, POS_START, POS_CENTER);
+    gtkut_pos(label, POS_CENTER, POS_CENTER);
     gtk_box_pack_start(GTK_BOX(vbox2),
 		       label,TRUE,TRUE,0);
 #endif
@@ -11358,6 +11375,17 @@ GtkWidget *make_start_menubar(typMascot *mascot){
   my_signal_connect (popup_button, "activate",do_install_common_mascot,
 		     (gpointer)mascot);
 #endif
+
+  bar =gtk_menu_item_new();
+  gtk_widget_show (bar);
+  gtk_container_add (GTK_CONTAINER (menu), bar);
+
+  popup_button =gtk_menu_item_new_with_label (_("Download & Install Official Mascots [User]"));
+  gtk_widget_show (popup_button);
+  gtk_container_add (GTK_CONTAINER (menu), popup_button);
+  my_signal_connect (popup_button, "activate", smenu_dl_mascot_list,
+		     (gpointer)mascot);
+  
 
   // Open
   menu_item=gtkut_menu_item_new_with_icon(
@@ -11571,10 +11599,10 @@ void popup_message(GtkWidget *parent, gchar* stock_id,gint delay, ...){
   if(delay>0){
     dialog = gtk_dialog_new();
     gtk_window_set_transient_for(GTK_WINDOW(dialog),(parent) ? GTK_WINDOW(parent) : NULL);
-    gtk_window_set_title(GTK_WINDOW(dialog),"MaCoPiX : Message");
+    gtk_window_set_title(GTK_WINDOW(dialog),_("MaCoPiX : Message"));
   }
   else{
-    dialog = gtk_dialog_new_with_buttons("MaCoPiX : Message",
+    dialog = gtk_dialog_new_with_buttons(_("MaCoPiX : Message"),
 					 (parent) ? GTK_WINDOW(parent) : NULL,
 					 GTK_DIALOG_MODAL,
 #ifdef USE_GTK3
@@ -13038,3 +13066,4 @@ static void cattree_down_tgt (GtkWidget *widget, gpointer gdata)
   make_cat_tree(mascot,i_cat);
   cattree_select_tgt(mascot->cattree[i_cat], i_tgt+1, mascot->menu_tgt_max[i_cat]);
 }
+
