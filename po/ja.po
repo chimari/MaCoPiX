@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: macopix 1.6.2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-05-26 17:48-1000\n"
+"POT-Creation-Date: 2019-05-26 20:23-1000\n"
 "PO-Revision-Date: 2008-05-23 19:29-1000\n"
 "Last-Translator: Kurumi Chimari <chimari@rosegray.sakura.ne.jp>\n"
 "Language-Team: Japansese <chimari@rosegray.sakura.ne.jp>\n"
@@ -79,23 +79,29 @@ msgstr ""
 msgid "MaCoPiX : Installing Mascot Menu File"
 msgstr "MaCoPiX : マスコットメニューファイルをインストール"
 
-#: src/dnd.c:188 src/gui.c:5881 src/gui.c:11029 src/gui.c:11253
-#: src/nokkari.c:890 src/sslmanager.c:157
+#: src/dnd.c:188 src/gui.c:2176 src/gui.c:2501 src/gui.c:2674 src/gui.c:4253
+#: src/gui.c:4315 src/gui.c:4380 src/gui.c:4477 src/gui.c:5160 src/gui.c:5277
+#: src/gui.c:5367 src/gui.c:5533 src/gui.c:5783 src/gui.c:5908 src/gui.c:6059
+#: src/gui.c:11207 src/gui.c:11431 src/gui.c:11798 src/gui.c:11890
+#: src/gui.c:12083 src/nokkari.c:890 src/sslmanager.c:157
 msgid "OK"
 msgstr "了承"
 
-#: src/dnd.c:198 src/gui.c:11018 src/gui.c:11242 src/main.c:4246
+#: src/dnd.c:198 src/gui.c:2167 src/gui.c:2492 src/gui.c:2665 src/gui.c:4244
+#: src/gui.c:4306 src/gui.c:4371 src/gui.c:4468 src/gui.c:5151 src/gui.c:5268
+#: src/gui.c:5358 src/gui.c:5524 src/gui.c:5774 src/gui.c:5899 src/gui.c:11196
+#: src/gui.c:11420 src/gui.c:11881 src/gui.c:12074 src/main.c:4246
 #: src/main.c:4248 src/sslmanager.c:167
 msgid "Cancel"
 msgstr "嫌です"
 
-#: src/gui.c:466 src/gui.c:5763 src/gui.c:5780
+#: src/gui.c:466 src/gui.c:5937 src/gui.c:5954
 #, c-format
 msgid "Saved Resource as ...%%n    \"%s\""
 msgstr "共通設定を保存しました. %%n    \"%s\""
 
-#: src/gui.c:478 src/gui.c:526 src/gui.c:5079 src/gui.c:5091 src/gui.c:5442
-#: src/gui.c:5513
+#: src/gui.c:478 src/gui.c:526 src/gui.c:5187 src/gui.c:5199 src/gui.c:5590
+#: src/gui.c:5661
 #, c-format
 msgid "Saved Mascot as ...%%n    \"%s\""
 msgstr "マスコットを保存しました.%%n    \"%s\""
@@ -134,11 +140,11 @@ msgstr "%%a共通設定からデフォルトメニューの指定を消去しま
 msgid "Select New Image for No.%02d"
 msgstr "%02d番の画像を選択"
 
-#: src/gui.c:1656 src/gui.c:1771 src/gui.c:1851 src/gui.c:1956 src/gui.c:2812
-#: src/gui.c:2913 src/gui.c:3295 src/gui.c:3414 src/gui.c:3505 src/gui.c:3593
-#: src/gui.c:3796 src/gui.c:4054 src/gui.c:4123 src/gui.c:4557 src/gui.c:4740
-#: src/gui.c:4855 src/gui.c:4930 src/gui.c:5030 src/gui.c:5132 src/gui.c:5359
-#: src/gui.c:5600 src/gui.c:5712
+#: src/gui.c:1656 src/gui.c:1771 src/gui.c:1851 src/gui.c:1956 src/gui.c:2859
+#: src/gui.c:2960 src/gui.c:3342 src/gui.c:3461 src/gui.c:3552 src/gui.c:3640
+#: src/gui.c:3843 src/gui.c:4101 src/gui.c:4170 src/gui.c:4652 src/gui.c:4835
+#: src/gui.c:4950 src/gui.c:5025 src/gui.c:5125 src/gui.c:5240 src/gui.c:5494
+#: src/gui.c:5748 src/gui.c:5873
 msgid "All File"
 msgstr "すべてのファイル"
 
@@ -146,10 +152,10 @@ msgstr "すべてのファイル"
 msgid "Error: File cannot be loaded."
 msgstr "エラー : ファイルがロードできません。"
 
-#: src/gui.c:1699 src/gui.c:1791 src/gui.c:1881 src/gui.c:2002 src/gui.c:2839
-#: src/gui.c:2944 src/gui.c:3330 src/gui.c:3441 src/gui.c:3532 src/gui.c:3618
-#: src/gui.c:3741 src/gui.c:3824 src/gui.c:4077 src/gui.c:4152 src/gui.c:4606
-#: src/gui.c:4788 src/gui.c:4881 src/gui.c:4977 src/unlha.c:93 src/untar.c:180
+#: src/gui.c:1699 src/gui.c:1791 src/gui.c:1881 src/gui.c:2002 src/gui.c:2886
+#: src/gui.c:2991 src/gui.c:3377 src/gui.c:3488 src/gui.c:3579 src/gui.c:3665
+#: src/gui.c:3788 src/gui.c:3871 src/gui.c:4124 src/gui.c:4199 src/gui.c:4701
+#: src/gui.c:4883 src/gui.c:4976 src/gui.c:5072 src/unlha.c:93 src/untar.c:180
 msgid "Error: File cannot be opened."
 msgstr "エラー: ファイルを開けません。"
 
@@ -191,254 +197,253 @@ msgstr "エラー : 画像削除"
 msgid "Please Change..."
 msgstr "設定変更をしてください..."
 
-#: src/gui.c:2146 src/gui.c:2437
+#: src/gui.c:2146 src/gui.c:2453
 msgid "Error: Append Pattern."
 msgstr "エラー: パターン追加"
 
-#: src/gui.c:2148 src/gui.c:2439
+#: src/gui.c:2148 src/gui.c:2455
 msgid "The number of patterns maxes out."
 msgstr "登録パターン数が最大です。"
 
-#: src/gui.c:2157
+#: src/gui.c:2160
 msgid "Select Pattern No. to Append"
 msgstr "パターン追加"
 
-#: src/gui.c:2175
+#: src/gui.c:2191
 msgid "Append Pattern No."
 msgstr "追加するパターン番号"
 
-#: src/gui.c:2296
+#: src/gui.c:2312
 msgid "Error: Delete Pattern."
 msgstr "エラー: パターン削除"
 
-#: src/gui.c:2298
+#: src/gui.c:2314
 msgid "You cannot delete the Base pattern."
 msgstr "基底パターンは削除できません。"
 
-#: src/gui.c:2305
+#: src/gui.c:2321
 #, c-format
 msgid "Do you really delete Pattern <b>%02d</b>?"
 msgstr "本当にパターン <b>%02d</b> を消去しますか？"
 
-#: src/gui.c:2314 src/gui.c:3011 src/gui.c:3173
+#: src/gui.c:2330 src/gui.c:3058 src/gui.c:3220
 msgid "Warning: Delete Pattern."
 msgstr "警告: パターン削除"
 
-#: src/gui.c:2455
+#: src/gui.c:2471
 msgid "Error: Copy Pattern."
 msgstr "エラー: パターンコピー"
 
-#: src/gui.c:2457
+#: src/gui.c:2473
 msgid "You cannot copy the Base pattern."
 msgstr "基底パターンは削除できません。"
 
-#: src/gui.c:2466
+#: src/gui.c:2485
 msgid "Pattern Copy"
 msgstr "パターンコピー"
 
-#: src/gui.c:2484
+#: src/gui.c:2516
 #, c-format
 msgid "Pattern Copy No. <b>%02d</b> to No. "
 msgstr "パターン <b>%02d</b> をコピーします :  "
 
-#: src/gui.c:2607
+#: src/gui.c:2639
 msgid "Error: Append Frame."
 msgstr "エラー: フレーム追加"
 
-#: src/gui.c:2609
+#: src/gui.c:2641
 msgid "The number of frames maxes out."
 msgstr "登録フレーム数が最大です。"
 
-#: src/gui.c:2623
+#: src/gui.c:2658
 msgid "Select Frame No. to Append"
 msgstr "フレーム追加"
 
-#: src/gui.c:2641
+#: src/gui.c:2688
 msgid "Append Frame No."
 msgstr "追加するフレーム番号"
 
-#: src/gui.c:2724 src/gui.c:2740
+#: src/gui.c:2771 src/gui.c:2787
 msgid "Error: Delete Frame."
 msgstr "エラー : フレーム削除"
 
-#: src/gui.c:2726
+#: src/gui.c:2773
 msgid "You cannot delete no more frames."
 msgstr "これ以上フレームの削除はできません。"
 
-#: src/gui.c:2742
+#: src/gui.c:2789
 msgid "Please select a frame to delete."
 msgstr "削除するフレームを選択してください。"
 
 #. Win構築は重いので先にExposeイベント等をすべて処理してから
 #. while (my_main_iteration(FALSE));
-#: src/gui.c:2793 src/gui.c:3389
+#: src/gui.c:2840 src/gui.c:3436
 msgid "Select Mascot File"
 msgstr "マスコットファイルの選択"
 
-#: src/gui.c:2811 src/gui.c:2912 src/gui.c:3413 src/gui.c:4053 src/gui.c:4556
-#: src/gui.c:5029 src/gui.c:5358 src/gui.c:9996
+#: src/gui.c:2858 src/gui.c:2959 src/gui.c:3460 src/gui.c:4100 src/gui.c:4651
+#: src/gui.c:5124 src/gui.c:5493 src/gui.c:10174
 msgid "Mascot File"
 msgstr "マスコットファイル"
 
-#: src/gui.c:2879
+#: src/gui.c:2926
 msgid "Error: Append Mascot."
 msgstr "エラー: マスコット追加"
 
-#: src/gui.c:2881
+#: src/gui.c:2928
 msgid "The number of mascots maxes out."
 msgstr "登録マスコット数が最大です。"
 
-#: src/gui.c:2888 src/gui.c:4040
+#: src/gui.c:2935 src/gui.c:4087
 msgid "Select New Mascot File"
 msgstr "新規マスコットファイルの選択"
 
-#: src/gui.c:2988
+#: src/gui.c:3035
 msgid "Error: Delete Mascot."
 msgstr "エラー: マスコット削除"
 
-#: src/gui.c:2990
+#: src/gui.c:3037
 msgid "You cannot delete no more mascots."
 msgstr "これ以上マスコットを削除できません。"
 
-#: src/gui.c:3002
+#: src/gui.c:3049
 #, c-format
 msgid "        <b>%02d</b> : <b>%s</b>"
 msgstr "        <b>%02d</b> : <b>%s</b>"
 
-#: src/gui.c:3013
+#: src/gui.c:3060
 msgid "Do you really want to delete the mascot?"
 msgstr "ほんとうにこのマスコットを消去しますか？"
 
-#: src/gui.c:3068
+#: src/gui.c:3115
 msgid "Error: Append Category."
 msgstr "エラー: カテゴリー追加"
 
-#: src/gui.c:3070 src/gui.c:3263
+#: src/gui.c:3117 src/gui.c:3310
 msgid "The number of categories maxes out."
 msgstr "登録カテゴリー数が最大です。"
 
-#: src/gui.c:3152
+#: src/gui.c:3199
 msgid "Error: Delete Category."
 msgstr "エラー: カテゴリー削除"
 
-#: src/gui.c:3154
+#: src/gui.c:3201
 msgid "You can delete no more categories."
 msgstr "これ以上カテゴリーの削除はできません。"
 
-#: src/gui.c:3162
+#: src/gui.c:3209
 #, c-format
 msgid "       Category <b>%02d</b> : <b>%s</b> (%d registered mascots)"
 msgstr "       カテゴリー <b>%02d</b> : <b>%s</b> (登録マスコット数 %d)"
 
-#: src/gui.c:3175
+#: src/gui.c:3222
 msgid "Do you really want to delete the category?"
 msgstr "本当にこのカテゴリーを消去しますか？"
 
-#: src/gui.c:3261
+#: src/gui.c:3308
 msgid "Error: Merge Menu."
 msgstr "エラー: メニューの取り込み"
 
-#: src/gui.c:3274
+#: src/gui.c:3321
 msgid "Select Menu File to Merge"
 msgstr "取り込むメニューファイルの選択"
 
-#: src/gui.c:3294 src/gui.c:4738 src/gui.c:4929 src/gui.c:5599 src/gui.c:8160
+#: src/gui.c:3341 src/gui.c:4833 src/gui.c:5024 src/gui.c:5747 src/gui.c:8338
 msgid "Menu File"
 msgstr "メニューファイル"
 
-#: src/gui.c:3335 src/unlha.c:98
+#: src/gui.c:3382 src/unlha.c:98
 #, c-format
 msgid "Cannot Open %s\n"
 msgstr "ファイル %s を開けません\n"
 
-#: src/gui.c:3480 src/gui.c:3568
+#: src/gui.c:3527 src/gui.c:3615
 msgid "Select Sound File"
 msgstr "音声ファイルの選択"
 
-#: src/gui.c:3659
+#: src/gui.c:3706
 msgid "Select the file refered for the mail checking"
 msgstr "メールチェック参照用ファイルの選択"
 
-#: src/gui.c:3775
+#: src/gui.c:3822
 msgid "Select mailer command"
 msgstr "メーラー起動コマンドの選択"
 
-#: src/gui.c:4014
+#: src/gui.c:4061
 #, c-format
 msgid "Created New Mascot ...%%n    \"%s\""
 msgstr "新しいマスコットを作成しました.%%n    \"%s\""
 
 #. Win構築は重いので先にExposeイベント等をすべて処理してから
 #. while (my_main_iteration(FALSE));
-#: src/gui.c:4110
+#: src/gui.c:4157
 msgid "Select Image for New Mascot"
 msgstr "新規マスコット用画像を選択"
 
-#: src/gui.c:4190 src/gui.c:4203 src/gui.c:4240 src/gui.c:4253 src/gui.c:4292
-#: src/gui.c:4305 src/gui.c:10537
+#: src/gui.c:4239 src/gui.c:4301 src/gui.c:4366 src/gui.c:10715
 msgid "Create New Mascot"
 msgstr "マスコット作成"
 
-#: src/gui.c:4205 src/gui.c:4255 src/gui.c:4307
+#: src/gui.c:4263 src/gui.c:4326 src/gui.c:4390
 msgid "Creating New Mascot..."
 msgstr "新規マスコットを作成します..."
 
-#: src/gui.c:4218
+#: src/gui.c:4276
 msgid "1. Please select Mascot File Name to be created"
 msgstr "1. 作成するマスコットファイルを選択してください。"
 
-#: src/gui.c:4268
+#: src/gui.c:4339
 msgid "2. Please select an Image File Name to be used in Mascot"
 msgstr "2. 新規マスコット用の画像ファイルを一つ選択してください。"
 
-#: src/gui.c:4320
+#: src/gui.c:4403
 msgid "Mascot File : "
 msgstr "マスコットファイル : "
 
-#: src/gui.c:4326
+#: src/gui.c:4409
 msgid "Image File : "
 msgstr "画像ファイル : "
 
-#: src/gui.c:4335 src/gui.c:4341
+#: src/gui.c:4418 src/gui.c:4424
 msgid "At last, Please Input Descrption for Copyright"
 msgstr "最後にマスコットの著作記述を入力してください。"
 
-#: src/gui.c:4378 src/gui.c:4392
+#: src/gui.c:4463 src/gui.c:4487
 msgid "Please Input POP Password"
 msgstr "POP用のパスワードを入力してください"
 
-#: src/gui.c:4403
+#: src/gui.c:4498
 #, c-format
 msgid "Server : %s"
 msgstr "サーバー : %s"
 
-#: src/gui.c:4410
+#: src/gui.c:4505
 #, c-format
 msgid "User ID : %s"
 msgstr "ユーザーID : %s"
 
-#: src/gui.c:4425
+#: src/gui.c:4520
 msgid "Password : "
 msgstr "パスワード : "
 
-#: src/gui.c:4473 src/gui.c:10423
+#: src/gui.c:4568 src/gui.c:10601
 msgid "Open Mascot"
 msgstr "マスコット選択"
 
-#: src/gui.c:4495
+#: src/gui.c:4590
 msgid ""
 "Caution : You're going to install a new mascot into your user's direcroty.\n"
 msgstr "注意 : 新規のマスコットをユーザーディレクトリにインストールします。\n"
 
-#: src/gui.c:4496 src/gui.c:4525 src/gui.c:4673 src/gui.c:4699
+#: src/gui.c:4591 src/gui.c:4620 src/gui.c:4768 src/gui.c:4794
 msgid "    If you already have the file with the same filename,"
 msgstr "    同じ名前のファイルが存在する場合には"
 
-#: src/gui.c:4497 src/gui.c:4526 src/gui.c:4674 src/gui.c:4700
+#: src/gui.c:4592 src/gui.c:4621 src/gui.c:4769 src/gui.c:4795
 msgid "    it will be overwritten."
 msgstr "    自動的に上書きされますのでご注意ください。"
 
-#: src/gui.c:4498 src/gui.c:4527
+#: src/gui.c:4593 src/gui.c:4622
 msgid ""
 "\n"
 "    If you want to install more than one mascot with a launcher menu,"
@@ -447,30 +452,30 @@ msgstr ""
 "    ランチャメニューとそれに付属する複数のマスコットをインストールしたい場合"
 "は"
 
-#: src/gui.c:4499 src/gui.c:4528
+#: src/gui.c:4594 src/gui.c:4623
 msgid "    please install using \"Install Launcher Menu\"."
 msgstr "    『ランチャメニュー』のインストールの方を実行して下さい。"
 
-#: src/gui.c:4501
+#: src/gui.c:4596
 msgid "Install New Mascot to User's Directory"
 msgstr "ユーザーディレクトリへのマスコットのインストール"
 
-#: src/gui.c:4524
+#: src/gui.c:4619
 msgid ""
 "Caution : You're going to install a new mascot into the MaCoPiX common "
 "direcroty.\n"
 msgstr ""
 "注意 : 新規のマスコットをMaCoPiX共通ディレクトリにインストールします。\n"
 
-#: src/gui.c:4530
+#: src/gui.c:4625
 msgid "Install New Mascot to the Common Directory"
 msgstr "共通ディレクトリへのマスコットのインストール"
 
-#: src/gui.c:4651
+#: src/gui.c:4746
 msgid "Open Launcher Menu"
 msgstr "ランチャメニューを開く"
 
-#: src/gui.c:4672
+#: src/gui.c:4767
 msgid ""
 "Caution : You're going to install a new launcher menu with its mascots into "
 "your user's direcroty.\n"
@@ -478,11 +483,11 @@ msgstr ""
 "注意 : 新規のランチャメニューと付属するマスコットをユーザーディレクトリにイン"
 "ストールします。\n"
 
-#: src/gui.c:4676
+#: src/gui.c:4771
 msgid "Install New Launcher Menu to User's Directory"
 msgstr "ユーザーディレクトリへのメニューのインストール"
 
-#: src/gui.c:4698
+#: src/gui.c:4793
 msgid ""
 "Caution : You're going to install a new launcher menu with mascots into the "
 "MaCoPiX common direcroty.\n"
@@ -490,1377 +495,1369 @@ msgstr ""
 "注意 : 新規のランチャメニューと付属するマスコットをMaCoPiX共通ディレクトリに"
 "インストールします。\n"
 
-#: src/gui.c:4702
+#: src/gui.c:4797
 msgid "Install New Launcher Menu to the Common Directory"
 msgstr "共通ディレクトリへのメニューのインストール"
 
-#: src/gui.c:4733
+#: src/gui.c:4828
 msgid "LZH File"
 msgstr "LZHファイル"
 
-#: src/gui.c:4736
+#: src/gui.c:4831
 msgid "TAR+GZ File"
 msgstr "TAR+GZファイル"
 
 #. Win構築は重いので先にExposeイベント等をすべて処理してから
 #. while (my_main_iteration(FALSE));
-#: src/gui.c:4841 src/gui.c:10686
+#: src/gui.c:4936 src/gui.c:10864
 msgid "Convert from Nokkari-Chara"
 msgstr "のっかりキャラから変換"
 
-#: src/gui.c:4854 src/gui.c:5131
+#: src/gui.c:4949 src/gui.c:5239
 msgid "Nokkari-Chara File"
 msgstr "のっかりキャラファイル"
 
-#: src/gui.c:4914
+#: src/gui.c:5009
 msgid "Select New Launcher Menu File to Create"
 msgstr "新規作成するメニューファイルの選択"
 
-#: src/gui.c:4960
+#: src/gui.c:5055
 #, c-format
 msgid "Created Menu File%%n    \"%s\""
 msgstr "メニューファイルを作成しました.%%n    \"%s\""
 
-#: src/gui.c:5010
+#: src/gui.c:5105
 msgid "Save Mascot to Other File"
 msgstr "別名でマスコット保存"
 
-#: src/gui.c:5048 src/gui.c:5152 src/gui.c:5381
+#: src/gui.c:5146 src/gui.c:5263 src/gui.c:5519
 msgid "File Save : Overwrite Confirmation"
 msgstr "ファイル保存 : 上書き確認"
 
-#: src/gui.c:5062 src/gui.c:5166 src/gui.c:5395
+#: src/gui.c:5170 src/gui.c:5288 src/gui.c:5543
 #, c-format
 msgid "File %s already exists."
 msgstr "ファイル %s はすでに存在します。"
 
-#: src/gui.c:5067 src/gui.c:5170 src/gui.c:5400 src/gui.c:5637 src/gui.c:5749
+#: src/gui.c:5175 src/gui.c:5292 src/gui.c:5548 src/gui.c:5798 src/gui.c:5923
 msgid "Overwrite?"
 msgstr "上書きしますか?"
 
-#: src/gui.c:5118
+#: src/gui.c:5226
 msgid "Convert Mascot to Nokkari-Chara"
 msgstr "のっかりキャラに変換"
 
-#. Win構築は重いので先にExposeイベント等をすべて処理してから
-#. while (my_main_iteration(FALSE));
-#. Copyright用ダイアログ
-#: src/gui.c:5228
+#: src/gui.c:5353
 msgid "Setup for Release Mascot"
 msgstr "リリースするマスコットの設定"
 
-#: src/gui.c:5247
+#: src/gui.c:5382
 msgid "Please edit the setting for this mascot"
 msgstr "リリースするマスコットの設定を入力してください"
 
-#: src/gui.c:5257
+#: src/gui.c:5392
 msgid "Mascot Name"
 msgstr "マスコット名"
 
-#: src/gui.c:5274
+#: src/gui.c:5409
 msgid "Copyright"
 msgstr "著作権表示"
 
-#: src/gui.c:5291 src/gui.c:8177 src/gui.c:9512
+#: src/gui.c:5426 src/gui.c:8355 src/gui.c:9690
 msgid "Character Code"
 msgstr "文字コード"
 
-#: src/gui.c:5302
+#: src/gui.c:5437
 msgid "Save Fontset for Clock"
 msgstr "時計用フォントセットの保存"
 
-#: src/gui.c:5308
+#: src/gui.c:5443
 msgid "Save Colors for Clock"
 msgstr "時計用配色の保存"
 
-#: src/gui.c:5314
+#: src/gui.c:5449
 msgid "Save Fontset for Balloon"
 msgstr "ふきだし用フォントセットの保存"
 
-#: src/gui.c:5320
+#: src/gui.c:5455
 msgid "Save Colors for Baloon"
 msgstr "ふきだし用配色の保存"
 
 #. Win構築は重いので先にExposeイベント等をすべて処理してから
 #. while (my_main_iteration(FALSE));
-#: src/gui.c:5343
+#: src/gui.c:5478
 msgid "Save Mascot for Release"
 msgstr "リリース用にマスコットを保存"
 
-#: src/gui.c:5578
+#: src/gui.c:5726
 msgid "Save Menu to File"
 msgstr "メニューを保存"
 
-#: src/gui.c:5618
+#: src/gui.c:5769
 msgid "Menu Save : Overwrite Confirmation"
 msgstr "メニュー保存 : 上書き確認"
 
-#: src/gui.c:5632
+#: src/gui.c:5793
 #, c-format
 msgid "Menu File %s already exists."
 msgstr "メニューファイル %s はすでに存在します。"
 
-#: src/gui.c:5650 src/gui.c:5665
+#: src/gui.c:5811 src/gui.c:5826
 #, c-format
 msgid "Saved Menu as ...%%n    \"%s\""
 msgstr "メニューを保存しました.%%n    \"%s\""
 
-#: src/gui.c:5691
+#: src/gui.c:5852
 msgid "Save Resource to File"
 msgstr "共通設定を保存"
 
-#: src/gui.c:5711 src/gui.c:8143
+#: src/gui.c:5872 src/gui.c:8321
 msgid "Resource File"
 msgstr "共通設定ファイル"
 
-#: src/gui.c:5730
+#: src/gui.c:5894
 msgid "Resource Save : Overwrite Confirmation"
 msgstr "共通設定保存 : 上書き確認"
 
-#: src/gui.c:5744
+#: src/gui.c:5918
 #, c-format
 msgid "Resource File %s already exists."
 msgstr "共通設定ファイル %s はすでに存在します。"
 
-#. mascot->conf_main = gtk_window_new(GTK_WINDOW_TOPLEVEL);
-#: src/gui.c:5877
+#: src/gui.c:6052
 msgid "Config for MaCoPiX"
 msgstr "MaCoPiXの設定"
 
-#: src/gui.c:5976 src/gui.c:8264
+#: src/gui.c:6154 src/gui.c:8442
 msgid "Focus Follow"
 msgstr "フォーカス追従"
 
-#: src/gui.c:5985
+#: src/gui.c:6163
 msgid "Offset on the Title Bar"
 msgstr "タイトルバー上でのオフセット"
 
-#: src/gui.c:5998
+#: src/gui.c:6176
 msgid "Starting Point"
 msgstr "基準点"
 
-#: src/gui.c:6010
+#: src/gui.c:6188
 msgid "Left upper corner of the focused window"
 msgstr "フォーカスウィンドウの左上端"
 
-#: src/gui.c:6015
+#: src/gui.c:6193
 msgid "Right upper corner of the focused window"
 msgstr "フォーカスウィンドウの右上端"
 
-#: src/gui.c:6038
+#: src/gui.c:6216
 msgid "Absolute[pix]"
 msgstr "絶対値[pix]"
 
-#: src/gui.c:6044
+#: src/gui.c:6222
 msgid "Relative[%]"
 msgstr "相対値[%]"
 
-#: src/gui.c:6073
+#: src/gui.c:6251
 msgid "Title Bar Size"
 msgstr "タイトルバーのサイズ"
 
-#: src/gui.c:6090
+#: src/gui.c:6268
 msgid "Manual Scaling"
 msgstr "マニュアルで設定"
 
-#: src/gui.c:6095
+#: src/gui.c:6273
 msgid "Auto Scaling"
 msgstr "自動測定"
 
-#: src/gui.c:6100
+#: src/gui.c:6278
 msgid "Auto Scaling (for Compiz)"
 msgstr "自動測定 (Compiz使用時)"
 
-#: src/gui.c:6125
+#: src/gui.c:6303
 msgid "Window Manager [start-up]"
 msgstr "起動時のウィンドウマネージャ"
 
-#: src/gui.c:6136
+#: src/gui.c:6314
 msgid "Bar Size (Manual)"
 msgstr "バーサイズ(手動)"
 
-#: src/gui.c:6154
+#: src/gui.c:6332
 msgid "Offset for Shaped Bar"
 msgstr "非矩形バー用オフセット"
 
-#: src/gui.c:6169
+#: src/gui.c:6347
 msgid "Home Position"
 msgstr "ホームポジション"
 
-#: src/gui.c:6183
+#: src/gui.c:6361
 msgid "Auto"
 msgstr "自動"
 
-#: src/gui.c:6195
+#: src/gui.c:6373
 msgid "  X"
 msgstr "  X"
 
-#: src/gui.c:6209 src/gui.c:9364
+#: src/gui.c:6387 src/gui.c:9542
 msgid "  Y"
 msgstr "  Y"
 
-#: src/gui.c:6239
+#: src/gui.c:6417
 msgid "Vanish when auto-detection failed"
 msgstr "自動検出に失敗したときは画面から消える"
 
-#: src/gui.c:6254
+#: src/gui.c:6432
 msgid "No Focus"
 msgstr "フォーカス無"
 
-#: src/gui.c:6266 src/gui.c:6312 src/gui.c:6384
+#: src/gui.c:6444 src/gui.c:6490 src/gui.c:6562
 msgid "Do Nothing"
 msgstr "何もしない"
 
-#: src/gui.c:6271 src/gui.c:6317 src/gui.c:6389
+#: src/gui.c:6449 src/gui.c:6495 src/gui.c:6567
 msgid "Vanish"
 msgstr "消える"
 
-#: src/gui.c:6277 src/gui.c:6323 src/gui.c:6395
+#: src/gui.c:6455 src/gui.c:6501 src/gui.c:6573
 msgid "Sit on Task Bar"
 msgstr "タスクバーに座る"
 
-#: src/gui.c:6280 src/gui.c:6326 src/gui.c:6398
+#: src/gui.c:6458 src/gui.c:6504 src/gui.c:6576
 msgid "Move to Home Position"
 msgstr "ホームポジションへ移動"
 
-#: src/gui.c:6300
+#: src/gui.c:6478
 msgid "Sticked Out"
 msgstr "画面はみだし"
 
-#: src/gui.c:6346
+#: src/gui.c:6524
 msgid "Management for Window w/o  Title Bar"
 msgstr "タイトルバーのないウィンドウの取扱い"
 
-#: src/gui.c:6356
+#: src/gui.c:6534
 msgid "Ignore Window w/o Title Bar"
 msgstr "タイトルバーのないウィンドウには座らない"
 
-#: src/gui.c:6370
+#: src/gui.c:6548
 msgid "     Action : "
 msgstr "     動作 : "
 
-#: src/gui.c:6418
+#: src/gui.c:6596
 msgid "    * Mascot could fail to follow the focus with older window managers."
 msgstr ""
 "    * 古いウィンドウマネージャではフォーカス追従できなくなることがあります"
 
-#: src/gui.c:6425
+#: src/gui.c:6603
 msgid "for Windows"
 msgstr "Windows用"
 
-#: src/gui.c:6433
+#: src/gui.c:6611
 msgid "Stay on Task Bar"
 msgstr "タスクバーに常駐する"
 
-#: src/gui.c:6449
+#: src/gui.c:6627
 msgid "Foreground Mapping"
 msgstr "最前面表示"
 
-#: src/gui.c:6457
+#: src/gui.c:6635
 msgid "Force to Raise to the Foreground"
 msgstr "強制的に最前面に表示する(チラツキ等に注意)"
 
-#: src/gui.c:6465
+#: src/gui.c:6643
 msgid "Raise with Mascot shaping (for translucent KWin)"
 msgstr "マスコットの変形時に最前面に表示する (KWinの半透明表示対策)"
 
-#: src/gui.c:6477 src/gui.c:8357
+#: src/gui.c:6655 src/gui.c:8535
 msgid "Move"
 msgstr "移動"
 
-#: src/gui.c:6489 src/gui.c:6570 src/gui.c:10357
+#: src/gui.c:6667 src/gui.c:6748 src/gui.c:10535
 msgid "Time Signal"
 msgstr "時報"
 
-#: src/gui.c:6496
+#: src/gui.c:6674
 msgid "Use Signal"
 msgstr "時報の使用"
 
-#: src/gui.c:6511
+#: src/gui.c:6689
 msgid "Mascot Action"
 msgstr "マスコットの動作"
 
-#: src/gui.c:6523 src/gui.c:6611 src/gui.c:6755
+#: src/gui.c:6701 src/gui.c:6789 src/gui.c:6933
 msgid "None"
 msgstr "使用しない"
 
-#: src/gui.c:6528
+#: src/gui.c:6706
 msgid "Click Action"
 msgstr "クリック動作"
 
-#: src/gui.c:6533 src/trayicon.c:78
+#: src/gui.c:6711 src/trayicon.c:78
 msgid "Mascot Random Change"
 msgstr "マスコットをランダム変更"
 
-#: src/gui.c:6552
+#: src/gui.c:6730
 msgid "External Command"
 msgstr "外部コマンド"
 
-#: src/gui.c:6585
+#: src/gui.c:6763
 msgid "Server Information"
 msgstr "サーバー情報"
 
-#: src/gui.c:6599
+#: src/gui.c:6777
 msgid "Protocol"
 msgstr "プロトコル"
 
-#: src/gui.c:6616
+#: src/gui.c:6794
 msgid "POP3 (normal)"
 msgstr "POP3 (通常)"
 
-#: src/gui.c:6621
+#: src/gui.c:6799
 msgid "POP3 (APOP auth)"
 msgstr "POP3 (APOP認証)"
 
-#: src/gui.c:6627
+#: src/gui.c:6805
 msgid "Local mbox"
 msgstr "ローカル mbox"
 
-#: src/gui.c:6632
+#: src/gui.c:6810
 msgid "qmail (Maildir)"
 msgstr "qmail (Maildir形式)"
 
-#: src/gui.c:6637
+#: src/gui.c:6815
 msgid "MH + Procmail"
 msgstr "MH + Procmail"
 
-#: src/gui.c:6670
+#: src/gui.c:6848
 msgid "Server Address"
 msgstr "サーバーアドレス"
 
-#: src/gui.c:6687
+#: src/gui.c:6865
 msgid "User ID"
 msgstr "ユーザーID"
 
-#: src/gui.c:6705
+#: src/gui.c:6883
 msgid "   Password"
 msgstr "   パスワード"
 
-#: src/gui.c:6730
+#: src/gui.c:6908
 msgid "Save Password"
 msgstr "パスワードの保存"
 
-#: src/gui.c:6760
+#: src/gui.c:6938
 msgid "Use SSL for POP3 Connection"
 msgstr "POP3の接続にSSLを使用"
 
-#: src/gui.c:6765
+#: src/gui.c:6943
 msgid "Use STARTTLS to start SSL session"
 msgstr "SSLセッションの開始にSTARTTLSを使用"
 
-#: src/gui.c:6787
+#: src/gui.c:6965
 msgid "Skip to Verify on SSL Certification"
 msgstr "SSL検証の確認をスキップ"
 
-#: src/gui.c:6795
+#: src/gui.c:6973
 msgid "Non-Blocking SSL"
 msgstr "非ブロッキングSSL"
 
-#: src/gui.c:6810
+#: src/gui.c:6988
 msgid "   Port No."
 msgstr "   ポート番号"
 
-#: src/gui.c:6824
+#: src/gui.c:7002
 msgid "Local mbox / Maildir / .procmailrc"
 msgstr "ローカル mbox / Maildir / .procmailrc"
 
-#: src/gui.c:6840
+#: src/gui.c:7018
 msgid "File / Directory"
 msgstr "ファイル/ディレクトリ"
 
-#: src/gui.c:6867
+#: src/gui.c:7045
 msgid "Operating Information"
 msgstr "動作に関する情報"
 
-#: src/gui.c:6880
+#: src/gui.c:7058
 msgid "Interval[sec]"
 msgstr "更新間隔[秒]"
 
-#: src/gui.c:6892
+#: src/gui.c:7070
 msgid "  Mailer"
 msgstr "  メーラー起動コマンド"
 
-#: src/gui.c:6926
+#: src/gui.c:7104
 msgid "Polling command"
 msgstr "ポーリングコマンド"
 
-#: src/gui.c:6941
+#: src/gui.c:7119
 msgid "Max Mails for POP Scan"
 msgstr "最大スキャン件数(POP)"
 
-#: src/gui.c:6956
+#: src/gui.c:7134
 msgid "Tooltips on biff pix"
 msgstr "着信画像上のツールチップ表示"
 
-#: src/gui.c:6966
+#: src/gui.c:7144
 msgid "SPAM exception"
 msgstr "SPAMの除外"
 
-#: src/gui.c:6974
+#: src/gui.c:7152
 msgid "Use exception"
 msgstr "除外する"
 
-#: src/gui.c:6990
+#: src/gui.c:7168
 msgid "Mark in Header"
 msgstr "ヘッダ内のマーク"
 
-#: src/gui.c:7034
+#: src/gui.c:7212
 msgid "Mail List Window"
 msgstr "メールリスト表示ウィンドウ"
 
-#: src/gui.c:7046
+#: src/gui.c:7224
 msgid "Width"
 msgstr "幅"
 
-#: src/gui.c:7058
+#: src/gui.c:7236
 msgid "Height"
 msgstr "高さ"
 
-#: src/gui.c:7071
+#: src/gui.c:7249
 msgid "Colors for From/Subject List"
 msgstr "From/Subjectリストの表示色"
 
-#: src/gui.c:7082
+#: src/gui.c:7260
 msgid "Text (odd)"
 msgstr "文字 (奇数行)"
 
-#: src/gui.c:7101
+#: src/gui.c:7279
 msgid "BG (odd)"
 msgstr "背景 (奇数行)"
 
-#: src/gui.c:7119
+#: src/gui.c:7297
 msgid "Text (even)"
 msgstr "文字 (偶数行)"
 
-#: src/gui.c:7138
+#: src/gui.c:7316
 msgid "BG (even)"
 msgstr "背景 (偶数行)"
 
-#: src/gui.c:7158 src/gui.c:9467
+#: src/gui.c:7336 src/gui.c:9645
 msgid "Biff"
 msgstr "メール着信"
 
-#: src/gui.c:7173
+#: src/gui.c:7351
 msgid "Mascot Magnification"
 msgstr "マスコットの拡大縮小"
 
-#: src/gui.c:7181
+#: src/gui.c:7359
 msgid "Magnification[%]"
 msgstr "拡大率[%]"
 
-#: src/gui.c:7196
+#: src/gui.c:7374
 msgid "Interpolation Style"
 msgstr "補完方法"
 
-#: src/gui.c:7209
+#: src/gui.c:7387
 msgid "Nearest-Neighbor"
 msgstr "ニアレストネイバー"
 
-#: src/gui.c:7214
+#: src/gui.c:7392
 msgid "Tiles"
 msgstr "タイル"
 
-#: src/gui.c:7219
+#: src/gui.c:7397
 msgid "Bilinear"
 msgstr "バイリニア"
 
-#: src/gui.c:7224
+#: src/gui.c:7402
 msgid "Hyper"
 msgstr "ハイパー"
 
-#: src/gui.c:7245
+#: src/gui.c:7423
 msgid ""
 "Graphic lib. for Image Rendering (Cairo enables trancelucency w/composited "
 "desktop)"
 msgstr "描画用ライブラリ (Cairoを使用すると対応環境で半透明表示ができます)"
 
-#: src/gui.c:7254
+#: src/gui.c:7432
 msgid "Current Desktop"
 msgstr "現在のデスクトップ"
 
-#: src/gui.c:7263
+#: src/gui.c:7441
 msgid "Translucency is partly supported by Windows native graphics."
 msgstr ""
 "ウィンドウズネイティブの描画機能によって部分的に半透明表示をサポートしていま"
 "す。"
 
-#: src/gui.c:7269
+#: src/gui.c:7447
 msgid "Current system does not support translucent windows."
 msgstr "現在のシステムは半透明表示をサポートしていません。"
 
-#: src/gui.c:7274
+#: src/gui.c:7452
 msgid "Current system support translucent windows."
 msgstr "現在のシステムは半透明表示をサポートしています。"
 
-#: src/gui.c:7279
+#: src/gui.c:7457
 msgid "Translucent support is UNKNOWN.    "
 msgstr "半透明表示のサポートの有無を検出できませんでした。    "
 
-#: src/gui.c:7283
+#: src/gui.c:7461
 msgid "Forced translucent rendering"
 msgstr "強制的に半透明描画させる"
 
-#: src/gui.c:7295
+#: src/gui.c:7473
 msgid ""
 "Use Cairo for Mascot and Biff image rendering (Support anti-aliased outline)."
 msgstr ""
 "マスコットとメール着信画像の描画にCairoを使用する (アンチエイリアスな輪郭表示"
 "に対応)"
 
-#: src/gui.c:7308
+#: src/gui.c:7486
 msgid "Shadow of Mascot"
 msgstr "マスコットの影"
 
-#: src/gui.c:7320
+#: src/gui.c:7498
 msgid "Drop Shadow of Mascot"
 msgstr "マスコットに影をつける"
 
-#: src/gui.c:7329
+#: src/gui.c:7507
 msgid "    Offset  X"
 msgstr "   オフセット  X"
 
-#: src/gui.c:7347 src/gui.c:8306 src/gui.c:8343 src/gui.c:8511 src/gui.c:8540
-#: src/gui.c:8599 src/gui.c:8825
+#: src/gui.c:7525 src/gui.c:8484 src/gui.c:8521 src/gui.c:8689 src/gui.c:8718
+#: src/gui.c:8777 src/gui.c:9003
 msgid "Y"
 msgstr "Y"
 
-#: src/gui.c:7369
+#: src/gui.c:7547
 msgid "Opacity [%]"
 msgstr "不透明度 α値[%]"
 
-#: src/gui.c:7392
+#: src/gui.c:7570
 msgid "Use Cairo for Panel Clock rendering."
 msgstr "パネル時計の描画にCairoを使用する"
 
-#: src/gui.c:7394
+#: src/gui.c:7572
 msgid "Support translucent panel clock (by Cairo)."
 msgstr "パネル時計の半透明対応 (Cairoを使用)"
 
-#: src/gui.c:7405
+#: src/gui.c:7583
 msgid "Use Cairo for Balloon rendering."
 msgstr "ふきだしの描画にCairoを使用する"
 
-#: src/gui.c:7407
+#: src/gui.c:7585
 msgid "Support translucent balloon (by Cairo)."
 msgstr "ふきだしの半透明対応 (Cairoを使用)"
 
-#: src/gui.c:7420
+#: src/gui.c:7598
 msgid "Rendering"
 msgstr "描画"
 
-#: src/gui.c:7435
+#: src/gui.c:7613
 msgid "Default for Clock"
 msgstr "時計のデフォルト"
 
-#: src/gui.c:7447 src/gui.c:7555 src/gui.c:8464 src/gui.c:8776
+#: src/gui.c:7625 src/gui.c:7733 src/gui.c:8642 src/gui.c:8954
 msgid "Fontset"
 msgstr "フォントセット"
 
-#: src/gui.c:7461 src/gui.c:7568 src/gui.c:8629 src/gui.c:8898
+#: src/gui.c:7639 src/gui.c:7746 src/gui.c:8807 src/gui.c:9076
 msgid "Text"
 msgstr "文字"
 
-#: src/gui.c:7482 src/gui.c:7587 src/gui.c:8648 src/gui.c:8917
+#: src/gui.c:7660 src/gui.c:7765 src/gui.c:8826 src/gui.c:9095
 msgid "BG"
 msgstr "背景"
 
-#: src/gui.c:7506 src/gui.c:7610 src/gui.c:8669 src/gui.c:8940
+#: src/gui.c:7684 src/gui.c:7788 src/gui.c:8847 src/gui.c:9118
 msgid "Border"
 msgstr "境界"
 
-#: src/gui.c:7526 src/gui.c:8688
+#: src/gui.c:7704 src/gui.c:8866
 msgid "Shadow"
 msgstr "シャドウ"
 
-#: src/gui.c:7544
+#: src/gui.c:7722
 msgid "Default for Balloon"
 msgstr "ふきだしのデフォルト"
 
-#: src/gui.c:7629
+#: src/gui.c:7807
 msgid "Default Opacity"
 msgstr "デフォルトの不透明度"
 
-#: src/gui.c:7631
+#: src/gui.c:7809
 msgid "Default Opacity (Enable ONLY w/Compositing Window Managers)"
 msgstr "デフォルトの不透明度  (半透明対応したウィンドウマネージャでのみ有効)"
 
-#: src/gui.c:7641
+#: src/gui.c:7819
 msgid "Take precedence default opacities over mascot settings"
 msgstr "デフォルトの不透明度をマスコットの設定に優先させる"
 
-#: src/gui.c:7654
+#: src/gui.c:7832
 msgid "Mascot [%]"
 msgstr "マスコット [%]"
 
-#: src/gui.c:7659
+#: src/gui.c:7837
 msgid "Biff Image [%]"
 msgstr "メール着信画像 [%]"
 
-#: src/gui.c:7666
+#: src/gui.c:7844
 msgid "Balloon [%]"
 msgstr "ふきだし [%]"
 
-#: src/gui.c:7671
+#: src/gui.c:7849
 msgid "Clock [%]"
 msgstr "時計 [%]"
 
-#: src/gui.c:7737 src/gui.c:7751 src/gui.c:8746 src/gui.c:8999
+#: src/gui.c:7915 src/gui.c:7929 src/gui.c:8924 src/gui.c:9177
 msgid "BG only"
 msgstr "背景のみ"
 
-#: src/gui.c:7765
+#: src/gui.c:7943
 msgid "Font/Color"
 msgstr "フォント/色"
 
-#: src/gui.c:7780 src/gui.c:9983
+#: src/gui.c:7958 src/gui.c:10161
 msgid "Duet Animation"
 msgstr "デュエットアニメ"
 
-#: src/gui.c:7787
+#: src/gui.c:7965
 msgid "Synchronize with CLICK animation   "
 msgstr "クリックアニメに同期させる"
 
-#: src/gui.c:7796
+#: src/gui.c:7974
 msgid "Synchronize with RANDOM animation"
 msgstr "ランダムアニメに同期させる"
 
-#: src/gui.c:7808
+#: src/gui.c:7986
 msgid "Socket Message"
 msgstr "ソケットメッセージ"
 
-#: src/gui.c:7820
+#: src/gui.c:7998
 msgid "Balloon printing"
 msgstr "ふきだしの表示"
 
-#: src/gui.c:7832
+#: src/gui.c:8010
 msgid "Lump Sum"
 msgstr "一括表示"
 
-#: src/gui.c:7837
+#: src/gui.c:8015
 msgid "Stepping"
 msgstr "ステップ表示"
 
-#: src/gui.c:7860
+#: src/gui.c:8038
 msgid "  Stepping interval [frame]"
 msgstr "  ステップ間隔 [フレーム]"
 
-#: src/gui.c:7876
+#: src/gui.c:8054
 msgid "  Default expiration [ms]"
 msgstr "  デフォルトの消滅時間[ms]"
 
-#: src/gui.c:7891
+#: src/gui.c:8069
 msgid "Auto Install"
 msgstr "自動インストール"
 
-#: src/gui.c:7899
+#: src/gui.c:8077
 msgid "Auto Mascot Install to User Dir."
 msgstr "マスコットのユーザーディレクトリへの自動インストール"
 
-#: src/gui.c:7909
+#: src/gui.c:8087
 msgid "User & Common Dir Consistency Check"
 msgstr "ユーザー/共通Dirの整合性チェック"
 
-#: src/gui.c:7921
+#: src/gui.c:8099
 msgid "Manual"
 msgstr "マニュアルでチェック"
 
-#: src/gui.c:7926
+#: src/gui.c:8104
 msgid "Auto Overwrite"
 msgstr "自動上書き"
 
-#: src/gui.c:7931
+#: src/gui.c:8109
 msgid "Ignore"
 msgstr "無視する"
 
-#: src/gui.c:7954
+#: src/gui.c:8132
 msgid "Sound Command"
 msgstr "音声再生コマンド"
 
-#: src/gui.c:7970
+#: src/gui.c:8148
 #, c-format
 msgid "(\"%s\" will be translated to the sound file.)"
 msgstr "(\"%s\"は音声ファイルに置換されます)"
 
-#: src/gui.c:7977
+#: src/gui.c:8155
 msgid "GNU tar Command [for *.tar.gz Extraction]"
 msgstr "GNU tar コマンド [*.tar.gz　解凍用]"
 
-#: src/gui.c:7993
+#: src/gui.c:8171
 #, c-format
 msgid "(1st \"%s\" : *.tar.gz file, 2nd \"%s\" : temp dir.)"
 msgstr "(1st \"%s\" : *.tar.gz ファイル, 2nd\"%s\" : 一時ディレクトリ)"
 
-#: src/gui.c:8000
+#: src/gui.c:8178
 msgid "Tray Icon"
 msgstr "トレイアイコン"
 
-#: src/gui.c:8008
+#: src/gui.c:8186
 msgid "Show Tray Icon in Task Bar"
 msgstr "タスクバー内にトレイアイコンを表示する"
 
-#: src/gui.c:8022
+#: src/gui.c:8200
 msgid "Misc."
 msgstr "その他"
 
-#: src/gui.c:8040
+#: src/gui.c:8218
 msgid "About This Program"
 msgstr "このプログラムについて"
 
-#: src/gui.c:8187 src/gui.c:9522
+#: src/gui.c:8365 src/gui.c:9700
 msgid "(Based on the locale environment)"
 msgstr "(ロケール設定に準拠)"
 
-#: src/gui.c:8196 src/gui.c:9538
+#: src/gui.c:8374 src/gui.c:9716
 msgid "Info."
 msgstr "情報"
 
-#: src/gui.c:8202
+#: src/gui.c:8380
 msgid "Resource"
 msgstr "共通設定"
 
-#: src/gui.c:8247 src/gui.c:8373
+#: src/gui.c:8425 src/gui.c:8551
 msgid "Mode"
 msgstr "モード"
 
-#: src/gui.c:8259 src/gui.c:8283
+#: src/gui.c:8437 src/gui.c:8461
 msgid "Fix Position"
 msgstr "位置固定"
 
-#: src/gui.c:8293 src/gui.c:8330 src/gui.c:8499 src/gui.c:8528 src/gui.c:8813
+#: src/gui.c:8471 src/gui.c:8508 src/gui.c:8677 src/gui.c:8706 src/gui.c:8991
 msgid "X"
 msgstr "X"
 
-#: src/gui.c:8319
+#: src/gui.c:8497
 msgid "Mascot Offset for Focus Follow"
 msgstr "フォーカス追従用マスコット表示オフセット"
 
-#: src/gui.c:8385
+#: src/gui.c:8563
 msgid "No Clock"
 msgstr "時計を使用しない"
 
-#: src/gui.c:8390
+#: src/gui.c:8568
 msgid "Clock on Image"
 msgstr "マスコット上に直接描画"
 
-#: src/gui.c:8395
+#: src/gui.c:8573
 msgid "Panel Clock"
 msgstr "パネル時計"
 
-#: src/gui.c:8418
+#: src/gui.c:8596
 msgid "Digit Type"
 msgstr "時計の表記"
 
-#: src/gui.c:8430
+#: src/gui.c:8608
 msgid "14:00:00"
 msgstr "14:00:00"
 
-#: src/gui.c:8435
+#: src/gui.c:8613
 msgid "14:00"
 msgstr "14:00"
 
-#: src/gui.c:8440
+#: src/gui.c:8618
 msgid "PM  2:00:00"
 msgstr "午後  2:00:00"
 
-#: src/gui.c:8445
+#: src/gui.c:8623
 msgid "PM  2:00"
 msgstr "午後  2:00"
 
-#: src/gui.c:8481 src/gui.c:8794
+#: src/gui.c:8659 src/gui.c:8972
 msgid "Size/Position"
 msgstr "位置・サイズ"
 
-#: src/gui.c:8495
+#: src/gui.c:8673
 msgid "Panel Position"
 msgstr "パネル位置"
 
-#: src/gui.c:8524 src/gui.c:8808
+#: src/gui.c:8702 src/gui.c:8986
 msgid "Text Offset"
 msgstr "文字オフセット"
 
-#: src/gui.c:8553 src/gui.c:8839
+#: src/gui.c:8731 src/gui.c:9017
 msgid "Border Width"
 msgstr "境界幅"
 
-#: src/gui.c:8567
+#: src/gui.c:8745
 msgid "Decoration"
 msgstr "装飾"
 
-#: src/gui.c:8581
+#: src/gui.c:8759
 msgid "Drop Shadow"
 msgstr "影をつける"
 
-#: src/gui.c:8589
+#: src/gui.c:8767
 msgid "   Shadow Offset  X"
 msgstr "   影のオフセット  X"
 
-#: src/gui.c:8613
+#: src/gui.c:8791
 msgid "Rounded Corner for Panel Clock"
 msgstr "パネル時計の角を丸くする"
 
-#: src/gui.c:8621 src/gui.c:8890
+#: src/gui.c:8799 src/gui.c:9068
 msgid "Color"
 msgstr "カラー"
 
-#: src/gui.c:8707 src/gui.c:8959
+#: src/gui.c:8885 src/gui.c:9137
 msgid "Back to Default"
 msgstr "デフォルトに戻す"
 
-#: src/gui.c:8719 src/gui.c:8971 src/gui.c:9098
+#: src/gui.c:8897 src/gui.c:9149 src/gui.c:9276
 msgid "Opacity"
 msgstr "不透明度"
 
-#: src/gui.c:8727 src/gui.c:8979 src/gui.c:9109 src/gui.c:9377
+#: src/gui.c:8905 src/gui.c:9157 src/gui.c:9287 src/gui.c:9555
 msgid "Opacity Alpha[%]"
 msgstr "不透明度 α値[%]"
 
-#: src/gui.c:8764
+#: src/gui.c:8942
 msgid "Clock"
 msgstr "時計"
 
-#: src/gui.c:8852
+#: src/gui.c:9030
 msgid "Default Position"
 msgstr "デフォルト位置"
 
-#: src/gui.c:8865 src/gui.c:9319
+#: src/gui.c:9043 src/gui.c:9497
 msgid "Left side of mascot"
 msgstr "マスコットの左側"
 
-#: src/gui.c:8870 src/gui.c:9324
+#: src/gui.c:9048 src/gui.c:9502
 msgid "Right side of mascot"
 msgstr "マスコットの右側"
 
-#: src/gui.c:9009
+#: src/gui.c:9187
 msgid "Control Characters for Balloon Messages"
 msgstr "ふきだしメッセージ用の制御文字"
 
-#: src/gui.c:9025
+#: src/gui.c:9203
 msgid "([n]+1) frames waiting. (default : n=1)"
 msgstr "([n]+1)フレームのウェイト. (デフォルト n=1)"
 
-#: src/gui.c:9032
+#: src/gui.c:9210
 msgid "([n]+1) frames waiting with a new line. (default : n=10)"
 msgstr "([n+1])フレームのウェイト後に改行. (デフォルト n=10)"
 
-#: src/gui.c:9039
+#: src/gui.c:9217
 msgid "New line."
 msgstr "改行."
 
-#: src/gui.c:9046
+#: src/gui.c:9224
 msgid "New page after ([n]+1) frames waiting. (default : n=10)"
 msgstr "([n]+1)フレームのウェイト後に改ページ. (デフォルト n=10)"
 
-#: src/gui.c:9053
+#: src/gui.c:9231
 msgid "Number of arrived mails. (only for biff message)"
 msgstr "着信メイル数. (メイル着信メッセージ内のみ)"
 
-#: src/gui.c:9060
+#: src/gui.c:9238
 msgid "From: of the latest mail. (only for biff message with POP)"
 msgstr "最新メイルのFrom:. (POP利用時のメイル着信メッセージ内のみ)"
 
-#: src/gui.c:9067
+#: src/gui.c:9245
 msgid "Subject: of the latest mail. (only for biff message with POP)"
 msgstr "最新メイルのSubject:. (POP利用時のメイル着信メッセージ内のみ)"
 
-#: src/gui.c:9086
+#: src/gui.c:9264
 msgid "Balloon"
 msgstr "ふきだし"
 
-#: src/gui.c:9100
+#: src/gui.c:9278
 msgid "Opacity (Enable ONLY w/Compositing Window Managers)"
 msgstr "不透明度 (半透明対応したウィンドウマネージャでのみ有効)"
 
-#: src/gui.c:9150
+#: src/gui.c:9328
 msgid "Append"
 msgstr "追加"
 
-#: src/gui.c:9162
+#: src/gui.c:9340
 msgid "Delete"
 msgstr "削除"
 
-#: src/gui.c:9174
+#: src/gui.c:9352
 msgid "Images"
 msgstr "画像"
 
-#: src/gui.c:9210
+#: src/gui.c:9388
 msgid "Append Pattern"
 msgstr "パターン追加"
 
-#: src/gui.c:9221
+#: src/gui.c:9399
 msgid "Copy Pattern"
 msgstr "パターンコピー"
 
-#: src/gui.c:9232
+#: src/gui.c:9410
 msgid "Delete Pattern"
 msgstr "パターン削除"
 
-#: src/gui.c:9246
+#: src/gui.c:9424
 msgid "Animation"
 msgstr "アニメ"
 
-#: src/gui.c:9262
+#: src/gui.c:9440
 msgid "Biff Image"
 msgstr "メール着信画像"
 
-#: src/gui.c:9272
+#: src/gui.c:9450
 msgid "Image File"
 msgstr "画像ファイル"
 
-#: src/gui.c:9306
+#: src/gui.c:9484
 msgid "Position"
 msgstr "位置"
 
-#: src/gui.c:9347
+#: src/gui.c:9525
 msgid "        X"
 msgstr "        X"
 
-#: src/gui.c:9395
+#: src/gui.c:9573
 msgid "Biff Action"
 msgstr "メール着信時動作"
 
-#: src/gui.c:9405 src/gui.c:10032 src/gui.c:10061
+#: src/gui.c:9583 src/gui.c:10210 src/gui.c:10239
 msgid "Message"
 msgstr "メッセージ"
 
-#: src/gui.c:9419 src/gui.c:10080
+#: src/gui.c:9597 src/gui.c:10258
 msgid "Sound File"
 msgstr "音声ファイル"
 
-#: src/gui.c:9451 src/gui.c:10102
+#: src/gui.c:9629 src/gui.c:10280
 msgid "Clear"
 msgstr "クリア"
 
-#: src/gui.c:9457 src/gui.c:10107
+#: src/gui.c:9635 src/gui.c:10285
 msgid "Test"
 msgstr "テスト"
 
-#: src/gui.c:9480
+#: src/gui.c:9658
 msgid "About This Mascot"
 msgstr "このマスコットについて"
 
-#: src/gui.c:9488 src/gui.c:12801
+#: src/gui.c:9666 src/gui.c:13017
 msgid "Name"
 msgstr "マスコット名"
 
-#: src/gui.c:9500 src/gui.c:11506 src/main.c:4066
+#: src/gui.c:9678 src/gui.c:11684 src/main.c:4066
 msgid "File"
 msgstr "ファイル"
 
-#: src/gui.c:9544
+#: src/gui.c:9722
 msgid "Mascot"
 msgstr "マスコット"
 
-#: src/gui.c:9560
+#: src/gui.c:9738
 msgid "Menu"
 msgstr "メニュー"
 
-#: src/gui.c:9688
+#: src/gui.c:9866
 msgid "Append Category"
 msgstr "カテゴリー追加"
 
-#: src/gui.c:9698
+#: src/gui.c:9876
 msgid "Delete Category"
 msgstr "カテゴリー削除"
 
-#: src/gui.c:9708
+#: src/gui.c:9886
 msgid "Merge Menu"
 msgstr "メニューの取り込み"
 
-#: src/gui.c:9741
+#: src/gui.c:9919
 msgid "No menu files are loaded currently."
 msgstr "現在、ランチャ用メニューファイルがロードされていません。"
 
-#: src/gui.c:9745
+#: src/gui.c:9923
 msgid "You can find a menu to create new one in the popup,"
 msgstr "ポップアップメニュー中から新しいランチャ用メニューファイルを作成でき、"
 
-#: src/gui.c:9749
+#: src/gui.c:9927
 msgid " and edit it here."
 msgstr " ここで編集することができます。"
 
-#: src/gui.c:9780 src/gui.c:11972 src/gui.c:12778
+#: src/gui.c:9958 src/gui.c:12188 src/gui.c:12994
 msgid "No."
 msgstr "番号"
 
-#: src/gui.c:9786
+#: src/gui.c:9964
 msgid "Image File Name"
 msgstr "画像ファイル名"
 
-#: src/gui.c:9849
+#: src/gui.c:10027
 #, c-format
 msgid "Base"
 msgstr "基底"
 
-#: src/gui.c:9873
+#: src/gui.c:10051
 msgid "Append Frame"
 msgstr "フレーム追加"
 
-#: src/gui.c:9884
+#: src/gui.c:10062
 msgid "Delete Frame"
 msgstr "フレーム削除"
 
-#: src/gui.c:9895
+#: src/gui.c:10073
 msgid "Test Anime"
 msgstr "アニメテスト"
 
-#: src/gui.c:9906
+#: src/gui.c:10084
 msgid "Random"
 msgstr "ランダム"
 
-#: src/gui.c:9918
+#: src/gui.c:10096
 msgid " Click"
 msgstr " クリック"
 
-#: src/gui.c:9935
+#: src/gui.c:10113
 msgid "Balloon Offset X[Left]"
 msgstr "ふきだしオフセット X[左]"
 
-#: src/gui.c:9947
+#: src/gui.c:10125
 msgid " Y[Left]"
 msgstr " Y[左]"
 
-#: src/gui.c:9959
+#: src/gui.c:10137
 msgid "  X[Right]"
 msgstr "  X[右]"
 
-#: src/gui.c:9971
+#: src/gui.c:10149
 msgid " Y[Right]"
 msgstr "Y[右]"
 
-#: src/gui.c:10017
+#: src/gui.c:10195
 msgid " Pattern"
 msgstr " パターン"
 
-#: src/gui.c:10042
+#: src/gui.c:10220
 msgid " Delay"
 msgstr " 遅延"
 
-#: src/gui.c:10161 src/gui.c:11521
+#: src/gui.c:10339 src/gui.c:11699
 msgid "Category"
 msgstr "カテゴリー"
 
-#: src/gui.c:10216
+#: src/gui.c:10394
 msgid "Append Mascot"
 msgstr "マスコット追加"
 
-#: src/gui.c:10227
+#: src/gui.c:10405
 msgid "Delete Mascot"
 msgstr "マスコット削除"
 
-#: src/gui.c:10275 src/gui.c:11404
+#: src/gui.c:10453 src/gui.c:11582
 msgid "Open"
 msgstr "開く"
 
-#: src/gui.c:10289 src/gui.c:10626
+#: src/gui.c:10467 src/gui.c:10804
 msgid "Save"
 msgstr "保存"
 
-#: src/gui.c:10303
+#: src/gui.c:10481
 msgid "New"
 msgstr "新規作成"
 
-#: src/gui.c:10317 src/gui.c:11344
+#: src/gui.c:10495 src/gui.c:11522
 msgid "Install"
 msgstr "インストール"
 
-#: src/gui.c:10330 src/trayicon.c:91
+#: src/gui.c:10508 src/trayicon.c:91
 msgid "Config"
 msgstr "設定"
 
-#: src/gui.c:10340
+#: src/gui.c:10518
 msgid "Biff Check"
 msgstr "メール着信チェック"
 
-#: src/gui.c:10383
+#: src/gui.c:10561
 msgid "Mascot Launcher"
 msgstr "マスコットランチャ"
 
-#: src/gui.c:10401 src/gui.c:11323 src/gui.c:11331 src/trayicon.c:113
+#: src/gui.c:10579 src/gui.c:11501 src/gui.c:11509 src/trayicon.c:113
 msgid "Exit"
 msgstr "終了"
 
-#: src/gui.c:10436 src/gui.c:10495
+#: src/gui.c:10614 src/gui.c:10673
 msgid "Launcher Menu"
 msgstr "ランチャメニュー"
 
-#: src/gui.c:10449 src/gui.c:10518
+#: src/gui.c:10627 src/gui.c:10696
 msgid "For Developper"
 msgstr "開発者用"
 
-#: src/gui.c:10468 src/trayicon.c:100
+#: src/gui.c:10646 src/trayicon.c:100
 msgid "Save All"
 msgstr "すべて保存"
 
-#: src/gui.c:10477
+#: src/gui.c:10655
 msgid "Save Mascot"
 msgstr "マスコット保存"
 
-#: src/gui.c:10482
+#: src/gui.c:10660
 msgid "Save Mascot As..."
 msgstr "マスコット名を選択して保存"
 
-#: src/gui.c:10505
+#: src/gui.c:10683
 msgid "Save Resource"
 msgstr "共通設定保存"
 
-#: src/gui.c:10547
+#: src/gui.c:10725
 msgid "Create New Launcher Menu"
 msgstr "ランチャメニュー作成"
 
-#: src/gui.c:10566 src/gui.c:11352
+#: src/gui.c:10744 src/gui.c:11530
 msgid "Launcher Menu [User]"
 msgstr "ランチャメニュー [ユーザー]"
 
-#: src/gui.c:10573 src/gui.c:11359
+#: src/gui.c:10751 src/gui.c:11537
 msgid "Launcher Menu [Common]"
 msgstr "ランチャメニュー [共通]"
 
-#: src/gui.c:10587 src/gui.c:11371
+#: src/gui.c:10765 src/gui.c:11549
 msgid "Mascot [User]"
 msgstr "マスコット [ユーザー]"
 
-#: src/gui.c:10594 src/gui.c:11378
+#: src/gui.c:10772 src/gui.c:11556
 msgid "Mascot [Common]"
 msgstr "マスコット [共通]"
 
-#: src/gui.c:10608
+#: src/gui.c:10786
 msgid "Download Official Mascots"
 msgstr "公式マスコットのダウンロード"
 
-#: src/gui.c:10635
+#: src/gui.c:10813
 msgid "Set as Default"
 msgstr "デフォルトに設定"
 
-#: src/gui.c:10644
+#: src/gui.c:10822
 msgid "Remove from Default"
 msgstr "デフォルトを削除"
 
-#: src/gui.c:10662
+#: src/gui.c:10840
 msgid "File Select"
 msgstr "ファイル選択"
 
-#: src/gui.c:10668
+#: src/gui.c:10846
 msgid "Launcher"
 msgstr "ランチャ"
 
-#: src/gui.c:10704
+#: src/gui.c:10882
 msgid "Save for Release"
 msgstr "リリース用マスコット保存"
 
-#: src/gui.c:10710
+#: src/gui.c:10888
 msgid "Convert to Nokkari-Chara"
 msgstr "のっかりキャラに変換"
 
-#: src/gui.c:10733 src/gui.c:10767
+#: src/gui.c:10911 src/gui.c:10945
 msgid "Random Change"
 msgstr "ランダム選択"
 
-#: src/gui.c:10930
+#: src/gui.c:11108
 msgid "MaCoPiX : Consistency Check for Common & User Dir."
 msgstr "MaCoPiX : 共通/ユーザーDirの整合性チェック"
 
-#: src/gui.c:10947
+#: src/gui.c:11125
 msgid "WARNING"
 msgstr "警  告"
 
-#: src/gui.c:10956
+#: src/gui.c:11134
 msgid "Menu file : "
 msgstr "メニューファイル : "
 
-#: src/gui.c:10959
+#: src/gui.c:11137
 msgid "Mascot file : "
 msgstr "マスコットファイル : "
 
-#: src/gui.c:10964
+#: src/gui.c:11142
 msgid "  File in User Dir is older than the corresponded one in Common Dir."
 msgstr "  ユーザーファイルが共通ディレクトリ内のファイルより古くなっています."
 
-#: src/gui.c:10973
+#: src/gui.c:11151
 msgid "     [User Dir]"
 msgstr "     [ユーザーディレクトリ]"
 
-#: src/gui.c:10978 src/gui.c:10991
+#: src/gui.c:11156 src/gui.c:11169
 #, c-format
 msgid "     %4d/%02d/%02d %02d:%02d:%02d"
 msgstr "     %4d年%02d月%02d日 %02d時%02d分%02d秒"
 
-#: src/gui.c:10986
+#: src/gui.c:11164
 msgid "      [Common Dir]"
 msgstr "      [共通ディレクトリ]"
 
-#: src/gui.c:10999
+#: src/gui.c:11177
 msgid "Do you want to overwite the newer file to User Dir?"
 msgstr "ユーザーファイルを上書きしますか?"
 
-#: src/gui.c:11004
+#: src/gui.c:11182
 msgid "Don't ask this from the next time."
 msgstr "次回からこの質問をしない."
 
-#: src/gui.c:11109
+#: src/gui.c:11287
 msgid "MaCoPiX : Starting up"
 msgstr "MaCoPiX : 起動中"
 
-#: src/gui.c:11126
+#: src/gui.c:11304
 msgid "No Menu Files are installed!!"
 msgstr "メニューファイルがインストールされていません!!"
 
-#: src/gui.c:11131
+#: src/gui.c:11309
 msgid "Please install one menu file at least,"
 msgstr "最低一個のメニューをインストールするか、"
 
-#: src/gui.c:11136
+#: src/gui.c:11314
 msgid "You can appoint a mascot file in option in order to start MaCoPiX,"
 msgstr " マスコットファイルをオプションで指定してからMaCoPiXを起動するか"
 
-#: src/gui.c:11141
+#: src/gui.c:11319
 msgid "or directly download &amp; install them from MaCoPiX official web."
 msgstr ""
 "もしくはこのダイアログで直接MaCoPiX公式サイトからダウンロードすることもできま"
 "す."
 
-#: src/gui.c:11146
+#: src/gui.c:11324
 msgid "Download & install MaCoPiX official mascots."
 msgstr "MaCoPiX公式サイトからマスコットをダウンロード"
 
-#: src/gui.c:11162
+#: src/gui.c:11340
 msgid "See more details of the mascots in MaCoPiX official web."
 msgstr "各マスコットの詳細はMaCoPiX公式サイトをご覧ください."
 
-#: src/gui.c:11187
+#: src/gui.c:11365
 msgid "Menus and Mascots can be installed by the menu bar of this window."
 msgstr ""
 "メニューとマスコットはこのウィンドウのメニューバーからインストールできます。"
 
-#: src/gui.c:11191
+#: src/gui.c:11369
 msgid "Or, drag &amp; drop a mascot menu archive (*.tar.gz) directly"
 msgstr ""
 "もしくは、このウィンドウに直接マスコットメニューアーカイブ(*.tar.gz)をドラッ"
 "グ＆ドロップ"
 
-#: src/gui.c:11195
+#: src/gui.c:11373
 msgid "into this window, in order to install it."
 msgstr "することによって、それをインストールすることもできます。"
 
-#: src/gui.c:11214
+#: src/gui.c:11392
 msgid "MaCoPiX : Launcher Menu Selection"
 msgstr "MaCoPiX : ランチャメニュー選択"
 
-#: src/gui.c:11218
+#: src/gui.c:11396
 msgid "MaCoPiX : Start Menu Selection"
 msgstr "MaCoPiX : 起動メニュー選択"
 
-#: src/gui.c:11389
+#: src/gui.c:11567
 msgid "Download & Install Official Mascots [User]"
 msgstr "公式サイトからのマスコットダウンロード&インストール"
 
-#: src/gui.c:11412
+#: src/gui.c:11590
 msgid "Installed Mascot"
 msgstr "インストール済みマスコット"
 
-#: src/gui.c:11511
+#: src/gui.c:11689
 msgid "Dir."
 msgstr "場所"
 
-#: src/gui.c:11516
+#: src/gui.c:11694
 msgid "Entry"
 msgstr "エントリ"
 
-#: src/gui.c:11543
+#: src/gui.c:11721
 msgid "User"
 msgstr "ユーザー"
 
-#: src/gui.c:11547
+#: src/gui.c:11725
 msgid "Common"
 msgstr "共通"
 
-#: src/gui.c:11551
+#: src/gui.c:11729
 msgid "Unknown"
 msgstr "不明"
 
-#: src/gui.c:11560
+#: src/gui.c:11738
 #, c-format
 msgid "%4d categories"
 msgstr "%4d カテゴリー"
 
-#: src/gui.c:11563
+#: src/gui.c:11741
 #, c-format
 msgid "%4d mascots"
 msgstr "%4d マスコット"
 
-#: src/gui.c:11573
+#: src/gui.c:11751
 msgid "-- Combined Menu --"
 msgstr "-- 複合メニュー --"
 
-#: src/gui.c:11608 src/gui.c:11611
+#: src/gui.c:11786 src/gui.c:11792
 msgid "MaCoPiX : Message"
 msgstr "MaCoPiX : お知らせ"
 
-#: src/gui.c:11615 src/gui.c:11689
-msgid "_OK"
-msgstr "了承"
+#: src/gui.c:11875
+msgid "MaCoPiX : Dialog"
+msgstr "MaCoPiX : 質問"
 
-#: src/gui.c:11690
-msgid "_Cancel"
-msgstr "嫌です"
-
-#: src/gui.c:11755
+#: src/gui.c:11955
 msgid "MaCoPiX : Installing Mascots"
 msgstr "MaCoPiX : マスコットをインストール"
 
-#: src/gui.c:11842
+#: src/gui.c:12042
 msgid "Selected File\n"
 msgstr "選択されたファイル\n"
 
-#: src/gui.c:11844
+#: src/gui.c:12044
 msgid "cannot be opend as MaCoPiX menu.\n"
 msgstr "はMaCoPiXのメニューファイルとして開くことが出来ません。\n"
 
 # MaCoPiX : テンポラリファイルの消去
-#: src/gui.c:11864
+#: src/gui.c:12068
 msgid "MaCoPiX : Deletion of temporay files"
 msgstr "MaCoPiX : テンポラリファイルの消去"
 
-#: src/gui.c:11878
+#: src/gui.c:12094
 msgid "Install of the new menu file has been completed."
 msgstr "新しいメニューファイルのインストールが完了しました。"
 
-#: src/gui.c:11884
+#: src/gui.c:12100
 msgid "Remove the temporary direcotry?"
 msgstr "テンポラリディレクトリを消去しますか?"
 
-#: src/gui.c:12004
+#: src/gui.c:12220
 msgid "Image File <span size=\"smaller\">(Double-Click to change)</span>"
 msgstr "画像ファイル <span size=\"smaller\">(ダブルクリックで変更)</span>"
 
-#: src/gui.c:12186
+#: src/gui.c:12402
 msgid "Frame No."
 msgstr "フレーム番号"
 
-#: src/gui.c:12209
+#: src/gui.c:12425
 msgid "Image No."
 msgstr "画像番号"
 
-#: src/gui.c:12234
+#: src/gui.c:12450
 msgid "Min Stay"
 msgstr "最小滞在"
 
-#: src/gui.c:12259
+#: src/gui.c:12475
 msgid "Max Stay"
 msgstr "最大滞在"
 
-#: src/gui.c:12296
+#: src/gui.c:12512
 msgid "<span size=\"smaller\">Block Loop</span> Next Frame"
 msgstr "<span size=\"smaller\">ブロックループ</span> 次のフレーム"
 
-#: src/gui.c:12322
+#: src/gui.c:12538
 msgid "Min Loop"
 msgstr "最小ループ"
 
-#: src/gui.c:12348
+#: src/gui.c:12564
 msgid "Max Loop"
 msgstr "最大ループ"
 
-#: src/gui.c:12831
+#: src/gui.c:13047
 msgid "Mascot File <span size=\"smaller\">(Double-Click to change)</span>"
 msgstr ""
 "マスコットファイル <span size=\"smaller\">(ダブルクリックで変更)</span>"
@@ -2484,6 +2481,12 @@ msgstr "%s はディレクトリではありません\n"
 #, c-format
 msgid "Creating the common directory \"%s\"\n"
 msgstr "共通ディレクトリ \"%s\" を作成しています...\n"
+
+#~ msgid "_OK"
+#~ msgstr "了承"
+
+#~ msgid "_Cancel"
+#~ msgstr "嫌です"
 
 #~ msgid "%d%%  Downloaded %ld / %ld kB"
 #~ msgstr "%d%%  ダウンロードしました. (%ld / %ld バイト)"

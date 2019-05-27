@@ -2154,19 +2154,35 @@ static void create_add_pattern_dialog(GtkWidget *w, gpointer gdata)
   dest_ptn=gtk_notebook_get_current_page(GTK_NOTEBOOK(ptn_note));
   dest_ptn++;
 
-  dialog = gtk_dialog_new_with_buttons(_("Select Pattern No. to Append"),
-				       GTK_WINDOW(mascot->conf_main),
-				       GTK_DIALOG_MODAL,
-#ifdef USE_GTK3
-				       _("_Cancel"),GTK_RESPONSE_CANCEL,
-				       _("_OK"),GTK_RESPONSE_OK,
-#else
-				       GTK_STOCK_CANCEL,GTK_RESPONSE_CANCEL,
-				       GTK_STOCK_OK,GTK_RESPONSE_OK,
-#endif
-				       NULL);
+  dialog=gtk_dialog_new();
+  gtk_window_set_modal(GTK_WINDOW(dialog),TRUE);
+  gtk_window_set_title(GTK_WINDOW(dialog),
+		       _("Select Pattern No. to Append"));
   gtk_window_set_position(GTK_WINDOW(dialog), GTK_WIN_POS_CENTER);
   gtk_container_set_border_width(GTK_CONTAINER(dialog),5);
+  gtk_window_set_transient_for(GTK_WINDOW(dialog),
+			       GTK_WINDOW(mascot->conf_main));
+
+  button=gtkut_dialog_add_button(GTK_DIALOG(dialog),
+				 _("Cancel"),
+#ifdef USE_GTK3
+				 "process-stop",
+#else
+				 GTK_STOCK_CANCEL,
+#endif
+				 GTK_RESPONSE_CANCEL);
+
+  button=gtkut_dialog_add_button(GTK_DIALOG(dialog),
+				 _("OK"),
+#ifdef USE_GTK3
+				 "emblem-default",
+#else
+				 GTK_STOCK_OK,
+#endif
+				 GTK_RESPONSE_OK);
+  gtk_widget_grab_focus(gtk_dialog_get_widget_for_response(GTK_DIALOG(dialog),
+							   GTK_RESPONSE_CANCEL));
+  
   
   hbox=gtkut_hbox_new(FALSE,0);
   gtk_box_pack_start(GTK_BOX(gtk_dialog_get_content_area(GTK_DIALOG(dialog))),
@@ -2463,19 +2479,35 @@ static void create_copy_pattern_dialog(GtkWidget *w, gpointer gdata)
 
   dest_ptn=mascot->ptn_num;
 
-  dialog = gtk_dialog_new_with_buttons(_("Pattern Copy"),
-				       GTK_WINDOW(mascot->conf_main),
-				       GTK_DIALOG_MODAL,
-#ifdef USE_GTK3
-				       _("_Cancel"),GTK_RESPONSE_CANCEL,
-				       _("_OK"),GTK_RESPONSE_OK,
-#else
-				       GTK_STOCK_CANCEL,GTK_RESPONSE_CANCEL,
-				       GTK_STOCK_OK,GTK_RESPONSE_OK,
-#endif
-				       NULL);
+  dialog=gtk_dialog_new();
+  gtk_window_set_modal(GTK_WINDOW(dialog),TRUE);
+  gtk_window_set_title(GTK_WINDOW(dialog),
+		       _("Pattern Copy"));
   gtk_window_set_position(GTK_WINDOW(dialog), GTK_WIN_POS_CENTER);
   gtk_container_set_border_width(GTK_CONTAINER(dialog),5);
+  gtk_window_set_transient_for(GTK_WINDOW(dialog),
+			       GTK_WINDOW(mascot->conf_main));
+
+  button=gtkut_dialog_add_button(GTK_DIALOG(dialog),
+				 _("Cancel"),
+#ifdef USE_GTK3
+				 "process-stop",
+#else
+				 GTK_STOCK_CANCEL,
+#endif
+				 GTK_RESPONSE_CANCEL);
+
+  button=gtkut_dialog_add_button(GTK_DIALOG(dialog),
+				 _("OK"),
+#ifdef USE_GTK3
+				 "emblem-default",
+#else
+				 GTK_STOCK_OK,
+#endif
+				 GTK_RESPONSE_OK);
+  gtk_widget_grab_focus(gtk_dialog_get_widget_for_response(GTK_DIALOG(dialog),
+							   GTK_RESPONSE_CANCEL));
+
   
   hbox=gtkut_hbox_new(FALSE,0);
   gtk_box_pack_start(GTK_BOX(gtk_dialog_get_content_area(GTK_DIALOG(dialog))),
@@ -2620,20 +2652,35 @@ static void create_add_frame_dialog(GtkWidget *w, gpointer gdata)
   }
   dest_frm++;
 
-  dialog = gtk_dialog_new_with_buttons(_("Select Frame No. to Append"),
-				       GTK_WINDOW(mascot->conf_main),
-				       GTK_DIALOG_MODAL,
-#ifdef USE_GTK3
-				       _("_Cancel"),GTK_RESPONSE_CANCEL,
-				       _("_OK"),GTK_RESPONSE_OK,
-#else
-				       GTK_STOCK_CANCEL,GTK_RESPONSE_CANCEL,
-				       GTK_STOCK_OK,GTK_RESPONSE_OK,
-#endif
-				       NULL);
+  dialog=gtk_dialog_new();
+  gtk_window_set_modal(GTK_WINDOW(dialog),TRUE);
+  gtk_window_set_title(GTK_WINDOW(dialog),
+		       _("Select Frame No. to Append"));
   gtk_window_set_position(GTK_WINDOW(dialog), GTK_WIN_POS_CENTER);
   gtk_container_set_border_width(GTK_CONTAINER(dialog),5);
-  
+  gtk_window_set_transient_for(GTK_WINDOW(dialog),
+			       GTK_WINDOW(mascot->conf_main));
+
+  button=gtkut_dialog_add_button(GTK_DIALOG(dialog),
+				 _("Cancel"),
+#ifdef USE_GTK3
+				 "process-stop",
+#else
+				 GTK_STOCK_CANCEL,
+#endif
+				 GTK_RESPONSE_CANCEL);
+
+  button=gtkut_dialog_add_button(GTK_DIALOG(dialog),
+				 _("OK"),
+#ifdef USE_GTK3
+				 "emblem-default",
+#else
+				 GTK_STOCK_OK,
+#endif
+				 GTK_RESPONSE_OK);
+  gtk_widget_grab_focus(gtk_dialog_get_widget_for_response(GTK_DIALOG(dialog),
+							   GTK_RESPONSE_CANCEL));
+
   hbox=gtkut_hbox_new(FALSE,0);
   gtk_box_pack_start(GTK_BOX(gtk_dialog_get_content_area(GTK_DIALOG(dialog))),
 		     hbox,TRUE,TRUE,0);
@@ -4169,8 +4216,7 @@ static void create_new_mascot_dialog(GtkWidget *w, gpointer gdata)
 {
   typMascot *mascot = (typMascot *)gdata;
   GtkWidget *dialog;
-  GtkWidget *button_cancel;
-  GtkWidget *button_ok;
+  GtkWidget *button;
   GtkWidget *table;
   GtkWidget *hbox;
   GtkWidget *label;
@@ -4187,21 +4233,33 @@ static void create_new_mascot_dialog(GtkWidget *w, gpointer gdata)
   image_file=NULL;
   copyright=NULL;
 
-  dialog = gtk_dialog_new_with_buttons(_("Create New Mascot"),
-				       NULL,
-				       GTK_DIALOG_MODAL,
-#ifdef USE_GTK3
-				       _("_Cancel"),GTK_RESPONSE_CANCEL,
-				       _("_OK"),GTK_RESPONSE_OK,
-#else
-				       GTK_STOCK_CANCEL,GTK_RESPONSE_CANCEL,
-				       GTK_STOCK_OK,GTK_RESPONSE_OK,
-#endif
-				       NULL);
+  dialog=gtk_dialog_new();
+  gtk_window_set_modal(GTK_WINDOW(dialog),TRUE);
+  gtk_window_set_title(GTK_WINDOW(dialog),
+		       _("Create New Mascot"));
   gtk_window_set_position(GTK_WINDOW(dialog), GTK_WIN_POS_CENTER);
   gtk_container_set_border_width(GTK_CONTAINER(dialog),5);
-  gtk_window_set_title(GTK_WINDOW(dialog),_("Create New Mascot"));
-  
+
+  button=gtkut_dialog_add_button(GTK_DIALOG(dialog),
+				 _("Cancel"),
+#ifdef USE_GTK3
+				 "process-stop",
+#else
+				 GTK_STOCK_CANCEL,
+#endif
+				 GTK_RESPONSE_CANCEL);
+
+  button=gtkut_dialog_add_button(GTK_DIALOG(dialog),
+				 _("OK"),
+#ifdef USE_GTK3
+				 "emblem-default",
+#else
+				 GTK_STOCK_OK,
+#endif
+				 GTK_RESPONSE_OK);
+  gtk_widget_grab_focus(gtk_dialog_get_widget_for_response(GTK_DIALOG(dialog),
+							   GTK_RESPONSE_CANCEL));
+
   label=gtkut_label_new(_("Creating New Mascot..."));
   gtkut_pos(label, POS_START, POS_CENTER);
   gtk_box_pack_start(GTK_BOX(gtk_dialog_get_content_area(GTK_DIALOG(dialog))),
@@ -4237,20 +4295,33 @@ static void create_new_mascot_dialog(GtkWidget *w, gpointer gdata)
     return;
   }
 
-  dialog = gtk_dialog_new_with_buttons(_("Create New Mascot"),
-				       NULL,
-				       GTK_DIALOG_MODAL,
-#ifdef USE_GTK3
-				       _("_Cancel"),GTK_RESPONSE_CANCEL,
-				       _("_OK"),GTK_RESPONSE_OK,
-#else
-				       GTK_STOCK_CANCEL,GTK_RESPONSE_CANCEL,
-				       GTK_STOCK_OK,GTK_RESPONSE_OK,
-#endif
-				       NULL);
+  dialog=gtk_dialog_new();
+  gtk_window_set_modal(GTK_WINDOW(dialog),TRUE);
+  gtk_window_set_title(GTK_WINDOW(dialog),
+		       _("Create New Mascot"));
   gtk_window_set_position(GTK_WINDOW(dialog), GTK_WIN_POS_CENTER);
   gtk_container_set_border_width(GTK_CONTAINER(dialog),5);
-  gtk_window_set_title(GTK_WINDOW(dialog),_("Create New Mascot"));
+
+  button=gtkut_dialog_add_button(GTK_DIALOG(dialog),
+				 _("Cancel"),
+#ifdef USE_GTK3
+				 "process-stop",
+#else
+				 GTK_STOCK_CANCEL,
+#endif
+				 GTK_RESPONSE_CANCEL);
+
+  button=gtkut_dialog_add_button(GTK_DIALOG(dialog),
+				 _("OK"),
+#ifdef USE_GTK3
+				 "emblem-default",
+#else
+				 GTK_STOCK_OK,
+#endif
+				 GTK_RESPONSE_OK);
+  gtk_widget_grab_focus(gtk_dialog_get_widget_for_response(GTK_DIALOG(dialog),
+							   GTK_RESPONSE_CANCEL));
+
   
   label=gtkut_label_new(_("Creating New Mascot..."));
   gtkut_pos(label, POS_START, POS_CENTER);
@@ -4289,21 +4360,33 @@ static void create_new_mascot_dialog(GtkWidget *w, gpointer gdata)
     return;
   }
 
-  dialog = gtk_dialog_new_with_buttons(_("Create New Mascot"),
-				       NULL,
-				       GTK_DIALOG_MODAL,
-#ifdef USE_GTK3
-				       _("_Cancel"),GTK_RESPONSE_CANCEL,
-				       _("_OK"),GTK_RESPONSE_OK,
-#else
-				       GTK_STOCK_CANCEL,GTK_RESPONSE_CANCEL,
-				       GTK_STOCK_OK,GTK_RESPONSE_OK,
-#endif
-				       NULL);
+  dialog=gtk_dialog_new();
+  gtk_window_set_modal(GTK_WINDOW(dialog),TRUE);
+  gtk_window_set_title(GTK_WINDOW(dialog),
+		       _("Create New Mascot"));
   gtk_window_set_position(GTK_WINDOW(dialog), GTK_WIN_POS_CENTER);
   gtk_container_set_border_width(GTK_CONTAINER(dialog),5);
-  gtk_window_set_title(GTK_WINDOW(dialog),_("Create New Mascot"));
-  
+
+  button=gtkut_dialog_add_button(GTK_DIALOG(dialog),
+				 _("Cancel"),
+#ifdef USE_GTK3
+				 "process-stop",
+#else
+				 GTK_STOCK_CANCEL,
+#endif
+				 GTK_RESPONSE_CANCEL);
+
+  button=gtkut_dialog_add_button(GTK_DIALOG(dialog),
+				 _("OK"),
+#ifdef USE_GTK3
+				 "emblem-default",
+#else
+				 GTK_STOCK_OK,
+#endif
+				 GTK_RESPONSE_OK);
+  gtk_widget_grab_focus(gtk_dialog_get_widget_for_response(GTK_DIALOG(dialog),
+							   GTK_RESPONSE_CANCEL));
+
   label=gtkut_label_new(_("Creating New Mascot..."));
   gtkut_pos(label, POS_START, POS_CENTER);
   gtk_box_pack_start(GTK_BOX(gtk_dialog_get_content_area(GTK_DIALOG(dialog))),
@@ -4366,29 +4449,41 @@ static void create_new_mascot_dialog(GtkWidget *w, gpointer gdata)
 void create_pop_pass_dialog(typMascot *mascot)
 {
   GtkWidget *dialog;
-  GtkWidget *button_cancel;
-  GtkWidget *button_ok;
+  GtkWidget *button;
   GtkWidget *hbox;
   GtkWidget *label;
   GtkWidget *entry;
   gchar *tmp;
 
   mascot->flag_menu=TRUE;
-
-  dialog = gtk_dialog_new_with_buttons(_("Please Input POP Password"),
-				       NULL,
-				       GTK_DIALOG_MODAL,
-#ifdef USE_GTK3
-				       _("_Cancel"),GTK_RESPONSE_CANCEL,
-				       _("_OK"),GTK_RESPONSE_OK,
-#else
-				       GTK_STOCK_CANCEL,GTK_RESPONSE_CANCEL,
-				       GTK_STOCK_OK,GTK_RESPONSE_OK,
-#endif
-				       NULL);
+ 
+  dialog=gtk_dialog_new();
+  gtk_window_set_modal(GTK_WINDOW(dialog),TRUE);
+  gtk_window_set_title(GTK_WINDOW(dialog),
+		       _("Please Input POP Password"));
   gtk_window_set_position(GTK_WINDOW(dialog), GTK_WIN_POS_CENTER);
   gtk_container_set_border_width(GTK_CONTAINER(dialog),5);
-  
+
+  button=gtkut_dialog_add_button(GTK_DIALOG(dialog),
+				 _("Cancel"),
+#ifdef USE_GTK3
+				 "process-stop",
+#else
+				 GTK_STOCK_CANCEL,
+#endif
+				 GTK_RESPONSE_CANCEL);
+
+  button=gtkut_dialog_add_button(GTK_DIALOG(dialog),
+				 _("OK"),
+#ifdef USE_GTK3
+				 "emblem-default",
+#else
+				 GTK_STOCK_OK,
+#endif
+				 GTK_RESPONSE_OK);
+  gtk_widget_grab_focus(gtk_dialog_get_widget_for_response(GTK_DIALOG(dialog),
+							   GTK_RESPONSE_OK));
+
   label=gtkut_label_new(_("Please Input POP Password"));
   gtkut_pos(label, POS_START, POS_CENTER);
   gtk_box_pack_start(GTK_BOX(gtk_dialog_get_content_area(GTK_DIALOG(dialog))),
@@ -5045,19 +5140,32 @@ static void create_save_mascot_dialog(GtkWidget *w, gpointer gdata)
   if(fname) g_free(fname);
 
   if(access(dest_file,F_OK)==0){
-    dialog = gtk_dialog_new_with_buttons(_("File Save : Overwrite Confirmation"),
-					 NULL,
-					 GTK_DIALOG_MODAL,
-#ifdef USE_GTK3
-					 _("_Cancel"),GTK_RESPONSE_CANCEL,
-					 _("_OK"),GTK_RESPONSE_OK,
-#else
-					 GTK_STOCK_CANCEL,GTK_RESPONSE_CANCEL,
-					 GTK_STOCK_OK,GTK_RESPONSE_OK,
-#endif
-					 NULL);
+    dialog=gtk_dialog_new();
+    gtk_window_set_modal(GTK_WINDOW(dialog),TRUE);
+    gtk_window_set_title(GTK_WINDOW(dialog),
+			 _("File Save : Overwrite Confirmation"));
     gtk_window_set_position(GTK_WINDOW(dialog), GTK_WIN_POS_CENTER);
     gtk_container_set_border_width(GTK_CONTAINER(dialog),5);
+    
+    button=gtkut_dialog_add_button(GTK_DIALOG(dialog),
+				   _("Cancel"),
+#ifdef USE_GTK3
+				   "process-stop",
+#else
+				   GTK_STOCK_CANCEL,
+#endif
+				   GTK_RESPONSE_CANCEL);
+    
+    button=gtkut_dialog_add_button(GTK_DIALOG(dialog),
+				   _("OK"),
+#ifdef USE_GTK3
+				   "emblem-default",
+#else
+				   GTK_STOCK_OK,
+#endif
+				   GTK_RESPONSE_OK);
+    gtk_widget_grab_focus(gtk_dialog_get_widget_for_response(GTK_DIALOG(dialog),
+							     GTK_RESPONSE_CANCEL));
     
     tmp=g_strdup_printf(_("File %s already exists."),dest_file);
     label=gtkut_label_new(tmp);
@@ -5149,20 +5257,34 @@ static void create_save_nokkari_dialog(GtkWidget *w, gpointer gdata)
     
   
   if(access(dest_file,F_OK)==0){
-    dialog = gtk_dialog_new_with_buttons(_("File Save : Overwrite Confirmation"),
-					 NULL,
-					 GTK_DIALOG_MODAL,
-#ifdef USE_GTK3
-					 _("_Cancel"),GTK_RESPONSE_CANCEL,
-					 _("_OK"),GTK_RESPONSE_OK,
-#else
-					 GTK_STOCK_CANCEL,GTK_RESPONSE_CANCEL,
-					 GTK_STOCK_OK,GTK_RESPONSE_OK,
-#endif
-					 NULL);
+    dialog=gtk_dialog_new();
+    gtk_window_set_modal(GTK_WINDOW(dialog),TRUE);
+    gtk_window_set_title(GTK_WINDOW(dialog),
+			 _("File Save : Overwrite Confirmation"));
     gtk_window_set_position(GTK_WINDOW(dialog), GTK_WIN_POS_CENTER);
     gtk_container_set_border_width(GTK_CONTAINER(dialog),5);
     
+    button=gtkut_dialog_add_button(GTK_DIALOG(dialog),
+				   _("Cancel"),
+#ifdef USE_GTK3
+				   "process-stop",
+#else
+				   GTK_STOCK_CANCEL,
+#endif
+				   GTK_RESPONSE_CANCEL);
+    
+    button=gtkut_dialog_add_button(GTK_DIALOG(dialog),
+				   _("OK"),
+#ifdef USE_GTK3
+				   "emblem-default",
+#else
+				   GTK_STOCK_OK,
+#endif
+				   GTK_RESPONSE_OK);
+    gtk_widget_grab_focus(gtk_dialog_get_widget_for_response(GTK_DIALOG(dialog),
+							     GTK_RESPONSE_CANCEL));
+
+
     tmp=g_strdup_printf(_("File %s already exists."), dest_file);
     label=gtkut_label_new(tmp);
     gtk_box_pack_start(GTK_BOX(gtk_dialog_get_content_area(GTK_DIALOG(dialog))),
@@ -5200,6 +5322,7 @@ static void create_save_release_mascot_dialog(GtkWidget *w, gpointer gdata)
   typMascot *mascot = (typMascot *)gdata;
   GtkWidget *fdialog;
   GtkWidget *dialog;
+  GtkWidget *button;
   GtkWidget *table;
   GtkWidget *label;
   GtkWidget *entry;
@@ -5218,26 +5341,38 @@ static void create_save_release_mascot_dialog(GtkWidget *w, gpointer gdata)
   gchar *tmp_file,*tmp_file1,*tmp_file2;
   int i_pix;
 
-
   mascot->flag_menu=TRUE;
 
   // Win構築は重いので先にExposeイベント等をすべて処理してから
   //while (my_main_iteration(FALSE));
 
   // Copyright用ダイアログ
-  dialog = gtk_dialog_new_with_buttons(_("Setup for Release Mascot"),
-				       NULL,
-				       GTK_DIALOG_MODAL,
-#ifdef USE_GTK3
-				       _("_Cancel"),GTK_RESPONSE_CANCEL,
-				       _("_OK"),GTK_RESPONSE_OK,
-#else
-				       GTK_STOCK_CANCEL,GTK_RESPONSE_CANCEL,
-				       GTK_STOCK_OK,GTK_RESPONSE_OK,
-#endif
-				       NULL);
+  dialog=gtk_dialog_new();
+  gtk_window_set_modal(GTK_WINDOW(dialog),TRUE);
+  gtk_window_set_title(GTK_WINDOW(dialog),
+		       _("Setup for Release Mascot"));
   gtk_window_set_position(GTK_WINDOW(dialog), GTK_WIN_POS_CENTER);
   gtk_container_set_border_width(GTK_CONTAINER(dialog),5);
+  
+  button=gtkut_dialog_add_button(GTK_DIALOG(dialog),
+				 _("Cancel"),
+#ifdef USE_GTK3
+				 "process-stop",
+#else
+				 GTK_STOCK_CANCEL,
+#endif
+				 GTK_RESPONSE_CANCEL);
+  
+  button=gtkut_dialog_add_button(GTK_DIALOG(dialog),
+				 _("OK"),
+#ifdef USE_GTK3
+				 "emblem-default",
+#else
+				 GTK_STOCK_OK,
+#endif
+				 GTK_RESPONSE_OK);
+  gtk_widget_grab_focus(gtk_dialog_get_widget_for_response(GTK_DIALOG(dialog),
+							   GTK_RESPONSE_CANCEL));
 
   clk_font_flag=FALSE;
   bal_font_flag=FALSE;
@@ -5378,20 +5513,33 @@ static void create_save_release_mascot_dialog(GtkWidget *w, gpointer gdata)
   if(fname) g_free(fname);
   
   if(access(dest_file,F_OK)==0){    
-    dialog = gtk_dialog_new_with_buttons(_("File Save : Overwrite Confirmation"),
-					 NULL,
-					 GTK_DIALOG_MODAL,
-#ifdef USE_GTK3
-					 _("_Cancel"),GTK_RESPONSE_CANCEL,
-					 _("_OK"),GTK_RESPONSE_OK,
-#else
-					 GTK_STOCK_CANCEL,GTK_RESPONSE_CANCEL,
-					 GTK_STOCK_OK,GTK_RESPONSE_OK,
-#endif
-					 NULL);
+    dialog=gtk_dialog_new();
+    gtk_window_set_modal(GTK_WINDOW(dialog),TRUE);
+    gtk_window_set_title(GTK_WINDOW(dialog),
+			 _("File Save : Overwrite Confirmation"));
     gtk_window_set_position(GTK_WINDOW(dialog), GTK_WIN_POS_CENTER);
     gtk_container_set_border_width(GTK_CONTAINER(dialog),5);
-      
+    
+    button=gtkut_dialog_add_button(GTK_DIALOG(dialog),
+				   _("Cancel"),
+#ifdef USE_GTK3
+				   "process-stop",
+#else
+				   GTK_STOCK_CANCEL,
+#endif
+				   GTK_RESPONSE_CANCEL);
+    
+    button=gtkut_dialog_add_button(GTK_DIALOG(dialog),
+				   _("OK"),
+#ifdef USE_GTK3
+				   "emblem-default",
+#else
+				   GTK_STOCK_OK,
+#endif
+				   GTK_RESPONSE_OK);
+    gtk_widget_grab_focus(gtk_dialog_get_widget_for_response(GTK_DIALOG(dialog),
+							     GTK_RESPONSE_CANCEL));
+    
     tmp=g_strdup_printf(_("File %s already exists."),dest_file);
     label=gtkut_label_new(tmp);
     g_free(tmp);
@@ -5615,20 +5763,33 @@ static void create_save_menu_dialog(GtkWidget *w, gpointer gdata)
   if(fname) g_free(fname);
 
   if(access(dest_file,F_OK)==0){
-    dialog = gtk_dialog_new_with_buttons(_("Menu Save : Overwrite Confirmation"),
-					 NULL,
-					 GTK_DIALOG_MODAL,
-#ifdef USE_GTK3
-					 _("_Cancel"),GTK_RESPONSE_CANCEL,
-					 _("_OK"),GTK_RESPONSE_OK,
-#else
-					 GTK_STOCK_CANCEL,GTK_RESPONSE_CANCEL,
-					 GTK_STOCK_OK,GTK_RESPONSE_OK,
-#endif
-					 NULL);   
+    dialog=gtk_dialog_new();
+    gtk_window_set_modal(GTK_WINDOW(dialog),TRUE);
+    gtk_window_set_title(GTK_WINDOW(dialog),
+			 _("Menu Save : Overwrite Confirmation"));
     gtk_window_set_position(GTK_WINDOW(dialog), GTK_WIN_POS_CENTER);
     gtk_container_set_border_width(GTK_CONTAINER(dialog),5);
     
+    button=gtkut_dialog_add_button(GTK_DIALOG(dialog),
+				   _("Cancel"),
+#ifdef USE_GTK3
+				   "process-stop",
+#else
+				   GTK_STOCK_CANCEL,
+#endif
+				   GTK_RESPONSE_CANCEL);
+    
+    button=gtkut_dialog_add_button(GTK_DIALOG(dialog),
+				   _("OK"),
+#ifdef USE_GTK3
+				   "emblem-default",
+#else
+				   GTK_STOCK_OK,
+#endif
+				   GTK_RESPONSE_OK);
+    gtk_widget_grab_focus(gtk_dialog_get_widget_for_response(GTK_DIALOG(dialog),
+							     GTK_RESPONSE_CANCEL));
+
     tmp=g_strdup_printf(_("Menu File %s already exists."),dest_file);
     label=gtkut_label_new(tmp);
     g_free(tmp);
@@ -5727,20 +5888,33 @@ static void create_save_menu_dialog(GtkWidget *w, gpointer gdata)
   if(fname) g_free(fname);
 
   if(access(dest_file,F_OK)==0){
-    dialog = gtk_dialog_new_with_buttons(_("Resource Save : Overwrite Confirmation"),
-					 NULL,
-					 GTK_DIALOG_MODAL,
-#ifdef USE_GTK3
-					 _("_Cancel"),GTK_RESPONSE_CANCEL,
-					 _("_OK"),GTK_RESPONSE_OK,
-#else
-					 GTK_STOCK_CANCEL,GTK_RESPONSE_CANCEL,
-					 GTK_STOCK_OK,GTK_RESPONSE_OK,
-#endif
-					 NULL);   
+    dialog=gtk_dialog_new();
+    gtk_window_set_modal(GTK_WINDOW(dialog),TRUE);
+    gtk_window_set_title(GTK_WINDOW(dialog),
+			 _("Resource Save : Overwrite Confirmation"));
     gtk_window_set_position(GTK_WINDOW(dialog), GTK_WIN_POS_CENTER);
     gtk_container_set_border_width(GTK_CONTAINER(dialog),5);
     
+    button=gtkut_dialog_add_button(GTK_DIALOG(dialog),
+				   _("Cancel"),
+#ifdef USE_GTK3
+				   "process-stop",
+#else
+				   GTK_STOCK_CANCEL,
+#endif
+				   GTK_RESPONSE_CANCEL);
+    
+    button=gtkut_dialog_add_button(GTK_DIALOG(dialog),
+				   _("OK"),
+#ifdef USE_GTK3
+				   "emblem-default",
+#else
+				   GTK_STOCK_OK,
+#endif
+				   GTK_RESPONSE_OK);
+    gtk_widget_grab_focus(gtk_dialog_get_widget_for_response(GTK_DIALOG(dialog),
+							     GTK_RESPONSE_CANCEL));
+
     tmp=g_strdup_printf(_("Resource File %s already exists."),dest_file);
     label=gtkut_label_new(tmp);
     g_free(tmp);
@@ -5872,22 +6046,26 @@ void create_config_dialog(GtkWidget *widget, gpointer gdata){
     mascot->cattree_i_tgt[i_cat]=-1;
   }
 
-  //mascot->conf_main = gtk_window_new(GTK_WINDOW_TOPLEVEL);
-
-  mascot->conf_main = gtk_dialog_new_with_buttons(_("Config for MaCoPiX"),
-						  NULL,
-						  GTK_DIALOG_MODAL | GTK_DIALOG_DESTROY_WITH_PARENT,
-#ifdef USE_GTK3
-						  _("OK"), GTK_RESPONSE_OK,
-#else
-						  GTK_STOCK_OK,GTK_RESPONSE_OK,
-#endif
-						  NULL);
+  mascot->conf_main=gtk_dialog_new();
+  gtk_window_set_modal(GTK_WINDOW(mascot->conf_main),TRUE);
+  gtk_window_set_title(GTK_WINDOW(mascot->conf_main),
+		       _("Config for MaCoPiX"));
+  
   gtk_dialog_set_default_response(GTK_DIALOG(mascot->conf_main),
 				  GTK_RESPONSE_OK); 
+  gtk_container_set_border_width(GTK_CONTAINER(mascot->conf_main),5);
+
+  button=gtkut_dialog_add_button(GTK_DIALOG(mascot->conf_main),
+				 _("OK"),
+#ifdef USE_GTK3
+				 "emblem-default",
+#else
+				 GTK_STOCK_OK,
+#endif
+				 GTK_RESPONSE_OK);
+
   gtk_widget_grab_focus(gtk_dialog_get_widget_for_response(GTK_DIALOG(mascot->conf_main),
 							   GTK_RESPONSE_OK));
-  gtk_container_set_border_width(GTK_CONTAINER(mascot->conf_main),5);
 
   
   //gtk_window_set_title(GTK_WINDOW(mascot->conf_main), 
@@ -11608,15 +11786,24 @@ void popup_message(GtkWidget *parent, gchar* stock_id,gint delay, ...){
     gtk_window_set_title(GTK_WINDOW(dialog),_("MaCoPiX : Message"));
   }
   else{
-    dialog = gtk_dialog_new_with_buttons(_("MaCoPiX : Message"),
-					 (parent) ? GTK_WINDOW(parent) : NULL,
-					 GTK_DIALOG_MODAL,
+    dialog=gtk_dialog_new();
+    gtk_window_set_modal(GTK_WINDOW(dialog),TRUE);
+    gtk_window_set_title(GTK_WINDOW(dialog),
+			 _("MaCoPiX : Message"));
+    gtk_window_set_position(GTK_WINDOW(dialog), GTK_WIN_POS_CENTER);
+    gtk_container_set_border_width(GTK_CONTAINER(dialog),5);
+    gtk_window_set_transient_for(GTK_WINDOW(dialog),(parent) ? GTK_WINDOW(parent) : NULL);
+    
+    button=gtkut_dialog_add_button(GTK_DIALOG(dialog),
+				   _("OK"),
 #ifdef USE_GTK3
-					 _("_OK"),GTK_RESPONSE_OK,
+				   "emblem-default",
 #else
-					 GTK_STOCK_OK,GTK_RESPONSE_OK,
+				   GTK_STOCK_OK,
 #endif
-					 NULL);
+				   GTK_RESPONSE_OK);
+    gtk_widget_grab_focus(gtk_dialog_get_widget_for_response(GTK_DIALOG(dialog),
+							     GTK_RESPONSE_OK));
   }
   gtk_container_set_border_width(GTK_CONTAINER(dialog),5);
 
@@ -11682,20 +11869,33 @@ gboolean popup_ask(GtkWidget *parent, gchar* stock_id, ...){
 
   va_start(args, stock_id);
 
-  dialog = gtk_dialog_new_with_buttons("MaCoPiX : Dialog",
-				       GTK_WINDOW(parent),
-				       GTK_DIALOG_MODAL,
-#ifdef USE_GTK3
-				       _("_OK"),GTK_RESPONSE_OK,
-				       _("_Cancel"),GTK_RESPONSE_CANCEL,
-#else
-				       GTK_STOCK_OK,GTK_RESPONSE_OK,
-				       GTK_STOCK_CANCEL,GTK_RESPONSE_CANCEL,
-#endif
-				       NULL);
+  dialog=gtk_dialog_new();
+  gtk_window_set_modal(GTK_WINDOW(dialog),TRUE);
+  gtk_window_set_title(GTK_WINDOW(dialog),
+		       _("MaCoPiX : Dialog"));
+  gtk_window_set_position(GTK_WINDOW(dialog), GTK_WIN_POS_CENTER);
   gtk_container_set_border_width(GTK_CONTAINER(dialog),5);
-  gtk_window_set_transient_for(GTK_WINDOW(dialog),GTK_WINDOW(parent));
-  gtk_window_set_title(GTK_WINDOW(dialog),"MaCoPiX : Dialog");
+  gtk_window_set_transient_for(GTK_WINDOW(dialog),(parent) ? GTK_WINDOW(parent) : NULL);
+
+  button=gtkut_dialog_add_button(GTK_DIALOG(dialog),
+				 _("Cancel"),
+#ifdef USE_GTK3
+				 "process-stop",
+#else
+				 GTK_STOCK_CANCEL,
+#endif
+				 GTK_RESPONSE_CANCEL);
+
+  button=gtkut_dialog_add_button(GTK_DIALOG(dialog),
+				 _("OK"),
+#ifdef USE_GTK3
+				 "emblem-default",
+#else
+				 GTK_STOCK_OK,
+#endif
+				 GTK_RESPONSE_OK);
+  gtk_widget_grab_focus(gtk_dialog_get_widget_for_response(GTK_DIALOG(dialog),
+							   GTK_RESPONSE_OK));
 
   hbox = gtkut_hbox_new(FALSE,2);
   gtk_container_set_border_width (GTK_CONTAINER (hbox), 0);
@@ -11862,21 +12062,35 @@ void unlink_all(typMascot *mascot, gchar *dirname)
   
   mascot->flag_menu=TRUE;
   
-  dialog = gtk_dialog_new_with_buttons(_("MaCoPiX : Deletion of temporay files"),
-				       NULL,
-				       GTK_DIALOG_MODAL,
-#ifdef USE_GTK3
-				       _("_Cancel"),GTK_RESPONSE_CANCEL,
-				       _("_OK"),GTK_RESPONSE_OK,
-#else
-				       GTK_STOCK_CANCEL,GTK_RESPONSE_CANCEL,
-				       GTK_STOCK_OK,GTK_RESPONSE_OK,
-#endif
-				       NULL);
+  dialog=gtk_dialog_new();
+  gtk_window_set_modal(GTK_WINDOW(dialog),TRUE);
+  gtk_window_set_title(GTK_WINDOW(dialog),
+		       _("MaCoPiX : Deletion of temporay files"));
   gtk_window_set_position(GTK_WINDOW(dialog), GTK_WIN_POS_CENTER);
   gtk_container_set_border_width(GTK_CONTAINER(dialog),5);
-  gtk_dialog_set_default_response(GTK_DIALOG(dialog), GTK_RESPONSE_OK); 
-  
+  gtk_window_set_transient_for(GTK_WINDOW(dialog), NULL);
+
+  button=gtkut_dialog_add_button(GTK_DIALOG(dialog),
+				 _("Cancel"),
+#ifdef USE_GTK3
+				 "process-stop",
+#else
+				 GTK_STOCK_CANCEL,
+#endif
+				 GTK_RESPONSE_CANCEL);
+
+  button=gtkut_dialog_add_button(GTK_DIALOG(dialog),
+				 _("OK"),
+#ifdef USE_GTK3
+				 "emblem-default",
+#else
+				 GTK_STOCK_OK,
+#endif
+				 GTK_RESPONSE_OK);
+  gtk_widget_grab_focus(gtk_dialog_get_widget_for_response(GTK_DIALOG(dialog),
+							   GTK_RESPONSE_OK));
+
+
   label=gtkut_label_new(_("Install of the new menu file has been completed."));
   gtk_box_pack_start(GTK_BOX(gtk_dialog_get_content_area(GTK_DIALOG(dialog))),
 		     label,TRUE,TRUE,0);

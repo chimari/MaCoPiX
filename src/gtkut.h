@@ -25,6 +25,7 @@ void gdkut_flush();
 GtkWidget * gtkut_hscale_new();
 GtkWidget * gtkut_arrow_new();
 void my_cairo_set_source_rgba();
+GtkWidget * gtkut_dialog_add_button();
 
 enum{
   POS_START,

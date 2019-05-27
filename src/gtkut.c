@@ -529,3 +529,21 @@ void my_cairo_set_source_rgba(cairo_t *cr, GdkColor *col, gdouble alpha){
 			 (gdouble)alpha);
 }
 #endif
+
+
+GtkWidget * gtkut_dialog_add_button(GtkDialog *dialog,
+				    gchar *txt,
+				    const gchar *stock_or_icon_name,
+				    gint response_id){
+  GtkWidget *button;
+  
+#ifdef USE_GTK3
+  button=gtkut_button_new_from_icon_name(txt, stock_or_icon_name);
+#else
+  button=gtkut_button_new_from_stock(txt, srock_or_icon_name);
+#endif
+  gtk_dialog_add_action_widget(dialog, button, response_id);
+
+  return(button);
+}
+  
