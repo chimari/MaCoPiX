@@ -59,6 +59,11 @@ void httpdl_signal();
 
 void dl_mascot_list();
 
+glong get_file_size();
+void write_dlsz();
+void unlink_dlsz();
+glong get_dlsz();
+
 #ifdef POP_DEBUG
 gboolean debug_flg=TRUE;
 #else
@@ -589,6 +594,8 @@ int http_c_nonssl(typMascot *mascot)
     return(MACOPIX_HTTP_ERROR_TEMPFILE);
   }
 
+  unlink_dlsz(mascot);
+  
   while((size = fd_gets(command_socket,buf,BUF_LEN)) > 2 ){
     // header lines
     if(debug_flg){
@@ -597,7 +604,14 @@ int http_c_nonssl(typMascot *mascot)
     if(NULL != (cp = strstr(buf, "Transfer-Encoding: chunked"))){
       chunked_flag=TRUE;
     }
+    if(strncmp(buf,"Content-Length: ",strlen("Content-Length: "))==0){
+      cp = buf + strlen("Content-Length: ");
+      mascot->http_dlsz=atol(cp);
+    }
   }
+  
+  write_dlsz(mascot);
+  
   do{ // data read
     size = recv(command_socket,buf,BUF_LEN, 0);
     fwrite( &buf , size , 1 , fp_write ); 
@@ -800,9 +814,62 @@ int http_c_ssl(typMascot *mascot)
 
 gboolean progress_timeout( gpointer data ){
   typMascot *mascot=(typMascot *)data;
+  glong sz=-1;
+  gchar *tmp;
+  gdouble frac;
 
   if(gtk_widget_get_realized(mascot->pbar)){
-    gtk_progress_bar_pulse(GTK_PROGRESS_BAR(mascot->pbar));
+    sz=get_file_size(mascot->http_dlfile);
+    
+    if(sz>0){  // After Downloading Started to get current dlsz
+      if(mascot->http_dlsz<0){
+	mascot->http_dlsz=get_dlsz(mascot);
+      }
+    }
+
+    if(mascot->http_dlsz>0){
+      frac=(gdouble)sz/(gdouble)mascot->http_dlsz;
+      gtk_progress_bar_set_fraction(GTK_PROGRESS_BAR(mascot->pbar),
+				    frac);
+
+      if(sz>1024*1024){
+	tmp=g_strdup_printf(_("%d%% Downloaded (%.2lf / %.2lf MB)"),
+			    (gint)(frac*100.),
+			    (gdouble)sz/1024./1024.,
+			    (gdouble)mascot->http_dlsz/1024./1024.);
+      }
+      else if(sz>1024){
+	tmp=g_strdup_printf(_("%d%% Downloaded (%ld / %ld kB)"),
+			    (gint)(frac*100.),
+			    sz/1024,
+			    mascot->http_dlsz/1024);
+      }
+      else{
+	tmp=g_strdup_printf(_("%d%% Downloaded (%ld / %ld bytes)"),
+			    (gint)(frac*100.),
+			    sz, mascot->http_dlsz);
+      }
+    }
+    else{
+      gtk_progress_bar_pulse(GTK_PROGRESS_BAR(mascot->pbar));
+
+      if(sz>1024*1024){
+	tmp=g_strdup_printf(_("Downloaded %.2lf MB"),
+			    (gdouble)sz/1024./1024.);
+      }
+      else if(sz>1024){
+	tmp=g_strdup_printf(_("Downloaded %ld kB"), sz/1024);
+      }
+      else if (sz>0){
+	tmp=g_strdup_printf(_("Downloaded %ld bytes"), sz);
+      }
+      else{
+	tmp=g_strdup_printf(_("Waiting for HTTP server response ..."));
+      }
+    }
+    gtk_progress_bar_set_text(GTK_PROGRESS_BAR(mascot->pbar),
+			      tmp);
+    g_free(tmp);
   }
   
   return TRUE;
@@ -879,6 +946,7 @@ void dl_mascot_list(typMascot *mascot,  gboolean flag_popup){
 		     label,TRUE,TRUE,0);
   gtk_widget_show(label);
   
+  mascot->http_dlsz=-1;
   mascot->pbar=gtk_progress_bar_new();
   gtk_box_pack_start(GTK_BOX(gtk_dialog_get_content_area(GTK_DIALOG(dialog))),
 		     mascot->pbar,TRUE,TRUE,0);
@@ -887,6 +955,7 @@ void dl_mascot_list(typMascot *mascot,  gboolean flag_popup){
   gtk_orientable_set_orientation (GTK_ORIENTABLE (mascot->pbar), 
 				  GTK_ORIENTATION_HORIZONTAL);
   css_change_pbar_height(mascot->pbar,15);
+  gtk_progress_bar_set_show_text(GTK_PROGRESS_BAR(mascot->pbar), TRUE);
 #else
   gtk_progress_bar_set_orientation (GTK_PROGRESS_BAR (mascot->pbar), 
 				    GTK_PROGRESS_RIGHT_TO_LEFT);
@@ -976,17 +1045,13 @@ void dl_mascot_tgz(typMascot *mascot){
   gtk_window_set_title(GTK_WINDOW(dialog),_("MaCoPiX : Downloading Official Mascot tar.gz file"));
   gtk_window_set_decorated(GTK_WINDOW(dialog),TRUE);
 
-  label=gtk_label_new(_("Downloading an official mascot ..."));
-#ifdef USE_GTK3
-  gtk_widget_set_halign (label, GTK_ALIGN_START);
-  gtk_widget_set_valign (label, GTK_ALIGN_CENTER);
-#else
-  gtk_misc_set_alignment (GTK_MISC (label), 0.0, 0.5);
-#endif
+  label=gtkut_label_new(_("Downloading an official mascot ..."));
+  gtkut_pos(label, POS_START, POS_CENTER);
   gtk_box_pack_start(GTK_BOX(gtk_dialog_get_content_area(GTK_DIALOG(dialog))),
 		     label,TRUE,TRUE,0);
   gtk_widget_show(label);
-  
+
+  mascot->http_dlsz=-1;
   mascot->pbar=gtk_progress_bar_new();
   gtk_box_pack_start(GTK_BOX(gtk_dialog_get_content_area(GTK_DIALOG(dialog))),
 		     mascot->pbar,TRUE,TRUE,0);
@@ -995,6 +1060,7 @@ void dl_mascot_tgz(typMascot *mascot){
   gtk_orientable_set_orientation (GTK_ORIENTABLE (mascot->pbar), 
 				  GTK_ORIENTATION_HORIZONTAL);
   css_change_pbar_height(mascot->pbar,15);
+  gtk_progress_bar_set_show_text(GTK_PROGRESS_BAR(mascot->pbar), TRUE);
 #else
   gtk_progress_bar_set_orientation (GTK_PROGRESS_BAR (mascot->pbar), 
 				    GTK_PROGRESS_RIGHT_TO_LEFT);
@@ -1047,3 +1113,102 @@ void dl_mascot_tgz(typMascot *mascot){
 }
 
 
+glong get_file_size(gchar *fname)
+{
+  FILE *fp;
+  long sz;
+
+  fp = fopen( fname, "rb" );
+  if( fp == NULL ){
+    return -1;
+  }
+
+  fseek( fp, 0, SEEK_END );
+  sz = ftell( fp );
+
+  fclose( fp );
+  return sz;
+}
+
+
+void write_dlsz(typMascot *mascot){
+  FILE *fp;
+  gchar *tmp_file;
+
+#ifdef USE_WIN32
+  tmp_file=g_strconcat(g_get_tmp_dir(), G_DIR_SEPARATOR_S,
+				  HTTP_DLSZ_FILE, NULL);
+#else
+  tmp_file=g_strdup_printf("%s%s%s-%d",
+			   g_get_tmp_dir(), G_DIR_SEPARATOR_S,
+			   HTTP_DLSZ_FILE, getuid());
+#endif
+  
+  if((fp=fopen(tmp_file,"w"))==NULL){
+    fprintf(stderr," File Write Error  \"%s\" \n", tmp_file);
+    g_free(tmp_file);
+    return;
+  }
+
+  fprintf(fp, "%ld\n",mascot->http_dlsz);
+  fclose(fp);
+  
+  g_free(tmp_file);
+  return;
+}
+
+
+void unlink_dlsz(typMascot *mascot){
+  gchar *tmp_file;
+
+  mascot->http_dlsz=0;
+  
+#ifdef USE_WIN32
+  tmp_file=g_strconcat(g_get_tmp_dir(), G_DIR_SEPARATOR_S,
+				  HTTP_DLSZ_FILE, NULL);
+#else
+  tmp_file=g_strdup_printf("%s%s%s-%d",
+			   g_get_tmp_dir(), G_DIR_SEPARATOR_S,
+			   HTTP_DLSZ_FILE, getuid());
+#endif
+  
+  if(access(tmp_file, F_OK)==0){
+    unlink(tmp_file);
+  }
+
+  g_free(tmp_file);
+  return;
+}
+
+
+glong get_dlsz(typMascot *mascot){
+  FILE *fp;
+  gchar *tmp_file;
+  glong sz=0;
+  gchar buf[10];
+  
+
+#ifdef USE_WIN32
+  tmp_file=g_strconcat(g_get_tmp_dir(), G_DIR_SEPARATOR_S,
+				  HTTP_DLSZ_FILE, NULL);
+#else
+  tmp_file=g_strdup_printf("%s%s%s-%d",
+			   g_get_tmp_dir(), G_DIR_SEPARATOR_S,
+			   HTTP_DLSZ_FILE, getuid());
+#endif
+  
+  if((fp=fopen(tmp_file,"r"))==NULL){
+    g_free(tmp_file);
+    return(-1);
+  }
+
+  if(fgets(buf,10-1,fp)){
+    sz = atol(buf);
+  }
+  fclose(fp);
+
+  unlink(tmp_file);
+  
+  g_free(tmp_file);
+  return (sz);
+}

@@ -555,7 +555,7 @@ void DrawPanelClock2(typMascot *mascot)
 #endif
   
   //while(my_main_iteration(FALSE));
-  gdkut_flush(mascot);
+  gdkut_flush(mascot->win_main);
   
 }
 

@@ -199,7 +199,7 @@ void MoveMascot(typMascot *mascot, gint x, gint y)
   gtk_menu_popdown(GTK_MENU(mascot->PopupMenu));
 #endif
 
-  gdkut_flush(mascot);
+  gdkut_flush(mascot->win_main);
 }
 
 #ifdef USE_BIFF
@@ -224,7 +224,7 @@ void MoveBiffPix(typMascot *mascot, gint x, gint y)
   }
   g_free(allocation);
 
-  gdkut_flush(mascot);
+  gdkut_flush(mascot->win_main);
 }
 #endif
 
@@ -257,7 +257,7 @@ void MoveBalloon(typMascot *mascot, gint x, gint y)
 		    bal_y);
   }
 
-  gdkut_flush(mascot);
+  gdkut_flush(mascot->win_main);
 }
 
 void ResizeMoveBalloon(typMascot *mascot, gint x, gint y, gint w, gint h)
@@ -292,7 +292,7 @@ void ResizeMoveBalloon(typMascot *mascot, gint x, gint y, gint w, gint h)
 			   w,h);
   }
 
-  gdkut_flush(mascot);
+  gdkut_flush(mascot->win_main);
 }
 
 // フォーカスWindow追従型移動
@@ -871,7 +871,7 @@ int MoveToFocus(typMascot *mascot, gboolean force_fl)
   }
 
   while (my_main_iteration(FALSE));
-  gdkut_flush(mascot);
+  gdkut_flush(mascot->win_main);
   return(1); 
 }
 
@@ -1006,7 +1006,7 @@ void drag_end(GtkWidget * widget, GdkEventButton * event, gpointer gdata)
 #else	    
   gdk_pointer_ungrab(GDK_CURRENT_TIME);
 #endif	    
-  gdkut_flush(mascot);
+  gdkut_flush(mascot->win_main);
 }
 
 // 時計  マウスボタンをおしたときのイベントCallback
@@ -1046,7 +1046,7 @@ void clk_drag_begin(GtkWidget * widget, GdkEventButton * event, gpointer gdata)
 		     FALSE, GDK_BUTTON_MOTION_MASK | GDK_BUTTON_RELEASE_MASK,
 		     NULL, NULL, GDK_CURRENT_TIME);
 #endif	    
-    gdkut_flush(mascot);
+    gdkut_flush(mascot->win_main);
   }
 }
 
@@ -1083,7 +1083,7 @@ void clk_drag_end(GtkWidget * widget, GdkEventButton * event, gpointer gdata)
 #else	    
   gdk_pointer_ungrab(GDK_CURRENT_TIME);
 #endif	    
-  gdkut_flush(mascot);
+  gdkut_flush(mascot->win_main);
 }
 
 
@@ -1125,7 +1125,7 @@ void biff_drag_begin(GtkWidget * widget, GdkEventButton * event, gpointer gdata)
 		     FALSE, GDK_BUTTON_MOTION_MASK | GDK_BUTTON_RELEASE_MASK,
 		     NULL, NULL, GDK_CURRENT_TIME);
 #endif	    
-    gdkut_flush(mascot);
+    gdkut_flush(mascot->win_main);
   }
 }
 
@@ -1170,7 +1170,7 @@ void biff_drag_end(GtkWidget * widget, GdkEventButton * event, gpointer gdata)
 #else	    
   gdk_pointer_ungrab(GDK_CURRENT_TIME);
 #endif	    
-  gdkut_flush(mascot);
+  gdkut_flush(mascot->win_main);
 }
 #endif
 
@@ -1824,7 +1824,7 @@ void focus_in(GtkWidget * widget, GdkEventMotion * event, gpointer gdata)
 {
   typMascot *mascot = (typMascot *)gdata;
 
-  gdkut_flush(mascot);
+  gdkut_flush(mascot->win_main);
 }
 
 void focus_out(GtkWidget * widget, GdkEventMotion * event, gpointer gdata)
@@ -1837,7 +1837,7 @@ void focus_out(GtkWidget * widget, GdkEventMotion * event, gpointer gdata)
 #else	    
   gdk_pointer_ungrab(GDK_CURRENT_TIME);
 #endif	    
-  gdkut_flush(mascot);
+  gdkut_flush(mascot->win_main);
 }
 
 
@@ -2031,7 +2031,7 @@ gboolean time_update(gpointer gdata)
 
   if(mascot->raise_force) raise_all(mascot);
     
-  gdkut_flush(mascot);
+  gdkut_flush(mascot->win_main);
   
   return(TRUE);
 
@@ -2108,7 +2108,7 @@ void clock_update(typMascot *mascot, gboolean force_flag){
 #else	    
 	  gdk_pointer_ungrab(GDK_CURRENT_TIME);
 #endif	    
-	  gdkut_flush(mascot);
+	  gdkut_flush(mascot->win_main);
 	  break;
 	case SIGACT_CHANGE:
 	  if(mascot->menu_file){

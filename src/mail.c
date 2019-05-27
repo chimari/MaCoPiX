@@ -203,17 +203,17 @@ gboolean MailChecker(gpointer gdata){
 
   if(mascot->flag_menu) return(TRUE);
 
-  gdkut_flush(mascot);
+  gdkut_flush(mascot->win_main);
 
   ext_play(mascot,mascot->mail.polling);  
   mail_check(mascot);
 
-  gdkut_flush(mascot);
+  gdkut_flush(mascot->win_main);
 
   if((mascot->mail.type!=MAIL_POP3)&&(mascot->mail.type!=MAIL_APOP))
     display_biff_balloon(mascot);
 
-  gdkut_flush(mascot);
+  gdkut_flush(mascot->win_main);
   return(TRUE);
 }
 
@@ -2325,7 +2325,7 @@ void create_biff_dialog(typMascot *mascot)
   
   gtk_widget_show_all(mascot->biff_main);
   
-  gdkut_flush(mascot);
+  gdkut_flush(mascot->win_main);
 }
 
 

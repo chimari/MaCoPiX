@@ -163,6 +163,7 @@
 #define HTTP_MASCOT_HOST "rosegray.sakura.ne.jp"
 #define HTTP_MASCOT_PATH  "/macopix/"
 #define HTTP_MASCOT_FILE "macopix_mascot_list.ini"
+#define HTTP_DLSZ_FILE   "macopix_http_dlsz.txt"
 
 #define MAX_TGZ_FILE 100
 
@@ -1083,6 +1084,7 @@ struct _typMascot{
   gchar *http_host;
   gchar *http_path;
   gchar *http_dlfile;
+  glong http_dlsz;
   GtkWidget *pbar;
 #ifdef USE_WIN32
   HANDLE hThread_http;

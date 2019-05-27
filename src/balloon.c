@@ -456,7 +456,7 @@ void DrawBalloon2(typMascot *mascot, char **wn_iwp, int wn_max)
   if(pango_text)
     g_object_unref(G_OBJECT(pango_text));
 #endif
-  gdkut_flush(mascot);
+  gdkut_flush(mascot->win_main);
 
 }
 

@@ -3871,7 +3871,7 @@ static void MakeNewMascot(typMascot *mascot, gchar *mascot_file,
     }
     
     
-    g_print(_("Installing %s -> %s\n"),image_file,tmp_file);
+    //g_print(_("Installing %s -> %s\n"),image_file,tmp_file);
     copy_file(image_file,tmp_file);
     mascot->sprites[0].filename=tmp_file;
   }
@@ -9642,7 +9642,7 @@ void create_config_dialog(GtkWidget *widget, gpointer gdata){
 
 
   while (my_main_iteration(FALSE));
-  gdkut_flush(mascot);
+  gdkut_flush(mascot->win_main);
 
   flag_make_pixmap_list=FALSE;
   mascot->flag_menu=FALSE;
@@ -11042,7 +11042,7 @@ void create_cons_dialog(typMascot *mascot,
   
   gtk_main();
 
-  gdkut_flush(mascot);
+  gdkut_flush(mascot->win_main);
 
   mascot->flag_consow=ccons->flag_ow;
   if(ccons->flag_auto){
@@ -11201,7 +11201,7 @@ void create_smenu_dialog(typMascot *mascot, gboolean flag_popup)
     
     gtk_main();
     
-    gdkut_flush(mascot);
+    gdkut_flush(main);
     
     if((!mascot->file)&&(!mascot->menu_file)) exit(1);
 
@@ -11265,7 +11265,7 @@ void create_smenu_dialog(typMascot *mascot, gboolean flag_popup)
     
     gtk_main();
     
-    gdkut_flush(mascot);
+    gdkut_flush(main);
     
     if(selected_smenu==-1){
       if(!flag_popup) exit(1);
@@ -11771,17 +11771,16 @@ void popup_progress(typMascot *mascot, gchar *msg1){
   gtk_orientable_set_orientation (GTK_ORIENTABLE (mascot->pdata->pbar), 
 				  GTK_ORIENTATION_HORIZONTAL);
   css_change_pbar_height(mascot->pdata->pbar,15);
+  gtk_progress_bar_set_show_text(GTK_PROGRESS_BAR(mascot->pdata->pbar), TRUE);
 #else
   gtk_progress_bar_set_orientation (GTK_PROGRESS_BAR (mascot->pdata->pbar), 
 				    GTK_PROGRESS_RIGHT_TO_LEFT);
 #endif
-
-  gtk_container_add (GTK_CONTAINER (align), mascot->pdata->pbar);
   gtk_widget_show (mascot->pdata->pbar);
 
   gtk_widget_show_all(mascot->pdata->dialog);
 
-  gdkut_flush(mascot);
+  gdkut_flush(mascot->pdata->dialog);
 }
 
 void destroy_progress(typMascot *mascot){

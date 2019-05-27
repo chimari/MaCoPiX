@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-05-24 21:32-1000\n"
+"POT-Creation-Date: 2019-05-26 17:48-1000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,316 +17,18 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: src/main.c:515
-msgid "Cannot Find Menu File."
-msgstr ""
-
-#: src/main.c:546 src/main.c:588 src/main.c:2072 src/main.c:2115
-#: src/main.c:2826 src/main.c:2945 src/main.c:3235 src/main.c:3254
-#: src/main.c:3262 src/main.c:3393 src/gui.c:3874
+#: src/balloon.c:509
 #, c-format
-msgid "Installing %s -> %s\n"
+msgid "%s(From is not avairable)%s"
 msgstr ""
 
-#: src/main.c:616
-msgid "Preparing for Installation"
-msgstr ""
-
-#: src/main.c:636 src/main.c:683
-msgid " Cannot read the Menu File correctly!!"
-msgstr ""
-
-#: src/main.c:667 src/main.c:903 src/main.c:972 src/main.c:2146 src/main.c:2444
-#: src/main.c:2563 src/main.c:2592 src/main.c:3464
-msgid "(Invalid Character Code)"
-msgstr ""
-
-#: src/main.c:706
+#: src/balloon.c:522
 #, c-format
-msgid "Installing mascots [%2d/%2d]"
+msgid "%s(Subject is not avairable)%s"
 msgstr ""
 
-#: src/main.c:765
-msgid " ================== Installed Menus ================== \n"
-msgstr ""
-
-#: src/main.c:782
-#, c-format
-msgid "   !!! Common Directory - %s - does not exist.\n"
-msgstr ""
-
-#: src/main.c:787
-msgid "  [Common Directory]\n"
-msgstr ""
-
-#: src/main.c:801 src/main.c:851
-#, c-format
-msgid "  %20s *  %2d categories  -- Combined Menu --\n"
-msgstr ""
-
-#: src/main.c:805 src/main.c:855
-#, c-format
-msgid "  %20s :  %2d mascots    [%s]\n"
-msgstr ""
-
-#: src/main.c:832
-#, c-format
-msgid "  !!! User Directory - %s - does not exist.\n"
-msgstr ""
-
-#: src/main.c:837
-msgid "  [User Directory]\n"
-msgstr ""
-
-#: src/main.c:1070
-#, c-format
-msgid "Creating User-Dir %s .\n"
-msgstr ""
-
-#: src/main.c:1084
-#, c-format
-msgid "Creating User-PixmapDir %s .\n"
-msgstr ""
-
-#: src/main.c:1098
-#, c-format
-msgid "Creating User-SoundDir %s .\n"
-msgstr ""
-
-#: src/main.c:2039 src/main.c:2797 src/main.c:3023
-msgid "Cannot Find Mascot File."
-msgstr ""
-
-#: src/main.c:2916 src/main.c:3205
-msgid "Cannot Find Image."
-msgstr ""
-
-#: src/main.c:3363
-msgid "Cannot Find Sound File."
-msgstr ""
-
-#: src/main.c:3425
-#, c-format
-msgid "Cannot find resource file %s.\n"
-msgstr ""
-
-#: src/main.c:3426
-msgid "Loading default resource file...\n"
-msgstr ""
-
-#: src/main.c:4024
-msgid "MaCoPiX : Download & Install Mascot"
-msgstr ""
-
-#: src/main.c:4029
-msgid ""
-"Select a mascot file to download &amp; install into your <i>User directory</"
-"i>."
-msgstr ""
-
-#: src/main.c:4045
-msgid ""
-"<span color=\"#FF0000\"><b>Please note that all existing files will be "
-"overwritten.</b></span>"
-msgstr ""
-
-#: src/main.c:4071 src/gui.c:9500 src/gui.c:11500
-msgid "File"
-msgstr ""
-
-#: src/main.c:4081
-msgid "Name (E)"
-msgstr ""
-
-#: src/main.c:4091
-#, c-format
-msgid "Name (%s)"
-msgstr ""
-
-#: src/main.c:4103
-msgid "Registered"
-msgstr ""
-
-#: src/main.c:4113
-msgid "Ver."
-msgstr ""
-
-#: src/main.c:4123
-msgid "Date"
-msgstr ""
-
-#: src/main.c:4133
-msgid "Code"
-msgstr ""
-
-#: src/main.c:4157 src/main.c:4160
-msgid "(<i>Invalid Character Code</i>)"
-msgstr ""
-
-#: src/main.c:4199
-#, c-format
-msgid "%d mascot"
-msgstr ""
-
-#: src/main.c:4202
-msgid "<i>unkown</i>"
-msgstr ""
-
-#: src/main.c:4244 src/main.c:4246
-msgid "Download / Install"
-msgstr ""
-
-#: src/main.c:4251 src/main.c:4253 src/gui.c:11018 src/gui.c:11236
-#: src/sslmanager.c:167 src/dnd.c:198
-msgid "Cancel"
-msgstr ""
-
-#: src/main.c:4312
-msgid "Error : Failed to download the mascot archive file (tar.gz)."
-msgstr ""
-
-#: src/main.c:4335
-msgid "Error : Cannot read the downloaded mascot list."
-msgstr ""
-
-#: src/main.c:4596 src/main.c:4629 src/main.c:4736
-#, c-format
-msgid "Option \"%s\" is not found. Ignoring...\n"
-msgstr ""
-
-#: src/main.c:4788
-#, c-format
-msgid "macopix COMMON DIR:%s\n"
-msgstr ""
-
-#: src/main.c:4799
-msgid " macopix : Mascot Constructive Pilot for X   Ver"
-msgstr ""
-
-#: src/main.c:4800
-#, c-format
-msgid "  [usage] %% macopix [options] (mascot file)\n"
-msgstr ""
-
-#: src/main.c:4801
-msgid "     -h, --help               : Print this message\n"
-msgstr ""
-
-#: src/main.c:4803
-msgid "     -c, --common-dir         : Print COMMON Directory\n"
-msgstr ""
-
-#: src/main.c:4806
-msgid "     -b, --biff               : Turn on the biff function\n"
-msgstr ""
-
-#: src/main.c:4808
-msgid "     -s, --signal             : Turn on the time signal\n"
-msgstr ""
-
-#: src/main.c:4809
-#, c-format
-msgid "     -o, --offset offset[%%]   : Set offset-value for Focus Following\n"
-msgstr ""
-
-#: src/main.c:4810
-msgid "     -r, --rcfile rc-file     : Set the resource file\n"
-msgstr ""
-
-#: src/main.c:4811
-msgid "     -m, --menu   menu-file   : Set the file for quick menu\n"
-msgstr ""
-
-#: src/main.c:4812
-msgid ""
-"     -mg --mag    magnify     : Set magnification percentage of mascot\n"
-msgstr ""
-
-#: src/main.c:4813
-msgid ""
-"     -i, --ip-style (0|1|2|3) : Set interpolation style for magnification\n"
-msgstr ""
-
-#: src/main.c:4814
-msgid "## For Installation\n"
-msgstr ""
-
-#: src/main.c:4815
-msgid "     -a, --auto-install       : Set mascot auto install ON\n"
-msgstr ""
-
-#: src/main.c:4816
-msgid "     -na --no-auto-install    : Set mascot auto install OFF\n"
-msgstr ""
-
-#: src/main.c:4817
-msgid "     -O, --over-write         : Permit to overwrite files in user dir\n"
-msgstr ""
-
-#: src/main.c:4818
-msgid ""
-"     --install-user-mascot (mascot)  : Mascot Installation to User Dir.\n"
-msgstr ""
-
-#: src/main.c:4819
-msgid "     --install-user-menu (menu)      : Menu Installation to User Dir.\n"
-msgstr ""
-
-#: src/main.c:4821
-msgid ""
-"     --install-common-mascot (mascot): Mascot Installation to Common Dir.\n"
-msgstr ""
-
-#: src/main.c:4822
-msgid ""
-"     --install-common-menu (menu)    : Menu Installation to Common Dir.\n"
-msgstr ""
-
-#: src/main.c:4825
-msgid "## For Socket Message\n"
-msgstr ""
-
-#: src/main.c:4826
-msgid ""
-"     --sockmsg                : Start MaCoPiX as Socket Message Receiver\n"
-msgstr ""
-
-#: src/main.c:4827
-msgid ""
-"     --message (text)         : Send Message to Socket Message Receiver\n"
-msgstr ""
-
-#: src/main.c:4828
-msgid "     --message-expire (time)  : Socket Message Expire Time[ms]\n"
-msgstr ""
-
-#: src/main.c:4829
-msgid "     --message-type-lump      : Force to Set Lump Sum Balloon\n"
-msgstr ""
-
-#: src/main.c:4830
-msgid "     --message-type-step      : Force to Set Stepping Balloon\n"
-msgstr ""
-
-#: src/main.c:4831
-msgid "     --message-step (frame)   : Stepping Interval Frame for SockeMsg\n"
-msgstr ""
-
-#: src/main.c:4832
-msgid "     -nc, --no-duet-click     : Duet Animation [Click] OFF\n"
-msgstr ""
-
-#: src/main.c:4833
-msgid "     -nr, --no-duet-random    : Duet Animation [Random] OFF\n"
-msgstr ""
-
-#: src/main.c:4928
-#, c-format
-msgid "%8d%2d%4dMacopix already running in SockMsg Mode"
-msgstr ""
-
-#: src/main.c:4940
-msgid "Macopix not running in SockMsg Mode\n"
+#: src/balloon.c:529
+msgid "POP3 access error"
 msgstr ""
 
 #: src/callbacks.c:2054
@@ -360,6 +62,29 @@ msgstr ""
 
 #: src/callbacks.c:2232
 msgid "Sat"
+msgstr ""
+
+#: src/dnd.c:156
+#, c-format
+msgid ""
+"Do you want to install the mascot menu archive,\n"
+"     \"%s\"\n"
+"to your system [\"%s\"]? \n"
+"(Files are automatically overwritten.)"
+msgstr ""
+
+#: src/dnd.c:170
+msgid "MaCoPiX : Installing Mascot Menu File"
+msgstr ""
+
+#: src/dnd.c:188 src/gui.c:5881 src/gui.c:11029 src/gui.c:11253
+#: src/nokkari.c:890 src/sslmanager.c:157
+msgid "OK"
+msgstr ""
+
+#: src/dnd.c:198 src/gui.c:11018 src/gui.c:11242 src/main.c:4246
+#: src/main.c:4248 src/sslmanager.c:167
+msgid "Cancel"
 msgstr ""
 
 #: src/gui.c:466 src/gui.c:5763 src/gui.c:5780
@@ -422,7 +147,7 @@ msgstr ""
 #: src/gui.c:1699 src/gui.c:1791 src/gui.c:1881 src/gui.c:2002 src/gui.c:2839
 #: src/gui.c:2944 src/gui.c:3330 src/gui.c:3441 src/gui.c:3532 src/gui.c:3618
 #: src/gui.c:3741 src/gui.c:3824 src/gui.c:4077 src/gui.c:4152 src/gui.c:4606
-#: src/gui.c:4788 src/gui.c:4881 src/gui.c:4977
+#: src/gui.c:4788 src/gui.c:4881 src/gui.c:4977 src/unlha.c:93 src/untar.c:180
 msgid "Error: File cannot be opened."
 msgstr ""
 
@@ -619,7 +344,7 @@ msgstr ""
 msgid "Menu File"
 msgstr ""
 
-#: src/gui.c:3335
+#: src/gui.c:3335 src/unlha.c:98
 #, c-format
 msgid "Cannot Open %s\n"
 msgstr ""
@@ -892,11 +617,6 @@ msgstr ""
 msgid "Config for MaCoPiX"
 msgstr ""
 
-#: src/gui.c:5881 src/gui.c:11029 src/gui.c:11247 src/nokkari.c:890
-#: src/sslmanager.c:157 src/dnd.c:188
-msgid "OK"
-msgstr ""
-
 #: src/gui.c:5976 src/gui.c:8264
 msgid "Focus Follow"
 msgstr ""
@@ -1057,7 +777,7 @@ msgstr ""
 msgid "Click Action"
 msgstr ""
 
-#: src/gui.c:6533
+#: src/gui.c:6533 src/trayicon.c:78
 msgid "Mascot Random Change"
 msgstr ""
 
@@ -1703,8 +1423,12 @@ msgstr ""
 msgid "About This Mascot"
 msgstr ""
 
-#: src/gui.c:9488 src/gui.c:12796
+#: src/gui.c:9488 src/gui.c:12801
 msgid "Name"
+msgstr ""
+
+#: src/gui.c:9500 src/gui.c:11506 src/main.c:4066
+msgid "File"
 msgstr ""
 
 #: src/gui.c:9544
@@ -1739,7 +1463,7 @@ msgstr ""
 msgid " and edit it here."
 msgstr ""
 
-#: src/gui.c:9780 src/gui.c:11967 src/gui.c:12773
+#: src/gui.c:9780 src/gui.c:11972 src/gui.c:12778
 msgid "No."
 msgstr ""
 
@@ -1796,7 +1520,7 @@ msgstr ""
 msgid " Delay"
 msgstr ""
 
-#: src/gui.c:10161 src/gui.c:11515
+#: src/gui.c:10161 src/gui.c:11521
 msgid "Category"
 msgstr ""
 
@@ -1808,7 +1532,7 @@ msgstr ""
 msgid "Delete Mascot"
 msgstr ""
 
-#: src/gui.c:10275 src/gui.c:11398
+#: src/gui.c:10275 src/gui.c:11404
 msgid "Open"
 msgstr ""
 
@@ -1820,11 +1544,11 @@ msgstr ""
 msgid "New"
 msgstr ""
 
-#: src/gui.c:10317 src/gui.c:11338
+#: src/gui.c:10317 src/gui.c:11344
 msgid "Install"
 msgstr ""
 
-#: src/gui.c:10330
+#: src/gui.c:10330 src/trayicon.c:91
 msgid "Config"
 msgstr ""
 
@@ -1836,7 +1560,7 @@ msgstr ""
 msgid "Mascot Launcher"
 msgstr ""
 
-#: src/gui.c:10401 src/gui.c:11317 src/gui.c:11325
+#: src/gui.c:10401 src/gui.c:11323 src/gui.c:11331 src/trayicon.c:113
 msgid "Exit"
 msgstr ""
 
@@ -1848,7 +1572,7 @@ msgstr ""
 msgid "For Developper"
 msgstr ""
 
-#: src/gui.c:10468
+#: src/gui.c:10468 src/trayicon.c:100
 msgid "Save All"
 msgstr ""
 
@@ -1868,19 +1592,19 @@ msgstr ""
 msgid "Create New Launcher Menu"
 msgstr ""
 
-#: src/gui.c:10566 src/gui.c:11346
+#: src/gui.c:10566 src/gui.c:11352
 msgid "Launcher Menu [User]"
 msgstr ""
 
-#: src/gui.c:10573 src/gui.c:11353
+#: src/gui.c:10573 src/gui.c:11359
 msgid "Launcher Menu [Common]"
 msgstr ""
 
-#: src/gui.c:10587 src/gui.c:11365
+#: src/gui.c:10587 src/gui.c:11371
 msgid "Mascot [User]"
 msgstr ""
 
-#: src/gui.c:10594 src/gui.c:11372
+#: src/gui.c:10594 src/gui.c:11378
 msgid "Mascot [Common]"
 msgstr ""
 
@@ -1981,244 +1705,204 @@ msgstr ""
 msgid "Download & install MaCoPiX official mascots."
 msgstr ""
 
-#: src/gui.c:11156
+#: src/gui.c:11162
 msgid "See more details of the mascots in MaCoPiX official web."
 msgstr ""
 
-#: src/gui.c:11181
+#: src/gui.c:11187
 msgid "Menus and Mascots can be installed by the menu bar of this window."
 msgstr ""
 
-#: src/gui.c:11185
+#: src/gui.c:11191
 msgid "Or, drag &amp; drop a mascot menu archive (*.tar.gz) directly"
 msgstr ""
 
-#: src/gui.c:11189
+#: src/gui.c:11195
 msgid "into this window, in order to install it."
 msgstr ""
 
-#: src/gui.c:11208
+#: src/gui.c:11214
 msgid "MaCoPiX : Launcher Menu Selection"
 msgstr ""
 
-#: src/gui.c:11212
+#: src/gui.c:11218
 msgid "MaCoPiX : Start Menu Selection"
 msgstr ""
 
-#: src/gui.c:11383
+#: src/gui.c:11389
 msgid "Download & Install Official Mascots [User]"
 msgstr ""
 
-#: src/gui.c:11406
+#: src/gui.c:11412
 msgid "Installed Mascot"
 msgstr ""
 
-#: src/gui.c:11505
+#: src/gui.c:11511
 msgid "Dir."
 msgstr ""
 
-#: src/gui.c:11510
+#: src/gui.c:11516
 msgid "Entry"
 msgstr ""
 
-#: src/gui.c:11537
+#: src/gui.c:11543
 msgid "User"
 msgstr ""
 
-#: src/gui.c:11541
+#: src/gui.c:11547
 msgid "Common"
 msgstr ""
 
-#: src/gui.c:11545
+#: src/gui.c:11551
 msgid "Unknown"
 msgstr ""
 
-#: src/gui.c:11554
+#: src/gui.c:11560
 #, c-format
 msgid "%4d categories"
 msgstr ""
 
-#: src/gui.c:11557
+#: src/gui.c:11563
 #, c-format
 msgid "%4d mascots"
 msgstr ""
 
-#: src/gui.c:11567
+#: src/gui.c:11573
 msgid "-- Combined Menu --"
 msgstr ""
 
-#: src/gui.c:11602 src/gui.c:11605
+#: src/gui.c:11608 src/gui.c:11611
 msgid "MaCoPiX : Message"
 msgstr ""
 
-#: src/gui.c:11609 src/gui.c:11683
+#: src/gui.c:11615 src/gui.c:11689
 msgid "_OK"
 msgstr ""
 
-#: src/gui.c:11684
+#: src/gui.c:11690
 msgid "_Cancel"
 msgstr ""
 
-#: src/gui.c:11749
+#: src/gui.c:11755
 msgid "MaCoPiX : Installing Mascots"
 msgstr ""
 
-#: src/gui.c:11837
+#: src/gui.c:11842
 msgid "Selected File\n"
 msgstr ""
 
-#: src/gui.c:11839
+#: src/gui.c:11844
 msgid "cannot be opend as MaCoPiX menu.\n"
 msgstr ""
 
-#: src/gui.c:11859
+#: src/gui.c:11864
 msgid "MaCoPiX : Deletion of temporay files"
 msgstr ""
 
-#: src/gui.c:11873
+#: src/gui.c:11878
 msgid "Install of the new menu file has been completed."
 msgstr ""
 
-#: src/gui.c:11879
+#: src/gui.c:11884
 msgid "Remove the temporary direcotry?"
 msgstr ""
 
-#: src/gui.c:11999
+#: src/gui.c:12004
 msgid "Image File <span size=\"smaller\">(Double-Click to change)</span>"
 msgstr ""
 
-#: src/gui.c:12181
+#: src/gui.c:12186
 msgid "Frame No."
 msgstr ""
 
-#: src/gui.c:12204
+#: src/gui.c:12209
 msgid "Image No."
 msgstr ""
 
-#: src/gui.c:12229
+#: src/gui.c:12234
 msgid "Min Stay"
 msgstr ""
 
-#: src/gui.c:12254
+#: src/gui.c:12259
 msgid "Max Stay"
 msgstr ""
 
-#: src/gui.c:12291
+#: src/gui.c:12296
 msgid "<span size=\"smaller\">Block Loop</span> Next Frame"
 msgstr ""
 
-#: src/gui.c:12317
+#: src/gui.c:12322
 msgid "Min Loop"
 msgstr ""
 
-#: src/gui.c:12343
+#: src/gui.c:12348
 msgid "Max Loop"
 msgstr ""
 
-#: src/gui.c:12826
+#: src/gui.c:12831
 msgid "Mascot File <span size=\"smaller\">(Double-Click to change)</span>"
 msgstr ""
 
-#: src/pixmap.c:516 src/nokkari.c:99
+#: src/http-client.c:836
 #, c-format
-msgid "Cannot Load Image %s\n"
+msgid "%d%% Downloaded (%.2lf / %.2lf MB)"
 msgstr ""
 
-#: src/balloon.c:509
+#: src/http-client.c:842
 #, c-format
-msgid "%s(From is not avairable)%s"
+msgid "%d%% Downloaded (%ld / %ld kB)"
 msgstr ""
 
-#: src/balloon.c:522
+#: src/http-client.c:848
 #, c-format
-msgid "%s(Subject is not avairable)%s"
+msgid "%d%% Downloaded (%ld / %ld bytes)"
 msgstr ""
 
-#: src/balloon.c:529
-msgid "POP3 access error"
-msgstr ""
-
-#: src/utils.c:58 src/nokkari.c:745 src/nokkari.c:797
+#: src/http-client.c:857
 #, c-format
-msgid "Cannot open copy source file %s"
+msgid "Downloaded %.2lf MB"
 msgstr ""
 
-#: src/utils.c:63 src/nokkari.c:750 src/nokkari.c:802
+#: src/http-client.c:861
 #, c-format
-msgid "Cannot open copy destination file %s"
+msgid "Downloaded %ld kB"
 msgstr ""
 
-#: src/utils.c:88
+#: src/http-client.c:864
 #, c-format
-msgid "Cannot read status of directry %s .\n"
+msgid "Downloaded %ld bytes"
 msgstr ""
 
-#: src/utils.c:92
-#, c-format
-msgid "%s is not directory.\n"
+#: src/http-client.c:867
+msgid "Waiting for HTTP server response ..."
 msgstr ""
 
-#: src/utils.c:97
-#, c-format
-msgid "Creating the common directory \"%s\"\n"
+#: src/http-client.c:935
+msgid "MaCoPiX : Downloading Official Mascot List"
 msgstr ""
 
-#: src/nokkari.c:110
-#, c-format
-msgid "Warning : Too much BMP files for Nokkari-Chara! [File%d]\n"
+#: src/http-client.c:938
+msgid "Downloading the latest version of the official mascot list ..."
 msgstr ""
 
-#: src/nokkari.c:161
-msgid "Cannot Save Ini File!"
+#: src/http-client.c:974
+msgid "Checking the latest version of the official mascot list ..."
 msgstr ""
 
-#: src/nokkari.c:255 src/nokkari.c:292
-#, c-format
-msgid "Warning : Too much Frames!! [%s=%d]\n"
+#: src/http-client.c:1023 src/main.c:4307
+msgid "Error : Failed to download the mascot archive file (tar.gz)."
 msgstr ""
 
-#: src/nokkari.c:359
-#, c-format
-msgid "Warning : Too much Line numbers for the Balloon message! [Pat%d]\n"
+#: src/http-client.c:1045
+msgid "MaCoPiX : Downloading Official Mascot tar.gz file"
 msgstr ""
 
-#: src/nokkari.c:441
-#, c-format
-msgid "Cannot Find Mascot File %s\n"
+#: src/http-client.c:1048
+msgid "Downloading an official mascot ..."
 msgstr ""
 
-#: src/nokkari.c:604
-#, c-format
-msgid "Warning : Too much Frames for MaCoPiX! [Pattern%d]\n"
-msgstr ""
-
-#: src/nokkari.c:629
-#, c-format
-msgid "Error : Cannot find Frame setting! [Pat%d_%d]\n"
-msgstr ""
-
-#: src/nokkari.c:853
-msgid "MaCoPiX <--> Nokkari-Chara Convert Log"
-msgstr ""
-
-#: src/nokkari.c:879
-msgid ""
-"\n"
-"\n"
-"  The above warnings/errors are found in conversion...\n"
-"\n"
-"  Please modify and use this mascot on Nokkari-Chara ver1.40 or later.\n"
-msgstr ""
-
-#: src/nokkari.c:883
-msgid ""
-"\n"
-" Congratulations!!\n"
-"===================\n"
-"\n"
-"  You've scceeded to convert with no errors.\n"
-"\n"
-"  Please use this mascot on Nokkari-Chara ver1.40 or later.\n"
+#: src/http-client.c:1079
+msgid "Downloading ..."
 msgstr ""
 
 #: src/mail.c:115
@@ -2322,6 +2006,372 @@ msgstr ""
 msgid "Close"
 msgstr ""
 
+#: src/main.c:515
+msgid "Cannot Find Menu File."
+msgstr ""
+
+#: src/main.c:614
+msgid "Preparing for Installation"
+msgstr ""
+
+#: src/main.c:634 src/main.c:681
+msgid " Cannot read the Menu File correctly!!"
+msgstr ""
+
+#: src/main.c:665 src/main.c:901 src/main.c:970 src/main.c:2144 src/main.c:2442
+#: src/main.c:2561 src/main.c:2590 src/main.c:3459 src/sockmsg.c:409
+#: src/sockmsg.c:421
+msgid "(Invalid Character Code)"
+msgstr ""
+
+#: src/main.c:704
+#, c-format
+msgid "Installing mascots [%2d/%2d]"
+msgstr ""
+
+#: src/main.c:763
+msgid " ================== Installed Menus ================== \n"
+msgstr ""
+
+#: src/main.c:780
+#, c-format
+msgid "   !!! Common Directory - %s - does not exist.\n"
+msgstr ""
+
+#: src/main.c:785
+msgid "  [Common Directory]\n"
+msgstr ""
+
+#: src/main.c:799 src/main.c:849
+#, c-format
+msgid "  %20s *  %2d categories  -- Combined Menu --\n"
+msgstr ""
+
+#: src/main.c:803 src/main.c:853
+#, c-format
+msgid "  %20s :  %2d mascots    [%s]\n"
+msgstr ""
+
+#: src/main.c:830
+#, c-format
+msgid "  !!! User Directory - %s - does not exist.\n"
+msgstr ""
+
+#: src/main.c:835
+msgid "  [User Directory]\n"
+msgstr ""
+
+#: src/main.c:1068
+#, c-format
+msgid "Creating User-Dir %s .\n"
+msgstr ""
+
+#: src/main.c:1082
+#, c-format
+msgid "Creating User-PixmapDir %s .\n"
+msgstr ""
+
+#: src/main.c:1096
+#, c-format
+msgid "Creating User-SoundDir %s .\n"
+msgstr ""
+
+#: src/main.c:2037 src/main.c:2795 src/main.c:3020
+msgid "Cannot Find Mascot File."
+msgstr ""
+
+#: src/main.c:2914 src/main.c:3202
+msgid "Cannot Find Image."
+msgstr ""
+
+#: src/main.c:3358
+msgid "Cannot Find Sound File."
+msgstr ""
+
+#: src/main.c:3420
+#, c-format
+msgid "Cannot find resource file %s.\n"
+msgstr ""
+
+#: src/main.c:3421
+msgid "Loading default resource file...\n"
+msgstr ""
+
+#: src/main.c:4019
+msgid "MaCoPiX : Download & Install Mascot"
+msgstr ""
+
+#: src/main.c:4024
+msgid ""
+"Select a mascot file to download &amp; install into your <i>User directory</"
+"i>."
+msgstr ""
+
+#: src/main.c:4040
+msgid ""
+"<span color=\"#FF0000\"><b>Please note that all existing files will be "
+"overwritten.</b></span>"
+msgstr ""
+
+#: src/main.c:4076
+msgid "Name (E)"
+msgstr ""
+
+#: src/main.c:4086
+#, c-format
+msgid "Name (%s)"
+msgstr ""
+
+#: src/main.c:4098
+msgid "Registered"
+msgstr ""
+
+#: src/main.c:4108
+msgid "Ver."
+msgstr ""
+
+#: src/main.c:4118
+msgid "Date"
+msgstr ""
+
+#: src/main.c:4128
+msgid "Code"
+msgstr ""
+
+#: src/main.c:4152 src/main.c:4155
+msgid "(<i>Invalid Character Code</i>)"
+msgstr ""
+
+#: src/main.c:4194
+#, c-format
+msgid "%d mascot"
+msgstr ""
+
+#: src/main.c:4197
+msgid "<i>unkown</i>"
+msgstr ""
+
+#: src/main.c:4239 src/main.c:4241
+msgid "Download / Install"
+msgstr ""
+
+#: src/main.c:4330
+msgid "Error : Cannot read the downloaded mascot list."
+msgstr ""
+
+#: src/main.c:4591 src/main.c:4624 src/main.c:4731
+#, c-format
+msgid "Option \"%s\" is not found. Ignoring...\n"
+msgstr ""
+
+#: src/main.c:4783
+#, c-format
+msgid "macopix COMMON DIR:%s\n"
+msgstr ""
+
+#: src/main.c:4794
+msgid " macopix : Mascot Constructive Pilot for X   Ver"
+msgstr ""
+
+#: src/main.c:4795
+#, c-format
+msgid "  [usage] %% macopix [options] (mascot file)\n"
+msgstr ""
+
+#: src/main.c:4796
+msgid "     -h, --help               : Print this message\n"
+msgstr ""
+
+#: src/main.c:4798
+msgid "     -c, --common-dir         : Print COMMON Directory\n"
+msgstr ""
+
+#: src/main.c:4801
+msgid "     -b, --biff               : Turn on the biff function\n"
+msgstr ""
+
+#: src/main.c:4803
+msgid "     -s, --signal             : Turn on the time signal\n"
+msgstr ""
+
+#: src/main.c:4804
+#, c-format
+msgid "     -o, --offset offset[%%]   : Set offset-value for Focus Following\n"
+msgstr ""
+
+#: src/main.c:4805
+msgid "     -r, --rcfile rc-file     : Set the resource file\n"
+msgstr ""
+
+#: src/main.c:4806
+msgid "     -m, --menu   menu-file   : Set the file for quick menu\n"
+msgstr ""
+
+#: src/main.c:4807
+msgid ""
+"     -mg --mag    magnify     : Set magnification percentage of mascot\n"
+msgstr ""
+
+#: src/main.c:4808
+msgid ""
+"     -i, --ip-style (0|1|2|3) : Set interpolation style for magnification\n"
+msgstr ""
+
+#: src/main.c:4809
+msgid "## For Installation\n"
+msgstr ""
+
+#: src/main.c:4810
+msgid "     -a, --auto-install       : Set mascot auto install ON\n"
+msgstr ""
+
+#: src/main.c:4811
+msgid "     -na --no-auto-install    : Set mascot auto install OFF\n"
+msgstr ""
+
+#: src/main.c:4812
+msgid "     -O, --over-write         : Permit to overwrite files in user dir\n"
+msgstr ""
+
+#: src/main.c:4813
+msgid ""
+"     --install-user-mascot (mascot)  : Mascot Installation to User Dir.\n"
+msgstr ""
+
+#: src/main.c:4814
+msgid "     --install-user-menu (menu)      : Menu Installation to User Dir.\n"
+msgstr ""
+
+#: src/main.c:4816
+msgid ""
+"     --install-common-mascot (mascot): Mascot Installation to Common Dir.\n"
+msgstr ""
+
+#: src/main.c:4817
+msgid ""
+"     --install-common-menu (menu)    : Menu Installation to Common Dir.\n"
+msgstr ""
+
+#: src/main.c:4820
+msgid "## For Socket Message\n"
+msgstr ""
+
+#: src/main.c:4821
+msgid ""
+"     --sockmsg                : Start MaCoPiX as Socket Message Receiver\n"
+msgstr ""
+
+#: src/main.c:4822
+msgid ""
+"     --message (text)         : Send Message to Socket Message Receiver\n"
+msgstr ""
+
+#: src/main.c:4823
+msgid "     --message-expire (time)  : Socket Message Expire Time[ms]\n"
+msgstr ""
+
+#: src/main.c:4824
+msgid "     --message-type-lump      : Force to Set Lump Sum Balloon\n"
+msgstr ""
+
+#: src/main.c:4825
+msgid "     --message-type-step      : Force to Set Stepping Balloon\n"
+msgstr ""
+
+#: src/main.c:4826
+msgid "     --message-step (frame)   : Stepping Interval Frame for SockeMsg\n"
+msgstr ""
+
+#: src/main.c:4827
+msgid "     -nc, --no-duet-click     : Duet Animation [Click] OFF\n"
+msgstr ""
+
+#: src/main.c:4828
+msgid "     -nr, --no-duet-random    : Duet Animation [Random] OFF\n"
+msgstr ""
+
+#: src/main.c:4923
+#, c-format
+msgid "%8d%2d%4dMacopix already running in SockMsg Mode"
+msgstr ""
+
+#: src/main.c:4935
+msgid "Macopix not running in SockMsg Mode\n"
+msgstr ""
+
+#: src/nokkari.c:99 src/pixmap.c:516
+#, c-format
+msgid "Cannot Load Image %s\n"
+msgstr ""
+
+#: src/nokkari.c:110
+#, c-format
+msgid "Warning : Too much BMP files for Nokkari-Chara! [File%d]\n"
+msgstr ""
+
+#: src/nokkari.c:161
+msgid "Cannot Save Ini File!"
+msgstr ""
+
+#: src/nokkari.c:255 src/nokkari.c:292
+#, c-format
+msgid "Warning : Too much Frames!! [%s=%d]\n"
+msgstr ""
+
+#: src/nokkari.c:359
+#, c-format
+msgid "Warning : Too much Line numbers for the Balloon message! [Pat%d]\n"
+msgstr ""
+
+#: src/nokkari.c:441
+#, c-format
+msgid "Cannot Find Mascot File %s\n"
+msgstr ""
+
+#: src/nokkari.c:604
+#, c-format
+msgid "Warning : Too much Frames for MaCoPiX! [Pattern%d]\n"
+msgstr ""
+
+#: src/nokkari.c:629
+#, c-format
+msgid "Error : Cannot find Frame setting! [Pat%d_%d]\n"
+msgstr ""
+
+#: src/nokkari.c:745 src/nokkari.c:797 src/utils.c:58
+#, c-format
+msgid "Cannot open copy source file %s"
+msgstr ""
+
+#: src/nokkari.c:750 src/nokkari.c:802 src/utils.c:63
+#, c-format
+msgid "Cannot open copy destination file %s"
+msgstr ""
+
+#: src/nokkari.c:853
+msgid "MaCoPiX <--> Nokkari-Chara Convert Log"
+msgstr ""
+
+#: src/nokkari.c:879
+msgid ""
+"\n"
+"\n"
+"  The above warnings/errors are found in conversion...\n"
+"\n"
+"  Please modify and use this mascot on Nokkari-Chara ver1.40 or later.\n"
+msgstr ""
+
+#: src/nokkari.c:883
+msgid ""
+"\n"
+" Congratulations!!\n"
+"===================\n"
+"\n"
+"  You've scceeded to convert with no errors.\n"
+"\n"
+"  Please use this mascot on Nokkari-Chara ver1.40 or later.\n"
+msgstr ""
+
 #: src/sslmanager.c:74 src/sslmanager.c:81
 msgid "(unknown)"
 msgstr ""
@@ -2347,15 +2397,26 @@ msgstr ""
 msgid "Skip this verification after this."
 msgstr ""
 
-#: src/dnd.c:156
-#, c-format
-msgid ""
-"Do you want to install the mascot menu archive,\n"
-"     \"%s\"\n"
-"to your system [\"%s\"]? \n"
-"(Files are automatically overwritten.)"
+#: src/unlha.c:105 src/untar.c:195
+msgid "Error: A Menu File is not found in"
 msgstr ""
 
-#: src/dnd.c:170
-msgid "MaCoPiX : Installing Mascot Menu File"
+#: src/unlha.c:110
+#, c-format
+msgid "A Menu Files is not found in %s\n"
+msgstr ""
+
+#: src/utils.c:88
+#, c-format
+msgid "Cannot read status of directry %s .\n"
+msgstr ""
+
+#: src/utils.c:92
+#, c-format
+msgid "%s is not directory.\n"
+msgstr ""
+
+#: src/utils.c:97
+#, c-format
+msgid "Creating the common directory \"%s\"\n"
 msgstr ""

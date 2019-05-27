@@ -543,7 +543,7 @@ void ReadMenu(typMascot *mascot, gint offset_i_cat, gchar *merge_file)
 #endif
       if((access(filename2,F_OK)!=0)||(mascot->flag_ow)){
 	if(strcmp(filename,filename2)!=0){
-	  g_print(_("Installing %s -> %s\n"),filename,filename2);
+	  //g_print(_("Installing %s -> %s\n"),filename,filename2);
 	  copy_file(filename,filename2);
 	  install_flag=TRUE;
 	  FlagInstalledMenu=TRUE;
@@ -585,7 +585,7 @@ void ReadMenu(typMascot *mascot, gint offset_i_cat, gchar *merge_file)
 	  mascot->flag_consow=TRUE;
 	}
 	if(mascot->flag_consow){
-	  g_print(_("Installing %s -> %s\n"),filename0,filename2);
+	  //g_print(_("Installing %s -> %s\n"),filename0,filename2);
 	  // Copy Common -> User
 	  copy_file(filename0,filename2);
 	  install_flag=TRUE;
@@ -596,7 +596,6 @@ void ReadMenu(typMascot *mascot, gint offset_i_cat, gchar *merge_file)
   }
 #endif
 
-
   if(offset_i_cat==0){  // 通常読み込み
     mascot->menu_file=g_strdup(filename);
 
@@ -605,7 +604,6 @@ void ReadMenu(typMascot *mascot, gint offset_i_cat, gchar *merge_file)
   }
   cfgfile = xmms_cfg_open_file(filename);
   
-
   if (cfgfile) {
     if(!xmms_cfg_read_string(cfgfile, "General", "code",&mascot->menu_code))
       mascot->menu_code = NULL;
@@ -613,7 +611,7 @@ void ReadMenu(typMascot *mascot, gint offset_i_cat, gchar *merge_file)
     if(mascot->flag_install){
       popup_progress(mascot,"MaCoPiX: Installing Mascots...");
       gtk_progress_bar_set_text(GTK_PROGRESS_BAR(mascot->pdata->pbar),
-				_("Preparing for Installation"));
+      			_("Preparing for Installation"));
 
       // PRESCAN for INSTALLING
       menu_total_for_install=0;
@@ -626,7 +624,7 @@ void ReadMenu(typMascot *mascot, gint offset_i_cat, gchar *merge_file)
 	  if(!xmms_cfg_read_string(cfgfile, f_tmp0, tmp0, &dummy)){
 	    if(i_tgt==0){
 	      if(i_cat==0){
-		popup_message(mascot->win_main,
+		popup_message(NULL,
 #ifdef USE_GTK3
 			      "dialog-error", 
 #else
@@ -710,7 +708,7 @@ void ReadMenu(typMascot *mascot, gint offset_i_cat, gchar *merge_file)
 	    g_free(progress_txt);
 	    progress_txt=NULL;
 	    while (my_main_iteration(FALSE));
-	    gdkut_flush();
+	    gdkut_flush(mascot->pdata->dialog);
 	    usleep(INTERVAL*1e3);
 	  }
 	  mascot->menu_total++;
@@ -2069,7 +2067,7 @@ void ReadMascot(typMascot *mascot, gboolean def_flag)
 #endif
       if((access(filename2,F_OK)!=0)||(mascot->flag_ow)){
 	if(strcmp(filename,filename2)!=0){
-	  g_print(_("Installing %s -> %s\n"),filename,filename2);
+	  //g_print(_("Installing %s -> %s\n"),filename,filename2);
 	  copy_file(filename,filename2);
 	  install_flag=TRUE;
 	}
@@ -2112,7 +2110,7 @@ void ReadMascot(typMascot *mascot, gboolean def_flag)
 	  mascot->flag_consow=TRUE;
 	}
 	if(mascot->flag_consow){
-	  g_print(_("Installing %s -> %s\n"),filename0,filename2);
+	  //g_print(_("Installing %s -> %s\n"),filename0,filename2);
 	  // Copy Common -> User
 	  copy_file(filename0,filename2);
 	  install_flag=TRUE;
@@ -2823,7 +2821,7 @@ void MascotInstall(typMascot *mascot, gchar *mascotfile)
 #endif
       if((access(filename2,F_OK)!=0)||(mascot->flag_ow)){
 	if(strcmp(filename,filename2)!=0){
-	  g_print(_("Installing %s -> %s\n"),filename,filename2);
+	  //g_print(_("Installing %s -> %s\n"),filename,filename2);
 	  copy_file(filename,filename2);
 	}
       }
@@ -2942,8 +2940,7 @@ void MascotInstall(typMascot *mascot, gchar *mascotfile)
 #endif
 		if((access(pixfilename2,F_OK)!=0)||(mascot->flag_ow)){
 		  if(strcmp(pixfilename,pixfilename2)!=0){
-		    g_print(_("Installing %s -> %s\n"),
-			    pixfilename,pixfilename2);
+		    //g_print(_("Installing %s -> %s\n"), pixfilename,pixfilename2);
 		    copy_file(pixfilename,pixfilename2);
 		  }
 		}
@@ -3232,7 +3229,7 @@ gchar *FullPathPixmapFile(typMascot *mascot, gchar *pixfile)
 #endif
       if((access(pixfilename2,F_OK)!=0)||(mascot->flag_ow)){
 	if(strcmp(pixfilename,pixfilename2)!=0){
-	  g_print(_("Installing %s -> %s\n"),pixfilename,pixfilename2);
+	  //g_print(_("Installing %s -> %s\n"),pixfilename,pixfilename2);
 	  copy_file(pixfilename,pixfilename2);
 	  pixfilename=pixfilename2;
 	}
@@ -3251,16 +3248,14 @@ gchar *FullPathPixmapFile(typMascot *mascot, gchar *pixfile)
     pixfilename0  = g_strconcat(COMMON_DIR,PIXDIR,
 			       my_basename(pixfile), NULL);
     if((access(pixfilename0,F_OK)==0)&&(access(pixfilename2,F_OK)==0)){
-      g_print(_("Installing %s -> %s\n"),
-	      pixfilename0,pixfilename2);
+      //g_print(_("Installing %s -> %s\n"), pixfilename0,pixfilename2);
       copy_file(pixfilename0,pixfilename2);
       pixfilename=pixfilename2;
     }
     else{
       pixfilename0  = g_strconcat(COMMON_DIR, my_basename(pixfile), NULL);
       if((access(pixfilename0,F_OK)==0)&&(access(pixfilename2,F_OK)==0)){
-	g_print(_("Installing %s -> %s\n"),
-		pixfilename0,pixfilename2);
+	//g_print(_("Installing %s -> %s\n"), pixfilename0,pixfilename2);
 	copy_file(pixfilename0,pixfilename2);
 	pixfilename=pixfilename2;
       }
@@ -3390,7 +3385,7 @@ gchar *FullPathSoundFile(typMascot *mascot, gchar *wavfile, gboolean i_fl){
 #endif
       if((access(wavfilename2,F_OK)!=0)||(mascot->flag_ow)){
 	if(strcmp(wavfilename,wavfilename2)!=0){
-	  g_print(_("Installing %s -> %s\n"),wavfilename,wavfilename2);
+	  //g_print(_("Installing %s -> %s\n"),wavfilename,wavfilename2);
 	  copy_file(wavfilename,wavfilename2);
 	  wavfilename=wavfilename2;
 	}
@@ -4277,7 +4272,7 @@ void create_dl_smenu_dialog(typMascot *mascot, gboolean flag_popup){
 
       if(access(mascot->http_dlfile,F_OK)==0){
 	flag_install=mascot->flag_install;
-	
+
 	select_menu_from_ext(mascot, mascot->http_dlfile);
 	mascot->flag_install=TRUE;
 	mascot->flag_common=FALSE;
