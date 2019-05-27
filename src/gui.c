@@ -2158,8 +2158,8 @@ static void create_add_pattern_dialog(GtkWidget *w, gpointer gdata)
 				       GTK_WINDOW(mascot->conf_main),
 				       GTK_DIALOG_MODAL,
 #ifdef USE_GTK3
-				       "_Cancel",GTK_RESPONSE_CANCEL,
-				       "_OK",GTK_RESPONSE_OK,
+				       _("_Cancel"),GTK_RESPONSE_CANCEL,
+				       _("_OK"),GTK_RESPONSE_OK,
 #else
 				       GTK_STOCK_CANCEL,GTK_RESPONSE_CANCEL,
 				       GTK_STOCK_OK,GTK_RESPONSE_OK,
@@ -2467,8 +2467,8 @@ static void create_copy_pattern_dialog(GtkWidget *w, gpointer gdata)
 				       GTK_WINDOW(mascot->conf_main),
 				       GTK_DIALOG_MODAL,
 #ifdef USE_GTK3
-				       "_Cancel",GTK_RESPONSE_CANCEL,
-				       "_OK",GTK_RESPONSE_OK,
+				       _("_Cancel"),GTK_RESPONSE_CANCEL,
+				       _("_OK"),GTK_RESPONSE_OK,
 #else
 				       GTK_STOCK_CANCEL,GTK_RESPONSE_CANCEL,
 				       GTK_STOCK_OK,GTK_RESPONSE_OK,
@@ -2624,8 +2624,8 @@ static void create_add_frame_dialog(GtkWidget *w, gpointer gdata)
 				       GTK_WINDOW(mascot->conf_main),
 				       GTK_DIALOG_MODAL,
 #ifdef USE_GTK3
-				       "_Cancel",GTK_RESPONSE_CANCEL,
-				       "_OK",GTK_RESPONSE_OK,
+				       _("_Cancel"),GTK_RESPONSE_CANCEL,
+				       _("_OK"),GTK_RESPONSE_OK,
 #else
 				       GTK_STOCK_CANCEL,GTK_RESPONSE_CANCEL,
 				       GTK_STOCK_OK,GTK_RESPONSE_OK,
@@ -4191,8 +4191,8 @@ static void create_new_mascot_dialog(GtkWidget *w, gpointer gdata)
 				       NULL,
 				       GTK_DIALOG_MODAL,
 #ifdef USE_GTK3
-				       "_Cancel",GTK_RESPONSE_CANCEL,
-				       "_OK",GTK_RESPONSE_OK,
+				       _("_Cancel"),GTK_RESPONSE_CANCEL,
+				       _("_OK"),GTK_RESPONSE_OK,
 #else
 				       GTK_STOCK_CANCEL,GTK_RESPONSE_CANCEL,
 				       GTK_STOCK_OK,GTK_RESPONSE_OK,
@@ -4241,8 +4241,8 @@ static void create_new_mascot_dialog(GtkWidget *w, gpointer gdata)
 				       NULL,
 				       GTK_DIALOG_MODAL,
 #ifdef USE_GTK3
-				       "_Cancel",GTK_RESPONSE_CANCEL,
-				       "_OK",GTK_RESPONSE_OK,
+				       _("_Cancel"),GTK_RESPONSE_CANCEL,
+				       _("_OK"),GTK_RESPONSE_OK,
 #else
 				       GTK_STOCK_CANCEL,GTK_RESPONSE_CANCEL,
 				       GTK_STOCK_OK,GTK_RESPONSE_OK,
@@ -4293,8 +4293,8 @@ static void create_new_mascot_dialog(GtkWidget *w, gpointer gdata)
 				       NULL,
 				       GTK_DIALOG_MODAL,
 #ifdef USE_GTK3
-				       "_Cancel",GTK_RESPONSE_CANCEL,
-				       "_OK",GTK_RESPONSE_OK,
+				       _("_Cancel"),GTK_RESPONSE_CANCEL,
+				       _("_OK"),GTK_RESPONSE_OK,
 #else
 				       GTK_STOCK_CANCEL,GTK_RESPONSE_CANCEL,
 				       GTK_STOCK_OK,GTK_RESPONSE_OK,
@@ -4379,8 +4379,8 @@ void create_pop_pass_dialog(typMascot *mascot)
 				       NULL,
 				       GTK_DIALOG_MODAL,
 #ifdef USE_GTK3
-				       "_Cancel",GTK_RESPONSE_CANCEL,
-				       "_OK",GTK_RESPONSE_OK,
+				       _("_Cancel"),GTK_RESPONSE_CANCEL,
+				       _("_OK"),GTK_RESPONSE_OK,
 #else
 				       GTK_STOCK_CANCEL,GTK_RESPONSE_CANCEL,
 				       GTK_STOCK_OK,GTK_RESPONSE_OK,
@@ -5049,8 +5049,8 @@ static void create_save_mascot_dialog(GtkWidget *w, gpointer gdata)
 					 NULL,
 					 GTK_DIALOG_MODAL,
 #ifdef USE_GTK3
-					 "_Cancel",GTK_RESPONSE_CANCEL,
-					 "_OK",GTK_RESPONSE_OK,
+					 _("_Cancel"),GTK_RESPONSE_CANCEL,
+					 _("_OK"),GTK_RESPONSE_OK,
 #else
 					 GTK_STOCK_CANCEL,GTK_RESPONSE_CANCEL,
 					 GTK_STOCK_OK,GTK_RESPONSE_OK,
@@ -5153,8 +5153,8 @@ static void create_save_nokkari_dialog(GtkWidget *w, gpointer gdata)
 					 NULL,
 					 GTK_DIALOG_MODAL,
 #ifdef USE_GTK3
-					 "_Cancel",GTK_RESPONSE_CANCEL,
-					 "_OK",GTK_RESPONSE_OK,
+					 _("_Cancel"),GTK_RESPONSE_CANCEL,
+					 _("_OK"),GTK_RESPONSE_OK,
 #else
 					 GTK_STOCK_CANCEL,GTK_RESPONSE_CANCEL,
 					 GTK_STOCK_OK,GTK_RESPONSE_OK,
@@ -5229,8 +5229,8 @@ static void create_save_release_mascot_dialog(GtkWidget *w, gpointer gdata)
 				       NULL,
 				       GTK_DIALOG_MODAL,
 #ifdef USE_GTK3
-				       "_Cancel",GTK_RESPONSE_CANCEL,
-				       "_OK",GTK_RESPONSE_OK,
+				       _("_Cancel"),GTK_RESPONSE_CANCEL,
+				       _("_OK"),GTK_RESPONSE_OK,
 #else
 				       GTK_STOCK_CANCEL,GTK_RESPONSE_CANCEL,
 				       GTK_STOCK_OK,GTK_RESPONSE_OK,
@@ -5382,8 +5382,8 @@ static void create_save_release_mascot_dialog(GtkWidget *w, gpointer gdata)
 					 NULL,
 					 GTK_DIALOG_MODAL,
 #ifdef USE_GTK3
-					 "_Cancel",GTK_RESPONSE_CANCEL,
-					 "_OK",GTK_RESPONSE_OK,
+					 _("_Cancel"),GTK_RESPONSE_CANCEL,
+					 _("_OK"),GTK_RESPONSE_OK,
 #else
 					 GTK_STOCK_CANCEL,GTK_RESPONSE_CANCEL,
 					 GTK_STOCK_OK,GTK_RESPONSE_OK,
@@ -5619,8 +5619,8 @@ static void create_save_menu_dialog(GtkWidget *w, gpointer gdata)
 					 NULL,
 					 GTK_DIALOG_MODAL,
 #ifdef USE_GTK3
-					 "_Cancel",GTK_RESPONSE_CANCEL,
-					 "_OK",GTK_RESPONSE_OK,
+					 _("_Cancel"),GTK_RESPONSE_CANCEL,
+					 _("_OK"),GTK_RESPONSE_OK,
 #else
 					 GTK_STOCK_CANCEL,GTK_RESPONSE_CANCEL,
 					 GTK_STOCK_OK,GTK_RESPONSE_OK,
@@ -5731,8 +5731,8 @@ static void create_save_menu_dialog(GtkWidget *w, gpointer gdata)
 					 NULL,
 					 GTK_DIALOG_MODAL,
 #ifdef USE_GTK3
-					 "_Cancel",GTK_RESPONSE_CANCEL,
-					 "_OK",GTK_RESPONSE_OK,
+					 _("_Cancel"),GTK_RESPONSE_CANCEL,
+					 _("_OK"),GTK_RESPONSE_OK,
 #else
 					 GTK_STOCK_CANCEL,GTK_RESPONSE_CANCEL,
 					 GTK_STOCK_OK,GTK_RESPONSE_OK,
@@ -11849,6 +11849,7 @@ gint select_menu_from_ext(typMascot *mascot, gchar *dest_file){
 
 }
 
+
 void unlink_all(typMascot *mascot, gchar *dirname)
 {
   struct dirent *entry;
@@ -11865,8 +11866,8 @@ void unlink_all(typMascot *mascot, gchar *dirname)
 				       NULL,
 				       GTK_DIALOG_MODAL,
 #ifdef USE_GTK3
-				       "_Cancel",GTK_RESPONSE_CANCEL,
-				       "_OK",GTK_RESPONSE_OK,
+				       _("_Cancel"),GTK_RESPONSE_CANCEL,
+				       _("_OK"),GTK_RESPONSE_OK,
 #else
 				       GTK_STOCK_CANCEL,GTK_RESPONSE_CANCEL,
 				       GTK_STOCK_OK,GTK_RESPONSE_OK,
@@ -11874,6 +11875,7 @@ void unlink_all(typMascot *mascot, gchar *dirname)
 				       NULL);
   gtk_window_set_position(GTK_WINDOW(dialog), GTK_WIN_POS_CENTER);
   gtk_container_set_border_width(GTK_CONTAINER(dialog),5);
+  gtk_dialog_set_default_response(GTK_DIALOG(dialog), GTK_RESPONSE_OK); 
   
   label=gtkut_label_new(_("Install of the new menu file has been completed."));
   gtk_box_pack_start(GTK_BOX(gtk_dialog_get_content_area(GTK_DIALOG(dialog))),
