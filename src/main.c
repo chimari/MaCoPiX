@@ -1057,6 +1057,7 @@ void ReadRC(typMascot *mascot, gboolean def_flag)
   gchar *field_tmp=NULL;
   gint col_tmp;
   gboolean b_buf;
+  gchar *tmp;
 
   // USER_DIRがないときは作成する  : おそらく初回起動時のみ
 #ifdef USE_WIN32
@@ -1065,8 +1066,17 @@ void ReadRC(typMascot *mascot, gboolean def_flag)
   filename = g_strconcat(g_get_home_dir(), G_DIR_SEPARATOR_S,USER_DIR, NULL);
 #endif
   if (access(filename, F_OK) != 0) {
-    g_print(_("Creating User-Dir %s .\n"),
-	    filename);
+    tmp=g_strdup_printf(_("Creating User-Dir %s .\n"), filename);
+    popup_message(NULL,
+#ifdef USE_GTK3
+		  "dialog-information", 
+#else
+		  GTK_STOCK_DIALOG_INFO,
+#endif
+		  POPUP_TIMEOUT,
+		  tmp,
+		  NULL);
+    g_free(tmp);
 #ifdef USE_WIN32
     mkdir(filename);
 #else
@@ -1079,8 +1089,18 @@ void ReadRC(typMascot *mascot, gboolean def_flag)
   filename = g_strconcat(g_get_home_dir(), G_DIR_SEPARATOR_S,USER_DIR, PIXDIR, NULL);
 #endif
   if (access(filename, F_OK) != 0) {
-    g_print(_("Creating User-PixmapDir %s .\n"),
-	    filename);
+    tmp=g_strdup_printf(_("Creating User-PixmapDir %s .\n"),
+			filename);
+    popup_message(NULL,
+#ifdef USE_GTK3
+		  "dialog-information", 
+#else
+		  GTK_STOCK_DIALOG_INFO,
+#endif
+		  POPUP_TIMEOUT,
+		  tmp,
+		  NULL);
+    g_free(tmp);
 #ifdef USE_WIN32
     mkdir(filename);
 #else
@@ -1093,8 +1113,18 @@ void ReadRC(typMascot *mascot, gboolean def_flag)
   filename = g_strconcat(g_get_home_dir(), G_DIR_SEPARATOR_S,USER_DIR, SOUNDDIR, NULL);
 #endif
   if (access(filename, F_OK) != 0) {
-    g_print(_("Creating User-SoundDir %s .\n"),
-	    filename);
+    tmp=g_strdup_printf(_("Creating User-SoundDir %s .\n"),
+			filename);
+    popup_message(NULL,
+#ifdef USE_GTK3
+		  "dialog-information", 
+#else
+		  GTK_STOCK_DIALOG_INFO,
+#endif
+		  POPUP_TIMEOUT,
+		  tmp,
+		  NULL);
+    g_free(tmp);
 #ifdef USE_WIN32
     mkdir(filename);
 #else

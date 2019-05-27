@@ -11329,7 +11329,6 @@ void create_smenu_dialog(typMascot *mascot, gboolean flag_popup)
 #endif				     
 				      );
     gtk_box_pack_start(GTK_BOX(vbox2), button, TRUE, FALSE, 0);
-    gtk_button_set_relief(GTK_BUTTON(button), GTK_RELIEF_NONE);
     my_signal_connect(button,"clicked", smenu_dl_mascot_list, (gpointer)mascot);
 
     label=gtkut_label_new("");
