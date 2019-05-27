@@ -4298,9 +4298,11 @@ void create_dl_smenu_dialog(typMascot *mascot, gboolean flag_popup){
       mascot->http_dlfile=g_strdup_printf("%s%s%s",
 					  g_get_tmp_dir(), G_DIR_SEPARATOR_S,
 					  tgz_file[i_selected]);
+      if(access(mascot->http_dlfile, F_OK)==0) unlink(mascot->http_dlfile);
+	 
       dl_mascot_tgz(mascot);
 
-      if(access(mascot->http_dlfile,F_OK)==0){
+      if((mascot->http_ok)&&(access(mascot->http_dlfile,F_OK)==0)){
 	flag_install=mascot->flag_install;
 
 	select_menu_from_ext(mascot, mascot->http_dlfile);

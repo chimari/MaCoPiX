@@ -64,6 +64,8 @@ void write_dlsz();
 void unlink_dlsz();
 glong get_dlsz();
 
+static void cancel_http();
+
 #ifdef POP_DEBUG
 gboolean debug_flg=TRUE;
 #else
@@ -818,9 +820,13 @@ gboolean progress_timeout( gpointer data ){
   gchar *tmp;
   gdouble frac;
 
+  if(!mascot->http_ok){
+    return(FALSE);
+  }
+
   if(gtk_widget_get_realized(mascot->pbar)){
     sz=get_file_size(mascot->http_dlfile);
-    
+
     if(sz>0){  // After Downloading Started to get current dlsz
       if(mascot->http_dlsz<0){
 	mascot->http_dlsz=get_dlsz(mascot);
@@ -911,6 +917,8 @@ void dl_mascot_list(typMascot *mascot,  gboolean flag_popup){
 #endif
   gchar *tmp;
 
+  mascot->http_ok=TRUE;
+  
   if(mascot->http_host) g_free(mascot->http_host);
   mascot->http_host=g_strdup(HTTP_MASCOT_HOST);
 
@@ -926,6 +934,8 @@ void dl_mascot_list(typMascot *mascot,  gboolean flag_popup){
 				      g_get_tmp_dir(), G_DIR_SEPARATOR_S,
 				      HTTP_MASCOT_FILE,   getuid());
 #endif
+
+  if(access(mascot->http_dlfile, F_OK)==0) unlink(mascot->http_dlfile);
 
   dialog = gtk_dialog_new();
   
@@ -980,6 +990,16 @@ void dl_mascot_list(typMascot *mascot,  gboolean flag_popup){
 #endif
   gtk_box_pack_start(GTK_BOX(gtk_dialog_get_content_area(GTK_DIALOG(dialog))),
 		     label,FALSE,FALSE,0);
+
+#ifdef USE_GTK3
+  button=gtkut_button_new_from_icon_name(_("Cancel"),"process-stop");
+#else
+  button=gtkut_button_new_from_stock(_("Cancel"),GTK_STOCK_CANCEL);
+#endif
+  gtk_dialog_add_action_widget(GTK_DIALOG(dialog),button,GTK_RESPONSE_CANCEL);
+  my_signal_connect(button,"pressed",
+		    cancel_http, 
+		    (gpointer)mascot);
 
   gtk_widget_show_all(dialog);
 
@@ -1038,6 +1058,8 @@ void dl_mascot_tgz(typMascot *mascot){
 #endif
 
   dialog = gtk_dialog_new();
+
+  mascot->http_ok=TRUE;
   
   gtk_window_set_position(GTK_WINDOW(dialog), GTK_WIN_POS_CENTER);
   gtk_container_set_border_width(GTK_CONTAINER(dialog),5);
@@ -1086,6 +1108,16 @@ void dl_mascot_tgz(typMascot *mascot){
   gtk_box_pack_start(GTK_BOX(gtk_dialog_get_content_area(GTK_DIALOG(dialog))),
 		     label,FALSE,FALSE,0);
 
+#ifdef USE_GTK3
+  button=gtkut_button_new_from_icon_name(_("Cancel"),"process-stop");
+#else
+  button=gtkut_button_new_from_stock(_("Cancel"),GTK_STOCK_CANCEL);
+#endif
+  gtk_dialog_add_action_widget(GTK_DIALOG(dialog),button,GTK_RESPONSE_CANCEL);
+  my_signal_connect(button,"pressed",
+		    cancel_http, 
+		    (gpointer)mascot);
+  
   gtk_widget_show_all(dialog);
 
   timer=g_timeout_add(100, 
@@ -1102,7 +1134,7 @@ void dl_mascot_tgz(typMascot *mascot){
 #endif
   
   gtk_window_set_modal(GTK_WINDOW(dialog),TRUE);
-  
+
   get_mascot_list(mascot);
   gtk_main();
   
@@ -1211,4 +1243,36 @@ glong get_dlsz(typMascot *mascot){
   
   g_free(tmp_file);
   return (sz);
+}
+
+
+static void cancel_http(GtkWidget *w, gpointer gdata){
+  typMascot *mascot = (typMascot *)gdata;
+  pid_t child_pid=0;
+
+  mascot->http_ok=FALSE;
+
+#ifdef USE_WIN32
+  if(hg->dwThreadID_http){
+    PostThreadMessage(hg->dwThreadID_http, WM_QUIT, 0, 0);
+    WaitForSingleObject(hg->hThread_http, INFINITE);
+    CloseHandle(hg->hThread_http);
+    gtk_main_quit();
+  }
+#else
+  if(http_pid){
+    kill(http_pid, SIGKILL);
+    gtk_main_quit();
+
+    do{
+      int child_ret;
+      child_pid=waitpid(http_pid, &child_ret,WNOHANG);
+    } while((child_pid>0)||(child_pid!=-1));
+ 
+    http_pid=0;
+  }
+#endif
+
+  unlink_dlsz(mascot);
+  if(access(mascot->http_dlfile, F_OK)==0) unlink(mascot->http_dlfile);
 }

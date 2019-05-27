@@ -1085,7 +1085,9 @@ struct _typMascot{
   gchar *http_path;
   gchar *http_dlfile;
   glong http_dlsz;
+  GtkWidget *pdialog;
   GtkWidget *pbar;
+  gboolean http_ok;
 #ifdef USE_WIN32
   HANDLE hThread_http;
   unsigned int dwThreadID_http;
