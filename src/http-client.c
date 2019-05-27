@@ -1253,10 +1253,10 @@ static void cancel_http(GtkWidget *w, gpointer gdata){
   mascot->http_ok=FALSE;
 
 #ifdef USE_WIN32
-  if(hg->dwThreadID_http){
-    PostThreadMessage(hg->dwThreadID_http, WM_QUIT, 0, 0);
-    WaitForSingleObject(hg->hThread_http, INFINITE);
-    CloseHandle(hg->hThread_http);
+  if(mascot->dwThreadID_http){
+    PostThreadMessage(mascot->dwThreadID_http, WM_QUIT, 0, 0);
+    WaitForSingleObject(mascot->hThread_http, INFINITE);
+    CloseHandle(mascot->hThread_http);
     gtk_main_quit();
   }
 #else
