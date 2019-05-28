@@ -232,6 +232,8 @@ static void destroy_popup();
 static void close_conf();
 static void close_smenu();
 
+gboolean pdata_timeout();
+
 void TestPut();
 gboolean test_update();
 void TestAnime();
@@ -11938,30 +11940,49 @@ gboolean popup_ask(GtkWidget *parent, gchar* stock_id, ...){
     return(FALSE);
   }
 }
+ 
+ 
+gboolean pdata_timeout(gpointer gdata ){
+  typMascot *mascot=(typMascot *)gdata;
+
+  if(gtk_widget_get_realized(mascot->pdata->pbar)){
+    gtk_progress_bar_set_fraction(GTK_PROGRESS_BAR(mascot->pdata->pbar),
+				  mascot->pdata->frac);
+    gtk_progress_bar_set_text(GTK_PROGRESS_BAR(mascot->pdata->pbar),
+			      mascot->pdata->txt);
+  }
+  return TRUE;
+}
 
 
 void popup_progress(typMascot *mascot, gchar *msg1){
   GtkWidget *label;
+  GtkWidget *vbox;
   GtkWidget *align;
 
   mascot->pdata = g_malloc (sizeof (ProgressData));
-  
-  mascot->pdata->dialog = gtk_dialog_new();
+
+  mascot->pdata->dialog = gtk_window_new(GTK_WINDOW_TOPLEVEL);
   gtk_window_set_position(GTK_WINDOW(mascot->pdata->dialog),
 			  GTK_WIN_POS_MOUSE);
   gtk_container_set_border_width(GTK_CONTAINER(mascot->pdata->dialog),5);
   gtk_window_set_title(GTK_WINDOW(mascot->pdata->dialog),
 		       _("MaCoPiX : Installing Mascots"));
+  mascot->pdata->timer=-1;
+  mascot->pdata->frac=0.0;
+  mascot->pdata->txt=g_strdup(_("MaCoPiX : Installing Mascots"));
+  
+  vbox = gtkut_vbox_new(FALSE,0);
+  gtk_container_add (GTK_CONTAINER (mascot->pdata->dialog), vbox);
 
   label=gtkut_label_new(msg1);
   gtkut_pos(label, POS_START, POS_CENTER);
-  gtk_box_pack_start(GTK_BOX(gtk_dialog_get_content_area(GTK_DIALOG(mascot->pdata->dialog))),
-		     label,TRUE,TRUE,0);
+  gtk_box_pack_start(GTK_BOX(vbox),label,TRUE,TRUE,0);
   
 
   /* GtkProgressBar を生成します。*/
   mascot->pdata->pbar = gtk_progress_bar_new ();
-  gtk_box_pack_start(GTK_BOX(gtk_dialog_get_content_area(GTK_DIALOG(mascot->pdata->dialog))),
+  gtk_box_pack_start(GTK_BOX(vbox),
 		     mascot->pdata->pbar,TRUE,TRUE,0);
   //gtk_progress_bar_set_bar_style (GTK_PROGRESS_BAR(mascot->pdata->pbar),
   //				  GTK_PROGRESS_CONTINUOUS);
@@ -11979,11 +12000,15 @@ void popup_progress(typMascot *mascot, gchar *msg1){
 
   gtk_widget_show_all(mascot->pdata->dialog);
 
-  gdkut_flush(mascot->pdata->dialog);
+  mascot->pdata->timer=g_timeout_add(100, 
+				     (GSourceFunc)pdata_timeout,
+				     (gpointer)mascot);
 }
 
 void destroy_progress(typMascot *mascot){
+  if(mascot->pdata->timer!=-1) g_source_remove(mascot->pdata->timer);
   gtk_widget_destroy(mascot->pdata->dialog);
+  if(mascot->pdata->txt) g_free(mascot->pdata->txt);
   g_free (mascot->pdata);
 }
 

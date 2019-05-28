@@ -668,6 +668,9 @@ enum{ COMPOSITE_FALSE,
 typedef struct _ProgressData {
   GtkWidget *pbar;
   GtkWidget *dialog;
+  gchar *txt;
+  gdouble frac;
+  gint timer;
 } ProgressData;
 
 
