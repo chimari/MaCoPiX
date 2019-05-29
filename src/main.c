@@ -425,7 +425,9 @@ void ReadMenu(typMascot *mascot, gint offset_i_cat, gchar *merge_file)
   time_t user_mtime=0, common_mtime=0;
   gchar *dummy;
   gint menu_total_for_install;
-  //gchar *progress_txt=NULL;
+  gchar *install_log=NULL;
+  gchar *tmp_log=NULL;
+  gchar *progress_txt=NULL;
 
   mascot->flag_consow=FALSE;
 
@@ -609,10 +611,6 @@ void ReadMenu(typMascot *mascot, gint offset_i_cat, gchar *merge_file)
       mascot->menu_code = NULL;
 
     if(mascot->flag_install){
-      popup_progress(mascot,"MaCoPiX: Installing Mascots...");
-      gtk_progress_bar_set_text(GTK_PROGRESS_BAR(mascot->pdata->pbar),
-      			_("Preparing for Installation"));
-
       // PRESCAN for INSTALLING
       menu_total_for_install=0;
       for(i_cat=offset_i_cat;i_cat<MAX_MENU_CATEGORY;i_cat++){
@@ -699,13 +697,18 @@ void ReadMenu(typMascot *mascot, gint offset_i_cat, gchar *merge_file)
 	  mascot->menu_tgt_name[i_cat][i_tgt]
 	    =ReadMascotName(mascot, mascot->menu_tgt[i_cat][i_tgt]);
 	  if(mascot->flag_install){
-	    mascot->pdata->frac = (gdouble)((i_tgt+1)/(gdouble)menu_total_for_install);
-	    if(mascot->pdata->txt) g_free(mascot->pdata->txt);
-	    mascot->pdata->txt=g_strdup_printf(_("Installing mascots [%2d/%2d]"),
-					       i_tgt+1,menu_total_for_install);
-	    while (my_main_iteration(FALSE));
-	    gdkut_flush(mascot->pdata->dialog);
-	    usleep(INTERVAL*1e3);
+	    progress_txt=g_strdup_printf(_("Installed Mascot [%2d/%2d] \"%s\"\n"),
+					 i_tgt+1,menu_total_for_install,
+					 mascot->menu_tgt_name[i_cat][i_tgt]);
+	    if(install_log){
+	      tmp_log=g_strconcat(install_log,progress_txt,NULL);
+	      install_log=g_strdup(tmp_log);
+	      g_free(tmp_log);
+	    }
+	    else{
+	      install_log=g_strdup(progress_txt);
+	    }
+	    g_free(progress_txt);
 	  }
 	  mascot->menu_total++;
 	}
@@ -714,8 +717,20 @@ void ReadMenu(typMascot *mascot, gint offset_i_cat, gchar *merge_file)
     }
     xmms_cfg_free(cfgfile);
     if(mascot->flag_install){
-      gtk_progress_bar_set_fraction(GTK_PROGRESS_BAR(mascot->pdata->pbar),1.0);
-      destroy_progress(mascot);
+      if(install_log){
+	popup_text_view(NULL,
+#ifdef USE_GTK3
+			"dialog-information", 
+#else
+			GTK_STOCK_DIALOG_INFO,
+#endif
+			install_log,
+			_("Mascot instllation has been completed."),
+			NULL);
+	g_free(install_log);
+      }
+      //gtk_progress_bar_set_fraction(GTK_PROGRESS_BAR(mascot->pdata->pbar),1.0);
+      // destroy_progress(mascot);
     }
 
   }

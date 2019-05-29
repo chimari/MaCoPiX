@@ -664,16 +664,6 @@ enum{ COMPOSITE_FALSE,
 #define RANDOMIZE() srand(time(NULL)+getpid())
 #define RANDOM(x)  (rand()%(x))
 
-// プログレスバー用構造体
-typedef struct _ProgressData {
-  GtkWidget *pbar;
-  GtkWidget *dialog;
-  gchar *txt;
-  gdouble frac;
-  gint timer;
-} ProgressData;
-
-
 // ブロックループ用構造体
 typedef struct{
   int next;
@@ -1054,7 +1044,6 @@ struct _typMascot{
   typCursor cursor;
   gchar    *code;  
   gchar    *menu_code;  
-  ProgressData *pdata;
 //#if GTK_CHECK_VERSION(2, 10, 0)
 #ifdef USE_GTK_STATUS_ICON
   GtkStatusIcon *tray_icon;
@@ -1249,9 +1238,8 @@ void create_cons_dialog();
 void create_smenu_dialog();
 void gui_arg_init();
 void popup_message(GtkWidget *parent, gchar* stock_id,gint delay, ...);
+void popup_text_view(GtkWidget *parent, gchar* stock_id, gchar *txt, ...);
 gboolean popup_ask(GtkWidget *parent, gchar* stock_id, ...);
-void popup_progress();
-void destroy_progress();
 void unlink_all();
 void AllRandomChangeMascotMenu();
 GtkWidget* make_popup_menu();

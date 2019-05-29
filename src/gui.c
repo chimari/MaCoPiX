@@ -228,11 +228,9 @@ static void noow_cons();
 #endif
 static void close_child_dialog();
 gboolean close_popup();
-static void destroy_popup();
+static gboolean destroy_popup();
 static void close_conf();
 static void close_smenu();
-
-gboolean pdata_timeout();
 
 void TestPut();
 gboolean test_update();
@@ -1424,13 +1422,14 @@ gboolean close_popup(gpointer data)
   return(FALSE);
 }
 
-static void destroy_popup(GtkWidget *w, guint data)
+static gboolean destroy_popup(GtkWidget *w, guint data)
 {
   guint timer;
   timer=(guint)data;
 
   g_source_remove((guint)timer);
   gtk_main_quit();
+  return(FALSE);
 }
 
 
@@ -1926,6 +1925,7 @@ static void create_add_image_dialog(GtkWidget *widget, gpointer gdata)
 		  " ",
 		  _("The number of images maxes out."),
 		  NULL);
+    flagChildDialog=FALSE;
     return;
   }
 
@@ -2053,6 +2053,7 @@ static void create_del_image_dialog(GtkWidget *widget, gpointer gdata)
 		  -1,
 		  _("Warning : Please select an image to delete in the list."),
 		  NULL);
+    flagChildDialog=FALSE;
     return;
   }
 
@@ -2642,6 +2643,7 @@ static void create_add_frame_dialog(GtkWidget *w, gpointer gdata)
 		  " ",
 		  _("The number of frames maxes out."),
 		  NULL);
+    flagChildDialog=FALSE;
     return;
   }
 
@@ -2774,6 +2776,7 @@ static void create_del_frame_dialog(GtkWidget *w, gpointer gdata)
 		  " ",
 		  _("You cannot delete no more frames."),
 		  NULL);
+    flagChildDialog=FALSE;
     return;
   }
 
@@ -2790,6 +2793,7 @@ static void create_del_frame_dialog(GtkWidget *w, gpointer gdata)
 		  " ",
 		  _("Please select a frame to delete."),
 		  NULL);
+    flagChildDialog=FALSE;
     return;
   }
 
@@ -11776,48 +11780,33 @@ void popup_message(GtkWidget *parent, gchar* stock_id,gint delay, ...){
   GtkWidget *button;
   GtkWidget *pixmap;
   GtkWidget *hbox;
+  GtkWidget *vbox0;
   GtkWidget *vbox;
-  gint timer;
+  gint timer=-1;
 
   va_start(args, delay);
 
-  if(delay>0){
-    dialog = gtk_dialog_new();
-    gtk_window_set_transient_for(GTK_WINDOW(dialog),(parent) ? GTK_WINDOW(parent) : NULL);
-    gtk_window_set_title(GTK_WINDOW(dialog),_("MaCoPiX : Message"));
-  }
-  else{
-    dialog=gtk_dialog_new();
-    gtk_window_set_modal(GTK_WINDOW(dialog),TRUE);
-    gtk_window_set_title(GTK_WINDOW(dialog),
-			 _("MaCoPiX : Message"));
-    gtk_window_set_position(GTK_WINDOW(dialog), GTK_WIN_POS_CENTER);
-    gtk_container_set_border_width(GTK_CONTAINER(dialog),5);
-    gtk_window_set_transient_for(GTK_WINDOW(dialog),(parent) ? GTK_WINDOW(parent) : NULL);
-    
-    button=gtkut_dialog_add_button(GTK_DIALOG(dialog),
-				   _("OK"),
-#ifdef USE_GTK3
-				   "emblem-default",
-#else
-				   GTK_STOCK_OK,
-#endif
-				   GTK_RESPONSE_OK);
-    gtk_widget_grab_focus(gtk_dialog_get_widget_for_response(GTK_DIALOG(dialog),
-							     GTK_RESPONSE_OK));
-  }
+  dialog = gtk_window_new(GTK_WINDOW_TOPLEVEL);
+  gtk_window_set_modal(GTK_WINDOW(dialog),TRUE);
+  gtk_window_set_title(GTK_WINDOW(dialog),_("MaCoPiX : Message"));
+  gtk_window_set_position(GTK_WINDOW(dialog), GTK_WIN_POS_CENTER);
+  if(parent) gtk_window_set_transient_for(GTK_WINDOW(dialog), GTK_WINDOW(parent));
   gtk_container_set_border_width(GTK_CONTAINER(dialog),5);
-
+  my_signal_connect(dialog,"delete-event",gtk_main_quit, NULL);
+  
   if(delay>0){
     timer=g_timeout_add(delay*1000, (GSourceFunc)close_popup,
 			(gpointer)dialog);
     my_signal_connect(dialog,"delete-event",destroy_popup, &timer);
   }
 
+  vbox0 = gtkut_vbox_new(FALSE,2);
+  gtk_container_set_border_width (GTK_CONTAINER (vbox0), 0);
+  gtk_container_add (GTK_CONTAINER (dialog), vbox0);
+
   hbox = gtkut_hbox_new(FALSE,2);
   gtk_container_set_border_width (GTK_CONTAINER (hbox), 0);
-  gtk_box_pack_start(GTK_BOX(gtk_dialog_get_content_area(GTK_DIALOG(dialog))),
-		     hbox,FALSE, FALSE, 0);
+  gtk_box_pack_start(GTK_BOX(vbox0), hbox,FALSE, FALSE, 0);
 
 #ifdef USE_GTK3
   pixmap=gtk_image_new_from_icon_name (stock_id,
@@ -11839,23 +11828,172 @@ void popup_message(GtkWidget *parent, gchar* stock_id,gint delay, ...){
    
     label=gtkut_label_new(msg1);
     gtkut_pos(label, POS_START, POS_CENTER);
-    gtk_box_pack_start(GTK_BOX(vbox),
-		       label,TRUE,TRUE,0);
+    gtk_box_pack_start(GTK_BOX(vbox), label,TRUE,TRUE,0);
   }
 
   va_end(args);
 
+  if(delay<0){
+    hbox = gtkut_hbox_new(FALSE,2);
+    gtk_container_set_border_width (GTK_CONTAINER (hbox), 0);
+    gtk_box_pack_start(GTK_BOX(vbox0), hbox,TRUE, TRUE, 0);
+    
+    label=gtkut_label_new(" ");
+    gtkut_pos(label, POS_START, POS_CENTER);
+    gtk_box_pack_start(GTK_BOX(hbox), label,TRUE,TRUE,0);
+    /*
+    button=gtkut_dialog_add_button(GTK_DIALOG(dialog),
+				   _("OK"),
+#ifdef USE_GTK3
+				   "emblem-default",
+#else
+				   GTK_STOCK_OK,
+#endif
+				   GTK_RESPONSE_OK);
+    gtk_widget_grab_focus(gtk_dialog_get_widget_for_response(GTK_DIALOG(dialog),
+							     GTK_RESPONSE_OK));
+    */
+    button=gtkut_button_new_with_icon(_("OK"),
+#ifdef USE_GTK3
+				      "emblem-default"
+#else
+				      GTK_STOCK_OK
+#endif				     
+				      );
+
+    gtk_box_pack_start(GTK_BOX(hbox), button,FALSE, FALSE, 0);
+    my_signal_connect(button,"clicked", gtk_main_quit, NULL);
+    
+    gtk_widget_grab_focus(button);
+  }
+
   gtk_widget_show_all(dialog);
 
-  if(delay>0){
-    gtk_main();
-  }
-  else{
-    gtk_dialog_run(GTK_DIALOG(dialog));
-    gtk_widget_destroy(dialog);
-  }
+  gtk_main();
+  
+  if(GTK_IS_WIDGET(dialog)) gtk_widget_destroy(dialog);
 }
 
+
+void popup_text_view(GtkWidget *parent, gchar* stock_id, gchar *txt, ...){
+  va_list args;
+  gchar *msg1;
+  GtkWidget *dialog;
+  GtkWidget *scrwin;
+  GtkWidget *txtview;
+  GtkWidget *label;
+  GtkWidget *button;
+  GtkWidget *pixmap;
+  GtkWidget *hbox;
+  GtkWidget *vbox0;
+  GtkWidget *vbox;
+  GtkTextIter iter;
+  GtkTextBuffer *buffer;
+  gint timer=-1;
+
+  va_start(args, txt);
+  
+  dialog = gtk_window_new(GTK_WINDOW_TOPLEVEL);
+  gtk_window_set_modal(GTK_WINDOW(dialog),TRUE);
+  gtk_window_set_title(GTK_WINDOW(dialog),_("MaCoPiX : Message"));
+  gtk_window_set_position(GTK_WINDOW(dialog), GTK_WIN_POS_CENTER);
+  if(parent) gtk_window_set_transient_for(GTK_WINDOW(dialog), GTK_WINDOW(parent));
+  gtk_container_set_border_width(GTK_CONTAINER(dialog),5);
+  my_signal_connect(dialog,"delete-event",gtk_main_quit, NULL);
+  
+  vbox0 = gtkut_vbox_new(FALSE,2);
+  gtk_container_set_border_width (GTK_CONTAINER (vbox0), 0);
+  gtk_container_add (GTK_CONTAINER (dialog), vbox0);
+
+  hbox = gtkut_hbox_new(FALSE,2);
+  gtk_container_set_border_width (GTK_CONTAINER (hbox), 0);
+  gtk_box_pack_start(GTK_BOX(vbox0), hbox,FALSE, FALSE, 0);
+
+#ifdef USE_GTK3
+  pixmap=gtk_image_new_from_icon_name (stock_id,
+				       GTK_ICON_SIZE_DIALOG);
+#else
+  pixmap=gtk_image_new_from_stock (stock_id,
+				   GTK_ICON_SIZE_DIALOG);
+#endif
+
+  gtk_box_pack_start(GTK_BOX(hbox), pixmap,FALSE, FALSE, 0);
+
+  vbox = gtkut_vbox_new(FALSE,2);
+  gtk_container_set_border_width (GTK_CONTAINER (vbox), 0);
+  gtk_box_pack_start(GTK_BOX(hbox),vbox,FALSE, FALSE, 0);
+
+  while(1){
+    msg1=va_arg(args,gchar*);
+    if(!msg1) break;
+   
+    label=gtkut_label_new(msg1);
+    gtkut_pos(label, POS_START, POS_CENTER);
+    gtk_box_pack_start(GTK_BOX(vbox), label,TRUE,TRUE,0);
+  }
+
+  va_end(args);
+
+  scrwin = gtk_scrolled_window_new(NULL, NULL);
+  gtk_scrolled_window_set_policy(GTK_SCROLLED_WINDOW(scrwin),
+                                 GTK_POLICY_AUTOMATIC, GTK_POLICY_AUTOMATIC);
+  gtk_box_pack_start(GTK_BOX(vbox0),scrwin,FALSE, FALSE, 0);
+
+  txtview = gtk_text_view_new ();
+  gtk_text_view_set_editable (GTK_TEXT_VIEW (txtview), FALSE);
+  gtk_text_view_set_cursor_visible (GTK_TEXT_VIEW (txtview), FALSE);
+
+  gtk_container_add(GTK_CONTAINER(scrwin), txtview);
+  buffer = gtk_text_view_get_buffer(GTK_TEXT_VIEW(txtview));
+  gtk_text_buffer_get_iter_at_offset(buffer, &iter, 0);
+
+  gtk_text_buffer_insert(buffer, &iter, txt, -1);
+  gtk_text_buffer_get_start_iter(buffer, &iter);
+  gtk_text_buffer_place_cursor(buffer, &iter);
+  
+  gtk_widget_set_size_request (scrwin, 400, 250);
+  
+  hbox = gtkut_hbox_new(FALSE,2);
+  gtk_container_set_border_width (GTK_CONTAINER (hbox), 0);
+  gtk_box_pack_start(GTK_BOX(vbox0), hbox,TRUE, TRUE, 0);
+  
+  label=gtkut_label_new(" ");
+  gtkut_pos(label, POS_START, POS_CENTER);
+  gtk_box_pack_start(GTK_BOX(hbox), label,TRUE,TRUE,0);
+  
+  button=gtkut_button_new_with_icon(_("OK"),
+#ifdef USE_GTK3
+				    "emblem-default"
+#else
+				    GTK_STOCK_OK
+#endif				     
+				    );
+  
+  gtk_box_pack_start(GTK_BOX(hbox), button,FALSE, FALSE, 0);
+  my_signal_connect(button,"clicked", gtk_main_quit, NULL);
+  
+  gtk_widget_grab_focus(button);
+
+  gtk_widget_show_all(dialog);
+
+  gtk_main();
+  
+  if(GTK_IS_WIDGET(dialog)) gtk_widget_destroy(dialog);
+}
+
+
+static void ask_ok (GtkWidget *widget,  gboolean * gdata)
+{
+  gtk_main_quit();
+  *gdata=TRUE;
+}
+
+static void ask_cancel (GtkWidget *widget,  gboolean * gdata)
+{
+  gtk_main_quit();
+  *gdata=FALSE;
+}
+ 
 
 gboolean popup_ask(GtkWidget *parent, gchar* stock_id, ...){
   va_list args;
@@ -11866,41 +12004,27 @@ gboolean popup_ask(GtkWidget *parent, gchar* stock_id, ...){
   GtkWidget *pixmap;
   GtkWidget *hbox;
   GtkWidget *vbox;
-  gint timer;
+  GtkWidget *vbox0;
+  gboolean ans=FALSE;
 
   va_start(args, stock_id);
 
-  dialog=gtk_dialog_new();
+  dialog=gtk_window_new(GTK_WINDOW_TOPLEVEL);
   gtk_window_set_modal(GTK_WINDOW(dialog),TRUE);
-  gtk_window_set_title(GTK_WINDOW(dialog),
-		       _("MaCoPiX : Dialog"));
+  gtk_window_set_title(GTK_WINDOW(dialog), _("MaCoPiX : Dialog"));
   gtk_window_set_position(GTK_WINDOW(dialog), GTK_WIN_POS_CENTER);
   gtk_container_set_border_width(GTK_CONTAINER(dialog),5);
-  gtk_window_set_transient_for(GTK_WINDOW(dialog),(parent) ? GTK_WINDOW(parent) : NULL);
+  if(parent) gtk_window_set_transient_for(GTK_WINDOW(dialog), GTK_WINDOW(parent));
 
-  button=gtkut_dialog_add_button(GTK_DIALOG(dialog),
-				 _("Cancel"),
-#ifdef USE_GTK3
-				 "process-stop",
-#else
-				 GTK_STOCK_CANCEL,
-#endif
-				 GTK_RESPONSE_CANCEL);
-
-  button=gtkut_dialog_add_button(GTK_DIALOG(dialog),
-				 _("OK"),
-#ifdef USE_GTK3
-				 "emblem-default",
-#else
-				 GTK_STOCK_OK,
-#endif
-				 GTK_RESPONSE_OK);
-  gtk_widget_grab_focus(gtk_dialog_get_widget_for_response(GTK_DIALOG(dialog),
-							   GTK_RESPONSE_OK));
-
+  my_signal_connect(dialog,"delete-event",gtk_main_quit, NULL);
+  
+  vbox0 = gtkut_vbox_new(FALSE,2);
+  gtk_container_set_border_width (GTK_CONTAINER (vbox0), 0);
+  gtk_container_add (GTK_CONTAINER (dialog), vbox0);
+  
   hbox = gtkut_hbox_new(FALSE,2);
   gtk_container_set_border_width (GTK_CONTAINER (hbox), 0);
-  gtk_box_pack_start(GTK_BOX(gtk_dialog_get_content_area(GTK_DIALOG(dialog))),
+  gtk_box_pack_start(GTK_BOX(vbox0),
 		     hbox,FALSE, FALSE, 0);
 
 #ifdef USE_GTK3
@@ -11929,90 +12053,46 @@ gboolean popup_ask(GtkWidget *parent, gchar* stock_id, ...){
 
   va_end(args);
   
-  gtk_widget_show_all(dialog);
+  hbox = gtkut_hbox_new(FALSE,2);
+  gtk_container_set_border_width (GTK_CONTAINER (hbox), 0);
+  gtk_box_pack_start(GTK_BOX(vbox0), hbox,TRUE, TRUE, 0);
   
-  if( gtk_dialog_run(GTK_DIALOG(dialog)) == GTK_RESPONSE_OK){
-    gtk_widget_destroy(dialog);
-    return(TRUE);
-  }
-  else{
-    if(GTK_IS_WIDGET(dialog)) gtk_widget_destroy(dialog);
-    return(FALSE);
-  }
-}
- 
- 
-gboolean pdata_timeout(gpointer gdata ){
-  typMascot *mascot=(typMascot *)gdata;
-
-  if(gtk_widget_get_realized(mascot->pdata->pbar)){
-    gtk_progress_bar_set_fraction(GTK_PROGRESS_BAR(mascot->pdata->pbar),
-				  mascot->pdata->frac);
-    gtk_progress_bar_set_text(GTK_PROGRESS_BAR(mascot->pdata->pbar),
-			      mascot->pdata->txt);
-  }
-  return TRUE;
-}
-
-
-void popup_progress(typMascot *mascot, gchar *msg1){
-  GtkWidget *label;
-  GtkWidget *vbox;
-  GtkWidget *align;
-
-  mascot->pdata = g_malloc (sizeof (ProgressData));
-
-  mascot->pdata->dialog = gtk_window_new(GTK_WINDOW_TOPLEVEL);
-  gtk_window_set_position(GTK_WINDOW(mascot->pdata->dialog),
-			  GTK_WIN_POS_MOUSE);
-  gtk_container_set_border_width(GTK_CONTAINER(mascot->pdata->dialog),5);
-  gtk_window_set_title(GTK_WINDOW(mascot->pdata->dialog),
-		       _("MaCoPiX : Installing Mascots"));
-  mascot->pdata->timer=-1;
-  mascot->pdata->frac=0.0;
-  mascot->pdata->txt=g_strdup(_("MaCoPiX : Installing Mascots"));
-  
-  vbox = gtkut_vbox_new(FALSE,0);
-  gtk_container_add (GTK_CONTAINER (mascot->pdata->dialog), vbox);
-
-  label=gtkut_label_new(msg1);
+  label=gtkut_label_new(" ");
   gtkut_pos(label, POS_START, POS_CENTER);
-  gtk_box_pack_start(GTK_BOX(vbox),label,TRUE,TRUE,0);
+  gtk_box_pack_start(GTK_BOX(hbox), label,TRUE,TRUE,0);
   
-
-  /* GtkProgressBar を生成します。*/
-  mascot->pdata->pbar = gtk_progress_bar_new ();
-  gtk_box_pack_start(GTK_BOX(vbox),
-		     mascot->pdata->pbar,TRUE,TRUE,0);
-  //gtk_progress_bar_set_bar_style (GTK_PROGRESS_BAR(mascot->pdata->pbar),
-  //				  GTK_PROGRESS_CONTINUOUS);
-  gtk_progress_bar_pulse(GTK_PROGRESS_BAR(mascot->pdata->pbar));
+  button=gtkut_button_new_with_icon(_("Cancel"),
 #ifdef USE_GTK3
-  gtk_orientable_set_orientation (GTK_ORIENTABLE (mascot->pdata->pbar), 
-				  GTK_ORIENTATION_HORIZONTAL);
-  css_change_pbar_height(mascot->pdata->pbar,15);
-  gtk_progress_bar_set_show_text(GTK_PROGRESS_BAR(mascot->pdata->pbar), TRUE);
+				    "process-stop"
 #else
-  gtk_progress_bar_set_orientation (GTK_PROGRESS_BAR (mascot->pdata->pbar), 
-				    GTK_PROGRESS_RIGHT_TO_LEFT);
-#endif
-  gtk_widget_show (mascot->pdata->pbar);
+				    GTK_STOCK_CANCEL
+#endif				     
+				    );
+  
+  gtk_box_pack_start(GTK_BOX(hbox), button,FALSE, FALSE, 0);
+  my_signal_connect(button,"clicked", ask_cancel, &ans);
 
-  gtk_widget_show_all(mascot->pdata->dialog);
+  button=gtkut_button_new_with_icon(_("OK"),
+#ifdef USE_GTK3
+				    "emblem-default"
+#else
+				    GTK_STOCK_OK
+#endif				     
+				    );
+  
+  gtk_box_pack_start(GTK_BOX(hbox), button,FALSE, FALSE, 0);
+  my_signal_connect(button,"clicked", ask_ok, &ans);
+  
+  gtk_widget_grab_focus(button);
 
-  mascot->pdata->timer=g_timeout_add(100, 
-				     (GSourceFunc)pdata_timeout,
-				     (gpointer)mascot);
+  gtk_widget_show_all(dialog);
+
+  if(GTK_IS_WIDGET(dialog)) gtk_widget_destroy(dialog);
+
+  return(ans);
 }
-
-void destroy_progress(typMascot *mascot){
-  if(mascot->pdata->timer!=-1) g_source_remove(mascot->pdata->timer);
-  gtk_widget_destroy(mascot->pdata->dialog);
-  if(mascot->pdata->txt) g_free(mascot->pdata->txt);
-  g_free (mascot->pdata);
-}
-
  
+
 void gui_arg_init(){
   gint i_ptn;
   flagChildDialog=FALSE;
