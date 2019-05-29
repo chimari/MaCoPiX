@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: macopix 1.6.2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-05-28 14:21-1000\n"
+"POT-Creation-Date: 2019-05-28 14:46-1000\n"
 "PO-Revision-Date: 2008-05-23 19:29-1000\n"
 "Last-Translator: Kurumi Chimari <chimari@rosegray.sakura.ne.jp>\n"
 "Language-Team: Japansese <chimari@rosegray.sakura.ne.jp>\n"
@@ -95,16 +95,16 @@ msgstr "MaCoPiX : マスコットメニューファイルをインストール"
 #: src/gui.c:4321 src/gui.c:4386 src/gui.c:4483 src/gui.c:5166 src/gui.c:5283
 #: src/gui.c:5373 src/gui.c:5539 src/gui.c:5789 src/gui.c:5914 src/gui.c:6065
 #: src/gui.c:11213 src/gui.c:11436 src/gui.c:11856 src/gui.c:11964
-#: src/gui.c:12075 src/gui.c:12187 src/nokkari.c:890 src/sslmanager.c:157
+#: src/gui.c:12075 src/gui.c:12189 src/nokkari.c:890 src/sslmanager.c:157
 msgid "OK"
 msgstr "了承"
 
 #: src/dnd.c:198 src/gui.c:2170 src/gui.c:2495 src/gui.c:2669 src/gui.c:4250
 #: src/gui.c:4312 src/gui.c:4377 src/gui.c:4474 src/gui.c:5157 src/gui.c:5274
 #: src/gui.c:5364 src/gui.c:5530 src/gui.c:5780 src/gui.c:5905 src/gui.c:11202
-#: src/gui.c:11425 src/gui.c:12064 src/gui.c:12178 src/http-client.c:995
+#: src/gui.c:11425 src/gui.c:12064 src/gui.c:12180 src/http-client.c:995
 #: src/http-client.c:997 src/http-client.c:1112 src/http-client.c:1114
-#: src/main.c:4287 src/main.c:4289 src/sslmanager.c:167
+#: src/main.c:4285 src/main.c:4287 src/sslmanager.c:167
 msgid "Cancel"
 msgstr "嫌です"
 
@@ -281,7 +281,7 @@ msgid "Error: Delete Frame."
 msgstr "エラー : フレーム削除"
 
 #: src/gui.c:2777
-msgid "You cannot delete no more frames."
+msgid "You cannot delete frames anymore."
 msgstr "これ以上フレームの削除はできません。"
 
 #: src/gui.c:2794
@@ -316,7 +316,7 @@ msgid "Error: Delete Mascot."
 msgstr "エラー: マスコット削除"
 
 #: src/gui.c:3043
-msgid "You cannot delete no more mascots."
+msgid "You cannot delete mascots anymore."
 msgstr "これ以上マスコットを削除できません。"
 
 #: src/gui.c:3055
@@ -1452,11 +1452,11 @@ msgstr "テスト"
 msgid "About This Mascot"
 msgstr "このマスコットについて"
 
-#: src/gui.c:9672 src/gui.c:13121
+#: src/gui.c:9672 src/gui.c:13123
 msgid "Name"
 msgstr "マスコット名"
 
-#: src/gui.c:9684 src/gui.c:11689 src/main.c:4107
+#: src/gui.c:9684 src/gui.c:11689 src/main.c:4105
 msgid "File"
 msgstr "ファイル"
 
@@ -1492,7 +1492,7 @@ msgstr "ポップアップメニュー中から新しいランチャ用メニュ
 msgid " and edit it here."
 msgstr " ここで編集することができます。"
 
-#: src/gui.c:9964 src/gui.c:12292 src/gui.c:13098
+#: src/gui.c:9964 src/gui.c:12294 src/gui.c:13100
 msgid "No."
 msgstr "番号"
 
@@ -1813,60 +1813,60 @@ msgstr "MaCoPiX : お知らせ"
 msgid "MaCoPiX : Dialog"
 msgstr "MaCoPiX : 質問"
 
-#: src/gui.c:12146
+#: src/gui.c:12148
 msgid "Selected File\n"
 msgstr "選択されたファイル\n"
 
-#: src/gui.c:12148
+#: src/gui.c:12150
 msgid "cannot be opend as MaCoPiX menu.\n"
 msgstr "はMaCoPiXのメニューファイルとして開くことが出来ません。\n"
 
 # MaCoPiX : テンポラリファイルの消去
-#: src/gui.c:12172
+#: src/gui.c:12174
 msgid "MaCoPiX : Deletion of temporay files"
 msgstr "MaCoPiX : テンポラリファイルの消去"
 
-#: src/gui.c:12198
+#: src/gui.c:12200
 msgid "Install of the new menu file has been completed."
 msgstr "新しいメニューファイルのインストールが完了しました。"
 
-#: src/gui.c:12204
+#: src/gui.c:12206
 msgid "Remove the temporary direcotry?"
 msgstr "テンポラリディレクトリを消去しますか?"
 
-#: src/gui.c:12324
+#: src/gui.c:12326
 msgid "Image File <span size=\"smaller\">(Double-Click to change)</span>"
 msgstr "画像ファイル <span size=\"smaller\">(ダブルクリックで変更)</span>"
 
-#: src/gui.c:12506
+#: src/gui.c:12508
 msgid "Frame No."
 msgstr "フレーム番号"
 
-#: src/gui.c:12529
+#: src/gui.c:12531
 msgid "Image No."
 msgstr "画像番号"
 
-#: src/gui.c:12554
+#: src/gui.c:12556
 msgid "Min Stay"
 msgstr "最小滞在"
 
-#: src/gui.c:12579
+#: src/gui.c:12581
 msgid "Max Stay"
 msgstr "最大滞在"
 
-#: src/gui.c:12616
+#: src/gui.c:12618
 msgid "<span size=\"smaller\">Block Loop</span> Next Frame"
 msgstr "<span size=\"smaller\">ブロックループ</span> 次のフレーム"
 
-#: src/gui.c:12642
+#: src/gui.c:12644
 msgid "Min Loop"
 msgstr "最小ループ"
 
-#: src/gui.c:12668
+#: src/gui.c:12670
 msgid "Max Loop"
 msgstr "最大ループ"
 
-#: src/gui.c:13151
+#: src/gui.c:13153
 msgid "Mascot File <span size=\"smaller\">(Double-Click to change)</span>"
 msgstr ""
 "マスコットファイル <span size=\"smaller\">(ダブルクリックで変更)</span>"
@@ -1917,7 +1917,7 @@ msgstr "MaCoPiX公式サイトから最新マスコットリストをダウン�
 msgid "Checking the latest version of the official mascot list ..."
 msgstr "最新の公式マスコットリストをチェックしています..."
 
-#: src/http-client.c:1043 src/main.c:4350
+#: src/http-client.c:1043 src/main.c:4348
 msgid "Error : Failed to download the mascot archive file (tar.gz)."
 msgstr "エラー : マスコットアーカイブ(tar.gz)のダウンロードに失敗しました."
 
@@ -2054,13 +2054,14 @@ msgstr "メニューファイルがありません"
 msgid " Cannot read the Menu File correctly!!"
 msgstr " メニューファイルが正常に開けません!!"
 
-#: src/main.c:663 src/main.c:912 src/main.c:981 src/main.c:2185 src/main.c:2483
-#: src/main.c:2602 src/main.c:2631 src/main.c:3500 src/sockmsg.c:409
+#: src/main.c:663 src/main.c:910 src/main.c:979 src/main.c:2183 src/main.c:2481
+#: src/main.c:2600 src/main.c:2629 src/main.c:3498 src/sockmsg.c:409
 #: src/sockmsg.c:421
 msgid "(Invalid Character Code)"
 msgstr "(不正な文字コード)"
 
 #: src/main.c:700
+#, c-format
 msgid "Installed Mascot [%2d/%2d] \"%s\"\n"
 msgstr "マスコットをインストールしました. [%2d/%2d]  \"%s\"\n"
 
@@ -2068,79 +2069,79 @@ msgstr "マスコットをインストールしました. [%2d/%2d]  \"%s\"\n"
 msgid "Mascot instllation has been completed."
 msgstr "マスコットのインストールが完了しました."
 
-#: src/main.c:774
+#: src/main.c:772
 msgid " ================== Installed Menus ================== \n"
 msgstr " ================== インストール済 メニュー ================== \n"
 
-#: src/main.c:791
+#: src/main.c:789
 #, c-format
 msgid "   !!! Common Directory - %s - does not exist.\n"
 msgstr "   !!! 共通ディレクトリ - %s - が存在しません.\n"
 
-#: src/main.c:796
+#: src/main.c:794
 msgid "  [Common Directory]\n"
 msgstr "  [共通ディレクトリ]\n"
 
-#: src/main.c:810 src/main.c:860
+#: src/main.c:808 src/main.c:858
 #, c-format
 msgid "  %20s *  %2d categories  -- Combined Menu --\n"
 msgstr "  %20s *  %2d カテゴリー  -- 複合メニュー --\n"
 
-#: src/main.c:814 src/main.c:864
+#: src/main.c:812 src/main.c:862
 #, c-format
 msgid "  %20s :  %2d mascots    [%s]\n"
 msgstr "  %20s :  %2d マスコット    [%s]\n"
 
-#: src/main.c:841
+#: src/main.c:839
 #, c-format
 msgid "  !!! User Directory - %s - does not exist.\n"
 msgstr "  !!! ユーザーディレクトリ - %s - が存在しません.\n"
 
-#: src/main.c:846
+#: src/main.c:844
 msgid "  [User Directory]\n"
 msgstr "  [ユーザーディレクトリ]\n"
 
-#: src/main.c:1080
+#: src/main.c:1078
 #, c-format
 msgid "Creating User-Dir %s .\n"
 msgstr "ユーザーディレクトリを作成中...%s\n"
 
-#: src/main.c:1103
+#: src/main.c:1101
 #, c-format
 msgid "Creating User-PixmapDir %s .\n"
 msgstr "ユーザー画像格納ディレクトリを作成中...%s\n"
 
-#: src/main.c:1127
+#: src/main.c:1125
 #, c-format
 msgid "Creating User-SoundDir %s .\n"
 msgstr "ユーザー音声格納ディレクトリを作成中...%s\n"
 
-#: src/main.c:2078 src/main.c:2836 src/main.c:3061
+#: src/main.c:2076 src/main.c:2834 src/main.c:3059
 msgid "Cannot Find Mascot File."
 msgstr "マスコットファイルがありません"
 
-#: src/main.c:2955 src/main.c:3243
+#: src/main.c:2953 src/main.c:3241
 msgid "Cannot Find Image."
 msgstr "画像ファイルがありません"
 
-#: src/main.c:3399
+#: src/main.c:3397
 msgid "Cannot Find Sound File."
 msgstr "音声ファイルがありません"
 
-#: src/main.c:3461
+#: src/main.c:3459
 #, c-format
 msgid "Cannot find resource file %s.\n"
 msgstr "共通設定ファイル %s がありません\n"
 
-#: src/main.c:3462
+#: src/main.c:3460
 msgid "Loading default resource file...\n"
 msgstr "デフォルトの共通設定をロードします...\n"
 
-#: src/main.c:4060
+#: src/main.c:4058
 msgid "MaCoPiX : Download & Install Mascot"
 msgstr "MaCoPiX : マスコットのダウンロードとインストール"
 
-#: src/main.c:4065
+#: src/main.c:4063
 msgid ""
 "Select a mascot file to download &amp; install into your <i>User directory</"
 "i>."
@@ -2148,7 +2149,7 @@ msgstr ""
 "ダウンロードおよびインストールをするファイルを選択してください. ファイルは以"
 "下の<i>ユーザーディレクトリ</i>にインストールされます."
 
-#: src/main.c:4081
+#: src/main.c:4079
 msgid ""
 "<span color=\"#FF0000\"><b>Please note that all existing files will be "
 "overwritten.</b></span>"
@@ -2156,195 +2157,195 @@ msgstr ""
 "<span color=\"#FF0000\"><b>すべてのファイルは上書きされますのでご注意くださ"
 "い.</b></span>"
 
-#: src/main.c:4117
+#: src/main.c:4115
 msgid "Name (E)"
 msgstr "名前 (英語)"
 
-#: src/main.c:4127
+#: src/main.c:4125
 #, c-format
 msgid "Name (%s)"
 msgstr "名前 (%s)"
 
-#: src/main.c:4139
+#: src/main.c:4137
 msgid "Registered"
 msgstr "登録"
 
-#: src/main.c:4149
+#: src/main.c:4147
 msgid "Ver."
 msgstr "Ver."
 
-#: src/main.c:4159
+#: src/main.c:4157
 msgid "Date"
 msgstr "日付"
 
-#: src/main.c:4169
+#: src/main.c:4167
 msgid "Code"
 msgstr "コード"
 
-#: src/main.c:4193 src/main.c:4196
+#: src/main.c:4191 src/main.c:4194
 msgid "(<i>Invalid Character Code</i>)"
 msgstr "(<i>不正な文字コード</i>)"
 
-#: src/main.c:4235
+#: src/main.c:4233
 #, c-format
 msgid "%d mascot"
 msgstr "%d マスコット"
 
-#: src/main.c:4238
+#: src/main.c:4236
 msgid "<i>unkown</i>"
 msgstr "<i>不明</i>"
 
-#: src/main.c:4280 src/main.c:4282
+#: src/main.c:4278 src/main.c:4280
 msgid "Download / Install"
 msgstr "ダウンロード / インストール"
 
-#: src/main.c:4373
+#: src/main.c:4371
 msgid "Error : Cannot read the downloaded mascot list."
 msgstr "エラー : マスコットリストのダウンロードに失敗しました."
 
-#: src/main.c:4634 src/main.c:4667 src/main.c:4774
+#: src/main.c:4632 src/main.c:4665 src/main.c:4772
 #, c-format
 msgid "Option \"%s\" is not found. Ignoring...\n"
 msgstr "オプション \"%s\"  はありません。無視されます...\n"
 
-#: src/main.c:4826
+#: src/main.c:4824
 #, c-format
 msgid "macopix COMMON DIR:%s\n"
 msgstr "macopix 共通ディレクトリ:%s\n"
 
-#: src/main.c:4837
+#: src/main.c:4835
 msgid " macopix : Mascot Constructive Pilot for X   Ver"
 msgstr " macopix : Mascot Constructive Pilot for X   バージョン"
 
-#: src/main.c:4838
+#: src/main.c:4836
 #, c-format
 msgid "  [usage] %% macopix [options] (mascot file)\n"
 msgstr "  [使用法] %% macopix [オプション] (マスコットファイル)\n"
 
-#: src/main.c:4839
+#: src/main.c:4837
 msgid "     -h, --help               : Print this message\n"
 msgstr "     -h, --help               : このメッセージを表示\n"
 
-#: src/main.c:4841
+#: src/main.c:4839
 msgid "     -c, --common-dir         : Print COMMON Directory\n"
 msgstr "     -c, --common-dir         : 共通ディレクトリを表示\n"
 
-#: src/main.c:4844
+#: src/main.c:4842
 msgid "     -b, --biff               : Turn on the biff function\n"
 msgstr "     -b, --biff               : Biff機能をON\n"
 
-#: src/main.c:4846
+#: src/main.c:4844
 msgid "     -s, --signal             : Turn on the time signal\n"
 msgstr "     -s, --signal             : 時報機能をON\n"
 
-#: src/main.c:4847
+#: src/main.c:4845
 #, c-format
 msgid "     -o, --offset offset[%%]   : Set offset-value for Focus Following\n"
 msgstr "     -o, --offset offset[%%]   : フォーカス追従用のオフセットを指定\n"
 
-#: src/main.c:4848
+#: src/main.c:4846
 msgid "     -r, --rcfile rc-file     : Set the resource file\n"
 msgstr "     -r, --rcfile rc-file     : 共通設定ファイルを指定\n"
 
-#: src/main.c:4849
+#: src/main.c:4847
 msgid "     -m, --menu   menu-file   : Set the file for quick menu\n"
 msgstr "     -m, --menu   menu-file   : メニュー用のファイルを指定\n"
 
-#: src/main.c:4850
+#: src/main.c:4848
 msgid ""
 "     -mg --mag    magnify     : Set magnification percentage of mascot\n"
 msgstr "     -mg --mag    magnify     : マスコットの拡大縮小率を%%で指定\n"
 
-#: src/main.c:4851
+#: src/main.c:4849
 msgid ""
 "     -i, --ip-style (0|1|2|3) : Set interpolation style for magnification\n"
 msgstr "     -i, --ip-style (0|1|2|3) : 拡大縮小時の画像補完スタイルを指定\n"
 
-#: src/main.c:4852
+#: src/main.c:4850
 msgid "## For Installation\n"
 msgstr "## インストール用オプション\n"
 
-#: src/main.c:4853
+#: src/main.c:4851
 msgid "     -a, --auto-install       : Set mascot auto install ON\n"
 msgstr "     -a, --auto-install       : マスコットの自動インストールをON\n"
 
-#: src/main.c:4854
+#: src/main.c:4852
 msgid "     -na --no-auto-install    : Set mascot auto install OFF\n"
 msgstr "     -na --no-auto-install    : マスコットの自動インストールをOFF\n"
 
-#: src/main.c:4855
+#: src/main.c:4853
 msgid "     -O, --over-write         : Permit to overwrite files in user dir\n"
 msgstr ""
 "     -O, --over-write         : ユーザーディレクトリ中のファイルの上書き許"
 "可\n"
 
-#: src/main.c:4856
+#: src/main.c:4854
 msgid ""
 "     --install-user-mascot (mascot)  : Mascot Installation to User Dir.\n"
 msgstr ""
 "     --install-user-mascot (mascot)  : ユーザーマスコットのインストール\n"
 
-#: src/main.c:4857
+#: src/main.c:4855
 msgid "     --install-user-menu (menu)      : Menu Installation to User Dir.\n"
 msgstr ""
 "     --install-user-menu (menu)      : ユーザーメニューのインストール\n"
 
-#: src/main.c:4859
+#: src/main.c:4857
 msgid ""
 "     --install-common-mascot (mascot): Mascot Installation to Common Dir.\n"
 msgstr "     --install-common-mascot (mascot): 共通マスコットのインストール\n"
 
-#: src/main.c:4860
+#: src/main.c:4858
 msgid ""
 "     --install-common-menu (menu)    : Menu Installation to Common Dir.\n"
 msgstr "     --install-common-menu (menu)    : 共通メニューのインストール\n"
 
-#: src/main.c:4863
+#: src/main.c:4861
 msgid "## For Socket Message\n"
 msgstr "## ソケットメッセージ用オプション\n"
 
-#: src/main.c:4864
+#: src/main.c:4862
 msgid ""
 "     --sockmsg                : Start MaCoPiX as Socket Message Receiver\n"
 msgstr "     --sockmsg                : ソケットメッセージモードで起動\n"
 
-#: src/main.c:4865
+#: src/main.c:4863
 msgid ""
 "     --message (text)         : Send Message to Socket Message Receiver\n"
 msgstr ""
 "     --message (text)         : ソケットメッセージモードにメッセージを送る\n"
 
-#: src/main.c:4866
+#: src/main.c:4864
 msgid "     --message-expire (time)  : Socket Message Expire Time[ms]\n"
 msgstr "     --message-expire (time)  : ソケットメッセージの表示時間[ms]\n"
 
-#: src/main.c:4867
+#: src/main.c:4865
 msgid "     --message-type-lump      : Force to Set Lump Sum Balloon\n"
 msgstr "     --message-type-lump      : バルーンを強制的に一括表示にする\n"
 
-#: src/main.c:4868
+#: src/main.c:4866
 msgid "     --message-type-step      : Force to Set Stepping Balloon\n"
 msgstr ""
 "     --message-type-step      : バルーンを強制的にステッピング表示にする\n"
 
-#: src/main.c:4869
+#: src/main.c:4867
 msgid "     --message-step (frame)   : Stepping Interval Frame for SockeMsg\n"
 msgstr "     --message-step (frame)   : ステッピング表示の間隔 [フレーム数]\n"
 
-#: src/main.c:4870
+#: src/main.c:4868
 msgid "     -nc, --no-duet-click     : Duet Animation [Click] OFF\n"
 msgstr "     -nc, --no-duet-click     : デュエットアニメ [クリック] OFF\n"
 
-#: src/main.c:4871
+#: src/main.c:4869
 msgid "     -nr, --no-duet-random    : Duet Animation [Random] OFF\n"
 msgstr "     -nr, --no-duet-random    : デュエットアニメ [ランダム] OFF\n"
 
-#: src/main.c:4966
+#: src/main.c:4964
 #, c-format
 msgid "%8d%2d%4dMacopix already running in SockMsg Mode"
 msgstr "%8d%2d%4dすでにソケットメッセージモードでMaCoPiXが起動しています."
 
-#: src/main.c:4978
+#: src/main.c:4976
 msgid "Macopix not running in SockMsg Mode\n"
 msgstr "MaCoPiXがソケットメッセージモードで起動していません.\n"
 

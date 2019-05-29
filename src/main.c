@@ -729,8 +729,6 @@ void ReadMenu(typMascot *mascot, gint offset_i_cat, gchar *merge_file)
 			NULL);
 	g_free(install_log);
       }
-      //gtk_progress_bar_set_fraction(GTK_PROGRESS_BAR(mascot->pdata->pbar),1.0);
-      // destroy_progress(mascot);
     }
 
   }

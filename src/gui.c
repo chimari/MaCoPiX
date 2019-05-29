@@ -2774,7 +2774,7 @@ static void create_del_frame_dialog(GtkWidget *w, gpointer gdata)
 		  -1,
 		  _("Error: Delete Frame."),
 		  " ",
-		  _("You cannot delete no more frames."),
+		  _("You cannot delete frames anymore."),
 		  NULL);
     flagChildDialog=FALSE;
     return;
@@ -3040,7 +3040,7 @@ static void create_del_tgt_dialog(GtkWidget *w, gpointer gdata)
 		  -1,
 		  _("Error: Delete Mascot."),
 		  " ",
-		  _("You cannot delete no more mascots."),
+		  _("You cannot delete mascots anymore."),
 		  NULL);
     flagChildDialog=FALSE;
     return;
@@ -3213,7 +3213,7 @@ static void create_del_cat_dialog(GtkWidget *w, gpointer gdata)
   dest_cat=gtk_notebook_get_current_page(GTK_NOTEBOOK(cat_note));
 
   tmp=g_strdup_printf(_("       Category <b>%02d</b> : <b>%s</b> (%d registered mascots)"),
-		      dest_cat+1,
+		      dest_cat,
 		      mascot->menu_cat[dest_cat],
 		      mascot->menu_tgt_max[dest_cat]);
 
@@ -12086,6 +12086,8 @@ gboolean popup_ask(GtkWidget *parent, gchar* stock_id, ...){
   gtk_widget_grab_focus(button);
 
   gtk_widget_show_all(dialog);
+
+  gtk_main();
 
   if(GTK_IS_WIDGET(dialog)) gtk_widget_destroy(dialog);
 
