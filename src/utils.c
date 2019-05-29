@@ -146,11 +146,14 @@ gboolean check_common_dir2(){
 
 #ifdef USE_WIN32
 gchar* get_win_home(void){
-  gchar WinPath[257]; 
+  gchar *WinPath; 
 
-  GetModuleFileName( NULL, WinPath, 256 );
+  WinPath=g_strconcat(getenv("APPDATA"),G_DIR_SEPARATOR_S,"MaCoPiX",NULL);
+  if(access(WinPath,F_OK)!=0){
+    mkdir(WinPath);
+  }
 
-  return(my_dirname(WinPath));
+  return(WinPath);
 }
 #endif
 
