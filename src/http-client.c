@@ -579,6 +579,9 @@ int http_c_nonssl(typMascot *mascot)
   sprintf(send_mesg, "Accept: text/plain,text/html,application/x-gzip\r\n");
   write_to_server(command_socket, send_mesg);
 
+  sprintf(send_mesg, "Accept-Encoding: gzip\r\n");
+  write_to_server(command_socket, send_mesg);
+
   sprintf(send_mesg, "User-Agent: Mozilla/5.0\r\n");
   write_to_server(command_socket, send_mesg);
 
@@ -1259,6 +1262,9 @@ static void cancel_http(GtkWidget *w, gpointer gdata){
     CloseHandle(mascot->hThread_http);
     gtk_main_quit();
   }
+  else{
+    gtk_main_quit();
+  }
 #else
   if(http_pid){
     kill(http_pid, SIGKILL);
@@ -1270,6 +1276,9 @@ static void cancel_http(GtkWidget *w, gpointer gdata){
     } while((child_pid>0)||(child_pid!=-1));
  
     http_pid=0;
+  }
+  else{
+    gtk_main_quit();
   }
 #endif
 
