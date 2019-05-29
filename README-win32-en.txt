@@ -107,6 +107,10 @@
      Appoint downloaded mascot archive (.tar.gz)
   6. Mascots are installed automatically
      (UserData\ directory automatically created in the program directory)
+     Generally UserData dir should be
+      C:\User\(user name)\AppData\Roaming\MaCoPiX\UserData\
+     It is referring the environment argument %APPDATA% .
+     
 
 
 ## Installation of Mascots
