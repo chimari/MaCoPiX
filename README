@@ -4,7 +4,7 @@
 						     ver 3.0.0    
                       Document in English : README                
                                                                   
-                             2019.05.22  Kurumi Chimari           
+                             2019.05.28  Kurumi Chimari           
                              chimari@rosegray.sakura.ne.jp        
                              http://rosegray.sakura.ne.jp/        
 ##################################################################
@@ -68,13 +68,13 @@
      - gettext     > ver0.10   
      - openssl     > ver1.0     (or gnutls > ver1.4)
      are necessary.
-     MaCoPiX can be load all image types supported by gdk-pixbuf.
+     MaCoPiX can load all image types supported by gdk-pixbuf.
      But, you need libraries to support each types of images
      (ex. libtiff, libpng) in order to load each types of images. 
      The official MaCoPiX mascots are served in PNG files now.
 
    [for Microsoft Windows (binary package)]
-     - Windows7 or later (64 / 32 bit)
+     - Windows7 or later (64/32 bit) (10 [64bit] should be recommended.)
      - Including TAR64.DLL / TAR32.DLL (GPL) in the binary distribution.
         * You can dounload it (free-software, GPL) form the HP of
           "Common Archiver Library Project".
@@ -110,27 +110,25 @@
 
 
 **How to start
-  In anyway, you have to download one mascot file at least (at present).
-  Without mascot files, you cannot do anything with MaCoPiX.
-  Please download or prepare more than one mascot archive (*.tar.gz) 
-  and start macopix.
+  In anyway, at least one mascot file is necessary to use MaCoPiX.
+  Just running MaCoPiX, with the following command even without mascots.
 
-  With MaCoPiX ver1.6.4 or later, you can install downlocaded mascot
-  archives (*.tar.gz) with drag & drop on the running MaCoPiX mascot
-  (or on the 1st message window for environment with no installed mascots).
-
-  Just running MaCoPiX,
          % macopix
-  After started up, please install mascots with drag & drop (or from GUI).
+	 
+  Then you will find a button to download official mascots via the
+  official web in the start up menu (network connection is required).
+  Please select one and download & install it to use MaCoPiX for
+  the first time.
 
-  If you want to fix the mascot at your startup of MaCoPiX and have a
-  mascot file (mascot.mcpx), please run the following command. 
+  If you already have a mascot which you want to use, please appoint
+  its .mcpx file in your command line like
+
          % macopix mascot.mcpx
-  After starting the application, you can change any settings from the
-  pop-up GUI.
 
-  And you can see the command line options, using -h (or --help) option.
+  After starting the application, you can add mascots and change all
+  settings from the pop-up GUI.
 
+  The command line options appears with -h (or --help) option.
 
 
 **Creating files, necessary files
@@ -230,6 +228,8 @@
  
 
 **Biff function
+  ### Currently the author only checks POP3 (w/ and w/o SSL). ###
+
   MaCoPiX can be a mail checker for the following types of the mail 
   environment.
      1. local spool (UNIX mbox : /var/spool/mail/$USER etc)
@@ -306,7 +306,7 @@
       This can be set in GUI and also in command line options to send
       a message.
 
-**Duet Animation
+**Duet Animation  (only for UNIX ver)
    Using socket communication, some animation can be connected between
    two mascots.
    If you start Sachiko-sama and Yumi at the same time, and click one
@@ -342,43 +342,16 @@
 
 
 **Tranlucent Windows
-  Translucent Panel Clock and Balloon can be used also on UNIX with
-  MaCoPiX ver1.7.0 or later.
-  To enable this function, you need to compile MaCoPiX with  
-    - Gtk+ 2.8 (or later; cairo library is required.) .
-  Furthermore, you also need to run MaCoPiX on
-   - appropriate Window Mangers supporting translucent window rendering
-       (Compiz, Beryl KWin etc.)
-           * You should turn ON "Desktop Effects", "Visual Effects" etc. 
-  to use this translucent function.
-  With Gtk+2.10 or later, MaCoPiX can ditermine your desktop support
-  for translucent windows automaticaly. But, with Gtk+2.8, you should
-  check "Forced translucent rendering" in the config window (Common->
-  Font/Color).
+  MaCoPiX ver 3 (ol later) only supports tranlucent mascot drawing 
+  on compositing window managers.
+  (In 2019, the most of environments are supporting compositing.)
+  If you use it in non-compositing window managers, mascot / balloon
+  will not be drawn correctly.
 
-  With non-translucent environment, panel clock and balloon rendered
-  by cairo also can be used. The opacities of each colors are
-  effective only with cairo rendering. With non-translucent
-  environment, cairo will render each parts of clock and balloon over
-  a white plane base with translucent colors.
-  If the colors of clock and balloon are  different from your
-  expectation, you should change opacities of each colors to 255 (100%).
-
-  Mascot and biff images also can be rendered translucently with Cairo
-  rendering. 
-  Required environment for this function should be same as above.
-  In this cairo rendering mode, scaled-down (up) mascots can have
-  anti-aliased outline with composited environment. 
-  Furthermore, Now "Drop shadow of mascot" option is avairable with
-  this mode.
-  This mode automatically turns off with non-composited environment
-  (Gtk+2.10 or later).
-
-
-**To Do
-  - Sockmsg mode for Windows?
-  - Enhancement of the clock & alarm  function
-         .............
+  The author does not know how often non-compositing window managers
+  are used nowadays.
+  If you find your environment meets this problem, please notify to the
+  author.
 
 
 **Copyright

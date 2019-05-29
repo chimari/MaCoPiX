@@ -1,11 +1,11 @@
 SUBDIRS= intl m4 po src
 
 EXTRA_DIST =  config.rpath\
-	ChangeLog.ja \
-	README.ja \
-	README-win32-ja.txt \
+	ChangeLog.jp \
+	README.jp \
+	README-win32-jp.txt \
 	README-win32-en.txt \
-	NKR.README.ja \
+	NKR.README.jp \
 	autogen.sh\
 	macopix.1\
 	makewin32.sh\
