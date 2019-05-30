@@ -948,7 +948,7 @@ void dl_mascot_list(typMascot *mascot,  gboolean flag_popup){
   gtk_window_set_title(GTK_WINDOW(dialog),_("MaCoPiX : Downloading Official Mascot List"));
   gtk_window_set_decorated(GTK_WINDOW(dialog),TRUE);
 
-  label=gtk_label_new(_("Downloading the latest version of the official mascot list ..."));
+  label=gtkut_label_new(_("Downloading the latest version of the official mascot list ..."));
 #ifdef USE_GTK3
   gtk_widget_set_halign (label, GTK_ALIGN_START);
   gtk_widget_set_valign (label, GTK_ALIGN_CENTER);
@@ -984,7 +984,7 @@ void dl_mascot_list(typMascot *mascot,  gboolean flag_popup){
   gtk_box_pack_start(GTK_BOX(gtk_dialog_get_content_area(GTK_DIALOG(dialog))),
 		     bar,FALSE, FALSE, 0);
 
-  label=gtk_label_new(_("Checking the latest version of the official mascot list ..."));
+  label=gtkut_label_new(_("Checking the latest version of the official mascot list ..."));
 #ifdef USE_GTK3
   gtk_widget_set_halign (label, GTK_ALIGN_START);
   gtk_widget_set_valign (label, GTK_ALIGN_CENTER);
@@ -1101,7 +1101,7 @@ void dl_mascot_tgz(typMascot *mascot){
   gtk_box_pack_start(GTK_BOX(gtk_dialog_get_content_area(GTK_DIALOG(dialog))),
 		     bar,FALSE, FALSE, 0);
 
-  label=gtk_label_new(_("Downloading ..."));
+  label=gtkut_label_new(_("Downloading ..."));
 #ifdef USE_GTK3
   gtk_widget_set_halign (label, GTK_ALIGN_START);
   gtk_widget_set_valign (label, GTK_ALIGN_CENTER);

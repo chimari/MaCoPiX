@@ -8090,7 +8090,7 @@ void create_config_dialog(GtkWidget *widget, gpointer gdata){
 			 &mascot->flag_install);
 
 #ifdef USE_COMMON
-      label = gtkut_label_new(_("User & Common Dir Consistency Check"));
+      label = gtkut_label_new(_("User &amp; Common Dir Consistency Check"));
       gtkut_table_attach(table1, label, 0, 1, 1, 2,
 			 GTK_SHRINK,GTK_SHRINK,0,0);
 
@@ -11327,7 +11327,7 @@ void create_smenu_dialog(typMascot *mascot, gboolean flag_popup)
     gtk_box_pack_start(GTK_BOX(vbox2),
 		       label,TRUE,TRUE,0);
 
-    button=gtkut_button_new_with_icon(_("Download & install MaCoPiX official mascots."),
+    button=gtkut_button_new_with_icon(_("Download &amp; install MaCoPiX official mascots."),
 #ifdef USE_GTK3
 				      "document-save"
 #else

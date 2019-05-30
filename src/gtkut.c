@@ -1,5 +1,5 @@
 // gtkut.c    modified Gtk+ functions
-//                              Mar 2019  Akito Tajitsu
+//                              Mar 2019  Kurumi Chimari
 
 #include "main.h"
 
@@ -132,9 +132,9 @@ void gtkut_table_attach_defaults(GtkWidget *table,
 
 #ifdef USE_GTK3
 GtkWidget* gtkut_image_menu_item_new_with_label(GtkWidget *icon,
-						const gchar *txt){
+						gchar *txt){
   GtkWidget *box = gtk_box_new (GTK_ORIENTATION_HORIZONTAL, 6);
-  GtkWidget *label = gtk_label_new (txt);
+  GtkWidget *label = gtkut_label_new (txt);
   GtkWidget *menu_item = gtk_menu_item_new ();
 
   gtk_container_add (GTK_CONTAINER (box), icon);
@@ -199,7 +199,7 @@ GtkWidget* gtkut_button_new_from_stock(gchar *txt,
   gtk_widget_show(image);
   
   if(txt){
-    label=gtk_label_new (txt);
+    label=gtkut_label_new (txt);
     gtk_box_pack_start(GTK_BOX(box),label, FALSE,FALSE,2);
     gtk_widget_show(label);
   }
@@ -263,7 +263,7 @@ GtkWidget* gtkut_toggle_button_new_from_stock(gchar *txt,
   gtk_widget_show(image);
 
   if(txt){
-    label=gtk_label_new (txt);
+    label=gtkut_label_new (txt);
     gtk_box_pack_start(GTK_BOX(box),label, FALSE,FALSE,2);
     gtk_widget_show(label);
   }
@@ -309,7 +309,7 @@ GtkWidget* gtkut_button_new_from_pixbuf(gchar *txt,
   g_object_unref(pixbuf2);
 
   if(txt){
-    label=gtk_label_new (txt);
+    label=gtkut_label_new (txt);
     gtk_box_pack_start(GTK_BOX(box),label, FALSE,FALSE,2);
     gtk_widget_show(label);
   }
@@ -357,7 +357,7 @@ GtkWidget* gtkut_toggle_button_new_from_pixbuf(gchar *txt,
   g_object_unref(pixbuf2);
 
   if(txt){
-    label=gtk_label_new (txt);
+    label=gtkut_label_new (txt);
     gtk_box_pack_start(GTK_BOX(box),label, FALSE,FALSE,2);
     gtk_widget_show(label);
   }
@@ -427,7 +427,7 @@ void gtkut_pos(GtkWidget *w, gint hpos, gint vpos){
 
 GtkWidget * gtkut_menu_item_new_with_icon(const gchar *stock_or_icon_name,
 					  GtkIconSize size,
-					  const gchar *txt)
+					  gchar *txt)
 {
   GtkWidget *image, *menu_item;
 #ifdef USE_GTK3
@@ -540,7 +540,7 @@ GtkWidget * gtkut_dialog_add_button(GtkDialog *dialog,
 #ifdef USE_GTK3
   button=gtkut_button_new_from_icon_name(txt, stock_or_icon_name);
 #else
-  button=gtkut_button_new_from_stock(txt, srock_or_icon_name);
+  button=gtkut_button_new_from_stock(txt, stock_or_icon_name);
 #endif
   gtk_dialog_add_action_widget(dialog, button, response_id);
 

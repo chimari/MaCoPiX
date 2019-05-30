@@ -4102,7 +4102,7 @@ void create_dl_smenu_dialog(typMascot *mascot, gboolean flag_popup){
     gtk_scrolled_window_add_with_viewport(GTK_SCROLLED_WINDOW (scrwin), table);
 #endif
     
-    label=gtk_label_new(_("File"));
+    label=gtkut_label_new(_("File"));
 #ifdef USE_GTK3
     gtk_widget_set_halign (label, GTK_ALIGN_CENTER);
     gtk_widget_set_valign (label, GTK_ALIGN_CENTER);
@@ -4112,7 +4112,7 @@ void create_dl_smenu_dialog(typMascot *mascot, gboolean flag_popup){
     gtkut_table_attach(table, label, 0, 1, 0, 1,
 		       GTK_SHRINK,GTK_SHRINK,0,0);
 
-    label=gtk_label_new(_("Name (E)"));
+    label=gtkut_label_new(_("Name (E)"));
 #ifdef USE_GTK3
     gtk_widget_set_halign (label, GTK_ALIGN_CENTER);
     gtk_widget_set_valign (label, GTK_ALIGN_CENTER);
@@ -4123,7 +4123,7 @@ void create_dl_smenu_dialog(typMascot *mascot, gboolean flag_popup){
 		       GTK_SHRINK,GTK_SHRINK,0,0);
 
     tmp=g_strdup_printf(_("Name (%s)"), menu_code);
-    label=gtk_label_new(tmp);
+    label=gtkut_label_new(tmp);
 #ifdef USE_GTK3
     gtk_widget_set_halign (label, GTK_ALIGN_CENTER);
     gtk_widget_set_valign (label, GTK_ALIGN_CENTER);
@@ -4134,7 +4134,7 @@ void create_dl_smenu_dialog(typMascot *mascot, gboolean flag_popup){
 		       GTK_SHRINK,GTK_SHRINK,0,0);
     g_free(tmp);
 
-    label=gtk_label_new(_("Registered"));
+    label=gtkut_label_new(_("Registered"));
 #ifdef USE_GTK3
     gtk_widget_set_halign (label, GTK_ALIGN_CENTER);
     gtk_widget_set_valign (label, GTK_ALIGN_CENTER);
@@ -4144,7 +4144,7 @@ void create_dl_smenu_dialog(typMascot *mascot, gboolean flag_popup){
     gtkut_table_attach(table, label, 3, 4, 0, 1,
 		       GTK_SHRINK,GTK_SHRINK,0,0);
 
-    label=gtk_label_new(_("Ver."));
+    label=gtkut_label_new(_("Ver."));
 #ifdef USE_GTK3
     gtk_widget_set_halign (label, GTK_ALIGN_CENTER);
     gtk_widget_set_valign (label, GTK_ALIGN_CENTER);
@@ -4154,7 +4154,7 @@ void create_dl_smenu_dialog(typMascot *mascot, gboolean flag_popup){
     gtkut_table_attach(table, label, 4, 5, 0, 1,
 		       GTK_SHRINK,GTK_SHRINK,0,0);
 
-    label=gtk_label_new(_("Date"));
+    label=gtkut_label_new(_("Date"));
 #ifdef USE_GTK3
     gtk_widget_set_halign (label, GTK_ALIGN_CENTER);
     gtk_widget_set_valign (label, GTK_ALIGN_CENTER);
@@ -4164,7 +4164,7 @@ void create_dl_smenu_dialog(typMascot *mascot, gboolean flag_popup){
     gtkut_table_attach(table, label, 5, 6, 0, 1,
 		       GTK_SHRINK,GTK_SHRINK,0,0);
 
-    label=gtk_label_new(_("Code"));
+    label=gtkut_label_new(_("Code"));
 #ifdef USE_GTK3
     gtk_widget_set_halign (label, GTK_ALIGN_CENTER);
     gtk_widget_set_valign (label, GTK_ALIGN_CENTER);
@@ -4219,12 +4219,12 @@ void create_dl_smenu_dialog(typMascot *mascot, gboolean flag_popup){
       my_signal_connect (rb[i_list], "toggled", cc_radio, &i_selected);
       gtk_widget_show_all(rb[i_list]);
     
-      label=gtk_label_new(ename);
+      label=gtkut_label_new(ename);
       gtkut_pos(label, POS_START, POS_CENTER);
       gtkut_table_attach(table, label, 1, 2, i_list+1, i_list+2,
 			 GTK_EXPAND|GTK_FILL,GTK_SHRINK,0,0);
 
-      label=gtk_label_new(lname);
+      label=gtkut_label_new(lname);
       gtkut_pos(label, POS_START, POS_CENTER);
       gtkut_table_attach(table, label, 2, 3, i_list+1, i_list+2,
 			 GTK_EXPAND|GTK_FILL,GTK_SHRINK,0,0);
@@ -4235,7 +4235,7 @@ void create_dl_smenu_dialog(typMascot *mascot, gboolean flag_popup){
       else{
 	tmp=g_strdup(_("<i>unkown</i>"));
       }
-      label=gtk_label_new(_(tmp));
+      label=gtkut_label_new(_(tmp));
       gtkut_pos(label, POS_CENTER, POS_CENTER);
       gtkut_table_attach(table, label, 3, 4, i_list+1, i_list+2,
 			 GTK_SHRINK,GTK_SHRINK,0,0);

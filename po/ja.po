@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: macopix 1.6.2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-05-28 14:46-1000\n"
+"POT-Creation-Date: 2019-05-29 20:24-1000\n"
 "PO-Revision-Date: 2008-05-23 19:29-1000\n"
 "Last-Translator: Kurumi Chimari <chimari@rosegray.sakura.ne.jp>\n"
 "Language-Team: Japansese <chimari@rosegray.sakura.ne.jp>\n"
@@ -102,8 +102,8 @@ msgstr "了承"
 #: src/dnd.c:198 src/gui.c:2170 src/gui.c:2495 src/gui.c:2669 src/gui.c:4250
 #: src/gui.c:4312 src/gui.c:4377 src/gui.c:4474 src/gui.c:5157 src/gui.c:5274
 #: src/gui.c:5364 src/gui.c:5530 src/gui.c:5780 src/gui.c:5905 src/gui.c:11202
-#: src/gui.c:11425 src/gui.c:12064 src/gui.c:12180 src/http-client.c:995
-#: src/http-client.c:997 src/http-client.c:1112 src/http-client.c:1114
+#: src/gui.c:11425 src/gui.c:12064 src/gui.c:12180 src/http-client.c:998
+#: src/http-client.c:1000 src/http-client.c:1115 src/http-client.c:1117
 #: src/main.c:4285 src/main.c:4287 src/sslmanager.c:167
 msgid "Cancel"
 msgstr "嫌です"
@@ -1733,7 +1733,7 @@ msgstr ""
 "す."
 
 #: src/gui.c:11330
-msgid "Download & install MaCoPiX official mascots."
+msgid "Download &amp; install MaCoPiX official mascots."
 msgstr "MaCoPiX公式サイトからマスコットをダウンロード"
 
 #: src/gui.c:11345
@@ -1871,65 +1871,65 @@ msgid "Mascot File <span size=\"smaller\">(Double-Click to change)</span>"
 msgstr ""
 "マスコットファイル <span size=\"smaller\">(ダブルクリックで変更)</span>"
 
-#: src/http-client.c:842
+#: src/http-client.c:845
 #, c-format
 msgid "%d%% Downloaded (%.2lf / %.2lf MB)"
 msgstr "%d%% ダウンロードしました. (%.2lf / %.2lf MB)"
 
-#: src/http-client.c:848
+#: src/http-client.c:851
 #, c-format
 msgid "%d%% Downloaded (%ld / %ld kB)"
 msgstr "%d%% ダウンロードしました. (%ld / %ld kB)"
 
-#: src/http-client.c:854
+#: src/http-client.c:857
 #, c-format
 msgid "%d%% Downloaded (%ld / %ld bytes)"
 msgstr "%d%% ダウンロードしました. (%ld / %ld バイト)"
 
-#: src/http-client.c:863
+#: src/http-client.c:866
 #, c-format
 msgid "Downloaded %.2lf MB"
 msgstr "ダウンロード中 %.2lf MB"
 
-#: src/http-client.c:867
+#: src/http-client.c:870
 #, c-format
 msgid "Downloaded %ld kB"
 msgstr "ダウンロード中 %ld kB"
 
-#: src/http-client.c:870
+#: src/http-client.c:873
 #, c-format
 msgid "Downloaded %ld bytes"
 msgstr "ダウンロード中 %ld バイト"
 
-#: src/http-client.c:873
+#: src/http-client.c:876
 msgid "Waiting for HTTP server response ..."
 msgstr "HTTPサーバーからのレスポンスを待機しています..."
 
-#: src/http-client.c:945
+#: src/http-client.c:948
 msgid "MaCoPiX : Downloading Official Mascot List"
 msgstr "MaCoPiX : 公式マスコットリストのダウンロード"
 
-#: src/http-client.c:948
+#: src/http-client.c:951
 msgid "Downloading the latest version of the official mascot list ..."
 msgstr "MaCoPiX公式サイトから最新マスコットリストをダウンロードしています..."
 
-#: src/http-client.c:984
+#: src/http-client.c:987
 msgid "Checking the latest version of the official mascot list ..."
 msgstr "最新の公式マスコットリストをチェックしています..."
 
-#: src/http-client.c:1043 src/main.c:4348
+#: src/http-client.c:1046 src/main.c:4348
 msgid "Error : Failed to download the mascot archive file (tar.gz)."
 msgstr "エラー : マスコットアーカイブ(tar.gz)のダウンロードに失敗しました."
 
-#: src/http-client.c:1067
+#: src/http-client.c:1070
 msgid "MaCoPiX : Downloading Official Mascot tar.gz file"
 msgstr "MaCoPiX : 公式マスコットのtar.gzアーカイブをダウンロード"
 
-#: src/http-client.c:1070
+#: src/http-client.c:1073
 msgid "Downloading an official mascot ..."
 msgstr "公式マスコットをダウンロードしています..."
 
-#: src/http-client.c:1101
+#: src/http-client.c:1104
 msgid "Downloading ..."
 msgstr "ダウンロードしています..."
 

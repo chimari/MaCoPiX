@@ -461,6 +461,7 @@ EXTRA_DIST = \
         macopix.ico\
 	def_biff.xpm\
 	def_biff_r.xpm\
+	tar64.dll\
 	tar32.dll
 
 BUILT_SOURCES = resources.c resources.h
