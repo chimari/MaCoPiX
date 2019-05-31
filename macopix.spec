@@ -1,9 +1,9 @@
-Summary: Subaru HDS++ OPE file Editor
+Summary: MaCoPiX = Mascot Constructive Pilot for X
 Name: macopix
 Version: 3.0.0
 Release: 1%{?_dist_release}
 License: GPL3
-Group: Applications/Engineering
+Group: Amusements/Games
 Packager: Kurumi Chimari <chimari@rosegray.sakura.ne.jp>
 URL: http://rosegray.sakura.ne.jp/MaCoPiX/
 Source: %{name}-%{version}.tar.gz

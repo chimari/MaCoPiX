@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-05-29 20:24-1000\n"
+"POT-Creation-Date: 2019-05-30 15:38-1000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -31,36 +31,36 @@ msgstr ""
 msgid "POP3 access error"
 msgstr ""
 
-#: src/callbacks.c:2054
+#: src/callbacks.c:2100
 #, c-format
 msgid "%d/%d/%d(%s)"
 msgstr ""
 
-#: src/callbacks.c:2214
+#: src/callbacks.c:2260
 msgid "Sun"
 msgstr ""
 
-#: src/callbacks.c:2217
+#: src/callbacks.c:2263
 msgid "Mon"
 msgstr ""
 
-#: src/callbacks.c:2220
+#: src/callbacks.c:2266
 msgid "Tue"
 msgstr ""
 
-#: src/callbacks.c:2223
+#: src/callbacks.c:2269
 msgid "Wed"
 msgstr ""
 
-#: src/callbacks.c:2226
+#: src/callbacks.c:2272
 msgid "Thu"
 msgstr ""
 
-#: src/callbacks.c:2229
+#: src/callbacks.c:2275
 msgid "Fri"
 msgstr ""
 
-#: src/callbacks.c:2232
+#: src/callbacks.c:2278
 msgid "Sat"
 msgstr ""
 
@@ -102,7 +102,7 @@ msgstr ""
 #: src/gui.c:5364 src/gui.c:5530 src/gui.c:5780 src/gui.c:5905 src/gui.c:11202
 #: src/gui.c:11425 src/gui.c:12064 src/gui.c:12180 src/http-client.c:998
 #: src/http-client.c:1000 src/http-client.c:1115 src/http-client.c:1117
-#: src/main.c:4285 src/main.c:4287 src/sslmanager.c:167
+#: src/main.c:4306 src/main.c:4308 src/sslmanager.c:167
 msgid "Cancel"
 msgstr ""
 
@@ -1156,7 +1156,7 @@ msgid "Auto Mascot Install to User Dir."
 msgstr ""
 
 #: src/gui.c:8093
-msgid "User & Common Dir Consistency Check"
+msgid "User &amp; Common Dir Consistency Check"
 msgstr ""
 
 #: src/gui.c:8105
@@ -1441,7 +1441,7 @@ msgstr ""
 msgid "Name"
 msgstr ""
 
-#: src/gui.c:9684 src/gui.c:11689 src/main.c:4105
+#: src/gui.c:9684 src/gui.c:11689 src/main.c:4126
 msgid "File"
 msgstr ""
 
@@ -1895,7 +1895,7 @@ msgstr ""
 msgid "Checking the latest version of the official mascot list ..."
 msgstr ""
 
-#: src/http-client.c:1046 src/main.c:4348
+#: src/http-client.c:1046 src/main.c:4369
 msgid "Error : Failed to download the mascot archive file (tar.gz)."
 msgstr ""
 
@@ -2020,8 +2020,8 @@ msgstr ""
 msgid " Cannot read the Menu File correctly!!"
 msgstr ""
 
-#: src/main.c:663 src/main.c:910 src/main.c:979 src/main.c:2183 src/main.c:2481
-#: src/main.c:2600 src/main.c:2629 src/main.c:3498 src/sockmsg.c:409
+#: src/main.c:663 src/main.c:910 src/main.c:979 src/main.c:2204 src/main.c:2502
+#: src/main.c:2621 src/main.c:2650 src/main.c:3519 src/sockmsg.c:409
 #: src/sockmsg.c:421
 msgid "(Invalid Character Code)"
 msgstr ""
@@ -2082,226 +2082,226 @@ msgstr ""
 msgid "Creating User-SoundDir %s .\n"
 msgstr ""
 
-#: src/main.c:2076 src/main.c:2834 src/main.c:3059
+#: src/main.c:2097 src/main.c:2855 src/main.c:3080
 msgid "Cannot Find Mascot File."
 msgstr ""
 
-#: src/main.c:2953 src/main.c:3241
+#: src/main.c:2974 src/main.c:3262
 msgid "Cannot Find Image."
 msgstr ""
 
-#: src/main.c:3397
+#: src/main.c:3418
 msgid "Cannot Find Sound File."
 msgstr ""
 
-#: src/main.c:3459
+#: src/main.c:3480
 #, c-format
 msgid "Cannot find resource file %s.\n"
 msgstr ""
 
-#: src/main.c:3460
+#: src/main.c:3481
 msgid "Loading default resource file...\n"
 msgstr ""
 
-#: src/main.c:4058
+#: src/main.c:4079
 msgid "MaCoPiX : Download & Install Mascot"
 msgstr ""
 
-#: src/main.c:4063
+#: src/main.c:4084
 msgid ""
 "Select a mascot file to download &amp; install into your <i>User directory</"
 "i>."
 msgstr ""
 
-#: src/main.c:4079
+#: src/main.c:4100
 msgid ""
 "<span color=\"#FF0000\"><b>Please note that all existing files will be "
 "overwritten.</b></span>"
 msgstr ""
 
-#: src/main.c:4115
+#: src/main.c:4136
 msgid "Name (E)"
 msgstr ""
 
-#: src/main.c:4125
+#: src/main.c:4146
 #, c-format
 msgid "Name (%s)"
 msgstr ""
 
-#: src/main.c:4137
+#: src/main.c:4158
 msgid "Registered"
 msgstr ""
 
-#: src/main.c:4147
+#: src/main.c:4168
 msgid "Ver."
 msgstr ""
 
-#: src/main.c:4157
+#: src/main.c:4178
 msgid "Date"
 msgstr ""
 
-#: src/main.c:4167
+#: src/main.c:4188
 msgid "Code"
 msgstr ""
 
-#: src/main.c:4191 src/main.c:4194
+#: src/main.c:4212 src/main.c:4215
 msgid "(<i>Invalid Character Code</i>)"
 msgstr ""
 
-#: src/main.c:4233
+#: src/main.c:4254
 #, c-format
 msgid "%d mascot"
 msgstr ""
 
-#: src/main.c:4236
+#: src/main.c:4257
 msgid "<i>unkown</i>"
 msgstr ""
 
-#: src/main.c:4278 src/main.c:4280
+#: src/main.c:4299 src/main.c:4301
 msgid "Download / Install"
 msgstr ""
 
-#: src/main.c:4371
+#: src/main.c:4392
 msgid "Error : Cannot read the downloaded mascot list."
 msgstr ""
 
-#: src/main.c:4632 src/main.c:4665 src/main.c:4772
+#: src/main.c:4653 src/main.c:4686 src/main.c:4793
 #, c-format
 msgid "Option \"%s\" is not found. Ignoring...\n"
 msgstr ""
 
-#: src/main.c:4824
+#: src/main.c:4845
 #, c-format
 msgid "macopix COMMON DIR:%s\n"
 msgstr ""
 
-#: src/main.c:4835
+#: src/main.c:4856
 msgid " macopix : Mascot Constructive Pilot for X   Ver"
 msgstr ""
 
-#: src/main.c:4836
+#: src/main.c:4857
 #, c-format
 msgid "  [usage] %% macopix [options] (mascot file)\n"
 msgstr ""
 
-#: src/main.c:4837
+#: src/main.c:4858
 msgid "     -h, --help               : Print this message\n"
 msgstr ""
 
-#: src/main.c:4839
+#: src/main.c:4860
 msgid "     -c, --common-dir         : Print COMMON Directory\n"
 msgstr ""
 
-#: src/main.c:4842
+#: src/main.c:4863
 msgid "     -b, --biff               : Turn on the biff function\n"
 msgstr ""
 
-#: src/main.c:4844
+#: src/main.c:4865
 msgid "     -s, --signal             : Turn on the time signal\n"
 msgstr ""
 
-#: src/main.c:4845
+#: src/main.c:4866
 #, c-format
 msgid "     -o, --offset offset[%%]   : Set offset-value for Focus Following\n"
 msgstr ""
 
-#: src/main.c:4846
+#: src/main.c:4867
 msgid "     -r, --rcfile rc-file     : Set the resource file\n"
 msgstr ""
 
-#: src/main.c:4847
+#: src/main.c:4868
 msgid "     -m, --menu   menu-file   : Set the file for quick menu\n"
 msgstr ""
 
-#: src/main.c:4848
+#: src/main.c:4869
 msgid ""
 "     -mg --mag    magnify     : Set magnification percentage of mascot\n"
 msgstr ""
 
-#: src/main.c:4849
+#: src/main.c:4870
 msgid ""
 "     -i, --ip-style (0|1|2|3) : Set interpolation style for magnification\n"
 msgstr ""
 
-#: src/main.c:4850
+#: src/main.c:4871
 msgid "## For Installation\n"
 msgstr ""
 
-#: src/main.c:4851
+#: src/main.c:4872
 msgid "     -a, --auto-install       : Set mascot auto install ON\n"
 msgstr ""
 
-#: src/main.c:4852
+#: src/main.c:4873
 msgid "     -na --no-auto-install    : Set mascot auto install OFF\n"
 msgstr ""
 
-#: src/main.c:4853
+#: src/main.c:4874
 msgid "     -O, --over-write         : Permit to overwrite files in user dir\n"
 msgstr ""
 
-#: src/main.c:4854
+#: src/main.c:4875
 msgid ""
 "     --install-user-mascot (mascot)  : Mascot Installation to User Dir.\n"
 msgstr ""
 
-#: src/main.c:4855
+#: src/main.c:4876
 msgid "     --install-user-menu (menu)      : Menu Installation to User Dir.\n"
 msgstr ""
 
-#: src/main.c:4857
+#: src/main.c:4878
 msgid ""
 "     --install-common-mascot (mascot): Mascot Installation to Common Dir.\n"
 msgstr ""
 
-#: src/main.c:4858
+#: src/main.c:4879
 msgid ""
 "     --install-common-menu (menu)    : Menu Installation to Common Dir.\n"
 msgstr ""
 
-#: src/main.c:4861
+#: src/main.c:4882
 msgid "## For Socket Message\n"
 msgstr ""
 
-#: src/main.c:4862
+#: src/main.c:4883
 msgid ""
 "     --sockmsg                : Start MaCoPiX as Socket Message Receiver\n"
 msgstr ""
 
-#: src/main.c:4863
+#: src/main.c:4884
 msgid ""
 "     --message (text)         : Send Message to Socket Message Receiver\n"
 msgstr ""
 
-#: src/main.c:4864
+#: src/main.c:4885
 msgid "     --message-expire (time)  : Socket Message Expire Time[ms]\n"
 msgstr ""
 
-#: src/main.c:4865
+#: src/main.c:4886
 msgid "     --message-type-lump      : Force to Set Lump Sum Balloon\n"
 msgstr ""
 
-#: src/main.c:4866
+#: src/main.c:4887
 msgid "     --message-type-step      : Force to Set Stepping Balloon\n"
 msgstr ""
 
-#: src/main.c:4867
+#: src/main.c:4888
 msgid "     --message-step (frame)   : Stepping Interval Frame for SockeMsg\n"
 msgstr ""
 
-#: src/main.c:4868
+#: src/main.c:4889
 msgid "     -nc, --no-duet-click     : Duet Animation [Click] OFF\n"
 msgstr ""
 
-#: src/main.c:4869
+#: src/main.c:4890
 msgid "     -nr, --no-duet-random    : Duet Animation [Random] OFF\n"
 msgstr ""
 
-#: src/main.c:4964
+#: src/main.c:4985
 #, c-format
 msgid "%8d%2d%4dMacopix already running in SockMsg Mode"
 msgstr ""
 
-#: src/main.c:4976
+#: src/main.c:4997
 msgid "Macopix not running in SockMsg Mode\n"
 msgstr ""
 
