@@ -842,12 +842,13 @@ void LoadPixmaps(typMascot *mascot){
   mascot->width=w;
   mascot->height=h;
 
-  gtk_window_resize (GTK_WINDOW(mascot->win_main), w, h);
   gtk_widget_set_size_request (mascot->dw_main, w, h);
+  gtk_window_resize (GTK_WINDOW(mascot->win_main), w, h);
+
+  gdkut_flush(mascot->win_main);
 
   DrawMascot0(mascot);
   dw_init_main(mascot->dw_main, "configure_event",(gpointer)mascot);
-
 
 #ifdef FG_DRAW
   if((mascot->sdw_flag)&&(mascot->sdw_height>0)){
@@ -953,8 +954,8 @@ void LoadPixmaps(typMascot *mascot){
 #endif
   mascot->fontname_clk=pango_font_description_to_string(mascot->fontclk);
   mascot->fontname_bal=pango_font_description_to_string(mascot->fontbal);
-
   
+
   mascot->nPixmap = i;
   mascot->drag=FALSE;
   if(!mascot->digit)  strcpy(mascot->digit,"00:00:00");
@@ -981,13 +982,13 @@ void LoadPixmaps(typMascot *mascot){
     mascot->sprites[i].mask=NULL;
 #endif
   }
-  
-  while (my_main_iteration(FALSE));
+
+  // Removed for bad_drawable error in Gtk+2
+  //while (my_main_iteration(FALSE));
   
 #ifdef USE_GTK_STATUS_ICON
   trayicon_set_tooltip(mascot);
 #endif
-
 }
 
 

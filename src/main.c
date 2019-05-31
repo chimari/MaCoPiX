@@ -1220,6 +1220,9 @@ void ReadRC(typMascot *mascot, gboolean def_flag)
     mascot->def_colclk->blue =my_mascot_read_color(cfgfile, field_tmp, "text_b", init_colclk.blue);
     if(!xmms_cfg_read_int(cfgfile, field_tmp, "text_p", &col_tmp))
       col_tmp=DEF_ALPHA_OTHER;
+    if(col_tmp>100){
+      col_tmp=(gint)((gdouble)col_tmp*100.0/(gdouble)0xFFFF);
+    }
     mascot->def_alpclk=col_tmp;
 #ifdef  USE_GTK3
     mascot->def_colclk->alpha=(gdouble)mascot->def_alpclk/100.0;
@@ -1230,6 +1233,9 @@ void ReadRC(typMascot *mascot, gboolean def_flag)
     mascot->def_colclksd->blue =my_mascot_read_color(cfgfile, field_tmp, "shadow_b", init_colclksd.blue);
     if(!xmms_cfg_read_int(cfgfile, field_tmp, "shadow_p", &col_tmp))
       col_tmp=DEF_ALPHA_SDW;
+    if(col_tmp>100){
+      col_tmp=(gint)((gdouble)col_tmp*100.0/(gdouble)0xFFFF);
+    }
     mascot->def_alpclksd=col_tmp;
 #ifdef  USE_GTK3
     mascot->def_colclksd->alpha=(gdouble)mascot->def_alpclksd/100.0;
@@ -1240,6 +1246,9 @@ void ReadRC(typMascot *mascot, gboolean def_flag)
     mascot->def_colclkbg->blue =my_mascot_read_color(cfgfile, field_tmp, "bg_b", init_colclkbg.blue);
     if(!xmms_cfg_read_int(cfgfile, field_tmp, "bg_p", &col_tmp))
       col_tmp=DEF_ALPHA_CLK;
+    if(col_tmp>100){
+      col_tmp=(gint)((gdouble)col_tmp*100.0/(gdouble)0xFFFF);
+    }
     mascot->def_alpclkbg=col_tmp;
 #ifdef  USE_GTK3
     mascot->def_colclkbg->alpha=(gdouble)mascot->def_alpclkbg/100.0;
@@ -1251,6 +1260,9 @@ void ReadRC(typMascot *mascot, gboolean def_flag)
     mascot->def_colclkbd->blue =my_mascot_read_color(cfgfile, field_tmp, "border_b", init_colclkbd.blue);
     if(!xmms_cfg_read_int(cfgfile, field_tmp, "border_p", &col_tmp))
       col_tmp=DEF_ALPHA_OTHER;
+    if(col_tmp>100){
+      col_tmp=(gint)((gdouble)col_tmp*100.0/(gdouble)0xFFFF);
+    }
     mascot->def_alpclkbd=col_tmp;
 #ifdef  USE_GTK3
     mascot->def_colclkbd->alpha=(gdouble)mascot->def_alpclkbd/100.0;
@@ -1266,6 +1278,9 @@ void ReadRC(typMascot *mascot, gboolean def_flag)
     mascot->def_colbal->blue =my_mascot_read_color(cfgfile, field_tmp, "text_b", init_colbal.blue);
     if(!xmms_cfg_read_int(cfgfile, field_tmp, "text_p", &col_tmp))
       col_tmp=DEF_ALPHA_OTHER;
+    if(col_tmp>100){
+      col_tmp=(gint)((gdouble)col_tmp*100.0/(gdouble)0xFFFF);
+    }
     mascot->def_alpbal=col_tmp;
 #ifdef  USE_GTK3
     mascot->def_colbal->alpha=(gdouble)mascot->def_alpbal/100.0;
@@ -1276,6 +1291,9 @@ void ReadRC(typMascot *mascot, gboolean def_flag)
     mascot->def_colbalbg->blue =my_mascot_read_color(cfgfile, field_tmp, "bg_b", init_colbalbg.blue);
     if(!xmms_cfg_read_int(cfgfile, field_tmp, "bg_p", &col_tmp))
       col_tmp=DEF_ALPHA_BAL;
+    if(col_tmp>100){
+      col_tmp=(gint)((gdouble)col_tmp*100.0/(gdouble)0xFFFF);
+    }
     mascot->def_alpbalbg=col_tmp;
 #ifdef  USE_GTK3
     mascot->def_colbalbg->alpha=(gdouble)mascot->def_alpbalbg/100.0;
@@ -1286,6 +1304,9 @@ void ReadRC(typMascot *mascot, gboolean def_flag)
     mascot->def_colbalbd->blue =my_mascot_read_color(cfgfile, field_tmp, "border_b", init_colbalbd.blue);
     if(!xmms_cfg_read_int(cfgfile, field_tmp, "border_p", &col_tmp))
       col_tmp=DEF_ALPHA_OTHER;
+    if(col_tmp>100){
+      col_tmp=(gint)((gdouble)col_tmp*100.0/(gdouble)0xFFFF);
+    }
     mascot->def_alpbalbd=col_tmp;
 #ifdef  USE_GTK3
     mascot->def_colbalbd->alpha=(gdouble)mascot->def_alpbalbd/100.0;

@@ -953,6 +953,27 @@ void drag_end(GtkWidget * widget, GdkEventButton * event, gpointer gdata)
 
   mascot=(typMascot *)gdata; 
 
+#ifndef USE_GTK3  // for GTK2 buf?
+  {
+    gint main_w, main_h, dw_w, dw_h;
+    GtkAllocation *allocation;
+    GtkStyle *style;
+
+    allocation=g_new(GtkAllocation, 1);
+    style=gtk_widget_get_style(mascot->dw_main);
+    gtk_widget_get_allocation(mascot->dw_main,allocation);
+    dw_w=allocation->width;
+    dw_h=allocation->height;
+    g_free(allocation);
+
+    
+    if((mascot->width!=dw_w)||(mascot->height!=dw_h)){
+      gtk_widget_set_size_request (mascot->dw_main, mascot->width, mascot->height);
+      gtk_window_resize (GTK_WINDOW(mascot->win_main), mascot->width, mascot->height);
+    }
+  }
+#endif
+
   raise_all(mascot);
   
   if (mascot->drag){
@@ -1186,8 +1207,33 @@ gint dw_configure_main(GtkWidget *widget, GdkEventConfigure *event,
   printf("Configure: \n");
 #endif
 
-  DrawMascot(mascot, mascot->frame_pix[mascot->anime_ptn][mascot->anime_frm]);
-  
+#ifndef USE_GTK3  // for GTK2 buf?
+  {
+    gint main_w, main_h, dw_w, dw_h;
+    GtkAllocation *allocation;
+    GtkStyle *style;
+
+    allocation=g_new(GtkAllocation, 1);
+    style=gtk_widget_get_style(mascot->dw_main);
+    gtk_widget_get_allocation(mascot->dw_main,allocation);
+    dw_w=allocation->width;
+    dw_h=allocation->height;
+    g_free(allocation);
+
+    
+    if((mascot->width!=dw_w)||(mascot->height!=dw_h)){
+      gtk_widget_set_size_request (mascot->dw_main, mascot->width, mascot->height);
+      gtk_window_resize (GTK_WINDOW(mascot->win_main), mascot->width, mascot->height);
+#ifdef DEBUG
+      printf("### Resize!\n");
+#endif
+    }
+  }
+#endif
+
+  //DrawMascot(mascot, mascot->frame_pix[mascot->anime_ptn][mascot->anime_frm]);
+  DrawMascot(mascot, mascot->frame_pix[0][0]);
+
 #ifdef DEBUG
   printf("End of Configure: \n");
 #endif
