@@ -1015,7 +1015,7 @@ void dl_mascot_list(typMascot *mascot,  gboolean flag_popup){
   sigemptyset(&act.sa_mask);
   act.sa_flags=0;
   if(sigaction(SIGHTTPDL, &act, NULL)==-1){
-    fprintf(stderr,"Error in sigaction (SIGHSKYMON1).\n");
+    fprintf(stderr,"Error in sigaction (SIGHTTODL).\n");
   }
 #endif
   
@@ -1132,7 +1132,7 @@ void dl_mascot_tgz(typMascot *mascot){
   sigemptyset(&act.sa_mask);
   act.sa_flags=0;
   if(sigaction(SIGHTTPDL, &act, NULL)==-1){
-    fprintf(stderr,"Error in sigaction (SIGHSKYMON1).\n");
+    fprintf(stderr,"Error in sigaction (SIGHTTPDL).\n");
   }
 #endif
   

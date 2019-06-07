@@ -1,16 +1,16 @@
 #################################################################
        UNIX/MS Windows用  デスクトップマスコット プログラム      
        macopix : Mascot Constructive Pilot for X                 
-                                                    ver 3.0.0    
+                                                    ver 3.0.1    
                  Windows(バイナリ配布)版 簡易ドキュメント        
                                                                  
-                            2019.05.28  Kurumi Chimari           
+                            2019.06.06  Kurumi Chimari           
                             chimari@rosegray.sakura.ne.jp        
                             http://rosegray.sakura.ne.jp/        
 #################################################################
 
 -------------------------------------------------------------------------------
-［   名称   ］MaCoPiX_3.0.0_win
+［   名称   ］MaCoPiX_3.0.1_Win
 ［  開発者  ］くるみちまり
 ［  公開先  ］http://rosegray.sakura.ne.jp/
 ［  連絡先  ］chimari@rosegray.sakura.ne.jp

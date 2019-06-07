@@ -160,6 +160,10 @@
 // Homepage URL
 #define DEFAULT_URL "http://rosegray.sakura.ne.jp/"
 
+#ifndef USE_WIN32
+#define DEF_OPEN_URL "xdg-open %s"
+#endif
+
 #define HTTP_MASCOT_HOST "rosegray.sakura.ne.jp"
 #define HTTP_MASCOT_PATH  "/macopix/"
 #define HTTP_MASCOT_FILE "macopix_mascot_list.ini"
@@ -1018,6 +1022,7 @@ struct _typMascot{
   gint menu_total;
   gchar *sound_command;
 #ifndef USE_WIN32
+  gchar *url_command;
   gchar *tar_command;
 #endif
   gchar *click_sound[MAX_ANIME_PATTERN];

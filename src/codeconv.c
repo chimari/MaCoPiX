@@ -1629,6 +1629,8 @@ void conv_unmime_header_overwrite(gchar *str)
 	CharSet cur_charset;
 	const gchar *locale;
 
+	pop_debug_print("UnMIME in\n");
+
 	cur_charset = conv_get_current_charset();
 
 #warning FIXME_GTK2
@@ -1647,6 +1649,7 @@ void conv_unmime_header_overwrite(gchar *str)
 		unmime_header(buf, str);
 		strncpy2(str, buf, buflen);
 	}
+	pop_debug_print("UnMIME out\n");
 }
 
 void conv_unmime_header(gchar *outbuf, gint outlen, const gchar *str)

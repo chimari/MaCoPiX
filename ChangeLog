@@ -1,3 +1,7 @@
+2019.6.06   ver3.0.1  - Fixing Buffer overflows on getting From/Subject list
+	                in the Biff function.
+                      - Moved TreeViews in Gtk+2 from viewport to container.
+
 2019.5.28   ver3.0.0  - Support Gtk+3 (default: 3.22 or later).
 	                Gtk+2 can be chosen with "--with-gtk2" option in
 	                configure (2.24 or later).

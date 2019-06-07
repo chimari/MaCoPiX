@@ -190,9 +190,7 @@ static void clear_biff_sound();
 static void mc_down_tgt();
 static void mc_down_cat();
 
-#ifdef USE_WIN32
 static void uri_clicked();
-#endif
 
 void my_file_chooser_add_filter();
 void my_file_chooser_add_shortcut_folder();
@@ -695,15 +693,11 @@ static void cc_mail_ssl (GtkWidget *widget, gpointer gdata)
 
   switch(mascot->mail.ssl_mode){
   case SSL_TUNNEL:
-    if(mascot->mail.pop_port==POP3_PORT_NO){
-      gtk_adjustment_set_value(adj_pop_port, POP3_SSL_PORT_NO);
-    }
+    gtk_adjustment_set_value(adj_pop_port, POP3_SSL_PORT_NO);
     break;
   case SSL_NONE:
   case SSL_STARTTLS:
-    if(mascot->mail.pop_port==POP3_SSL_PORT_NO){
-      gtk_adjustment_set_value(adj_pop_port, POP3_PORT_NO);
-    }
+    gtk_adjustment_set_value(adj_pop_port, POP3_PORT_NO);
     break;
   }
 }
@@ -959,17 +953,24 @@ static void mc_down_cat (GtkWidget *widget, gpointer gdata)
 
 }
 
-#ifdef USE_WIN32
-static void uri_clicked(GtkButton *button, gpointer data)
+static void uri_clicked(GtkButton *button, gpointer gdata)
 {
+#ifdef USE_WIN32
   ShellExecute(NULL, 
 	       "open", 
 	       DEFAULT_URL,
 	       NULL, 
 	       NULL, 
 	       SW_SHOWNORMAL);
-}
+#else
+  typMascot *mascot=(typMascot *)gdata;
+  gchar *tmp_com;
+  
+  tmp_com=g_strdup_printf(mascot->url_command, DEFAULT_URL);
+  ext_play(tmp_com);
+  g_free(tmp_com);
 #endif
+}
 
 void my_file_chooser_add_filter (GtkWidget *dialog, 
 				 const gchar *name,
@@ -8303,7 +8304,6 @@ void create_config_dialog(GtkWidget *widget, gpointer gdata){
       gtkut_pos(label, POS_CENTER, POS_CENTER);
       gtk_box_pack_start(GTK_BOX(vbox), label,FALSE, FALSE, 0);
 
-#ifdef USE_WIN32
       hbox = gtkut_hbox_new(FALSE, 0);
       gtk_box_pack_start(GTK_BOX(vbox), hbox, FALSE, FALSE, 0);
 
@@ -8311,19 +8311,14 @@ void create_config_dialog(GtkWidget *widget, gpointer gdata){
       gtk_box_pack_start(GTK_BOX(vbox), 
 			 button, TRUE, FALSE, 0);
       gtk_button_set_relief(GTK_BUTTON(button), GTK_RELIEF_NONE);
-      my_signal_connect(button,"clicked",uri_clicked, NULL);
+      my_signal_connect(button,"clicked",uri_clicked, (gpointer)mascot);
 #ifdef USE_GTK3
       css_change_col(gtk_bin_get_child(GTK_BIN(button)),"blue");
 #else
       gtk_widget_modify_fg(gtk_bin_get_child(GTK_BIN(button)),
 			   GTK_STATE_NORMAL,&color_blue);
 #endif
-#else
-      label = gtkut_label_new (DEFAULT_URL);
-      gtkut_pos(label, POS_CENTER, POS_CENTER);
-      gtk_box_pack_start(GTK_BOX(vbox), label,FALSE, FALSE, 0);
-#endif 
-
+      
       frame = gtkut_frame_new (_("Resource File"));
       gtk_container_set_border_width (GTK_CONTAINER (frame), 5);
       gtkut_table_attach(table, frame, 0, 1, 1, 2,
@@ -8374,8 +8369,27 @@ void create_config_dialog(GtkWidget *widget, gpointer gdata){
       gtkut_table_attach(table1, entry, 1, 2, 1, 2,
 			 GTK_FILL|GTK_EXPAND,GTK_SHRINK,0,0);
 
+#ifndef USE_WIN32
+      frame = gtkut_frame_new (_("Browser Command <span size=\"smaller\">(\"%s\" will be translated to a URL.)</span>"));
+      gtk_container_set_border_width (GTK_CONTAINER (frame), 5);
+      gtkut_table_attach(table, frame, 0, 1, 3, 4,
+			 GTK_FILL,GTK_SHRINK,0,0);
+
+      table1 = gtkut_table_new(2,1,FALSE,0,0,5);
+      gtk_container_add (GTK_CONTAINER (frame), table1);
+
+      entry = gtk_entry_new ();
+      if(mascot->rcfile){
+	gtk_entry_set_text(GTK_ENTRY(entry),
+ 	                   to_utf8(mascot->url_command));
+      }
+      gtk_editable_set_editable(GTK_EDITABLE(entry), FALSE);
+      gtkut_table_attach(table1, entry, 0, 2, 0, 1,
+			 GTK_FILL|GTK_EXPAND,GTK_SHRINK,0,0);
+#endif
+      
       table1=gtkut_table_new(1,1,FALSE, 0, 0, 0);
-      gtkut_table_attach_defaults(table, table1, 0, 1, 3, 4);
+      gtkut_table_attach_defaults(table, table1, 0, 1, 4, 5);
     
       label = gtkut_label_new (_("Info."));
 
@@ -9955,11 +9969,7 @@ void make_pixmap_list(typMascot *mascot)
   //g_object_ref(pixmap_table);
   //gtk_object_sink(GTK_OBJECT(pixmap_table));
 
-#ifdef USE_GTK3
   gtk_container_add(GTK_CONTAINER(pixmap_scrwin),pixmap_table);
-#else
-  gtk_scrolled_window_add_with_viewport(GTK_SCROLLED_WINDOW (pixmap_scrwin), pixmap_table);
-#endif
   
   label = gtkut_label_new (_("No."));
   gtkut_table_attach(pixmap_table, label, 0, 1, 0, 1,
@@ -11354,7 +11364,7 @@ void create_smenu_dialog(typMascot *mascot, gboolean flag_popup)
     button = gtk_button_new_with_label(DEFAULT_URL);
     gtk_box_pack_start(GTK_BOX(hbox), button, TRUE, FALSE, 0);
     gtk_button_set_relief(GTK_BUTTON(button), GTK_RELIEF_NONE);
-    my_signal_connect(button,"clicked",uri_clicked, NULL);
+    my_signal_connect(button,"clicked",uri_clicked, (gpointer)mascot);
 #else
     label = gtkut_label_new (DEFAULT_URL);
     gtkut_pos(label, POS_CENTER, POS_CENTER);
@@ -11680,11 +11690,7 @@ void make_smenu_list(GtkWidget *scrwin, typScanMenu *smenu)
   
   smenu_table = gtkut_table_new (5, MAX_MENU_CATEGORY2+2, FALSE,7,7,5);
 
-#ifdef USE_GTK3
   gtk_container_add(GTK_CONTAINER(scrwin), smenu_table);
-#else
-  gtk_scrolled_window_add_with_viewport(GTK_SCROLLED_WINDOW (scrwin), smenu_table);
-#endif
  
   label = gtkut_label_new (_("File"));
   gtkut_table_attach(smenu_table, label, 1, 2, 0, 1,
@@ -12262,12 +12268,7 @@ void make_img_tree(typMascot *mascot){
 
   g_object_unref(items_model);
   
-#ifdef USE_GTK3
   gtk_container_add (GTK_CONTAINER (mascot->sw_imgtree), mascot->imgtree);
-#else
-  gtk_scrolled_window_add_with_viewport(GTK_SCROLLED_WINDOW (mascot->sw_imgtree),
-					mascot->imgtree);
-#endif
 
   g_signal_connect (mascot->imgtree, "cursor-changed",
 		    G_CALLBACK (focus_imgtree_item), (gpointer)mascot);
@@ -12478,12 +12479,7 @@ void make_ptn_tree(typMascot *mascot, gint i_ptn){
 
   g_object_unref(items_model);
   
-#ifdef USE_GTK3
   gtk_container_add(GTK_CONTAINER(ptn_scrwin[i_ptn]), mascot->ptntree[i_ptn]);
-#else
-  gtk_scrolled_window_add_with_viewport(GTK_SCROLLED_WINDOW (ptn_scrwin[i_ptn]),
-					mascot->ptntree[i_ptn]);
-#endif
 
   g_signal_connect (mascot->ptntree[i_ptn], "cursor-changed",
 		    G_CALLBACK (focus_ptntree_item), (gpointer)mptn[i_ptn]);
@@ -13068,12 +13064,7 @@ void make_cat_tree(typMascot *mascot, gint i_cat){
 
   g_object_unref(items_model);
   
-#ifdef USE_GTK3
   gtk_container_add(GTK_CONTAINER(cat_scrwin[i_cat]), mascot->cattree[i_cat]);
-#else
-  gtk_scrolled_window_add_with_viewport(GTK_SCROLLED_WINDOW (cat_scrwin[i_cat]),
-					mascot->cattree[i_cat]);
-#endif
 
   g_signal_connect (mascot->cattree[i_cat], "cursor-changed",
 		    G_CALLBACK (focus_cattree_item), (gpointer)mcat[i_cat]);

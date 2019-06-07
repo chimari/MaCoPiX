@@ -1196,6 +1196,9 @@ void ReadRC(typMascot *mascot, gboolean def_flag)
     if(!xmms_cfg_read_string(cfgfile, field_tmp, "sound_command",
 			  &mascot->sound_command))
       mascot->sound_command=NULL;
+    if(!xmms_cfg_read_string(cfgfile, field_tmp, "url_command",
+			  &mascot->url_command))
+      mascot->url_command=g_strdup(DEF_OPEN_URL);
 #endif
     if(!xmms_cfg_read_int(cfgfile, field_tmp, "cons_check_mode",
 			  &mascot->cons_check_mode))
@@ -1210,6 +1213,7 @@ void ReadRC(typMascot *mascot, gboolean def_flag)
 			      &mascot->tray_icon_flag))
       mascot->tray_icon_flag=TRUE;
 #endif
+    
 
     // Color for Clock
     if(def_flag)  field_tmp=g_strdup("Default-ClockColor");
@@ -1701,6 +1705,9 @@ void SaveRC(typMascot *mascot,  gboolean def_flag)
   if(mascot->sound_command) 
     xmms_cfg_write_string(cfgfile, field_tmp, "sound_command",mascot->sound_command);
   else     xmms_cfg_remove_key(cfgfile,field_tmp, "sound_command");
+  if(mascot->url_command) 
+    xmms_cfg_write_string(cfgfile, field_tmp, "url_command",mascot->url_command);
+  else    xmms_cfg_remove_key(cfgfile,field_tmp, "url_command");
   xmms_cfg_write_int(cfgfile, field_tmp, "cons_check_mode",mascot->cons_check_mode);
 #endif
 #ifdef USE_GTAR

@@ -43,7 +43,6 @@
 #include "codeconv.h"
 
 #define BUFFSIZE 200
-#define BUFFSIZE5 1000
 #define HEADER_MAX 256
 #define MIME_BUFFSIZE 1024
 //#define BUFFSIZE 1024
@@ -1249,7 +1248,7 @@ void pop3_data_read(typMascot *mascot)
 // メールボックスから From: Subject: を取得
 gchar * fs_get_mbox(typMascot *mascot){
   FILE *fp;
-  char buf[BUFFSIZE*16 ],bufs[BUFFSIZE5*16];
+  char buf[BUFFSIZE], *bufs, *buft;
   gchar *froms=NULL;
   char *p;
   gboolean ed_fl=FALSE, spam_flag;
@@ -1272,8 +1271,8 @@ gchar * fs_get_mbox(typMascot *mascot){
 	    break;
 	  if(g_ascii_strncasecmp(buf,"from:",5)==0)
 	    {
-	      strcpy(bufs,buf);
-	      ///***for(i=0;i<10;i++){
+	      //strcpy(bufs,buf);
+	      bufs=g_strdup(buf);
 	      while(1){
 		fgetpos(fp,&pos);
 		if((p=fgets(buf,BUFFSIZE-1,fp))==NULL
@@ -1281,23 +1280,35 @@ gchar * fs_get_mbox(typMascot *mascot){
 		  ed_fl=TRUE;
 /* tnaka start */
 		  if( strlen(bufs)) {
+		    if(f) g_free(f);
 		    f = g_strdup(bufs);
+		    g_free(bufs);
 		    fsetpos(fp,&pos);
 		  }
 /* tnaka end */
 		  break;
 		}
+		
 		if(bufs[strlen(bufs)-1]!='\n'){
-		  strcat(bufs,buf); /* 一行が200byte以上 */
+		  //strcat(bufs,buf); /* 一行が200byte以上 */
+		  buft=g_strdup(bufs);
+		  g_free(bufs);
+		  bufs=g_strconcat(buft, buf, NULL);
+		  g_free(buft);
 		}
-
 		else if((buf[0]==' ') || (buf[0]=='\t')){
 		  bufs[strlen(bufs)-1]='\0';
 		  sdel = &buf[1];     /* \t を上書き */
-		  strcat(bufs,sdel); /* 複数行 */
+		  //strcat(bufs,sdel); /* 複数行 */
+		  buft=g_strdup(bufs);
+		  g_free(bufs);
+		  bufs=g_strconcat(buft, sdel, NULL);
+		  g_free(buft);
 		}
 		else{
+		  if(f) g_free(f);
 		  f=g_strdup(bufs);
+		  g_free(bufs);
 		  fsetpos(fp,&pos);
 		  break;
 		}
@@ -1306,8 +1317,8 @@ gchar * fs_get_mbox(typMascot *mascot){
 	    }
 	  else if(g_ascii_strncasecmp(buf,"subject:",8)==0)
 	    {
-	      strcpy(bufs,buf);
-	      ///***for(i=0;i<10;i++){
+	      //strcpy(bufs,buf);
+	      bufs=g_strdup(buf);
 	      while(1){
 		fgetpos(fp,&pos);
 		if((p=fgets(buf,BUFFSIZE-1,fp))==NULL
@@ -1315,22 +1326,34 @@ gchar * fs_get_mbox(typMascot *mascot){
 		  ed_fl=TRUE;
 /* tnaka start */
 		  if( strlen(bufs)) {
+		    if(s) g_free(s);
 		    s = g_strdup(bufs);
+		    g_free(bufs);
 		    fsetpos(fp,&pos);
 		  }
 /* tnaka end */
 		  break;
 		}
 		if(bufs[strlen(bufs)-1]!='\n'){
-		  strcat(bufs,buf); /* 一行が200byte以上 */
+		  //strcat(bufs,buf); /* 一行が200byte以上 */
+		  buft=g_strdup(bufs);
+		  g_free(bufs);
+		  bufs=g_strconcat(buft, buf, NULL);
+		  g_free(buft);
 		}
 		else if((buf[0]==' ') || (buf[0]=='\t')){
 		  bufs[strlen(bufs)-1]='\0';
 		  sdel = &buf[1];     /* \t を上書き */
-		  strcat(bufs,sdel); /* 複数行 */
+		  //strcat(bufs,sdel); /* 複数行 */
+		  buft=g_strdup(bufs);
+		  g_free(bufs);
+		  bufs=g_strconcat(buft, sdel, NULL);
+		  g_free(buft);
 		}
 		else{
+		  if(s) g_free(s);
 		  s=g_strdup(bufs);
+		  g_free(bufs);
 		  fsetpos(fp,&pos);
 		  break;
 		}
@@ -1381,7 +1404,7 @@ ed_fl = FALSE;  /* tnaka */
 // MH + Procmail から
 gchar *  fs_get_procmail(typMascot  *mascot){
     FILE *fp,*fp_folder;
-    gchar buf[BUFFSIZE],tmp[10],bufs[BUFFSIZE5];
+    gchar buf[BUFFSIZE],tmp[10], *bufs, *buft;
     gchar *folder_file=NULL,folder_tmp[BUFFSIZE];
     gchar *froms=NULL, *p;
     gboolean ed_fl=FALSE;
@@ -1411,57 +1434,82 @@ gchar *  fs_get_procmail(typMascot  *mascot){
 			break;
 		    if(g_ascii_strncasecmp(buf,"from:",5)==0)
 		    {
-			strcpy(bufs,buf);
-			///***for(i=0;i<10;i++){
-			while(1){
-			    fgetpos(fp_folder,&pos);
-			    if((p=fgets(buf,BUFFSIZE-1,fp_folder))==NULL
-			       ||buf[0]=='\n'||buf[0]=='\0'){
-				ed_fl=TRUE;
-				break;
-			    }
-			    if(bufs[strlen(bufs)-1]!='\n'){
-				strcat(bufs,buf); /* 一行が200byte以上 */
-			    }
-			    else if((buf[0]==' ') || (buf[0]=='\t')){
-				bufs[strlen(bufs)-1]='\0';
-				sdel = &buf[1];     /* \t を上書き */
-				strcat(bufs,sdel); /* 複数行 */
-			    }
-			    else{
-			        f=g_strdup(bufs);
-				fsetpos(fp_folder,&pos);
-				break;
-			    }
+		      //strcpy(bufs,buf);
+		      bufs=g_strdup(buf);
+		      while(1){
+			fgetpos(fp_folder,&pos);
+			if((p=fgets(buf,BUFFSIZE-1,fp_folder))==NULL
+			   ||buf[0]=='\n'||buf[0]=='\0'){
+			  if(f) g_free(f);
+			  f=g_strdup(bufs);
+			  g_free(bufs);
+			  ed_fl=TRUE;
+			  break;
 			}
-			if(ed_fl) break;
+			if(bufs[strlen(bufs)-1]!='\n'){
+			  //strcat(bufs,buf); /* 一行が200byte以上 */
+			  buft=g_strdup(bufs);
+			  g_free(bufs);
+			  bufs=g_strconcat(buft, bufs, NULL);
+			  g_free(buft);
+			}
+			else if((buf[0]==' ') || (buf[0]=='\t')){
+			  bufs[strlen(bufs)-1]='\0';
+			  sdel = &buf[1];     /* \t を上書き */
+			  //strcat(bufs,sdel); /* 複数行 */
+			  buft=g_strdup(bufs);
+			  g_free(bufs);
+			  bufs=g_strconcat(buft, sdel, NULL);
+			  g_free(buft);
+			}
+			else{
+			  if(f) g_free(f);
+			  f=g_strdup(bufs);
+			  g_free(bufs);
+			  fsetpos(fp_folder,&pos);
+			  break;
+			}
+		      }
+		      if(ed_fl) break;
 		    }
-		    else if(g_ascii_strncasecmp(buf,"subject:",8)==0)
-		    {
-			strcpy(bufs,buf);
-			///***for(i=0;i<10;i++){
-			while(1){
-			    fgetpos(fp_folder,&pos);
-			    if((p=fgets(buf,BUFFSIZE-1,fp_folder))==NULL
-			       ||buf[0]=='\n'||buf[0]=='\0'){
-				ed_fl=TRUE;
-				break;
-			    }
-			    if(bufs[strlen(bufs)-1]!='\n'){
-				strcat(bufs,buf); /* 一行が200byte以上 */
-			    }
-			    else if((buf[0]==' ') || (buf[0]=='\t')){
-				bufs[strlen(bufs)-1]='\0';
-				sdel = &buf[1];     /* \t を上書き */
-				strcat(bufs,sdel); /* 複数行 */
-			    }
-			    else{
-			        s=g_strdup(bufs);
-				fsetpos(fp_folder,&pos);
-				break;
-			    }
+		    else if(g_ascii_strncasecmp(buf,"subject:",8)==0){
+		      //strcpy(bufs,buf);
+		      bufs=g_strdup(buf);
+		      while(1){
+			fgetpos(fp_folder,&pos);
+			if((p=fgets(buf,BUFFSIZE-1,fp_folder))==NULL
+			   ||buf[0]=='\n'||buf[0]=='\0'){
+			  ed_fl=TRUE;
+			  if(s) g_free(s);
+			  s=g_strdup(bufs);
+			  g_free(bufs);
+			  break;
 			}
-			if(ed_fl) break;
+			if(bufs[strlen(bufs)-1]!='\n'){
+			  //strcat(bufs,buf); /* 一行が200byte以上 */
+			  buft=g_strdup(bufs);
+			  g_free(bufs);
+			  bufs=g_strconcat(buft, buf, NULL);
+			  g_free(buft);
+			}
+			else if((buf[0]==' ') || (buf[0]=='\t')){
+			  bufs[strlen(bufs)-1]='\0';
+			  sdel = &buf[1];     /* \t を上書き */
+			  //strcat(bufs,sdel); /* 複数行 */
+			  buft=g_strdup(bufs);
+			  g_free(bufs);
+			  bufs=g_strconcat(buft, sdel, NULL);
+			  g_free(buft);
+			}
+			else{
+			  if(s) g_free(s);
+			  s=g_strdup(bufs);
+			  g_free(bufs);
+			  fsetpos(fp_folder,&pos);
+			  break;
+			}
+		      }
+		      if(ed_fl) break;
 		    } 
 		}
 		fclose(fp_folder);
@@ -1503,7 +1551,7 @@ gchar *  fs_get_procmail(typMascot  *mascot){
 // Qmail から
 gchar * fs_get_qmail(typMascot *mascot){
     FILE *fp_folder;
-    gchar buf[BUFFSIZE],tmp[10],bufs[BUFFSIZE5];
+    gchar buf[BUFFSIZE],tmp[10],*bufs, *buft;
     gchar *folder_file,folder_tmp[BUFFSIZE];
     gchar *froms=NULL, *p;
     gboolean ed_fl=FALSE, spam_flag;
@@ -1552,57 +1600,83 @@ gchar * fs_get_qmail(typMascot *mascot){
 			break;
 		    if(g_ascii_strncasecmp(buf,"from:",5)==0)
                     {
-			strcpy(bufs,buf);
-			///***for(i=0;i<10;i++){
-			while(1){
-			    fgetpos(fp_folder,&pos);
-			    if((p=fgets(buf,BUFFSIZE-1,fp_folder))==NULL
-			       ||buf[0]=='\n'||buf[0]=='\0'){
-				ed_fl=TRUE;
-				break;
-			    }
-			    if(bufs[strlen(bufs)-1]!='\n'){
-			      strcat(bufs,buf); // 一行が200byte以上
-			    }
-			    else if((buf[0]==' ') || (buf[0]=='\t')){
-				bufs[strlen(bufs)-1]='\0';
-				sdel = &buf[1];     // \t を上書き
-				strcat(bufs,sdel); // 複数行
-			    }
-			    else{
-			        f=g_strdup(bufs);
-				fsetpos(fp_folder,&pos);
-				break;
-			    }
+		      //strcpy(bufs,buf);
+		      bufs=g_strdup(buf);
+		      while(1){
+			fgetpos(fp_folder,&pos);
+			if((p=fgets(buf,BUFFSIZE-1,fp_folder))==NULL
+			   ||buf[0]=='\n'||buf[0]=='\0'){
+			  ed_fl=TRUE;
+			  if(f) g_free(f);
+			  f=g_strdup(bufs);
+			  g_free(bufs);
+			  break;
 			}
-			if(ed_fl) break;
+			if(bufs[strlen(bufs)-1]!='\n'){
+			  //strcat(bufs,buf); // 一行が200byte以上
+			  buft=g_strdup(bufs);
+			  g_free(bufs);
+			  bufs=g_strconcat(buft, buf, NULL);
+			  g_free(buft);
+			}
+			else if((buf[0]==' ') || (buf[0]=='\t')){
+			  bufs[strlen(bufs)-1]='\0';
+			  sdel = &buf[1];     // \t を上書き
+			  //strcat(bufs,sdel); // 複数行
+			  buft=g_strdup(bufs);
+			  g_free(bufs);
+			  bufs=g_strconcat(buft, sdel, NULL);
+			  g_free(buft);
+			}
+			else{
+			  if(f) g_free(f);
+			  f=g_strdup(bufs);
+			  g_free(bufs);
+			  fsetpos(fp_folder,&pos);
+			  break;
+			}
+		      }
+		      if(ed_fl) break;
 		    }
 		    else if(g_ascii_strncasecmp(buf,"subject:",8)==0)
                     {
-			strcpy(bufs,buf);
-			///***for(i=0;i<10;i++){
-			while(1){
-			    fgetpos(fp_folder,&pos);
-			    if((p=fgets(buf,BUFFSIZE-1,fp_folder))==NULL
-			       ||buf[0]=='\n'||buf[0]=='\0'){
-				ed_fl=TRUE;
-				break;
-			    }
-			    if(bufs[strlen(bufs)-1]!='\n'){
-				strcat(bufs,buf); /* 一行が200byte以上 */
-			    }
-			    else if((buf[0]==' ') || (buf[0]=='\t')){
-				bufs[strlen(bufs)-1]='\0';
-				sdel = &buf[1];     /* \t を上書き */
-				strcat(bufs,sdel); /* 複数行 */
-			    }
-			    else{
-				s=g_strdup(bufs);
-				fsetpos(fp_folder,&pos);
-				break;
-			    }
+		      //strcpy(bufs,buf);
+		      bufs=g_strdup(buf);
+		      while(1){
+			fgetpos(fp_folder,&pos);
+			if((p=fgets(buf,BUFFSIZE-1,fp_folder))==NULL
+			   ||buf[0]=='\n'||buf[0]=='\0'){
+			  if(s) g_free(s);
+			  s=g_strdup(bufs);
+			  g_free(bufs);
+			  ed_fl=TRUE;
+			  break;
 			}
-			if(ed_fl) break;
+			if(bufs[strlen(bufs)-1]!='\n'){
+			  //strcat(bufs,buf); /* 一行が200byte以上 */
+			  buft=g_strdup(bufs);
+			  g_free(bufs);
+			  bufs=g_strconcat(buft,buf,NULL);
+			  g_free(buft);
+			}
+			else if((buf[0]==' ') || (buf[0]=='\t')){
+			  bufs[strlen(bufs)-1]='\0';
+			  sdel = &buf[1];     /* \t を上書き */
+			  //strcat(bufs,sdel); /* 複数行 */
+			  buft=g_strdup(bufs);
+			  g_free(bufs);
+			  bufs=g_strconcat(buft,sdel,NULL);
+			  g_free(buft);
+			}
+			else{
+			  if(s) g_free(s);
+			  s=g_strdup(bufs);
+			  g_free(bufs);
+			  fsetpos(fp_folder,&pos);
+			  break;
+			}
+		      }
+		      if(ed_fl) break;
 		    }
 		}
 		fclose(fp_folder);
@@ -1641,7 +1715,7 @@ gchar * fs_get_qmail(typMascot *mascot){
 // pop3 server から From: Subject: を取得
 void fs_get_pop3(int num, typMascot *mascot){
   int funcret;
-  char buffer_header[HEADER_MAX][POP_MAX_LINE], bufs[BUFFSIZE5];
+  char buffer_header[HEADER_MAX][POP_MAX_LINE], *bufs, *buft;
   char buffer[POP_MAX_LINE];
   int mail_cnt, header, header_line, i, j;
   int mail_cnt_start;
@@ -1717,46 +1791,60 @@ void fs_get_pop3(int num, typMascot *mascot){
     for(header=0; header < header_line; header++){
       if(g_ascii_strncasecmp(buffer_header[header],"from:",5)==0)
       {
-	strcpy(bufs, buffer_header[header]);
-	//bufs=g_strconcat(buffer_header[header],NULL);
-	///***for(i=1;i<10;i++){
+	//strcpy(bufs, buffer_header[header]);
+	bufs=g_strdup(buffer_header[header]);
 	i=1;
 	while(1){
-	  if((i+header) > header_line) break;
+	  if((i+header) > header_line){
+	    if(f) g_free(f);
+	    f=g_strdup(bufs);
+	    g_free(bufs);
+	    break;
+	  }
 	  if((buffer_header[i+header][0]==' ') || (buffer_header[i+header][0]=='\t')){
 	    bufs[strlen(bufs)-2]='\0';
 	    sdel = &buffer_header[i+header][1];     /* \t を上書き */
-	    strcat(bufs,sdel); /* 複数行 */
-	    //bufs=g_strconcat(bufs,sdel,NULL); /* 複数行 */
-	    if(f) g_free(f);
-	    f=g_strdup(bufs);
+	    //strcat(bufs,sdel); /* 複数行 */
+	    buft=g_strdup(bufs);
+	    g_free(bufs);
+	    bufs=g_strconcat(buft, sdel, NULL);
+	    g_free(buft);
 	  }
 	  else{
+	    if(f) g_free(f);
 	    f=g_strdup(bufs);
+	    g_free(bufs);
 	    break;
 	  }
 	  i++;
 	}
+	pop_debug_print("??? ff=%s\n",f);
       }
       else if(g_ascii_strncasecmp(buffer_header[header],"subject:",8)==0)
       {
-	strcpy(bufs, buffer_header[header]);
-	//bufs=g_strconcat(buffer_header[header],NULL);
-	///***for(i=1;i<10;i++){
-	//s=g_strdup(bufs);
+	//strcpy(bufs, buffer_header[header]);
+	bufs=g_strdup(buffer_header[header]);
 	j=1;
 	while(1){
-	  if((j+header) > header_line) break;
+	  if((j+header) > header_line){
+	    if(s) g_free(s);
+	    s=g_strdup(bufs);
+	    g_free(bufs);
+	    break;
+	  }
 	  if((buffer_header[j+header][0]==' ') || (buffer_header[j+header][0]=='\t')){
 	    bufs[strlen(bufs)-2]='\0';
 	    sdel = &buffer_header[j+header][1];     // \t を上書き
-	    strcat(bufs,sdel); // 複数行
-	    //bufs=g_strconcat(bufs,sdel,NULL); // 複数行
-	    if(s) g_free(s);
-	    s=g_strdup(bufs);
+	    //strcat(bufs,sdel); // 複数行
+	    buft=g_strdup(bufs);
+	    g_free(bufs);
+	    bufs=g_strconcat(buft, sdel, NULL);
+	    g_free(buft);
 	  }
 	  else{
+	    if(s) g_free(s);
 	    s=g_strdup(bufs);
+	    g_free(bufs);
 	    break;
 	  }
 	  j++;
@@ -1842,208 +1930,6 @@ void fs_get_pop3(int num, typMascot *mascot){
 }
 
 
-void fs_get_pop3_old(int num, typMascot *mascot){
-
-  int funcret;
-  char buffer_header[HEADER_MAX][POP_MAX_LINE], bufs[BUFFSIZE5];
-  char buffer[POP_MAX_LINE];
-  int mail_cnt, header, header_line, i, j;
-  int mail_cnt_start;
-  char *f, *s, *sdel, tmp_fs[256];
-  int disp=0;
-  gboolean spam_flag;
-#ifndef USE_WIN32
-  char *tmp_froms;
-  
-  tmp_froms=strbuf(NULL); 
-#endif
-
-  pop_debug_print("fs read num = %d mail_count = %d\n", 
-	  num, mascot->mail.count); 
-
-  if((num - mascot->mail.count) > mascot->mail.pop_max_fs){  //overflow
-    mail_cnt_start = num - mascot->mail.pop_max_fs +1;
-    mascot->mail.fetched_count = mascot->mail.pop_max_fs;
-    mascot->mail.pop3_fs_status = POP3_OK_FS_OVER;
-  }
-  else {    // under
-    mail_cnt_start = mascot->mail.count +1;
-    mascot->mail.fetched_count = num - mascot->mail.count;
-    mascot->mail.pop3_fs_status = POP3_OK_NORMAL;
-  }
-
-  pop_debug_print("fs read num = %d mail_cnt_start = %d\n", 
-	  num, mail_cnt_start); 
-  pop_debug_print("fs mail_fetched = %d\n", mascot->mail.fetched_count); 
-
-  for(mail_cnt = mail_cnt_start; mail_cnt <= num; mail_cnt++){
-
-    sprintf(buffer, "TOP %d %d\r\n", mail_cnt, 0);  // get header only
-
-    funcret = popWriteLine(buffer, mascot->mail.ssl_mode);
-    if( funcret != 0 ){
-      fprintf(stderr,"write err = %d\n",funcret);
-#ifndef USE_WIN32
-      mascot->mail.status=POP3_ERROR;
-#endif
-      return;
-    }
-    for(header=0; header < HEADER_MAX; header++){
-      funcret = popReadLine(buffer_header[header], POP_MAX_LINE, mascot->mail.ssl_mode);
-      //pop_debug_print("%d %d   %s\n",mail_cnt,header,buffer_header[header]);
-      if( funcret != 0 ){
-	fprintf(stderr,"read err\n");
-#ifndef USE_WIN32
-      mascot->mail.status=POP3_ERROR;
-#endif
-	return;
-      }
-      if( strcmp(buffer_header[header], ".\r\n") == 0 )      break;
-      buffer_header[header][strlen(buffer_header[header])-2]=' ';  // \r delete
-    }
-    header_line = header-1;
-
-    spam_flag = FALSE;
-    if(mascot->mail.spam_check){
-      for(header=0; header < header_line; header++){
-	if(strncmp(buffer_header[header], mascot->mail.spam_mark, 
-		   strlen(mascot->mail.spam_mark))==0){
-	  spam_flag = TRUE;
-	  mascot->mail.spam_count++;
-	  
-	  pop_debug_print("SPAM detected = %d\n", mascot->mail.spam_count); 
-	}
-      }
-    }
-    if( (spam_flag) && (mascot->mail.spam_check) )  continue;
-
-    f=s=NULL;
-    for(header=0; header < header_line; header++){
-      if(g_ascii_strncasecmp(buffer_header[header],"from:",5)==0)
-      {
-	strcpy(bufs, buffer_header[header]);
-	//bufs=g_strconcat(buffer_header[header],NULL);
-	///***for(i=1;i<10;i++){
-	i=1;
-	while(1){
-	  if((i+header) > header_line) break;
-	  if((buffer_header[i+header][0]==' ') || (buffer_header[i+header][0]=='\t')){
-	    bufs[strlen(bufs)-2]='\0';
-	    sdel = &buffer_header[i+header][1];     /* \t を上書き */
-	    strcat(bufs,sdel); /* 複数行 */
-	    //bufs=g_strconcat(bufs,sdel,NULL); /* 複数行 */
-	    if(f) g_free(f);
-	    f=g_strdup(bufs);
-	  }
-	  else{
-	    f=g_strdup(bufs);
-	    break;
-	  }
-	  i++;
-	}
-      }
-      else if(g_ascii_strncasecmp(buffer_header[header],"subject:",8)==0)
-      {
-	strcpy(bufs, buffer_header[header]);
-	//bufs=g_strconcat(buffer_header[header],NULL);
-	///***for(i=1;i<10;i++){
-	//s=g_strdup(bufs);
-	j=1;
-	while(1){
-	  if((j+header) > header_line) break;
-	  if((buffer_header[j+header][0]==' ') || (buffer_header[j+header][0]=='\t')){
-	    bufs[strlen(bufs)-2]='\0';
-	    sdel = &buffer_header[j+header][1];     // \t を上書き
-	    strcat(bufs,sdel); // 複数行
-	    //bufs=g_strconcat(bufs,sdel,NULL); // 複数行
-	    if(s) g_free(s);
-	    s=g_strdup(bufs);
-	  }
-	  else{
-	    s=g_strdup(bufs);
-	    break;
-	  }
-	  j++;
-	}
-	pop_debug_print("??? ss=%s\n",s);
-      }
-    }
-    
-
-
-    if (f) {
-      conv_unmime_header_overwrite(f);
-      {
-	gint n;
-	for(n=4;n>1;n--){
-	  if((f[strlen(f)-n]==0x0D)&&(f[strlen(f)-n+1]==0x0A)){
-	    f[strlen(f)-n]=0x20;
-	    f[strlen(f)-n+1]=0x20;
-	  }
-	}
-      }
-#ifdef USE_WIN32
-      pop_froms=strbuf(f);
-#else
-      tmp_froms=strbuf(f);
-#endif
-      if(mascot->mail.last_f) g_free(mascot->mail.last_f);
-      mascot->mail.last_f=g_strdup(f+strlen("From: "));
-      strip_last_ret(mascot->mail.last_f);
-      if(f) g_free(f);
-    }
-    else{
-#ifdef USE_WIN32
-      pop_froms=strbuf(_("From: (no From: in original)\n"));
-#else
-      tmp_froms=strbuf(_("From: (no From: in original)\n"));
-#endif
-    }
-    if (s) {
-#ifdef USE_WIN32
-      pop_froms=strbuf(" ");
-#else
-      tmp_froms=strbuf(" ");
-#endif
-      conv_unmime_header_overwrite(s);
-      {
-	gint n;
-	for(n=4;n>1;n--){
-	  if((s[strlen(s)-n]==0x0D)&&(s[strlen(s)-n+1]==0x0A)){
-	    s[strlen(s)-n]=0x20;
-	    s[strlen(s)-n+1]=0x20;
-	  }
-	}
-      }
-      pop_debug_print("s=%s\n",s);
-
-#ifdef USE_WIN32
-      pop_froms=strbuf(s);
-#else
-      tmp_froms=strbuf(s);
-#endif
-      if(mascot->mail.last_s) g_free(mascot->mail.last_s);
-      mascot->mail.last_s=g_strdup(s+strlen("Subject: "));
-      strip_last_ret(mascot->mail.last_s);
-      if(s) g_free(s);
-    }
-    else{
-      pop_debug_print("s=!!!! No Subject !!!!\n");
-#ifdef USE_WIN32
-      pop_froms=strbuf(_(" Subject: (no Subject: in original)\n"));
-#else
-      tmp_froms=strbuf(_(" Subject: (no Subject: in original)\n"));
-#endif
-    }
-  }
-#ifndef USE_WIN32
-  if(pop_froms) g_free(pop_froms);
-  pop_froms=strbuf(NULL);
-  pop_froms=strbuf(tmp_froms);
-  if(tmp_froms) g_free(tmp_froms);
-#endif
-  pop_debug_print("fs_get_pop3 end\n");
-}
 
 //
 char* strbuf(char *p)
