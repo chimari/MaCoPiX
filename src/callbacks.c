@@ -721,29 +721,35 @@ int MoveToFocus(typMascot *mascot, gboolean force_fl)
 
     if(mascot->focus_autobar!=AUTOBAR_MANUAL){
 #ifdef USE_WIN32   // フォーカスがない 
-      if(IsWin32Root(hWnd, mascot->width_root, mascot->height_root)){
+      if(IsWin32Root(hWnd, mascot->width_root, mascot->height_root))
 #elif defined(USE_OSX)
-      if((fx<0) &&(fy<0)){  // フォーカスがない 
+	if((fx<0) &&(fy<0))  // フォーカスがない 
 #else
-      if((sx==ROOTOFF_X-width)
-	 &&(sy==ROOTOFF_Y-mascot->bar_offset)){  // フォーカスがない 
+	  if((sx==ROOTOFF_X-width)
+	     &&(sy==ROOTOFF_Y-mascot->bar_offset))  // フォーカスがない 
 #endif
+      {
 	flag_homepos=mascot->homepos_nf;
       }
-      else if(ypop<ROOTOFF_Y){ //画面上にマスコットがはみでる
-	flag_homepos=mascot->homepos_out;
-      }
+	 else if(ypop<ROOTOFF_Y){ //画面上にマスコットがはみでる
+       flag_homepos=mascot->homepos_out;
+	    
+    }
     }
     else{
 #ifdef USE_WIN32   // フォーカスがない 
       if(IsWin32Root(hWnd, mascot->width_root, mascot->height_root)){
-#elif defined(USE_OSX)
-      if((fx<0) &&(fy<0)){  // フォーカスがない 
-#else
-      if((sx==ROOTOFF_X) &&(sy==ROOTOFF_Y)){  // フォーカスがない 
-#endif
 	flag_homepos=mascot->homepos_nf;
       }
+#elif defined(USE_OSX)
+      if((fx<0) &&(fy<0)){  // フォーカスがない 
+	flag_homepos=mascot->homepos_nf;
+      }
+#else
+      if((sx==ROOTOFF_X) &&(sy==ROOTOFF_Y)){  // フォーカスがない 
+	flag_homepos=mascot->homepos_nf;
+      }
+#endif
       else if(ypop<ROOTOFF_Y){ //画面上にマスコットがはみでる
 	flag_homepos=mascot->homepos_out;
       }
@@ -791,7 +797,7 @@ int MoveToFocus(typMascot *mascot, gboolean force_fl)
 #else
       if(mascot->home_auto){  // Auto Taskbar Scaling for X
 	MyXY xy;
-
+	
 	xy=GetAutoHomePos();
 	if(xy.flag){
 	  mascot->home_x=mascot->width_root-xy.x;
@@ -841,7 +847,7 @@ int MoveToFocus(typMascot *mascot, gboolean force_fl)
       }
     }
   }
-
+    
   while (my_main_iteration(FALSE));
   gdkut_flush(mascot->win_main);
   return(1); 

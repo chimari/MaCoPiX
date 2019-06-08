@@ -1065,6 +1065,7 @@ void ReadRC(typMascot *mascot, gboolean def_flag)
   gchar *filename;
   gchar *field_tmp=NULL;
   gint col_tmp;
+  gint i_buf;
   gboolean b_buf;
   gchar *tmp;
 
