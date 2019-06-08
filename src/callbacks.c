@@ -418,6 +418,7 @@ int MoveToFocus(typMascot *mascot, gboolean force_fl)
     width = nRect.right-nRect.left;
 
 #elif defined(USE_OSX)  ///////////////////////// macOS ///////////////////////////
+  {
     sx=fx;
     sy=fy;
     width=fw;

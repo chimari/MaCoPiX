@@ -130,13 +130,13 @@ AC_SEARCH_LIBS([XFree], [X11], [], [
     AC_MSG_FAILURE(["Cannot find X11. Try setting LDFLAGS -L"], [-1])
   ])
 ])
+fi
 AC_DEFINE(USE_BIFF,[], [Use Biff function])
 AC_DEFINE(USE_SOCKMSG,[], [Use Socket Message function])
 AC_DEFINE(USE_COMMON,[], [Use Common Directory])
 AC_DEFINE(USE_GTAR,[], [Use Gnu tar])
 WINMM_LIBS=""
 WINSOCK_LIBS=""
-fi
 fi
 AC_DEFINE(USE_SSL,[], [Use SSL for POP])
 AC_SUBST(WINMM_LIBS)
