@@ -10,6 +10,7 @@ EXTRA_DIST =  config.rpath\
 	macopix.1\
 	makewin32.sh\
 	makewin64.sh\
+	makeosx.sh\
 	macopix.spec
 
 man_MANS = macopix.1

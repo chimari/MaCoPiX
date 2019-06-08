@@ -147,11 +147,13 @@ int weight_click(typMascot *mascot)
 
 // XEvent 関連のエラーハンドラー  MoveToFocusで参照する
 #ifndef USE_WIN32
+#ifndef USE_OSX
 int ehandler (Display *d, XErrorEvent *e)
 {
     errflag = 1;
     return(0);
 }
+#endif
 #endif
 
 // マスコットの移動
@@ -308,7 +310,9 @@ int MoveToFocus(typMascot *mascot, gboolean force_fl)
   int realXPos;
   unsigned int width;
 #elif defined(USE_OSX)
-  int rw, rh;
+  int realXPos; 
+  unsigned int width;
+  int sx, sy;
   int fx, fy, fw, fh;
 #else  // UNIX / X
   Window rootwin,parent,*children,child,wf;
@@ -344,9 +348,8 @@ int MoveToFocus(typMascot *mascot, gboolean force_fl)
     }
   }
 #elif defined(USE_OSX)
-  MacGetRootWin(&rx, &ry);
   MacGetFocusWin(&fx, &fy, &fw, &fh);
-#else
+#else  ///////////////////////// UNIX ///////////////////////////
   win_bar_size=0;
 
 #ifdef USE_GTK3  
@@ -383,7 +386,7 @@ int MoveToFocus(typMascot *mascot, gboolean force_fl)
   sx = 0;
   sy = 0;
 
-#ifdef USE_WIN32
+#ifdef USE_WIN32  ///////////////////////// Window ///////////////////////////
     /* for Windows */
   if(hWnd!=GDK_WINDOW_HWND(gtk_widget_get_window(mascot->win_main)) 
 #ifdef FG_DRAW
@@ -414,13 +417,11 @@ int MoveToFocus(typMascot *mascot, gboolean force_fl)
     sy = nRect.top-mascot->mon_y0;
     width = nRect.right-nRect.left;
 
-#elif defined(USE_OSX)  //macOS
-    mascot->width_root=rw;
-    mascot->height_root=rh;
-    sx=fx-mascot->mon_x0;
-    sy=fy-mascot->mon_y0;
+#elif defined(USE_OSX)  ///////////////////////// macOS ///////////////////////////
+    sx=fx;
+    sy=fy;
     width=fw;
-#else  // UNIX X
+#else  ///////////////////////// UNIX ///////////////////////////
   if(wf!=GDK_WINDOW_XID(gtk_widget_get_window(mascot->win_main)) 
      && wf!=GDK_WINDOW_XID(gtk_widget_get_window(mascot->balloon_main))
      && wf!=GDK_WINDOW_XID(gtk_widget_get_window(mascot->clock_main))
@@ -597,18 +598,6 @@ int MoveToFocus(typMascot *mascot, gboolean force_fl)
       }
 
       sx=x;
-#ifdef USE_WIN32
-      if(mascot->bar_offset==0){
-	sy=y;
-      }
-      else if((x==rx-wx)&&(y==ry-wy)){
-	sy=y;  // オフセット計測 : マスコットはバー無しWinに乗っている
-      }
-      else{    // オフセット計測 : マスコットはバー有りWinに乗っている
-	sy=y-mascot->bar_offset;
-      }
-#elif defined(USE_OSX)
-#else
       if(mascot->focus_autobar==AUTOBAR_COMPIZ){
 	y=y-win_bar_size;
       }
@@ -622,7 +611,7 @@ int MoveToFocus(typMascot *mascot, gboolean force_fl)
       else{
 	sy=y;
       }
-#endif
+      //#endif
     }
     else{  // タイトルバーのサイズをマニュアル設定モード
       if(errflag ==0){
@@ -691,7 +680,7 @@ int MoveToFocus(typMascot *mascot, gboolean force_fl)
       sx=rx-wx;
       sy=ry-wy-mascot->bar_size;
     }
-#endif
+#endif  ///////////////////////////////////////////////////////////////////////
 
     // sx, sy は現在のフォーカスWindowの左上(含タイトルバー)の絶対位置
       
@@ -1281,9 +1270,11 @@ gint dw_init_main(GtkWidget *widget, GdkEventConfigure *event,
     mascot->gc_main = MPCreatePen(pixmap_main, mascot->colclk);
     mascot->gc_mainsd = MPCreatePen(pixmap_main, mascot->colclksd);
 #ifndef USE_WIN32
+#ifndef USE_OSX
     if(errflag==-1){
       XSetErrorHandler (ehandler);
     }
+#endif
 #endif
 #ifdef DEBUG
     printf("Init GC Main\n");
@@ -2463,6 +2454,7 @@ gboolean IsWin32Root( HWND hWnd, gint root_width, gint root_height )
 #endif
 
 #ifndef USE_WIN32
+#ifndef USE_OSX
 //*********************************************************
 // X Window  現在のっかっているWindowの名前
 //*********************************************************
@@ -2623,12 +2615,14 @@ MyXY GetAutoHomePos(void){
 }
 
 #endif
+#endif
 
 
 void InitMascot0(typMascot *mascot){
 #ifdef USE_WIN32
   static MONITORS mon;
   gint nmon, i_mon;
+#elif defined(USE_OSX)
 #else  
   Window rootwin;
 #endif
@@ -2657,6 +2651,8 @@ void InitMascot0(typMascot *mascot){
     }
   }
   
+#elif defined(USE_OSX)
+  MacGetRootWin(&width_root, &height_root);
 #else
   XGetGeometry(GDK_WINDOW_XDISPLAY(gtk_widget_get_window(mascot->win_main)),
 	       GDK_ROOT_WINDOW(),
@@ -2854,10 +2850,12 @@ void make_mascot(typMascot *mascot){
 
   gdk_window_set_decorations(gtk_widget_get_window(mascot->win_main), 0);
 #ifndef USE_WIN32
+#ifndef USE_OSX
   //  gdk_window_set_decorations(win_main->window, GDK_DECOR_MENU);
   // Win32 Gtk+> 2.10 -> trayicon 
   gdk_window_set_override_redirect(gtk_widget_get_window(mascot->win_main),
 				   TRUE);
+#endif
 #endif
 
 #ifdef FG_DRAW
