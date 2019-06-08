@@ -92,25 +92,6 @@ AC_CHECK_FUNCS([__argz_count __argz_next __argz_stringify dup2 getcwd gethostbyn
 
 os_osx=no
 
-case "$target" in
-*-darwin*)
-	os_osx=yes
-        AC_DEFINE([USE_OSX],[],[Use Mac OS X])
-dnl	CFLAGS="$CFLAGS -no-cpp-precomp -fno-common"
-	;;
-esac
-
-if test x"${os_osx}" = "xyes"; then
-        OSX_CFLAGSADD = " -framework carbon -framework foundation -framework cocoa -x objective-c -std=c99"
-        OSX_LDADD="-headerpad_max_install_names -framework carbon -framework foundation -framework cocoa -x objective-c -std=c99"
-else
-       OSX_CFLAGSADD=""
-        OSX_LDADD=""
-fi
-AC_SUBST(OSX_CFLAGSADD)
-AC_SUBST(OSX_LDADD)
-
-
 dnl Win32
 AC_ARG_WITH(win32,
 		 AC_HELP_STRING([--with-win32],
@@ -123,8 +104,25 @@ CFLAGS="$CFLAGS -mms-bitfields"
 LDFLAGS="$LDFLAGS -mwindows"
 WINMM_LIBS="-lwinmm"
 WINSOCK_LIBS="-lws2_32"
+OSX_CFLAGSADD=""
+OSX_LDADD=""
 else
-dnl X11
+
+dnl macOS or X11
+case "$target" in
+*-darwin*)
+	os_osx=yes
+        AC_DEFINE([USE_OSX],[],[Use Mac OS X])
+dnl	CFLAGS="$CFLAGS -no-cpp-precomp -fno-common"
+	;;
+esac
+
+if test x"${os_osx}" = "xyes"; then
+        OSX_CFLAGSADD = " -framework carbon -framework foundation -framework cocoa -x objective-c -std=c99"
+        OSX_LDADD="-headerpad_max_install_names -framework carbon -framework foundation -framework cocoa -x objective-c -std=c99"
+else
+        OSX_CFLAGSADD=""
+        OSX_LDADD=""
 AC_SEARCH_LIBS([XFree], [X11], [], [
   LDFLAGS="$LDFLAGS -L/usr/X11R6/lib -L/usr/X11R6/lib64"
   AC_MSG_CHECKING(["Looking for XFree in /usr/X11R6"])
@@ -139,9 +137,12 @@ AC_DEFINE(USE_GTAR,[], [Use Gnu tar])
 WINMM_LIBS=""
 WINSOCK_LIBS=""
 fi
+fi
 AC_DEFINE(USE_SSL,[], [Use SSL for POP])
 AC_SUBST(WINMM_LIBS)
 AC_SUBST(WINSOCK_LIBS)
+AC_SUBST(OSX_CFLAGSADD)
+AC_SUBST(OSX_LDADD)
 
 dnl UNLHA32
 AC_ARG_WITH(unlha32,
