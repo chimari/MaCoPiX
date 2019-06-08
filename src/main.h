@@ -158,6 +158,9 @@
 #endif
 #endif
 
+#ifdef USE_OSX
+#define FG_DRAW
+#endif
 
 // Homepage URL
 #define DEFAULT_URL "http://rosegray.sakura.ne.jp/"

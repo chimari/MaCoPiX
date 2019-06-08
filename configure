@@ -21938,8 +21938,13 @@ if test x"${use_win32}" = "xyes"; then
 localedir='share/locale'
 WIN32_ICONV_LIBS="-liconv"
 else
-localedir='${prefix}/${DATADIRNAME}/locale'
+if test x"${use_osx}" = "xyes"; then
+localedir='share/locale'
+WIN32_ICONV_LIBS="-liconv"
+else
 WIN32_ICONV_LIBS=""
+localedir='${prefix}/${DATADIRNAME}/locale'
+fi
 fi
 
 

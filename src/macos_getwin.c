@@ -55,7 +55,7 @@ void MacGetFocusWin(int *x, int *y, int *w, int *h){
 	  *w=(int)rect.size.width;
 	  *h=(int)rect.size.height;
 	  if((x!=0)||(y!=0)){
-	    printf("%s:%s   ", [windowName UTF8String], [[windowid stringValue] UTF8String]);
+	    //printf("%s:%s   ", [windowName UTF8String], [[windowid stringValue] UTF8String]);
 	    break;
 	  }
 	}

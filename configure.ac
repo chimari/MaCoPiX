@@ -222,8 +222,13 @@ localedir='share/locale'
 WIN32_ICONV_LIBS="-liconv"
 dnl  a temoral measure to solve a problem on MinGW glib iconv
 else
-localedir='${prefix}/${DATADIRNAME}/locale'
+if test x"${use_osx}" = "xyes"; then
+localedir='share/locale'
+WIN32_ICONV_LIBS="-liconv"
+else
 WIN32_ICONV_LIBS=""
+localedir='${prefix}/${DATADIRNAME}/locale'
+fi
 fi
 AC_SUBST(localedir)
 AC_SUBST(WIN32_ICONV_LIBS)
