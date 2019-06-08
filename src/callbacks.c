@@ -312,7 +312,7 @@ int MoveToFocus(typMascot *mascot, gboolean force_fl)
 #elif defined(USE_OSX)
   int realXPos; 
   unsigned int width;
-  int sx, sy;
+  int sx,sy,x_root=0,y_root=0;
   int fx, fy, fw, fh;
 #else  // UNIX / X
   Window rootwin,parent,*children,child,wf;

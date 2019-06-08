@@ -1344,8 +1344,9 @@ void ReadRC(typMascot *mascot, gboolean def_flag)
     if(!xmms_cfg_read_boolean(cfgfile, field_tmp, "raise_kwin",
 			      &mascot->raise_kwin))
       mascot->raise_kwin=FALSE;
-    if(!xmms_cfg_read_int(cfgfile, field_tmp, "autobar2",
-			      &mascot->focus_autobar))
+    if(xmms_cfg_read_int(cfgfile, field_tmp, "autobar2", &i_buf))
+      mascot->focus_autobar=(guint)i_buf;
+    else
       mascot->focus_autobar=AUTOBAR_ORDINAL;
 #ifdef USE_WIN32
     if(!xmms_cfg_read_boolean(cfgfile, field_tmp, "task_force",
