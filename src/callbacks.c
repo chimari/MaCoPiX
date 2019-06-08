@@ -307,7 +307,10 @@ int MoveToFocus(typMascot *mascot, gboolean force_fl)
   int sx,sy,x_root=0,y_root=0;
   int realXPos;
   unsigned int width;
-#else
+#elif defined(USE_OSX)
+  int rw, rh;
+  int fx, fy, fw, fh;
+#else  // UNIX / X
   Window rootwin,parent,*children,child,wf;
   int sx,sy,x,y,i,x_root=0,y_root=0;
   unsigned int border,depth;
@@ -340,6 +343,9 @@ int MoveToFocus(typMascot *mascot, gboolean force_fl)
       }
     }
   }
+#elif defined(USE_OSX)
+  MacGetRootWin(&rx, &ry);
+  MacGetFocusWin(&fx, &fy, &fw, &fh);
 #else
   win_bar_size=0;
 
@@ -404,45 +410,16 @@ int MoveToFocus(typMascot *mascot, gboolean force_fl)
       
     GetWindowRect(hWnd, &nRect);
 
-    /*
-    HMONITOR hMonitor = MonitorFromRect(&nRect, MONITOR_DEFAULTTONEAREST);
-    MONITORINFO mi;
-    mi.cbSize = sizeof(MONITORINFO);
-    GetMonitorInfo(hMonitor, &mi);
-    
-
-    printf("%d  %d  : %d  %d\n",
-	   mi.rcMonitor.left, mi.rcMonitor.right,
-	   nRect.left, nRect.right); fflush(stdout);
-
-   if (nRect.right > mi.rcMonitor.right)
-    {
-        nRect.left -= nRect.right - mi.rcMonitor.right;
-        nRect.right = mi.rcMonitor.right;
-    }
-    if (nRect.left < mi.rcMonitor.left)
-    {
-        nRect.right += mi.rcMonitor.left - nRect.left;
-        nRect.left = mi.rcMonitor.left;
-    }
-    if (nRect.bottom > mi.rcMonitor.bottom)
-    {
-        nRect.top -= nRect.bottom - mi.rcMonitor.bottom;
-        nRect.bottom = mi.rcMonitor.bottom;
-    }
-    if (nRect.top < mi.rcMonitor.top)
-    {
-        nRect.bottom += mi.rcMonitor.top - nRect.top;
-        nRect.top = mi.rcMonitor.top;
-    }
-
-    printf("%d  %d\n", nRect.right, nRect.left); fflush(stdout);
-    */
-    
     sx = nRect.left-mascot->mon_x0;
     sy = nRect.top-mascot->mon_y0;
     width = nRect.right-nRect.left;
 
+#elif defined(USE_OSX)  //macOS
+    mascot->width_root=rw;
+    mascot->height_root=rh;
+    sx=fx-mascot->mon_x0;
+    sy=fy-mascot->mon_y0;
+    width=fw;
 #else  // UNIX X
   if(wf!=GDK_WINDOW_XID(gtk_widget_get_window(mascot->win_main)) 
      && wf!=GDK_WINDOW_XID(gtk_widget_get_window(mascot->balloon_main))
@@ -630,6 +607,7 @@ int MoveToFocus(typMascot *mascot, gboolean force_fl)
       else{    // オフセット計測 : マスコットはバー有りWinに乗っている
 	sy=y-mascot->bar_offset;
       }
+#elif defined(USE_OSX)
 #else
       if(mascot->focus_autobar==AUTOBAR_COMPIZ){
 	y=y-win_bar_size;
@@ -755,6 +733,8 @@ int MoveToFocus(typMascot *mascot, gboolean force_fl)
     if(mascot->focus_autobar!=AUTOBAR_MANUAL){
 #ifdef USE_WIN32   // フォーカスがない 
       if(IsWin32Root(hWnd, mascot->width_root, mascot->height_root)){
+#elif defined(USE_OSX)
+      if((fx<0) &&(fy<0)){  // フォーカスがない 
 #else
       if((sx==ROOTOFF_X-width)
 	 &&(sy==ROOTOFF_Y-mascot->bar_offset)){  // フォーカスがない 
@@ -768,6 +748,8 @@ int MoveToFocus(typMascot *mascot, gboolean force_fl)
     else{
 #ifdef USE_WIN32   // フォーカスがない 
       if(IsWin32Root(hWnd, mascot->width_root, mascot->height_root)){
+#elif defined(USE_OSX)
+      if((fx<0) &&(fy<0)){  // フォーカスがない 
 #else
       if((sx==ROOTOFF_X) &&(sy==ROOTOFF_Y)){  // フォーカスがない 
 #endif
@@ -816,6 +798,7 @@ int MoveToFocus(typMascot *mascot, gboolean force_fl)
 	  }
 	}
       }
+#elif defined(USE_OSX)
 #else
       if(mascot->home_auto){  // Auto Taskbar Scaling for X
 	MyXY xy;

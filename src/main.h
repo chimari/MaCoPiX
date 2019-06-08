@@ -1380,3 +1380,9 @@ gint ssl_peek();
 gint ssl_gets();
 gint ssl_write();
 #endif
+
+// macOS
+#ifdef USE_OSX
+void MacGetFocusWin();
+void MacGetRootWin();
+#endif

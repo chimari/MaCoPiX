@@ -719,6 +719,8 @@ TAR32_LIBS
 UNLHA32_LIBS
 WINSOCK_LIBS
 WINMM_LIBS
+OSX_LDADD
+OSX_CFLAGSADD
 LIBOBJS
 ALLOCA
 HAVE_WINDRES_FALSE
@@ -15278,6 +15280,28 @@ _ACEOF
 
 fi
 done
+
+
+os_osx=no
+
+case "$target" in
+*-darwin*)
+	os_osx=yes
+
+$as_echo "#define USE_OSX /**/" >>confdefs.h
+
+	;;
+esac
+
+if test x"${os_osx}" = "xyes"; then
+        OSX_CFLAGSADD = " -framework carbon -framework foundation -framework cocoa -x objective-c -std=c99"
+        OSX_LDADD="-headerpad_max_install_names -framework carbon -framework foundation -framework cocoa -x objective-c -std=c99"
+else
+       OSX_CFLAGSADD=""
+        OSX_LDADD=""
+fi
+
+
 
 
 

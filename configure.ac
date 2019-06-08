@@ -90,6 +90,27 @@ AC_TYPE_SIGNAL
 AC_FUNC_STAT
 AC_CHECK_FUNCS([__argz_count __argz_next __argz_stringify dup2 getcwd gethostbyname mempcpy memset mkdir munmap nl_langinfo setlocale socket stpcpy strcasecmp strchr strcspn strdup strrchr strstr strtol strtoul isascii memmove strncasecmp])
 
+os_osx=no
+
+case "$target" in
+*-darwin*)
+	os_osx=yes
+        AC_DEFINE([USE_OSX],[],[Use Mac OS X])
+dnl	CFLAGS="$CFLAGS -no-cpp-precomp -fno-common"
+	;;
+esac
+
+if test x"${os_osx}" = "xyes"; then
+        OSX_CFLAGSADD = " -framework carbon -framework foundation -framework cocoa -x objective-c -std=c99"
+        OSX_LDADD="-headerpad_max_install_names -framework carbon -framework foundation -framework cocoa -x objective-c -std=c99"
+else
+       OSX_CFLAGSADD=""
+        OSX_LDADD=""
+fi
+AC_SUBST(OSX_CFLAGSADD)
+AC_SUBST(OSX_LDADD)
+
+
 dnl Win32
 AC_ARG_WITH(win32,
 		 AC_HELP_STRING([--with-win32],
