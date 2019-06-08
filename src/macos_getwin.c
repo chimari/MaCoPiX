@@ -9,7 +9,7 @@
 
 // compile with gcc thusly:
 // gcc -framework carbon -framework foundation -framework cocoa -x objective-c -std=c99 GetWindowList.c -o GetWindowList
-
+#include "main.h"
 
 #ifdef USE_OSX
 
