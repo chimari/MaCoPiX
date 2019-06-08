@@ -116,8 +116,10 @@
 #include <netinet/in.h>
 #include <netdb.h>
 #endif
+#ifndef USE_OSX
 #include <gdk/gdkx.h>
 #include <X11/Xatom.h>
+#endif
 #endif
 
 #include "resources.h"
