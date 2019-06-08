@@ -6307,6 +6307,7 @@ void create_config_dialog(GtkWidget *widget, gpointer gdata){
 #endif
 
 #ifndef USE_WIN32
+#ifndef USE_OSX
       label = gtkut_label_new (_("Window Manager [start-up]"));
       gtkut_pos(label, POS_START, POS_CENTER);
       gtkut_table_attach_defaults (table2, label, 0, 1, 1, 2);
@@ -6315,6 +6316,7 @@ void create_config_dialog(GtkWidget *widget, gpointer gdata){
 	gtkut_pos(label, POS_START, POS_CENTER);
 	gtkut_table_attach_defaults (table2, label, 1, 2, 1, 2);
       }
+#endif
 #endif
 
 

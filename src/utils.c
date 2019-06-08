@@ -340,12 +340,14 @@ void my_signal_connect(GtkWidget *widget,
 
 
 #ifndef USE_WIN32
+#ifndef USE_OSX
 gchar* GetCurrentWMName(GtkWidget *widget){
   GdkScreen *screen = gtk_widget_get_screen(widget);
   //GdkScreen *screen = gdk_screen_get_default();
 
   return((gchar *)gdk_x11_screen_get_window_manager_name(screen));
 }
+#endif
 #endif
 
 gdouble GetCurrentResolution(void){

@@ -104,7 +104,7 @@ CFLAGS="$CFLAGS -mms-bitfields"
 LDFLAGS="$LDFLAGS -mwindows"
 WINMM_LIBS="-lwinmm"
 WINSOCK_LIBS="-lws2_32"
-OSX_CFLAGSADD=""
+OSX_CADD=""
 OSX_LDADD=""
 else
 
@@ -118,10 +118,10 @@ dnl	CFLAGS="$CFLAGS -no-cpp-precomp -fno-common"
 esac
 
 if test x"${os_osx}" = "xyes"; then
-        OSX_CFLAGSADD = "-framework carbon -framework foundation -framework cocoa -x objective-c -std=c99"
+        OSX_CADD="-x objective-c -std=c99"
         OSX_LDADD="-headerpad_max_install_names -framework carbon -framework foundation -framework cocoa -x objective-c -std=c99"
 else
-        OSX_CFLAGSADD=""
+        OSX_CADD=""
         OSX_LDADD=""
 AC_SEARCH_LIBS([XFree], [X11], [], [
   LDFLAGS="$LDFLAGS -L/usr/X11R6/lib -L/usr/X11R6/lib64"
@@ -141,7 +141,7 @@ fi
 AC_DEFINE(USE_SSL,[], [Use SSL for POP])
 AC_SUBST(WINMM_LIBS)
 AC_SUBST(WINSOCK_LIBS)
-AC_SUBST(OSX_CFLAGSADD)
+AC_SUBST(OSX_CADD)
 AC_SUBST(OSX_LDADD)
 
 dnl UNLHA32

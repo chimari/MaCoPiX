@@ -718,7 +718,7 @@ PKG_CONFIG
 TAR32_LIBS
 UNLHA32_LIBS
 OSX_LDADD
-OSX_CFLAGSADD
+OSX_CADD
 WINSOCK_LIBS
 WINMM_LIBS
 LIBOBJS
@@ -15301,7 +15301,7 @@ CFLAGS="$CFLAGS -mms-bitfields"
 LDFLAGS="$LDFLAGS -mwindows"
 WINMM_LIBS="-lwinmm"
 WINSOCK_LIBS="-lws2_32"
-OSX_CFLAGSADD=""
+OSX_CADD=""
 OSX_LDADD=""
 else
 
@@ -15315,10 +15315,10 @@ $as_echo "#define USE_OSX /**/" >>confdefs.h
 esac
 
 if test x"${os_osx}" = "xyes"; then
-        OSX_CFLAGSADD = "-framework carbon -framework foundation -framework cocoa -x objective-c -std=c99"
+        OSX_CADD="-x objective-c -std=c99"
         OSX_LDADD="-headerpad_max_install_names -framework carbon -framework foundation -framework cocoa -x objective-c -std=c99"
 else
-        OSX_CFLAGSADD=""
+        OSX_CADD=""
         OSX_LDADD=""
 { $as_echo "$as_me:${as_lineno-$LINENO}: checking for library containing XFree" >&5
 $as_echo_n "checking for library containing XFree... " >&6; }
