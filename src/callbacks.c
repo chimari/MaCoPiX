@@ -721,20 +721,22 @@ int MoveToFocus(typMascot *mascot, gboolean force_fl)
 
     if(mascot->focus_autobar!=AUTOBAR_MANUAL){
 #ifdef USE_WIN32   // フォーカスがない 
-      if(IsWin32Root(hWnd, mascot->width_root, mascot->height_root))
-#elif defined(USE_OSX)
-	if((fx<0) &&(fy<0))  // フォーカスがない 
-#else
-	  if((sx==ROOTOFF_X-width)
-	     &&(sy==ROOTOFF_Y-mascot->bar_offset))  // フォーカスがない 
-#endif
-      {
+      if(IsWin32Root(hWnd, mascot->width_root, mascot->height_root)){
 	flag_homepos=mascot->homepos_nf;
       }
-	 else if(ypop<ROOTOFF_Y){ //画面上にマスコットがはみでる
-       flag_homepos=mascot->homepos_out;
-	    
-    }
+#elif defined(USE_OSX)
+      if((fx<0) &&(fy<0)){  // フォーカスがない 
+	flag_homepos=mascot->homepos_nf;
+      }
+#else
+      if((sx==ROOTOFF_X-width)
+	 &&(sy==ROOTOFF_Y-mascot->bar_offset)){  // フォーカスがない 
+	flag_homepos=mascot->homepos_nf;
+      }
+#endif
+      else if(ypop<ROOTOFF_Y){ //画面上にマスコットがはみでる
+	flag_homepos=mascot->homepos_out;
+      }
     }
     else{
 #ifdef USE_WIN32   // フォーカスがない 
@@ -742,7 +744,7 @@ int MoveToFocus(typMascot *mascot, gboolean force_fl)
 	flag_homepos=mascot->homepos_nf;
       }
 #elif defined(USE_OSX)
-      if((fx<0) &&(fy<0)){  // フォーカスがない 
+      if( (fx<0) && (fy<0) ){  // フォーカスがない 
 	flag_homepos=mascot->homepos_nf;
       }
 #else
