@@ -432,39 +432,22 @@ enum{   MENU_SELECT,
 
 
 //DEFAULT COLOR
-#ifdef USE_WIN32
-#define COLOR_CLK_R 0xffff
-#define COLOR_CLK_G 0xf600
-#define COLOR_CLK_B 0xde00
-
-#define COLOR_CLKSD_R 0x0000
-#define COLOR_CLKSD_G 0x0000
-#define COLOR_CLKSD_B 0x0000
-
-#define COLOR_CLKBG_R 0x2100
-#define COLOR_CLKBG_G 0x0000
-#define COLOR_CLKBG_B 0x0000
-
-#define COLOR_CLKBD_R 0xffff
-#define COLOR_CLKBD_G 0xdc00
-#define COLOR_CLKBD_B 0xbf00
-#else
-#define COLOR_CLK_R 0xffff
-#define COLOR_CLK_G 0x0000
-#define COLOR_CLK_B 0x0000
+#define COLOR_CLK_R 0x4B55
+#define COLOR_CLK_G 0x30E2
+#define COLOR_CLK_B 0x2527
 
 #define COLOR_CLKSD_R 0x7fff
 #define COLOR_CLKSD_G 0x7fff
 #define COLOR_CLKSD_B 0x7fff
 
 #define COLOR_CLKBG_R 0xffff
-#define COLOR_CLKBG_G 0xcfff
-#define COLOR_CLKBG_B 0xcfff
+#define COLOR_CLKBG_G 0xfa80
+#define COLOR_CLKBG_B 0xdbff
 
-#define COLOR_CLKBD_R 0xcfff
-#define COLOR_CLKBD_G 0x7fff
-#define COLOR_CLKBD_B 0x7fff
-#endif
+#define COLOR_CLKBD_R 0x7e9f
+#define COLOR_CLKBD_G 0x67d2
+#define COLOR_CLKBD_B 0x53f4
+
 #define COLOR_BAL_R 0x4B55
 #define COLOR_BAL_G 0x30E2
 #define COLOR_BAL_B 0x2527
@@ -951,7 +934,7 @@ struct _typMascot{
   gint alpha_biff;
   gint def_alpha_biff;
 #endif
-#ifdef USE_WIN32
+#ifdef USE_FGDRAW
   gint alpha_bal;
   gint def_alpha_bal;
   gint alpha_clk;
@@ -962,7 +945,7 @@ struct _typMascot{
   gboolean flag_clk_cairo;
   gboolean flag_clksd;
   gboolean flag_clkrd;
-#ifdef USE_WIN32
+#ifdef USE_FGDRAW
   gboolean def_flag_clkfg;
   gboolean flag_clkfg;
   gboolean def_flag_balfg;
@@ -1388,6 +1371,8 @@ gint ssl_write();
 
 // macOS
 #ifdef USE_OSX
+void MacGoTop();
+void MacMapWin();
 void MacGetFocusWin();
 void MacGetRootWin();
 #endif

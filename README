@@ -34,9 +34,10 @@
   MaCoPiX is a Gtk based desktop mascot program running under
     - UNIX (X window systems)
     - Microsoft Windows (7 or later)
+    - macOS El Capitan (10.11) or later
   .
   
-  The Windows version is distributed as compiled (binary) package.
+  The Windows and macOS versions are distributed as compiled (binary) package.
   Most of the text in this document describes about MaCoPiX UNIX
   version. So, fo windows, please see Readme-win32.jp (sorry, Japanese
   only, yet).
@@ -79,6 +80,13 @@
         * You can dounload it (free-software, GPL) form the HP of
           "Common Archiver Library Project".
            URL  http://www.csdinc.co.jp/archiver/index-e.html
+     - Compiled in msys2 with GtK+3 Without socket message function.	  
+     - All required libraries (Gtk+ etc.) are also included in the
+       binary package. 
+
+   [for maOS (binary package)]
+     - El Capitan (10.11) or later (64 bit)
+     - Compiled with Gtk+3 in Homebrew environment
      - All required libraries (Gtk+ etc.) are also included in the
        binary package. 
 

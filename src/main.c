@@ -5207,6 +5207,10 @@ int main(int argc, char **argv)
   if(sockmsg_flag) sockmsg_set_mascot(Mascot);
 #endif
 
+#ifdef USE_OSX
+  MacGoTop();
+#endif
+
   gtk_main();
 
 #ifdef USE_SOCKMSG

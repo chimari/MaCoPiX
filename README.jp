@@ -61,7 +61,10 @@
 
 
 ▼動作環境
-  X Window Systemが動作するUNIX環境、もしくはMicrosoft Windowsで動作します。
+  以下の環境で動作します。
+      - X Window Systemが動作するUNIX環境
+      - Microsoft Windows (7以降, 10推奨)
+      - macOS (10.11 ElCapitan以降、64bit only)
 
    [for UNIX]
      ・Gtk+3 (3.22以降) もしくはGtk+2 (2.24以降) およびそれに付随する gdk-pixbuf, cairo
@@ -76,8 +79,15 @@
      ・TAR64.DLL もしくは TAR32.DLL (GPL)を同梱
         ※参照「統合アーカイバプロジェクト」
             URL  http://www.csdinc.co.jp/archiver/
+     ・mysy2上のGtk+3 でコンパイルしています。
+     ・socket messageには対応していません。
      ・他Gtk+等の必要なライブラリもバイナリ配布版にすべて含まれています。
 
+   [for macOS (バイナリ配布)]
+     ・El Capitan (10.11)以降
+     ・64bitのみ
+     ・Homebrew のGtk+3 でコンパイルしています。
+     ・他Gtk+等の必要なライブラリもバイナリ配布版にすべて含まれています。
 
 ▼インストール (UNIX版/sourceから)
   1. sourceを展開し、できたディレクトリに移動
@@ -91,6 +101,7 @@
            ./configure --disable-ssl    (SSLを使わない場合)
          [Win32]  (デフォルトはfor UNIX)
            ./configure --with-win32    (Win32用にmakeする場合)
+	                               (macOS はdarwin環境か否かを自動判別)
          [TAR32]  (デフォルトはオフ)
            ./configure --with-tar64    (TAR64.DLLを使う場合, for 64bit)
            ./configure --with-tar32    (TAR32.DLLを使う場合, for 32bit)

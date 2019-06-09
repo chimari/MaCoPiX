@@ -192,9 +192,9 @@ void MoveMascot(typMascot *mascot, gint x, gint y)
 #ifdef USE_BIFF
   MoveBiffPix(mascot, x, y);
 #endif
-  
-  raise_all(mascot);
 
+  raise_all(mascot);
+  
   gdk_window_move(gtk_widget_get_window(mascot->win_main), x, y);
 
 #ifdef USE_WIN32
@@ -889,7 +889,7 @@ void drag_begin(GtkWidget * widget, GdkEventButton * event, gpointer gdata)
 #endif
 
   mascot=(typMascot *)gdata; 
-
+ 
   if(mascot->flag_menu) return;
   
   if (event->button == 1) {
@@ -1004,7 +1004,9 @@ void drag_end(GtkWidget * widget, GdkEventButton * event, gpointer gdata)
   }
   gdk_window_set_cursor(gtk_widget_get_window(widget),mascot->cursor.normal);
 #ifdef USE_GTK3	    
-  gdk_seat_ungrab(mascot->seat);
+  if(GDK_IS_SEAT(mascot->seat)){
+    gdk_seat_ungrab(mascot->seat);
+  }
 #else	    
   gdk_pointer_ungrab(GDK_CURRENT_TIME);
 #endif	    
@@ -1081,7 +1083,9 @@ void clk_drag_end(GtkWidget * widget, GdkEventButton * event, gpointer gdata)
   gdk_window_set_cursor(gtk_widget_get_window(widget),mascot->cursor.clk);
 
 #ifdef USE_GTK3	    
-  gdk_seat_ungrab(mascot->seat);
+  if(GDK_IS_SEAT(mascot->seat)){
+    gdk_seat_ungrab(mascot->seat);
+  }
 #else	    
   gdk_pointer_ungrab(GDK_CURRENT_TIME);
 #endif	    
@@ -1168,7 +1172,9 @@ void biff_drag_end(GtkWidget * widget, GdkEventButton * event, gpointer gdata)
   gdk_window_set_cursor(gtk_widget_get_window(widget),mascot->cursor.biff);
 
 #ifdef USE_GTK3	    
-  gdk_seat_ungrab(mascot->seat);
+  if(GDK_IS_SEAT(mascot->seat)){
+    gdk_seat_ungrab(mascot->seat);
+  }
 #else	    
   gdk_pointer_ungrab(GDK_CURRENT_TIME);
 #endif	    
@@ -1862,7 +1868,9 @@ void focus_out(GtkWidget * widget, GdkEventMotion * event, gpointer gdata)
   mascot=(typMascot *)gdata;
   
 #ifdef USE_GTK3	    
-  gdk_seat_ungrab(mascot->seat);
+  if(GDK_IS_SEAT(mascot->seat)){
+    gdk_seat_ungrab(mascot->seat);
+  }
 #else	    
   gdk_pointer_ungrab(GDK_CURRENT_TIME);
 #endif	    
@@ -1942,6 +1950,8 @@ gboolean time_update(gpointer gdata)
 	case SOCKMSG_OPENED:
 	  duet_send_msg(msg);
 	  duet_cl_done(mascot->duet_tgt[mascot->anime_ptn],FALSE);
+	  break;
+	default:
 	  break;
 	}
 	g_free(msg);
@@ -2132,8 +2142,10 @@ void clock_update(typMascot *mascot, gboolean force_flag){
 	      flag_balloon=TRUE;
 	    }
 	  }
-#ifdef USE_GTK3	    
-	  gdk_seat_ungrab(mascot->seat);
+#ifdef USE_GTK3
+	  if(GDK_IS_SEAT(mascot->seat)){
+	    gdk_seat_ungrab(mascot->seat);
+	  }
 #else	    
 	  gdk_pointer_ungrab(GDK_CURRENT_TIME);
 #endif	    
@@ -2368,18 +2380,25 @@ void raise_all(typMascot *mascot){
 #endif
 #endif
   gdk_window_raise(gtk_widget_get_window(mascot->win_main));
-
+  
+  if(mascot->clkmode==CLOCK_PANEL){
 #ifdef FG_DRAW
-  gdk_window_raise(gtk_widget_get_window(mascot->clock_fg));
+    gdk_window_raise(gtk_widget_get_window(mascot->clock_fg));
 #endif
-  gdk_window_raise(gtk_widget_get_window(mascot->clock_main));
+    gdk_window_raise(gtk_widget_get_window(mascot->clock_main));
+  }
 
+  if(flag_balloon){
 #ifdef FG_DRAW
-  gdk_window_raise(gtk_widget_get_window(mascot->balloon_fg));
+    gdk_window_raise(gtk_widget_get_window(mascot->balloon_fg));
 #endif
-  gdk_window_raise(gtk_widget_get_window(mascot->balloon_main));
+    gdk_window_raise(gtk_widget_get_window(mascot->balloon_main));
+  }
+
 #ifdef USE_BIFF
-  gdk_window_raise(gtk_widget_get_window(mascot->biff_pix));
+  if((mascot->mail.flag)&&(mascot->mail.status != NO_MAIL)){
+    gdk_window_raise(gtk_widget_get_window(mascot->biff_pix));
+  }
 #endif
 }
 
@@ -2859,12 +2878,10 @@ void make_mascot(typMascot *mascot){
 
   gdk_window_set_decorations(gtk_widget_get_window(mascot->win_main), 0);
 #ifndef USE_WIN32
-#ifndef USE_OSX
   //  gdk_window_set_decorations(win_main->window, GDK_DECOR_MENU);
   // Win32 Gtk+> 2.10 -> trayicon 
   gdk_window_set_override_redirect(gtk_widget_get_window(mascot->win_main),
 				   TRUE);
-#endif
 #endif
 
 #ifdef FG_DRAW
@@ -2961,6 +2978,7 @@ void make_mascot(typMascot *mascot){
 }
 
 void map_balloon(typMascot *mascot, gboolean flag){
+  
   if(flag){
 #ifdef FG_DRAW
     if((mascot->flag_balfg)&&(mascot->alpha_bal!=100)){
@@ -2974,6 +2992,9 @@ void map_balloon(typMascot *mascot, gboolean flag){
 #endif
     gtk_widget_map(mascot->balloon_main);
     gtk_widget_map(mascot->dw_balloon);
+#ifdef USE_OSX
+    MacMapWin(mascot->balloon_main, TRUE);
+#endif
   }
   else{
 #ifdef FG_DRAW
@@ -2982,6 +3003,9 @@ void map_balloon(typMascot *mascot, gboolean flag){
 #endif
     gtk_widget_unmap(mascot->balloon_main);
     gtk_widget_unmap(mascot->dw_balloon);
+#ifdef USE_OSX
+    MacMapWin(mascot->balloon_main, FALSE);
+#endif
   }
 }
 

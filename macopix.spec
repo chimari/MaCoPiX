@@ -1,6 +1,6 @@
 Summary: MaCoPiX = Mascot Constructive Pilot for X
 Name: macopix
-Version: 3.0.1
+Version: 3.1.0
 Release: 1%{?_dist_release}
 License: GPL3
 Group: Amusements/Games
@@ -17,8 +17,8 @@ BuildRequires:	cairo-devel
 BuildRequires:  openssl-devel
 
 %description
-MaCoPiX is a desktop mascot program running under UNIX / X window systems
-or Microsoft Windows.
+MaCoPiX is a desktop mascot program running under UNIX / X window systems,
+macOS, and Microsoft Windows.
 Users can make Focus follower (window sitters) or Fixed style (Desktop wappen)
 mascots using MaCoPiX. Furthermore, users can select with or without a digital
 clock for each types of mascots. 

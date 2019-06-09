@@ -1,3 +1,5 @@
+2019.6.XX   ver3.1.0  - Now supporting macOS.
+
 2019.6.06   ver3.0.1  - Fixing Buffer overflows on getting From/Subject list
 	                in the Biff function.
                       - Moved TreeViews in Gtk+2 from viewport to container.
