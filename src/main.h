@@ -931,7 +931,7 @@ struct _typMascot{
   gint alpha_biff;
   gint def_alpha_biff;
 #endif
-#ifdef USE_FGDRAW
+#ifdef FG_DRAW
   gint alpha_bal;
   gint def_alpha_bal;
   gint alpha_clk;
@@ -942,7 +942,7 @@ struct _typMascot{
   gboolean flag_clk_cairo;
   gboolean flag_clksd;
   gboolean flag_clkrd;
-#ifdef USE_FGDRAW
+#ifdef FG_DRAW
   gboolean def_flag_clkfg;
   gboolean flag_clkfg;
   gboolean def_flag_balfg;

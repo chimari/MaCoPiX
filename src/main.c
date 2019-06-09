@@ -1913,7 +1913,6 @@ void SaveRC(typMascot *mascot,  gboolean def_flag)
 		     mascot->sockmsg_expire_def);
 #endif  // USE_SOCKMSG
 
-#ifdef USE_WIN32
     // Alpha Percentage
   if(def_flag)  field_tmp=g_strdup("Default-Alpha");
   else          field_tmp=g_strdup("Alpha");
@@ -1924,6 +1923,7 @@ void SaveRC(typMascot *mascot,  gboolean def_flag)
 #ifdef USE_BIFF
   xmms_cfg_write_int(cfgfile, field_tmp, "biff",mascot->def_alpha_biff);
 #endif
+#ifdef FG_DRAW
   xmms_cfg_write_int(cfgfile, field_tmp, "balloon",mascot->def_alpha_bal);
   xmms_cfg_write_int(cfgfile, field_tmp, "clock",mascot->def_alpha_clk);
 #endif

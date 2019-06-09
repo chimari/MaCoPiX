@@ -4011,7 +4011,7 @@ static void MakeNewMascot(typMascot *mascot, gchar *mascot_file,
 #ifdef USE_BIFF
   mascot->alpha_biff=100;
 #endif
-#ifdef USE_WIN32
+#ifdef FG_DRAW
   mascot->alpha_bal=100;
   mascot->alpha_clk=100;
 #endif  

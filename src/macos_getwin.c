@@ -28,7 +28,7 @@ void MacMapWin(GtkWidget *w, gboolean f){
   }
 }
 
-void MacGoTop(void){
+void MacGoTop(){
   NSApplication *thisApp = [NSApplication sharedApplication];
   //[thisApp activateIgnoringOtherApps:YES];
 
@@ -36,10 +36,11 @@ void MacGoTop(void){
 
   for(int i = [owin count]-1; i>=0;i--){
     NSWindow *window = [[NSApp windows]objectAtIndex:i];
-    [window setCollectionBehavior:NSWindowCollectionBehaviorCanJoinAllSpaces | NSWindowCollectionBehaviorFullScreenAuxiliary];
+    //[window setCollectionBehavior:NSWindowCollectionBehaviorCanJoinAllSpaces | NSWindowCollectionBehaviorFullScreenAuxiliary];
     //[window setCollectionBehavior:NSWindowCollectionBehaviorCanJoinAllSpaces];
     [window setLevel: NSFloatingWindowLevel];
     [window setHasShadow:NO];
+    [window setCollectionBehavior:NSWindowCollectionBehaviorCanJoinAllSpaces | NSWindowCollectionBehaviorStationary | NSWindowCollectionBehaviorTransient | NSWindowCollectionBehaviorIgnoresCycle];
   }
   
 }
