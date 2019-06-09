@@ -3478,7 +3478,7 @@ static void create_change_duet_tgt_dialog(GtkWidget *w, gpointer gdata)
     if(fname) g_free(fname);
 
     if(access(dest_file,F_OK)==0){
-      if(mascot->duet_tgt[i_ptn]); g_free(mascot->duet_tgt[i_ptn]);
+      if(mascot->duet_tgt[i_ptn]) g_free(mascot->duet_tgt[i_ptn]);
       mascot->duet_tgt[i_ptn]=g_strdup(my_basename(FullPathMascotFile(mascot, dest_file)));
       
       gtk_entry_set_text(GTK_ENTRY(duet_tgt_entry[i_ptn]),

@@ -62,7 +62,7 @@ MD5Digest (unsigned char *s)
   /*MD5Init(&context);*/
   context = gnet_md5_new_incremental();
   /*MD5Update(&context, s, strlen(s));*/
-  gnet_md5_update (context,s,strlen(s));
+  gnet_md5_update (context,(const gchar *)s,strlen((const char *)s));
   /*MD5Final(digest, &context);*/
   gnet_md5_final(context);
   digest = gnet_md5_get_string(context);

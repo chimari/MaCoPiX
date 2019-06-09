@@ -158,9 +158,6 @@
 #endif
 #endif
 
-#ifdef USE_OSX
-#define FG_DRAW
-#endif
 
 // Homepage URL
 #define DEFAULT_URL "http://rosegray.sakura.ne.jp/"
@@ -953,7 +950,7 @@ struct _typMascot{
 #endif
   gint clktype;
   gboolean clk_pm;
-  char digit[20];  
+  gchar digit[20];  
   int anime_ptn;
   int anime_frm;
   int anime_seq;

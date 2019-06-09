@@ -958,7 +958,7 @@ void LoadPixmaps(typMascot *mascot){
 
   mascot->nPixmap = i;
   mascot->drag=FALSE;
-  if(!mascot->digit)  strcpy(mascot->digit,"00:00:00");
+  strcpy(mascot->digit,"00:00:00");
 
   // 未使用バッファをクリア
   for(i=mascot->nPixmap;i<MAX_PIXMAP;i++){

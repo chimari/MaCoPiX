@@ -1424,8 +1424,12 @@ void ReadRC(typMascot *mascot, gboolean def_flag)
 			     &mascot->mail.pop_server))
       mascot->mail.pop_server=NULL;
 #ifdef USE_SSL
-    if(!xmms_cfg_read_int(cfgfile, field_tmp, "ssl-mode",&mascot->mail.ssl_mode))
+    if(xmms_cfg_read_int(cfgfile, field_tmp, "ssl-mode",&i_buf)){
+      mascot->mail.ssl_mode=(guint)i_buf;
+    }
+    else{
       mascot->mail.ssl_mode=SSL_NONE;
+    }
 #else
     mascot->mail.ssl_mode=SSL_NONE;
 #endif

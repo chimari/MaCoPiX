@@ -124,14 +124,14 @@ void unmime_header(gchar *out, const gchar *str)
 		if (encoding == 'B') {
 			decoded_text = g_malloc
 				(eword_end_p - (text_begin_p + 1) + 1);
-			len = base64_decode(decoded_text, text_begin_p + 1,
+			len = base64_decode((guchar *)decoded_text, text_begin_p + 1,
 					    eword_end_p - (text_begin_p + 1));
 			decoded_text[len] = '\0';
 		} else if (encoding == 'Q') {
 			decoded_text = g_malloc
 				(eword_end_p - (text_begin_p + 1) + 1);
 			len = qp_decode_q_encoding
-				(decoded_text, text_begin_p + 1,
+			  ((guchar *)decoded_text, text_begin_p + 1,
 				 eword_end_p - (text_begin_p + 1));
 		} else {
 			memcpy(outp, p, eword_end_p + 2 - p);

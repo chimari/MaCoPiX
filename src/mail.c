@@ -163,6 +163,8 @@ gint SetMailChecker(gpointer gdata){
 
     pop_debug_print("proc_id=%d\n",mascot->mail.proc_id);
   }
+
+  return(0);
 }
 
 gint ResetMailChecker(gpointer gdata){
@@ -2026,7 +2028,7 @@ void create_biff_dialog(typMascot *mascot)
 
   gtk_widget_set_size_request (mascot->biff_main, mascot->mail.win_width, 
 			       mascot->mail.win_height);
-  if(mascot->mail.type==MAIL_POP3|MAIL_APOP){
+  if(mascot->mail.type==(MAIL_POP3|MAIL_APOP)){
     tmp=g_strconcat(_("MaCoPiX : Arrived mail list"),"  [",
 		    mascot->mail.pop_server,"]",NULL);
   }

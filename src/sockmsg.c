@@ -180,7 +180,7 @@ static gint fd_accept(gint sock)
 	gint caddr_len;
 
 	caddr_len = sizeof(caddr);
-	return accept(sock, (struct sockaddr *)&caddr, &caddr_len);
+	return accept(sock, (struct sockaddr *)&caddr, (socklen_t *)&caddr_len);
 }
 
 static gint fd_close(gint fd)

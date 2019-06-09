@@ -125,7 +125,7 @@ gint qp_decode_line(gchar *str)
 	while (*inp != '\0') {
 		if (*inp == '=') {
 			if (inp[1] && inp[2] &&
-			    get_hex_value(outp, inp[1], inp[2]) == TRUE) {
+			    get_hex_value((guchar *)outp, inp[1], inp[2]) == TRUE) {
 				inp += 3;
 			} else if (inp[1] == '\0' || isspace((guchar)inp[1])) {
 				/* soft line break */
