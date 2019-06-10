@@ -179,7 +179,14 @@ fi
 fi
 AC_SUBST(TAR32_LIBS)
 
-AM_PATH_GLIB_2_0(2.32.0,, AC_MSG_ERROR([glib-2.x is required]), gthread gobject)
+dnl AM_PATH_GLIB_2_0(2.32.0,, AC_MSG_ERROR([glib-2.x is required]), gthread gobject)
+PKG_CHECK_MODULES(GLIB, glib-2.0 >= 2.32, dummy=yes,
+			AC_MSG_ERROR(GLib >= 2.32 is required))
+GLIB_CFLAGS="$GLIB_CFLAGS"
+GLIB_LIBS="$GLIB_LIBS"
+AC_SUBST(GLIB_CFLAGS)
+AC_SUBST(GLIB_LIBS)
+
 dnl GTK 3 or 2 
 AC_ARG_WITH(gtk2,
              AC_HELP_STRING([--with-gtk2],

@@ -11701,7 +11701,11 @@ void make_smenu_list(GtkWidget *scrwin, typScanMenu *smenu)
   
   smenu_table = gtkut_table_new (5, MAX_MENU_CATEGORY2+2, FALSE,7,7,5);
 
+#ifdef USE_GTK3
   gtk_container_add(GTK_CONTAINER(scrwin), smenu_table);
+#else
+  gtk_scrolled_window_add_with_viewport(GTK_SCROLLED_WINDOW(scrwin),smenu_table);
+#endif
  
   label = gtkut_label_new (_("File"));
   gtkut_table_attach(smenu_table, label, 1, 2, 0, 1,
