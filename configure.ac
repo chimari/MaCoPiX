@@ -193,18 +193,22 @@ AC_ARG_WITH(gtk2,
                         [use Gtk+2 instead of Gtk+3]),
                         [use_gtk2=yes])
 if test x"${use_gtk2}" = "xyes"; then
-AM_PATH_GTK_2_0(2.24.0,, AC_MSG_ERROR([gtk+-2.x is required]), gthread gobject)
+dnl Gtk+2
+PKG_CHECK_MODULES(GTK2, gtk+-2.0 >= 2.24, dummy=yes,
+			AC_MSG_ERROR(Gtk+2 >= 2.24 is required))
+GTK_CFLAGS="$GTK2_CFLAGS"
+GTK_LIBS="$GTK2_LIBS"
 AC_DEFINE([USE_GTK2],[],[Use Gtk+2.x instead of Gtk+3])
-GTK3_CFLAGS=""
-GTK3_LIBS=""
 else
-GTK3_CFLAGS="`pkg-config gtk+-3.0 --cflags`"
-GTK3_LIBS="`pkg-config gtk+-3.0 --libs`"
-dnl    AM_PATH_GTK_3_0(3.22.0,, AC_MSG_ERROR([gtk+-2.x is required]), gthread gobject)
+dnl GTK+3
+PKG_CHECK_MODULES(GTK3, gtk+-3.0 >= 3.22, dummy=yes,
+			AC_MSG_ERROR(Gtk+3 >= 3.22 is required))
+GTK_CFLAGS="$GTK3_CFLAGS"
+GTK_LIBS="$GTK3_LIBS"
 AC_DEFINE([USE_GTK3],[],[Use Gtk+3.x instead of Gtk+2])
 fi
-AC_SUBST(GTK3_LIBS)
-AC_SUBST(GTK3_CFLAGS)
+AC_SUBST(GTK_LIBS)
+AC_SUBST(GTK_CFLAGS)
 
 dnl Checks for iconv
 AM_ICONV
