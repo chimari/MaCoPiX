@@ -10561,7 +10561,19 @@ GtkWidget * make_osx_menu(typMascot *mascot)
 
   return(menu_bar);
 }
+
+void remake_osx_menu(typMascot mascot){
+  gtk_widget_destroy(mascot->osx_menu);
+  mascot->osx_menu=make_osx_menu(mascot);
+  gtk_container_add(GTK_CONTAINER(mascot->osx_win), mascot->osx_menu);
+  gtk_widget_hide(mascot->osx_menu);
+  gtkosx_application_set_menu_bar(mascot->osx_app,
+				  GTK_MENU_SHELL(mascot->osx_menu));
+  gtkosx_application_ready(mascot->osx_app);
+}
 #endif
+
+
 
 // ポップアップメニューの生成
 GtkWidget * make_popup_menu(typMascot *mascot)
@@ -10726,6 +10738,9 @@ GtkWidget * make_popup_menu(typMascot *mascot)
 
   gtk_widget_show_all(popup_menu);
 
+#ifdef USE_GTKMACINTEGRATION
+#endif
+  
   return(popup_menu);
 }
 
@@ -11617,6 +11632,7 @@ void create_smenu_dialog(typMascot *mascot, gboolean flag_popup)
 	gtk_widget_destroy(mascot->PopupMenu);
 	ReadMenu(mascot,0,NULL);
 	mascot->PopupMenu=make_popup_menu(mascot);
+	remake_osx_menu(mascot);
       }
       gtk_widget_destroy(main);
     }

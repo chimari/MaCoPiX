@@ -2651,10 +2651,6 @@ void InitMascot0(typMascot *mascot){
   static MONITORS mon;
   gint nmon, i_mon;
 #elif defined(USE_OSX)
-#ifdef USE_GTKMACINTEGRATION
-  GtkosxApplication *osxapp;
-  GtkWidget *menubar;
-#endif
 #else  
   Window rootwin;
 #endif
@@ -2687,11 +2683,14 @@ void InitMascot0(typMascot *mascot){
   MacGetRootWin(&width_root, &height_root);
 
 #ifdef USE_GTKMACINTEGRATION
-  osxapp = g_object_new(GTKOSX_TYPE_APPLICATION, NULL);
-  gtkosx_application_set_use_quartz_accelerators(osxapp, FALSE);
-  menubar=make_osx_menu(mascot);
-  gtkosx_application_set_menu_bar(osxapp, GTK_MENU_SHELL(menubar));
-  gtkosx_application_ready(osxapp);
+  mascot->osx_app = g_object_new(GTKOSX_TYPE_APPLICATION, NULL);
+  gtkosx_application_set_use_quartz_accelerators(mascot->osx_app, FALSE);
+  mascot->osx_mwin=gtk_window_new(GTK_WINDOW_POPUP);
+  mascot->osx_menu=make_osx_menu(mascot);
+  gtk_container_add(GTK_CONTAINER(mascot->osx_win), mascot->osx_menu);
+  gtk_widget_hide(mascot->osx_menu);
+  gtkosx_application_set_menu_bar(mascot->osx_app, GTK_MENU_SHELL(mascot->osx_menu));
+  gtkosx_application_ready(mascot->osx_app);
 #endif
  
 #else

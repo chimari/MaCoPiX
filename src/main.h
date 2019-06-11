@@ -1087,6 +1087,12 @@ struct _typMascot{
   HANDLE hThread_http;
   unsigned int dwThreadID_http;
 #endif
+
+#ifdef USE_GTKMACINTEGRATION
+  GtkosxApplication *osx_app;
+  GtkWidget *osx_win;
+  GtkWidget *osx_menu;
+#endif
 };
 
 
