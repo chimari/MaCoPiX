@@ -269,7 +269,7 @@ dnl GtkMACIntegration
  
 if test x"${with_gtkmac}" = "xyes"; then
   if test "$os_osx" == yes; then
-    PKG_CHECK_MODULES(GTKMAC, gtk-mac-integration >= 2.1, dummy=yes,
+    PKG_CHECK_MODULES(GTKMAC, gtk-mac-integration-gtk3 >= 2.1, dummy=yes,
 			AC_MSG_ERROR(gtk-mac-integration >= 2.1 is required))
     GTKMAC_CFLAGS="$GTKMAC_CFLAGS"
     GTKMAC_LIBS="$GTKMAC_LIBS"
