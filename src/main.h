@@ -1254,6 +1254,7 @@ void unlink_all();
 void AllRandomChangeMascotMenu();
 #ifdef USE_GTKMACINTEGRATION
 GtkWidget* make_osx_menu();
+GtkWidget* make_osx_cmenu();
 #endif
 GtkWidget* make_popup_menu();
 void create_pop_pass_dialog();
