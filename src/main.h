@@ -1245,7 +1245,7 @@ void popup_text_view(GtkWidget *parent, gchar* stock_id, gchar *txt, ...);
 gboolean popup_ask(GtkWidget *parent, gchar* stock_id, ...);
 void unlink_all();
 void AllRandomChangeMascotMenu();
-#ifdef USE_GTKMACINTEGRATIOM
+#ifdef USE_GTKMACINTEGRATION
 GtkWidget* make_osx_menu();
 #endif
 GtkWidget* make_popup_menu();

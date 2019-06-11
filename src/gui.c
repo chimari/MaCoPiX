@@ -10460,7 +10460,7 @@ GtkWidget * make_osx_menu(typMascot *mascot)
   GtkWidget *bar;
   GtkWidget *image;
 
-  popup_menu = gtk_menu_new();
+  popup_menu = gtk_menu_bar_new();
   gtk_widget_show(popup_menu);
 
   open_menu=make_open_menu(mascot);
