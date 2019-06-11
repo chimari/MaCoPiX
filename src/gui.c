@@ -10466,7 +10466,13 @@ GtkWidget * make_osx_menu(typMascot *mascot)
   open_menu=make_open_menu(mascot);
   gtk_widget_show(open_menu);
 
-  popup_button =gtk_menu_item_new_with_label (_("Open"));
+  popup_button=gtkut_menu_item_new_with_icon(
+#ifdef USE_GTK3
+					 "document-open",
+#else				      
+					 GTK_STOCK_OPEN,
+#endif
+					 GTK_ICON_SIZE_MENU, _("Open"));
   gtk_widget_show (popup_button);
   gtk_container_add (GTK_CONTAINER (popup_menu), popup_button);
   gtk_menu_item_set_submenu(GTK_MENU_ITEM(popup_button),open_menu);
@@ -10474,7 +10480,13 @@ GtkWidget * make_osx_menu(typMascot *mascot)
   save_menu=make_save_menu(mascot);
   gtk_widget_show(save_menu);
 
-  popup_button =gtk_menu_item_new_with_label (_("Save"));
+  popup_button=gtkut_menu_item_new_with_icon(
+#ifdef USE_GTK3
+					 "document-save",
+#else				      
+					 GTK_STOCK_SAVE,
+#endif
+					 GTK_ICON_SIZE_MENU, _("Save"));
   gtk_widget_show (popup_button);
   gtk_container_add (GTK_CONTAINER (popup_menu), popup_button);
   gtk_menu_item_set_submenu(GTK_MENU_ITEM(popup_button),save_menu);
@@ -10482,7 +10494,13 @@ GtkWidget * make_osx_menu(typMascot *mascot)
   new_menu=make_new_menu(mascot);
   gtk_widget_show(new_menu);
 
-  popup_button =gtk_menu_item_new_with_label (_("New"));
+  popup_button=gtkut_menu_item_new_with_icon(
+#ifdef USE_GTK3
+					 "document-new",
+#else				      
+					 GTK_STOCK_NEW,
+#endif
+					 GTK_ICON_SIZE_MENU, _("New"));
   gtk_widget_show (popup_button);
   gtk_container_add (GTK_CONTAINER (popup_menu), popup_button);
   gtk_menu_item_set_submenu(GTK_MENU_ITEM(popup_button),new_menu);
@@ -10490,17 +10508,33 @@ GtkWidget * make_osx_menu(typMascot *mascot)
   install_menu=make_install_menu(mascot);
   gtk_widget_show(install_menu);
 
-  popup_button =gtk_menu_item_new_with_label (_("Install"));
+  popup_button=gtkut_menu_item_new_with_icon(
+#ifdef USE_GTK3
+					 "system-software-install",
+#else				      
+					 GTK_STOCK_HARDDISK,
+#endif
+					 GTK_ICON_SIZE_MENU, _("Install"));
   gtk_widget_show (popup_button);
   gtk_container_add (GTK_CONTAINER (popup_menu), popup_button);
   gtk_menu_item_set_submenu(GTK_MENU_ITEM(popup_button),install_menu);
 
 
 
-  popup_button =gtk_menu_item_new_with_label (_("Config"));
+  popup_button=gtkut_menu_item_new_with_icon(
+#ifdef USE_GTK3
+					 "document-properties",
+#else				      
+					 GTK_STOCK_PROPERTIES,
+#endif
+					 GTK_ICON_SIZE_MENU, _("Config"));
   gtk_widget_show (popup_button);
   gtk_container_add (GTK_CONTAINER (popup_menu), popup_button);
   my_signal_connect (popup_button, "activate", create_config_dialog, (gpointer)mascot);
+
+  bar =gtk_menu_item_new();
+  gtk_widget_show (bar);
+  gtk_container_add (GTK_CONTAINER (popup_menu), bar);
 
 #ifdef USE_BIFF
   biff_check =gtk_check_menu_item_new_with_label (_("Biff Check"));
@@ -10515,6 +10549,9 @@ GtkWidget * make_osx_menu(typMascot *mascot)
   my_signal_connect (biff_check, "toggled",mail_flag_toggle,
 		     (gpointer)mascot);
 
+  bar =gtk_menu_item_new();
+  gtk_widget_show (bar);
+  gtk_container_add (GTK_CONTAINER (popup_menu), bar);
 #endif  // USE_BIFF
 
   sig_check =gtk_check_menu_item_new_with_label (_("Time Signal"));
@@ -10530,10 +10567,20 @@ GtkWidget * make_osx_menu(typMascot *mascot)
 		     &mascot->signal.flag);
 
 
+  bar =gtk_menu_item_new();
+  gtk_widget_show (bar);
+  gtk_container_add (GTK_CONTAINER (popup_menu), bar);
+
   cat_menu=make_cat_menu(mascot);
   gtk_widget_show(cat_menu);
 
-  popup_button =gtk_menu_item_new_with_label (_("Mascot Launcher"));
+  popup_button=gtkut_menu_item_new_with_icon(
+#ifdef USE_GTK3
+					 "view-refresh",
+#else				      
+					 GTK_STOCK_REFRESH,
+#endif
+					 GTK_ICON_SIZE_MENU, _("Mascot Launcher"));
   gtk_widget_show (popup_button);
   gtk_container_add (GTK_CONTAINER (popup_menu), popup_button);
   gtk_menu_item_set_submenu(GTK_MENU_ITEM(popup_button),cat_menu);
@@ -10541,7 +10588,17 @@ GtkWidget * make_osx_menu(typMascot *mascot)
     gtk_widget_set_sensitive(popup_button, FALSE);
   }
 
-  popup_button =gtk_menu_item_new_with_label (_("Exit"));
+  bar =gtk_menu_item_new();
+  gtk_widget_show (bar);
+  gtk_container_add (GTK_CONTAINER (popup_menu), bar);
+
+  popup_button=gtkut_menu_item_new_with_icon(
+#ifdef USE_GTK3
+					 "application-exit",
+#else				      
+					 GTK_STOCK_QUIT,
+#endif
+					 GTK_ICON_SIZE_MENU, _("Exit"));
   gtk_widget_show (popup_button);
   gtk_container_add (GTK_CONTAINER (popup_menu), popup_button);
   my_signal_connect (popup_button, "activate",quit_all,
