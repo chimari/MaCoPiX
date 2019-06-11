@@ -10502,7 +10502,7 @@ GtkWidget * make_osx_menu(typMascot *mascot)
   popup_button =gtk_menu_item_new_with_label (_("Config Dialog"));
   gtk_widget_show (popup_button);
   gtk_container_add (GTK_CONTAINER (sub_menu), popup_button);
-  my_signal_connect (popup_buton, "activate", create_config_dialog,
+  my_signal_connect (popup_button, "activate", create_config_dialog,
 		     (gpointer)mascot);
   
   menu_item=gtk_menu_item_new_with_label(_("Config"));
