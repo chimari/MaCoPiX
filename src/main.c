@@ -5051,6 +5051,9 @@ int main(int argc, char **argv)
   Mascot->http_host=NULL;
   Mascot->http_path=NULL;
   Mascot->http_dlfile=NULL;
+#ifndef USE_WIN32  
+  Mascot->url_command=g_strdup(DEF_OPEN_URL);
+#endif
 
 #ifdef USE_BIFF
   Mascot->mail.flag=FALSE;

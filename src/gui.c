@@ -6041,8 +6041,7 @@ void create_config_dialog(GtkWidget *widget, gpointer gdata){
  
   // Win構築は重いので先にExposeイベント等をすべて処理してから
   while (my_main_iteration(FALSE));
- 
-
+  
   mascot->flag_menu=TRUE;
  
   mascot->imgtree_i=-1;
@@ -6318,7 +6317,6 @@ void create_config_dialog(GtkWidget *widget, gpointer gdata){
       }
 #endif
 #endif
-
 
       label = gtkut_label_new (_("Bar Size (Manual)"));
       gtkut_pos(label, POS_START, POS_CENTER);
@@ -8382,7 +8380,7 @@ void create_config_dialog(GtkWidget *widget, gpointer gdata){
       gtk_container_add (GTK_CONTAINER (frame), table1);
 
       entry = gtk_entry_new ();
-      if(mascot->rcfile){
+      if(mascot->url_command){
 	gtk_entry_set_text(GTK_ENTRY(entry),
  	                   to_utf8(mascot->url_command));
       }
@@ -11794,8 +11792,96 @@ void make_smenu_list(GtkWidget *scrwin, typScanMenu *smenu)
   gtk_widget_show_all(smenu_table);
 }
 
-
 void popup_message(GtkWidget *parent, gchar* stock_id,gint delay, ...){
+  va_list args;
+  gchar *msg1;
+  GtkWidget *dialog;
+  GtkWidget *label;
+  GtkWidget *button;
+  GtkWidget *pixmap;
+  GtkWidget *hbox;
+  GtkWidget *vbox;
+  gint timer;
+
+  va_start(args, delay);
+
+  if(delay>0){
+    dialog = gtk_dialog_new();
+  }
+  else{
+    dialog = gtk_dialog_new_with_buttons("MaCoPiX : Message",
+					 GTK_WINDOW(parent),
+					 GTK_DIALOG_MODAL,
+#ifdef USE_GTK3
+					 _("OK"),GTK_RESPONSE_OK,
+#else
+					 GTK_STOCK_OK,GTK_RESPONSE_OK,
+#endif
+					 NULL);
+  }
+  gtk_container_set_border_width(GTK_CONTAINER(dialog),5);
+  gtk_window_set_transient_for(GTK_WINDOW(dialog),GTK_WINDOW(parent));
+  gtk_window_set_title(GTK_WINDOW(dialog),"MaCoPiX : Message");
+
+#if !GTK_CHECK_VERSION(2,21,8)
+  gtk_dialog_set_has_separator(GTK_DIALOG(dialog),FALSE);
+#endif
+
+  if(delay>0){
+    timer=g_timeout_add(delay*1000, (GSourceFunc)close_popup,
+			(gpointer)dialog);
+    my_signal_connect(dialog,"delete-event",destroy_popup, &timer);
+  }
+
+  hbox = gtkut_hbox_new(FALSE,2);
+  gtk_container_set_border_width (GTK_CONTAINER (hbox), 0);
+  gtk_box_pack_start(GTK_BOX(gtk_dialog_get_content_area(GTK_DIALOG(dialog))),
+		     hbox,FALSE, FALSE, 0);
+
+#ifdef USE_GTK3
+  pixmap=gtk_image_new_from_icon_name (stock_id,
+				       GTK_ICON_SIZE_DIALOG);
+#else
+  pixmap=gtk_image_new_from_stock (stock_id,
+				   GTK_ICON_SIZE_DIALOG);
+#endif
+
+  gtk_box_pack_start(GTK_BOX(hbox), pixmap,FALSE, FALSE, 0);
+
+  vbox = gtkut_vbox_new(FALSE,2);
+  gtk_container_set_border_width (GTK_CONTAINER (vbox), 0);
+  gtk_box_pack_start(GTK_BOX(hbox),vbox,FALSE, FALSE, 0);
+
+  while(1){
+    msg1=va_arg(args,gchar*);
+    if(!msg1) break;
+   
+    label=gtkut_label_new(msg1);
+#ifdef USE_GTK3
+    gtk_widget_set_halign (label, GTK_ALIGN_START);
+    gtk_widget_set_valign (label, GTK_ALIGN_CENTER);
+#else
+    gtk_misc_set_alignment (GTK_MISC (label), 0.0, 0.5);
+#endif
+    gtk_box_pack_start(GTK_BOX(vbox),
+		       label,TRUE,TRUE,0);
+  }
+
+  va_end(args);
+
+  gtk_widget_show_all(dialog);
+
+  if(delay>0){
+    gtk_main();
+  }
+  else{
+    gtk_dialog_run(GTK_DIALOG(dialog));
+    gtk_widget_destroy(dialog);
+  }
+}
+
+ 
+void popup_message_old(GtkWidget *parent, gchar* stock_id,gint delay, ...){
   va_list args;
   gchar *msg1;
   GtkWidget *dialog;
