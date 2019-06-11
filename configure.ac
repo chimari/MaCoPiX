@@ -260,6 +260,30 @@ if test x"${use_maint}" = "xyes"; then
 else
         DISABLE_DEPRECATED=""
 fi
+
+dnl GtkMACIntegration
+ AC_ARG_WITH(gtkmac,
+ 		 AC_HELP_STRING([--with-gtkmac],
+		            [make with gtkmacintegration]),
+			    [with_gtkmac=yes])
+ 
+if test x"${with_gtkmac}" = "xyes"; then
+  if test "$os_osx" == yes; then
+    AC_DEFINE([USE_GTKMACINTEGRATION],[],[With gtkmacintegration])
+    GTKMAC_CFLAGS="`pkg-config gtk-mac-integration-gtk2 --cflags`"
+    GTKMAC_LIBS="`pkg-config gtk-mac-integration-gtk2 --libs`"
+  else
+    GTKMAC_CFALGS=""
+    GTKMAC_LIBS=""
+  fi
+else
+  GTKMAC_CFALGS=""
+  GTKMAC_LIBS=""
+fi
+AC_SUBST(GTKMAC_LIBS)
+AC_SUBST(GTKMAC_CFLAGS)
+
+
 AC_SUBST(DISABLE_DEPRECATED)
 
 

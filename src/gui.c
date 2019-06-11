@@ -10442,6 +10442,174 @@ void make_cat_list(typMascot *mascot, GtkWidget *cat_note, int i_cat)
   
 }
 
+#ifdef USE_GTKMACINTEGRATION
+// macOS 用メニューの生成
+GtkWidget * make_osx_menu(typMascot *mascot)
+{
+  GtkWidget *popup_menu; 
+  GtkWidget *open_menu; 
+  GtkWidget *save_menu; 
+  GtkWidget *new_menu; 
+  GtkWidget *install_menu; 
+  GtkWidget *cat_menu; 
+  GtkWidget *popup_button;
+#ifdef USE_BIFF
+  GtkWidget *biff_check;
+#endif  // USE_BIFF
+  GtkWidget *sig_check;
+  GtkWidget *bar;
+  GtkWidget *image;
+
+  popup_menu = gtk_menu_new();
+  gtk_widget_show(popup_menu);
+
+  open_menu=make_open_menu(mascot);
+  gtk_widget_show(open_menu);
+
+  popup_button=gtkut_menu_item_new_with_icon(
+#ifdef USE_GTK3
+					 "document-open",
+#else				      
+					 GTK_STOCK_OPEN,
+#endif
+					 GTK_ICON_SIZE_MENU, _("Open"));
+  gtk_widget_show (popup_button);
+  gtk_container_add (GTK_CONTAINER (popup_menu), popup_button);
+  gtk_menu_item_set_submenu(GTK_MENU_ITEM(popup_button),open_menu);
+
+  save_menu=make_save_menu(mascot);
+  gtk_widget_show(save_menu);
+
+  popup_button=gtkut_menu_item_new_with_icon(
+#ifdef USE_GTK3
+					 "document-save",
+#else				      
+					 GTK_STOCK_SAVE,
+#endif
+					 GTK_ICON_SIZE_MENU, _("Save"));
+  gtk_widget_show (popup_button);
+  gtk_container_add (GTK_CONTAINER (popup_menu), popup_button);
+  gtk_menu_item_set_submenu(GTK_MENU_ITEM(popup_button),save_menu);
+
+  new_menu=make_new_menu(mascot);
+  gtk_widget_show(new_menu);
+
+  popup_button=gtkut_menu_item_new_with_icon(
+#ifdef USE_GTK3
+					 "document-new",
+#else				      
+					 GTK_STOCK_NEW,
+#endif
+					 GTK_ICON_SIZE_MENU, _("New"));
+  gtk_widget_show (popup_button);
+  gtk_container_add (GTK_CONTAINER (popup_menu), popup_button);
+  gtk_menu_item_set_submenu(GTK_MENU_ITEM(popup_button),new_menu);
+
+  install_menu=make_install_menu(mascot);
+  gtk_widget_show(install_menu);
+
+  popup_button=gtkut_menu_item_new_with_icon(
+#ifdef USE_GTK3
+					 "system-software-install",
+#else				      
+					 GTK_STOCK_HARDDISK,
+#endif
+					 GTK_ICON_SIZE_MENU, _("Install"));
+  gtk_widget_show (popup_button);
+  gtk_container_add (GTK_CONTAINER (popup_menu), popup_button);
+  gtk_menu_item_set_submenu(GTK_MENU_ITEM(popup_button),install_menu);
+
+
+
+  popup_button=gtkut_menu_item_new_with_icon(
+#ifdef USE_GTK3
+					 "document-properties",
+#else				      
+					 GTK_STOCK_PROPERTIES,
+#endif
+					 GTK_ICON_SIZE_MENU, _("Config"));
+  gtk_widget_show (popup_button);
+  gtk_container_add (GTK_CONTAINER (popup_menu), popup_button);
+  my_signal_connect (popup_button, "activate", create_config_dialog, (gpointer)mascot);
+
+  bar =gtk_menu_item_new();
+  gtk_widget_show (bar);
+  gtk_container_add (GTK_CONTAINER (popup_menu), bar);
+
+#ifdef USE_BIFF
+  biff_check =gtk_check_menu_item_new_with_label (_("Biff Check"));
+  gtk_widget_show (biff_check);
+  gtk_container_add (GTK_CONTAINER (popup_menu), biff_check);
+  if(mascot->mail.flag){
+    gtk_check_menu_item_set_active(GTK_CHECK_MENU_ITEM(biff_check),TRUE);
+  }
+  else{
+    gtk_check_menu_item_set_active(GTK_CHECK_MENU_ITEM(biff_check),FALSE);
+  }
+  my_signal_connect (biff_check, "toggled",mail_flag_toggle,
+		     (gpointer)mascot);
+
+  bar =gtk_menu_item_new();
+  gtk_widget_show (bar);
+  gtk_container_add (GTK_CONTAINER (popup_menu), bar);
+#endif  // USE_BIFF
+
+  sig_check =gtk_check_menu_item_new_with_label (_("Time Signal"));
+  gtk_widget_show (sig_check);
+  gtk_container_add (GTK_CONTAINER (popup_menu), sig_check);
+  if(mascot->signal.flag){
+    gtk_check_menu_item_set_active(GTK_CHECK_MENU_ITEM(sig_check),TRUE);
+  }
+  else{
+    gtk_check_menu_item_set_active(GTK_CHECK_MENU_ITEM(sig_check),FALSE);
+  }
+  my_signal_connect (sig_check, "toggled",check_menu_get_toggle,
+		     &mascot->signal.flag);
+
+
+  bar =gtk_menu_item_new();
+  gtk_widget_show (bar);
+  gtk_container_add (GTK_CONTAINER (popup_menu), bar);
+
+  cat_menu=make_cat_menu(mascot);
+  gtk_widget_show(cat_menu);
+
+  popup_button=gtkut_menu_item_new_with_icon(
+#ifdef USE_GTK3
+					 "view-refresh",
+#else				      
+					 GTK_STOCK_REFRESH,
+#endif
+					 GTK_ICON_SIZE_MENU, _("Mascot Launcher"));
+  gtk_widget_show (popup_button);
+  gtk_container_add (GTK_CONTAINER (popup_menu), popup_button);
+  gtk_menu_item_set_submenu(GTK_MENU_ITEM(popup_button),cat_menu);
+  if(mascot->menu_total==0){
+    gtk_widget_set_sensitive(popup_button, FALSE);
+  }
+
+  bar =gtk_menu_item_new();
+  gtk_widget_show (bar);
+  gtk_container_add (GTK_CONTAINER (popup_menu), bar);
+
+  popup_button=gtkut_menu_item_new_with_icon(
+#ifdef USE_GTK3
+					 "application-exit",
+#else				      
+					 GTK_STOCK_QUIT,
+#endif
+					 GTK_ICON_SIZE_MENU, _("Exit"));
+  gtk_widget_show (popup_button);
+  gtk_container_add (GTK_CONTAINER (popup_menu), popup_button);
+  my_signal_connect (popup_button, "activate",quit_all,
+		     (gpointer)mascot);
+
+  gtk_widget_show_all(popup_menu);
+
+  return(popup_menu);
+}
+#endif
+
 // ポップアップメニューの生成
 GtkWidget * make_popup_menu(typMascot *mascot)
 {

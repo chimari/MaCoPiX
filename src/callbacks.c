@@ -2651,6 +2651,10 @@ void InitMascot0(typMascot *mascot){
   static MONITORS mon;
   gint nmon, i_mon;
 #elif defined(USE_OSX)
+#ifdef USE_GTKMACINTEGRATION
+  GtkosxApplication *osxapp;
+  GtkWidget *menubar;
+#endif
 #else  
   Window rootwin;
 #endif
@@ -2665,6 +2669,13 @@ void InitMascot0(typMascot *mascot){
   mascot->mon_x0=0;
   mascot->mon_y0=0;
 
+#ifdef USE_GTKMACINTEGRATION
+  osxapp = g_object_new(GTKOSX_TYPE_APPLICATION, NULL);
+  menubar=make_osx_menu(mascot);
+  gtkosx_application_set_menu_bar(osxapp, GTK_MENU_SHELL(menubar));
+  gtkosx_application_ready(osxapp);
+#endif
+  
   // メインモニター(0番)の左上が座標 (0, 0)になるので
   // 左や上にサブモニターがある場合は マイナス座標になる
   // その修正分(モニター矩形の最小値)を取得しておく

@@ -482,6 +482,9 @@
 /* Use Gtk+3.x instead of Gtk+2 */
 #undef USE_GTK3
 
+/* With gtkmacintegration */
+#undef USE_GTKMACINTEGRATION
+
 /* Define if you use OPENSSLto support SSL. */
 #undef USE_OPENSSL
 

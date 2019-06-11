@@ -644,6 +644,8 @@ OPENSSL_CFLAGS
 GNUTLS_LIBS
 GNUTLS_CFLAGS
 DISABLE_DEPRECATED
+GTKMAC_CFLAGS
+GTKMAC_LIBS
 WIN32_ICONV_LIBS
 POMAKEFILEDEPS
 MKINSTALLDIRS
@@ -886,6 +888,7 @@ with_libpth_prefix
 with_included_gettext
 with_libintl_prefix
 with_maintain
+with_gtkmac
 enable_cairo
 enable_ssl
 with_gnutls
@@ -1590,6 +1593,7 @@ Optional Packages:
   --with-libintl-prefix[=DIR]  search for libintl in DIR/include and DIR/lib
   --without-libintl-prefix     don't search for libintl in includedir and libdir
   --with-maintain         For Maintainer
+  --with-gtkmac           make with gtkmacintegration
   --with-gnutls           Make with GNUTLS instead of OpenSSL
   --with-gnutls-includes=PREFIX   location of GnuTLS includes.
   --with-gnutls-libs=PREFIX
@@ -21631,6 +21635,33 @@ if test x"${use_maint}" = "xyes"; then
 else
         DISABLE_DEPRECATED=""
 fi
+
+
+# Check whether --with-gtkmac was given.
+if test "${with_gtkmac+set}" = set; then :
+  withval=$with_gtkmac; with_gtkmac=yes
+fi
+
+
+if test x"${with_gtkmac}" = "xyes"; then
+  if test "$os_osx" == yes; then
+
+$as_echo "#define USE_GTKMACINTEGRATION /**/" >>confdefs.h
+
+    GTKMAC_CFLAGS="`pkg-config gtk-mac-integration-gtk2 --cflags`"
+    GTKMAC_LIBS="`pkg-config gtk-mac-integration-gtk2 --libs`"
+  else
+    GTKMAC_CFALGS=""
+    GTKMAC_LIBS=""
+  fi
+else
+  GTKMAC_CFALGS=""
+  GTKMAC_LIBS=""
+fi
+
+
+
+
 
 
 

@@ -122,6 +122,12 @@
 #endif
 #endif
 
+// for macOS menu
+#ifdef USE_GTKMACINTEGRATION
+#include<gtkmacintegration/gtkosxapplication.h>
+#endif
+
+
 #include "resources.h"
 #include "version.h"
 #include "configfile.h"
