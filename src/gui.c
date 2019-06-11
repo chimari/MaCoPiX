@@ -10553,8 +10553,9 @@ GtkWidget * make_osx_menu(typMascot *mascot)
 
 GtkWidget* remake_osx_cmenu(typMascot *mascot){
   GtkWidget *menu_item;
+  GtkWidget *cat_menu;
   
-  cat_menu_menu=make_cat_menu(mascot);
+  cat_menu=make_cat_menu(mascot);
 
   menu_item=gtk_menu_item_new_with_label(_("Mascot Launcher"));
   gtk_menu_item_set_submenu(GTK_MENU_ITEM(menu_item), cat_menu);
