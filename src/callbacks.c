@@ -2692,10 +2692,36 @@ void InitMascot0(typMascot *mascot){
   //gtk_widget_hide(mascot->osx_menu);
   //gtkosx_application_set_menu_bar(mascot->osx_app, GTK_MENU_SHELL(mascot->osx_menu));
 
+  menu_item=make_osx_open_menu(mascot);
+  gtkosx_application_insert_app_menu_item(mascot->osx_app,
+					  menu_item,
+					  0);
+  menu_item=make_osx_save_menu(mascot);
+  gtkosx_application_insert_app_menu_item(mascot->osx_app,
+					  menu_item,
+					  1);
+  menu_item=make_osx_new_menu(mascot);
+  gtkosx_application_insert_app_menu_item(mascot->osx_app,
+					  menu_item,
+					  2); 
+  menu_item=make_osx_install_menu(mascot);
+  gtkosx_application_insert_app_menu_item(mascot->osx_app,
+					  menu_item,
+					  3);
+  menu_item=make_osx_config_menu(mascot);
+  gtkosx_application_insert_app_menu_item(mascot->osx_app,
+					  menu_item,
+					  4);
+  menu_item=make_osx_signal_menu(mascot);
+  gtkosx_application_insert_app_menu_item(mascot->osx_app,
+					  menu_item,
+					  5);
+ 
   mascot->osx_cmenu=make_osx_cmenu(mascot);
   gtkosx_application_insert_app_menu_item(mascot->osx_app,
 					  mascot->osx_cmenu,
-					  1);
+					  6);
+  gtkosx_application_sync_menubar(mascot->osx_app);
   gtkosx_application_ready(mascot->osx_app);
 #endif
  
