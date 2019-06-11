@@ -30,7 +30,7 @@
 #undef DEBUG
 
 // *** GLOBAL ARGUMENT ***
-// ���ץ饤�Ƚ����
+// スプライト初期化
 //static  typSprite sprite_void[MAX_PIXMAP+1];
 
 void DrawPanelClock0();
@@ -58,10 +58,10 @@ HWND hWndTaskBar;
 
 #ifdef USE_WIN32
 #define MAX_MONITOR 10
-//      ��³����Ƥ����˥��ν������Ǽ
+//      接続されているモニタの諸元を格納
 typedef struct _MONITORS{
-        int max;        //      ��˥�����
-        RECT rect[MAX_MONITOR];     //      �ƥ�˥����κ�ɸ
+        int max;        //      モニター数
+        RECT rect[MAX_MONITOR];     //      各モニターの座標
 } MONITORS;
 
 BOOL CALLBACK myinfoenumproc(HMONITOR hMon, HDC hdcMon, LPRECT lpMon, LPARAM dwDate);
@@ -114,7 +114,7 @@ MyXY GetAutoHomePos();
 #endif
 void InitMascot0();
 
-// �ŤߤĤ�������ѥ����������
+// 重みつきランダムパターンの選択
 int weight_random(typMascot *mascot)
 {
   int ptn=0,sum=0,random_end;
@@ -129,7 +129,7 @@ int weight_random(typMascot *mascot)
   return(ptn);
 }
 
-// �ŤߤĤ�����å��ѥ����������
+// 重みつきクリックパターンの選択
 int weight_click(typMascot *mascot)
 {
   int ptn=0,sum=0,random_end;
@@ -145,7 +145,7 @@ int weight_click(typMascot *mascot)
 }
 
 
-// XEvent ��Ϣ�Υ��顼�ϥ�ɥ顼  MoveToFocus�ǻ��Ȥ���
+// XEvent 関連のエラーハンドラー  MoveToFocusで参照する
 #ifndef USE_WIN32
 #ifndef USE_OSX
 int ehandler (Display *d, XErrorEvent *e)
@@ -156,7 +156,7 @@ int ehandler (Display *d, XErrorEvent *e)
 #endif
 #endif
 
-// �ޥ����åȤΰ�ư
+// マスコットの移動
 void MoveMascot(typMascot *mascot, gint x, gint y)
 {
 
@@ -205,7 +205,7 @@ void MoveMascot(typMascot *mascot, gint x, gint y)
 }
 
 #ifdef USE_BIFF
-// Biff�����ΰ�ư
+// Biff画像の移動
 void MoveBiffPix(typMascot *mascot, gint x, gint y)
 {
   GtkAllocation *allocation=g_new(GtkAllocation, 1);
@@ -230,7 +230,7 @@ void MoveBiffPix(typMascot *mascot, gint x, gint y)
 }
 #endif
 
-// �Х롼��ΰ�ư
+// バルーンの移動
 void MoveBalloon(typMascot *mascot, gint x, gint y)
 {
   gint bal_y;
@@ -297,11 +297,11 @@ void ResizeMoveBalloon(typMascot *mascot, gint x, gint y, gint w, gint h)
   gdkut_flush(mascot->win_main);
 }
 
-// �ե�������Window�ɽ�����ư
+// フォーカスWindow追従型移動
 int MoveToFocus(typMascot *mascot, gboolean force_fl)
 {
 #ifdef USE_WIN32
-  /* for Windows �Ȥꤢ��������ѥ�����̤� */
+  /* for Windows とりあえずコンパイルを通す */
   HWND   hWnd;
   RECT   nRect;
   DWORD dwStyle;
@@ -432,7 +432,7 @@ int MoveToFocus(typMascot *mascot, gboolean force_fl)
      && (int)wf!=0){
 
     if(mascot->focus_autobar!=AUTOBAR_MANUAL){ 
-      // �����ȥ�С��Υ�������ư���� 
+      // タイトルバーのサイズを自動検出 
       if(errflag ==0){
 #ifdef USE_GTK3  
 	gdk_x11_display_error_trap_push (gtk_widget_get_display(mascot->win_main));
@@ -585,7 +585,7 @@ int MoveToFocus(typMascot *mascot, gboolean force_fl)
 	  XGetGeometry(GDK_WINDOW_XDISPLAY(gtk_widget_get_window(mascot->win_main)),
 	  	       wf,&rootwin,&x,&y,&width,&height,
 	  	       &border,&depth);
-	  // �ե�����������Window��¸�ߤ��ʤ� Offset"%"�ΤȤ�
+	  // フォーカスするWindowが存在しない Offset"%"のとき
 	  //		if (mascot->flag_xp==FF_BAR_REL){
 	  // if((x<0)&&(y<0)&&(depth==0)&&(border==0)){
 	  //   x-=mascot->width; y-=mascot->height;
@@ -614,7 +614,7 @@ int MoveToFocus(typMascot *mascot, gboolean force_fl)
       }
       //#endif
     }
-    else{  // �����ȥ�С��Υ�������ޥ˥奢������⡼��
+    else{  // タイトルバーのサイズをマニュアル設定モード
       if(errflag ==0){
 	XGetGeometry(GDK_WINDOW_XDISPLAY(gtk_widget_get_window(mascot->win_main)),
 		     wf,&rootwin,&x,&y,&width,&height,&border,&depth);
@@ -624,7 +624,7 @@ int MoveToFocus(typMascot *mascot, gboolean force_fl)
 	return(0);
       }
 
-      if(width==1){  // ľ�� Focused Window�Υ��������Ȥ�Ƥ��ʤ�
+      if(width==1){  // 直接 Focused Windowのサイズがとれていない
 #ifdef USE_GTK3  
 	gdk_x11_display_error_trap_push (gtk_widget_get_display(mascot->win_main));
 #else
@@ -683,7 +683,7 @@ int MoveToFocus(typMascot *mascot, gboolean force_fl)
     }
 #endif  ///////////////////////////////////////////////////////////////////////
 
-    // sx, sy �ϸ��ߤΥե�������Window�κ���(�ޥ����ȥ�С�)�����а���
+    // sx, sy は現在のフォーカスWindowの左上(含タイトルバー)の絶対位置
       
     errflag = 0;
     
@@ -721,39 +721,39 @@ int MoveToFocus(typMascot *mascot, gboolean force_fl)
     }
 
     if(mascot->focus_autobar!=AUTOBAR_MANUAL){
-#ifdef USE_WIN32   // �ե����������ʤ� 
+#ifdef USE_WIN32   // フォーカスがない 
       if(IsWin32Root(hWnd, mascot->width_root, mascot->height_root)){
 	flag_homepos=mascot->homepos_nf;
       }
 #elif defined(USE_OSX)
-      if((fx<0) &&(fy<0)){  // �ե����������ʤ� 
+      if((fx<0) &&(fy<0)){  // フォーカスがない 
 	flag_homepos=mascot->homepos_nf;
       }
 #else
       if((sx==ROOTOFF_X-width)
-	 &&(sy==ROOTOFF_Y-mascot->bar_offset)){  // �ե����������ʤ� 
+	 &&(sy==ROOTOFF_Y-mascot->bar_offset)){  // フォーカスがない 
 	flag_homepos=mascot->homepos_nf;
       }
 #endif
-      else if(ypop<ROOTOFF_Y){ //���̾�˥ޥ����åȤ��ϤߤǤ�
+      else if(ypop<ROOTOFF_Y){ //画面上にマスコットがはみでる
 	flag_homepos=mascot->homepos_out;
       }
     }
     else{
-#ifdef USE_WIN32   // �ե����������ʤ� 
+#ifdef USE_WIN32   // フォーカスがない 
       if(IsWin32Root(hWnd, mascot->width_root, mascot->height_root)){
 	flag_homepos=mascot->homepos_nf;
       }
 #elif defined(USE_OSX)
-      if( (fx<0) && (fy<0) ){  // �ե����������ʤ� 
+      if( (fx<0) && (fy<0) ){  // フォーカスがない 
 	flag_homepos=mascot->homepos_nf;
       }
 #else
-      if((sx==ROOTOFF_X) &&(sy==ROOTOFF_Y)){  // �ե����������ʤ� 
+      if((sx==ROOTOFF_X) &&(sy==ROOTOFF_Y)){  // フォーカスがない 
 	flag_homepos=mascot->homepos_nf;
       }
 #endif
-      else if(ypop<ROOTOFF_Y){ //���̾�˥ޥ����åȤ��ϤߤǤ�
+      else if(ypop<ROOTOFF_Y){ //画面上にマスコットがはみでる
 	flag_homepos=mascot->homepos_out;
       }
     }
@@ -858,7 +858,7 @@ int MoveToFocus(typMascot *mascot, gboolean force_fl)
 
 
 #ifndef USE_GTK3    
-// ���Ĥ�GC�κ����ȥ��顼allocation
+// 色つきGCの作成とカラーallocation
 GdkGC *MPCreatePen(GdkPixmap *pixmap, GdkColor *color)
 {
   GdkGC *gc;
@@ -878,7 +878,7 @@ GdkGC *MPCreatePen(GdkPixmap *pixmap, GdkColor *color)
 #endif
  
 
-// �ޥ����ܥ���򤪤����Ȥ��Υ��٥��Callback
+// マウスボタンをおしたときのイベントCallback
 void drag_begin(GtkWidget * widget, GdkEventButton * event, gpointer gdata)
 {
   typMascot *mascot;
@@ -924,7 +924,7 @@ void drag_begin(GtkWidget * widget, GdkEventButton * event, gpointer gdata)
 }
 
 
-// �ޥ����ܥ����Ϥʤ����Ȥ��Υ��٥��Callback
+// マウスボタンをはなしたときのイベントCallback
 void drag_end(GtkWidget * widget, GdkEventButton * event, gpointer gdata)
 {
   typMascot *mascot;
@@ -967,9 +967,9 @@ void drag_end(GtkWidget * widget, GdkEventButton * event, gpointer gdata)
 #endif
     if((end_x==start_x)&&(end_y==start_y)&&
        (mascot->click_total!=0)&&(flag_balloon==FALSE)){
-      /////// ����å����˥� ///////
+      /////// クリックアニメ ///////
       for(i_frm=0;i_frm<mascot->frame_num[mascot->anime_ptn];i_frm++){
-	// �֥��å��롼�פΥ���󥻥�
+	// ブロックループのキャンセル
 	mascot->frame_loop[mascot->anime_ptn][i_frm].seq=0;
       }
       mascot->anime_ptn=weight_click(mascot);
@@ -990,7 +990,7 @@ void drag_end(GtkWidget * widget, GdkEventButton * event, gpointer gdata)
       }
 
 #ifdef USE_SOCKMSG
-      // Duet���˥�
+      // Duetアニメ
       if(mascot->duet_use_click){
 	mascot->duet_seq=mascot->duet_delay[mascot->anime_ptn];
 	mascot->duet_mode=DUET_CLICK;
@@ -1013,7 +1013,7 @@ void drag_end(GtkWidget * widget, GdkEventButton * event, gpointer gdata)
   gdkut_flush(mascot->win_main);
 }
 
-// ����  �ޥ����ܥ���򤪤����Ȥ��Υ��٥��Callback
+// 時計  マウスボタンをおしたときのイベントCallback
 void clk_drag_begin(GtkWidget * widget, GdkEventButton * event, gpointer gdata)
 {
   typMascot *mascot;
@@ -1055,7 +1055,7 @@ void clk_drag_begin(GtkWidget * widget, GdkEventButton * event, gpointer gdata)
 }
 
 
-// ���� �ޥ����ܥ����Ϥʤ����Ȥ��Υ��٥��Callback
+// 時計 マウスボタンをはなしたときのイベントCallback
 void clk_drag_end(GtkWidget * widget, GdkEventButton * event, gpointer gdata)
 {
   typMascot *mascot;
@@ -1094,7 +1094,7 @@ void clk_drag_end(GtkWidget * widget, GdkEventButton * event, gpointer gdata)
 
 
 #ifdef USE_BIFF
-// Biff �ޥ����ܥ���򤪤����Ȥ��Υ��٥��Callback
+// Biff マウスボタンをおしたときのイベントCallback
 void biff_drag_begin(GtkWidget * widget, GdkEventButton * event, gpointer gdata)
 {
   typMascot *mascot;
@@ -1136,7 +1136,7 @@ void biff_drag_begin(GtkWidget * widget, GdkEventButton * event, gpointer gdata)
 }
 
 
-// Biff �ޥ����ܥ����Ϥʤ����Ȥ��Υ��٥��Callback
+// Biff マウスボタンをはなしたときのイベントCallback
 void biff_drag_end(GtkWidget * widget, GdkEventButton * event, gpointer gdata)
 {
   typMascot *mascot;
@@ -1160,7 +1160,7 @@ void biff_drag_end(GtkWidget * widget, GdkEventButton * event, gpointer gdata)
     gdk_window_get_pointer(NULL, &end_x, &end_y, &modmask);
 #endif
     if((end_x==biff_start_x)&&(end_y==biff_start_y)){
-      // From Subject Win ��ư
+      // From Subject Win 起動
       create_biff_dialog(mascot);
     }
     else{
@@ -1183,7 +1183,7 @@ void biff_drag_end(GtkWidget * widget, GdkEventButton * event, gpointer gdata)
 #endif
 
 
-// Mascot Window���������ѷ��ˤȤ�ʤ�Callback
+// Mascot Windowの生成・変形にともなうCallback
 gint dw_configure_main(GtkWidget *widget, GdkEventConfigure *event,
 		       gpointer gdata)
 {
@@ -1323,7 +1323,7 @@ gint dw_init_main(GtkWidget *widget, GdkEventConfigure *event,
 
 
 #ifdef USE_BIFF
-// Biff Pixmap  Window���������ѷ��ˤȤ�ʤ�Callback
+// Biff Pixmap  Windowの生成・変形にともなうCallback
 #ifdef USE_GTK3
 gint dw_configure_biff_pix(GtkWidget *widget, GdkEventConfigure *event,
 			   gpointer userdata){
@@ -1357,7 +1357,7 @@ gint dw_configure_biff_pix(GtkWidget *widget, GdkEventConfigure *event,
 #endif
 #endif
 
-// Clock Panel���������ѷ��ˤȤ�ʤ�Callback
+// Clock Panelの生成・変形にともなうCallback
 #ifdef USE_GTK3
 gint dw_configure_clk(GtkWidget *widget, GdkEventConfigure *event, gpointer userdata){
   typMascot *mascot;
@@ -1396,8 +1396,8 @@ gint dw_configure_clk(GtkWidget *widget, GdkEventConfigure *event,
   }
   
   if(mascot->clkmode==CLOCK_PANEL){
-    // **** Mascot���� window�ؤ�����
-    // **** window�ؤ�����
+    // **** Mascot部の windowへの描画
+    // **** windowへの描画
 #ifdef FG_DRAW
     if((mascot->flag_clkfg)&&(mascot->alpha_clk!=100)){
       {
@@ -1433,7 +1433,7 @@ gint dw_configure_clk(GtkWidget *widget, GdkEventConfigure *event,
 }
 #endif
 
-// Balloon Window���������ѷ��ˤȤ�ʤ�Callback
+// Balloon Windowの生成・変形にともなうCallback
 #ifdef USE_GTK3
 gint dw_configure_bal(GtkWidget *widget, GdkEventConfigure *event,
 		      gpointer userdata){
@@ -1472,8 +1472,8 @@ gint dw_configure_bal(GtkWidget *widget, GdkEventConfigure *event,
 }
 #endif
 
-// Main (Mascot) ���Ťʤ����������ν���
-// Work���Ƥ��ʤ�Buffer���Pixmap�������Ԥ���
+// Main (Mascot) が重なりを受けた場合の処理
+// WorkしていないBuffer中のPixmapの描画を行う。
 #ifdef USE_GTK3
 gint dw_expose_main(GtkWidget *widget, cairo_t *cr, gpointer gdata){
   typMascot *mascot;
@@ -1497,7 +1497,7 @@ gint dw_expose_main(GtkWidget *widget, GdkEventExpose *event,  gpointer gdata)
 
   mascot=(typMascot *)gdata; 
   
-  // **** Mascot���� window�ؤ�����
+  // **** Mascot部の windowへの描画
   gdk_draw_drawable(gtk_widget_get_window(widget),
 		  widget->style->fg_gc[GTK_WIDGET_STATE (widget)],
 		  pixmap_main,
@@ -1549,7 +1549,7 @@ gint dw_expose_sdw(GtkWidget *widget, GdkEventExpose *event,  gpointer gdata)
 
   mascot=(typMascot *)gdata; 
   
-  // **** Mascot���� window�ؤ�����
+  // **** Mascot部の windowへの描画
   if((mascot->sdw_flag)&&(mascot->sdw_height>0))
     gdk_draw_drawable(gtk_widget_get_window(widget),
 		      widget->style->fg_gc[GTK_WIDGET_STATE (widget)],
@@ -1565,7 +1565,7 @@ gint dw_expose_sdw(GtkWidget *widget, GdkEventExpose *event,  gpointer gdata)
 
 
 #ifdef USE_BIFF
-// Biff Pixmap ���Ťʤ����������ν���
+// Biff Pixmap が重なりを受けた場合の処理
 #ifdef USE_GTK3
 gint dw_expose_biff_pix(GtkWidget *widget, cairo_t *cr,  gpointer gdata)
 {
@@ -1619,8 +1619,8 @@ gint expose_biff_pix(GtkWidget *widget, GdkEventExpose *event,  gpointer gdata)
 #endif
 
 
-// Clock Panel ���Ťʤ����������ν���
-// Work���Ƥ��ʤ�Buffer���Pixmap�������Ԥ���
+// Clock Panel が重なりを受けた場合の処理
+// WorkしていないBuffer中のPixmapの描画を行う。
 #ifdef USE_GTK3
 gint dw_expose_clk(GtkWidget *widget, cairo_t *cr,  gpointer gdata)
 {
@@ -1642,8 +1642,8 @@ gint dw_expose_clk(GtkWidget *widget, GdkEventExpose *event,  gpointer gdata)
   mascot=(typMascot *)gdata; 
 
   if(mascot->clkmode==CLOCK_PANEL){
-    // **** Mascot���� window�ؤ�����
-    // **** window�ؤ�����
+    // **** Mascot部の windowへの描画
+    // **** windowへの描画
     gdk_draw_drawable(gtk_widget_get_window(widget),
 		      widget->style->fg_gc[GTK_WIDGET_STATE (widget)],
 		      pixmap_clk,
@@ -1674,9 +1674,9 @@ gint expose_clk(GtkWidget *widget, GdkEventExpose *event,  gpointer gdata)
 #endif
 
 
-// Balloon ���Ťʤ����������ν���
-// Work���Ƥ��ʤ�Buffer���Pixmap�������Ԥ���
-// 1.6.1�Ǽ¼���� drawballoon�Τʤ��� back_pixmap����ꤹ��ΤߤȤ�����
+// Balloon が重なりを受けた場合の処理
+// WorkしていないBuffer中のPixmapの描画を行う。
+// 1.6.1で実質削除 drawballoonのなかで back_pixmapを指定するのみとした。
 #ifdef USE_GTK3
 gint dw_expose_bal(GtkWidget *widget, cairo_t *cr,  gpointer gdata)
 {
@@ -1696,7 +1696,7 @@ gint dw_expose_bal(GtkWidget *widget, GdkEventExpose *event,  gpointer gdata)
   typMascot *mascot;
   mascot=(typMascot *)gdata; 
   
-  // **** Balloon�� window�ؤ�����
+  // **** Balloonの windowへの描画
 
   gdk_draw_drawable(gtk_widget_get_window(widget),
 		    widget->style->fg_gc[GTK_WIDGET_STATE (widget)],
@@ -1726,7 +1726,7 @@ gint expose_bal(GtkWidget *widget, GdkEventExpose *event,  gpointer gdata)
 }
 #endif
 
-// �ɥ�å��ˤ���ư
+// ドラッグによる移動
 gboolean window_motion(GtkWidget * widget, GdkEventMotion * event, gpointer gdata)
 {
   typMascot *mascot;
@@ -1791,7 +1791,7 @@ gboolean window_motion(GtkWidget * widget, GdkEventMotion * event, gpointer gdat
 }   
 
 
-// ���� �ɥ�å��ˤ���ư
+// 時計 ドラッグによる移動
 void clk_window_motion(GtkWidget * widget, GdkEventMotion * event, gpointer gdata)
 {   
   typMascot *mascot;
@@ -1819,7 +1819,7 @@ void clk_window_motion(GtkWidget * widget, GdkEventMotion * event, gpointer gdat
 
 
 #ifdef USE_BIFF
-// Biff �ɥ�å��ˤ���ư
+// Biff ドラッグによる移動
 void biff_window_motion(GtkWidget * widget, GdkEventMotion * event, gpointer gdata)
 {   
   typMascot *mascot;
@@ -1878,8 +1878,8 @@ void focus_out(GtkWidget * widget, GdkEventMotion * event, gpointer gdata)
 }
 
 
-// ���˥᡼����󤪤�ӻ���update�Ѵؿ�
-// timeout�����ʥ�����Ū�˸ƤӽФ���
+// アニメーションおよび時計update用関数
+// timeoutシグナルで定期的に呼び出す。
 gboolean time_update(gpointer gdata)
 {
   typMascot *mascot;
@@ -1893,14 +1893,14 @@ gboolean time_update(gpointer gdata)
   flag_clock=FALSE;
   mascot=(typMascot *)gdata; 
 
-  // ��˥塼���ФƤ���
+  // メニューが出ている
   if(mascot->flag_menu) return(TRUE);
 
   // Window Sitter
   if(mascot->move==MOVE_FOCUS){
     MoveToFocus(mascot, FALSE);
   }
-  // ����ޥ����å�
+  // 固定マスコット
   if(mascot->move==MOVE_FIX){
     mascot->xfix=mascot->x;
     mascot->yfix=mascot->y;
@@ -1914,14 +1914,14 @@ gboolean time_update(gpointer gdata)
   }
 #endif
 
-  // �դ���������
+  // ふきだし処理
   if(flag_balloon==TRUE){
     DoBalloon(mascot);
   }
 
 
 #ifdef USE_SOCKMSG
-  // Duet���˥�
+  // Duetアニメ
   if(mascot->duet_seq>0){
     mascot->duet_seq--;
   }
@@ -1942,7 +1942,7 @@ gboolean time_update(gpointer gdata)
 				mascot->duet_ptn[mascot->anime_ptn]);
 	}
 	
-	// Duet Anime Client ��ư
+	// Duet Anime Client 起動
 	sockres = duet_cl_init(mascot->duet_tgt[mascot->anime_ptn]);
 	switch (sockres) {
 	case SOCKMSG_ERROR:
@@ -1960,16 +1960,16 @@ gboolean time_update(gpointer gdata)
   }
 #endif  // USE_SOCKMSG
 
-  // ���˥�
+  // アニメ
   mascot->anime_seq++;
   if((mascot->anime_seqend-mascot->anime_seq)<=0){
-    //�ե졼��ν�λ
+    //フレームの終了
     mascot->anime_seq=0;
-    // �֥��å��롼��
+    // ブロックループ
     if((mascot->frame_loop[mascot->anime_ptn][mascot->anime_frm].next>=0)){
       mascot->frame_loop[mascot->anime_ptn][mascot->anime_frm].seq++;
       if(mascot->frame_loop[mascot->anime_ptn][mascot->anime_frm].seq==1){
-	// �֥��å��롼�׳���
+	// ブロックループ開始
 	mascot->frame_loop[mascot->anime_ptn][mascot->anime_frm].seqend=
 	  RANDOM(mascot->frame_loop[mascot->anime_ptn][mascot->anime_frm].max
 		 -mascot->frame_loop[mascot->anime_ptn][mascot->anime_frm].min+1)
@@ -1986,12 +1986,12 @@ gboolean time_update(gpointer gdata)
       }
       else if(mascot->frame_loop[mascot->anime_ptn][mascot->anime_frm].seqend-
 	      mascot->frame_loop[mascot->anime_ptn][mascot->anime_frm].seq<=0){
-	// �֥��å��롼�׽�λ
+	// ブロックループ終了
 	mascot->frame_loop[mascot->anime_ptn][mascot->anime_frm].seq=0;
 	mascot->anime_frm++;
       }
       else{
-	// �֥��å��롼�׷�³
+	// ブロックループ継続
 	mascot->anime_frm=
 	  mascot->frame_loop[mascot->anime_ptn][mascot->anime_frm].next;
       }
@@ -2000,19 +2000,19 @@ gboolean time_update(gpointer gdata)
       mascot->anime_frm++;
     }
     if(mascot->anime_frm>=mascot->frame_num[mascot->anime_ptn]){
-      //�ѥ�����ν�λ
+      //パターンの終了
       if(mascot->anime_ptn==0){
 	if(mascot->random_total==0){
-	  // �����ॢ�˥᤬�ʤ���� �١�������Ƭ�����
+	  // ランダムアニメがない場合 ベースの先頭に戻る
 	  mascot->anime_frm=0;
 	}
 	else{
-	  // �١����ν�λ -> ������ѥ�����ؤΰܹ�
+	  // ベースの終了 -> ランダムパターンへの移行
 	  mascot->anime_ptn=weight_random(mascot);
 	  mascot->anime_frm=0;
 	  if(mascot->duet_use_random){
 	    if(mascot->duet_tgt[mascot->anime_ptn]){
-	      // Duet���˥�
+	      // Duetアニメ
 	      mascot->duet_seq=mascot->duet_delay[mascot->anime_ptn];
 	      mascot->duet_mode=DUET_RANDOM;
 	    }
@@ -2020,21 +2020,21 @@ gboolean time_update(gpointer gdata)
 	}
       }
       else{
-	// ������֤����
+	// 初期状態へ戻る
 	mascot->anime_ptn=0;
 	mascot->anime_frm=0;
 	if((flag_balloon)&&
 	   ((mascot->bal_mode==BALLOON_NORMAL)
 	    ||(mascot->bal_mode==BALLOON_DUET))){
-	  // �Х롼�󤬤ǤƤ�������Ĥ���
-	  // ����å����˥�ν�λ
+	  // バルーンがでている場合は閉じる
+	  // クリックアニメの終了
 	  map_balloon(mascot, FALSE);
 	  flag_balloon=FALSE;
 	}
       }
     }
     else{
-      //���Υե졼��ذܹ�
+      //次のフレームへ移行
     }
     mascot->anime_seqend=
       RANDOM(mascot->frame_max[mascot->anime_ptn][mascot->anime_frm]
@@ -2042,7 +2042,7 @@ gboolean time_update(gpointer gdata)
       +mascot->frame_min[mascot->anime_ptn][mascot->anime_frm];
     flag_anime=TRUE;
   }
-  // �ե졼�ब�Ѥ�ä���shape���ѷ�
+  // フレームが変わったらshapeを変形
   //  if(pre_pix!=mascot->frame_pix[mascot->anime_ptn][mascot->anime_frm]){
   //   gtk_widget_shape_combine_mask( win_main, 
   //				  mascot->sprites[mascot->frame_pix[mascot->anime_ptn][mascot->anime_frm]].mask,
@@ -2054,12 +2054,12 @@ gboolean time_update(gpointer gdata)
   clock_update(mascot,FALSE);
 
 
-  // ���˥᡼�����ˤ��ޥ����åȤ�����
-  // �ޥ����åȾ�λ��פ�񤭴������Ȥ��Ϥ��ʤ�
+  // アニメーションによるマスコットの描画
+  // マスコット上の時計を書き換えたときはやらない
   if((flag_clock==FALSE)&&(flag_anime==TRUE)){ 
   
     if(mascot->clkmode==CLOCK_PIXMAP){ 
-      //���פ��Ѥ��ʤ������˥᤬�Ѥ�ä�
+      //時計は変わらないがアニメが変わった
       DrawMascotWithDigit(mascot);
     }
     else{
@@ -2077,7 +2077,7 @@ gboolean time_update(gpointer gdata)
 }
 
 
-// ���פΥ��åץǡ���
+// 時計のアップデート
 void clock_update(typMascot *mascot, gboolean force_flag){
   time_t t;
   struct tm *tmpt;
@@ -2104,25 +2104,25 @@ void clock_update(typMascot *mascot, gboolean force_flag){
     old_day=tmpt->tm_mday;
   }
 
-  // �������
+  // 時報処理
   if(pre_hour!=-1){
     if(pre_hour!=tmpt->tm_hour){
       pre_hour=tmpt->tm_hour;
       if((mascot->signal.flag)&&(!mascot->drag)){
-	// �������ޥ��
+	// 外部コマンド
 	if(mascot->signal.com){
 	  ext_play(mascot,mascot->signal.com);
 	}
 
-	// �ޥ����åȤ�ư��
+	// マスコットの動作
 	switch(mascot->signal.type){
 	case SIGACT_CLICK:
 	  if((mascot->click_total!=0)&&(flag_balloon==FALSE)){
 	    gint i_frm;
 
-	    // ����å����˥�
+	    // クリックアニメ
 	    for(i_frm=0;i_frm<mascot->frame_num[mascot->anime_ptn];i_frm++){
-	      // �֥��å��롼�פΥ���󥻥�
+	      // ブロックループのキャンセル
 	      mascot->frame_loop[mascot->anime_ptn][i_frm].seq=0;
 	    }
 	    mascot->anime_ptn=weight_click(mascot);
@@ -2214,19 +2214,19 @@ void clock_update(typMascot *mascot, gboolean force_flag){
     }
 
     if(draw_flag){
-      // ������
+      // 再描画
       switch(mascot->clkmode){
       case CLOCK_PIXMAP:
-	// Mascot���ľ��ʸ����񤯾��ϰ��٥ޥ����åȤ�pixmap���
-	// ���褷�ʤ���ɬ�פ�����(����ʸ����ä�����)
+	// Mascot上に直接文字を書く場合は一度マスコットをpixmap上に
+	// 描画しなおす必要がある(前の文字を消すため)
 	DrawMascotWithDigit(mascot);
 	flag_clock=TRUE;
 	break;
 	
       case CLOCK_PANEL:
-	// �ѥͥ��λ��פξ��ϥѥͥ�Τߤ�����ľ��
-	// ���δؿ�������Window���������ѹ��ˤ��configure/expose_event��
-	// �ƤӽФ���, ������pixmap����window�ؤ������ԤäƤ���
+	// パネル上の時計の場合はパネルのみを描き直す
+	// 下の関数内部でWindowサイズの変更によりconfigure/expose_eventが
+	// 呼び出され, そこでpixmapからwindowへの描画を行っている
 	if(force_flag){
 	  DrawPanelClock0(mascot);
 	}
@@ -2240,7 +2240,7 @@ void clock_update(typMascot *mascot, gboolean force_flag){
 
   }
   else{
-    // ���ư��
+    // 初回起動時
     pre_hour=tmpt->tm_hour;
   }
 }
@@ -2277,7 +2277,7 @@ gchar *ini_week(gint day_of_week){
   return(weekk);
 }
 
-// Ǥ�ե��ޥ�ɼ¹�
+// 任意コマンド実行
 void ext_play(typMascot *mascot, char *exe_command)
 {
 #ifdef USE_WIN32
@@ -2318,7 +2318,7 @@ void ext_play(typMascot *mascot, char *exe_command)
 }
 
 
-// �������� (1�Ĥ���)
+// 音声再生 (1つだけ)
 void sound_play(typMascot *mascot, char *wav_name)
 {
 #ifdef USE_WIN32
@@ -2355,7 +2355,7 @@ void sound_play(typMascot *mascot, char *wav_name)
 
 
 #ifndef USE_WIN32
-// �ҥץ������ν��� 
+// 子プロセスの処理 
 void ChildTerm(int dummy)
 {
   int s;
@@ -2427,7 +2427,7 @@ void callbacks_arg_init(){
 
 #ifdef USE_WIN32
 //*********************************************************
-//  �������С��ΰ�ζ�����֤���
+//  タスクバー領域の矩形を返す。
 //*********************************************************
 MyXY GetTaskbarHeight( void )
 {
@@ -2465,13 +2465,13 @@ MyXY GetTaskbarHeight( void )
 }//GetTaskbarRect
 
 //*********************************************************
-// Win32 �롼�Ȥ�Ƚ�̥�����ɥ��������֤���
+// Win32 ルートの判別ウィンドウの幅を返す。
 //*********************************************************
 gboolean IsWin32Root( HWND hWnd, gint root_width, gint root_height )
 {
   RECT Rect;
   
-  GetWindowRect( hWnd, &Rect ); // ������ɥ�����μ���
+  GetWindowRect( hWnd, &Rect ); // ウィンドウ矩形の取得
   if((Rect.right - Rect.left)==root_width){
     if((Rect.bottom - Rect.top)==root_height){
       return(TRUE);
@@ -2484,7 +2484,7 @@ gboolean IsWin32Root( HWND hWnd, gint root_width, gint root_height )
 #ifndef USE_WIN32
 #ifndef USE_OSX
 //*********************************************************
-// X Window  ���ߤΤä��äƤ���Window��̾��
+// X Window  現在のっかっているWindowの名前
 //*********************************************************
 gchar* Get_Window_Name(dpy, top)
      Display *dpy;
@@ -2515,7 +2515,7 @@ gchar* Get_Window_Name(dpy, top)
 }
 
 //*********************************************************
-// X Window  ���ߤΤä��äƤ���Window��Bar Size
+// X Window  現在のっかっているWindowのBar Size
 //*********************************************************
 gint Get_Window_Bar_Size(typMascot *mascot, Display *dpy, Window top)
 {
@@ -2600,7 +2600,7 @@ gint Get_Window_Bar_Size(typMascot *mascot, Display *dpy, Window top)
 
 
 //*********************************************************
-// X Window  �������С��α����ɸ���֤���
+// X Window  タスクバーの右上座標を返す。
 //    Home_X  =  root_x - ret.x
 //    Home_y  =  root_y - ret.y
 //*********************************************************
@@ -2657,7 +2657,7 @@ void InitMascot0(typMascot *mascot){
 #endif
   int x_root, y_root, width_root, height_root, border, depth;
   int i_pix, i_ptn, i_frm;
-  // Root Window���礭������
+  // Root Windowの大きさ取得
 
 #ifdef USE_WIN32
   width_root=GetSystemMetrics(SM_CXVIRTUALSCREEN);
@@ -2666,9 +2666,9 @@ void InitMascot0(typMascot *mascot){
   mascot->mon_x0=0;
   mascot->mon_y0=0;
 
-  // �ᥤ���˥���(0��)�κ��夬��ɸ (0, 0)�ˤʤ�Τ�
-  // �����˥��֥�˥������������ �ޥ��ʥ���ɸ�ˤʤ�
-  // ���ν���ʬ(��˥�������κǾ���)��������Ƥ���
+  // メインモニター(0番)の左上が座標 (0, 0)になるので
+  // 左や上にサブモニターがある場合は マイナス座標になる
+  // その修正分(モニター矩形の最小値)を取得しておく
   nmon= GetSystemMetrics(SM_CMONITORS);
   EnumDisplayMonitors(NULL, NULL, (MONITORENUMPROC)myinfoenumproc, (LPARAM)&mon);
   for(i_mon=0;i_mon<nmon; i_mon++){
@@ -2692,10 +2692,36 @@ void InitMascot0(typMascot *mascot){
   //gtk_widget_hide(mascot->osx_menu);
   //gtkosx_application_set_menu_bar(mascot->osx_app, GTK_MENU_SHELL(mascot->osx_menu));
 
+  menu_item=make_osx_open_menu(mascot);
+  gtkosx_application_insert_app_menu_item(mascot->osx_app,
+					  menu_item,
+					  0);
+  menu_item=make_osx_save_menu(mascot);
+  gtkosx_application_insert_app_menu_item(mascot->osx_app,
+					  menu_item,
+					  1);
+  menu_item=make_osx_new_menu(mascot);
+  gtkosx_application_insert_app_menu_item(mascot->osx_app,
+					  menu_item,
+					  2); 
+  menu_item=make_osx_install_menu(mascot);
+  gtkosx_application_insert_app_menu_item(mascot->osx_app,
+					  menu_item,
+					  3);
+  menu_item=make_osx_config_menu(mascot);
+  gtkosx_application_insert_app_menu_item(mascot->osx_app,
+					  menu_item,
+					  4);
+  menu_item=make_osx_signal_menu(mascot);
+  gtkosx_application_insert_app_menu_item(mascot->osx_app,
+					  menu_item,
+					  5);
+ 
   mascot->osx_cmenu=make_osx_cmenu(mascot);
   gtkosx_application_insert_app_menu_item(mascot->osx_app,
 					  mascot->osx_cmenu,
-					  1);
+					  6);
+  gtkosx_application_insert_app_menu_item(mascot->osx_app,
   gtkosx_application_ready(mascot->osx_app);
 #endif
  
@@ -2927,7 +2953,7 @@ void make_mascot(typMascot *mascot){
   InitMascot0(mascot);
   ReadMascot(mascot,FALSE);
 
-  // ��������
+  // カーソル
 #ifdef USE_GTK3
   mascot->cursor.normal=gdk_cursor_new_for_display(gdk_display_get_default(),
 						   CURSOR_NORMAL);
@@ -2963,10 +2989,10 @@ void make_mascot(typMascot *mascot){
   my_signal_connect(ebox, "motion-notify-event", window_motion,
 		    (gpointer)mascot);
   
-  // Window�������ѷ�
+  // Window作成・変形
   my_signal_connect(mascot->dw_main, "configure_event",dw_configure_main,
   		    (gpointer)mascot);
-  // �Ťʤä����κ������Ϣ
+  // 重なった場合の再描画関連
 #ifdef USE_GTK3
   my_signal_connect(mascot->dw_main, "draw",dw_expose_main,
   		    (gpointer)mascot);
@@ -2980,7 +3006,7 @@ void make_mascot(typMascot *mascot){
 #ifdef FG_DRAW
   my_signal_connect(mascot->dw_sdw, "configure_event",dw_configure_sdw,
   		    (gpointer)mascot);
-  // �Ťʤä����κ������Ϣ
+  // 重なった場合の再描画関連
 #ifdef USE_GTK3
   my_signal_connect(mascot->dw_sdw, "draw",dw_expose_sdw,
   		    (gpointer)mascot);
