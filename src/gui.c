@@ -965,7 +965,7 @@ static void uri_clicked(GtkButton *button, gpointer gdata)
 #else
   typMascot *mascot=(typMascot *)gdata;
   gchar *tmp_com;
-  
+
   tmp_com=g_strdup_printf(mascot->url_command, DEFAULT_URL);
   ext_play(tmp_com);
   g_free(tmp_com);
@@ -8372,6 +8372,7 @@ void create_config_dialog(GtkWidget *widget, gpointer gdata){
 			 GTK_FILL|GTK_EXPAND,GTK_SHRINK,0,0);
 
 #ifndef USE_WIN32
+#ifndef USE_OSX
       frame = gtkut_frame_new (_("Browser Command <span size=\"smaller\">(\"%s\" will be translated to a URL.)</span>"));
       gtk_container_set_border_width (GTK_CONTAINER (frame), 5);
       gtkut_table_attach(table, frame, 0, 1, 3, 4,
@@ -8388,6 +8389,7 @@ void create_config_dialog(GtkWidget *widget, gpointer gdata){
       gtk_editable_set_editable(GTK_EDITABLE(entry), FALSE);
       gtkut_table_attach(table1, entry, 0, 2, 0, 1,
 			 GTK_FILL|GTK_EXPAND,GTK_SHRINK,0,0);
+#endif
 #endif
       
       table1=gtkut_table_new(1,1,FALSE, 0, 0, 0);

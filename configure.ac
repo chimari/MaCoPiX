@@ -201,6 +201,9 @@ GTK_LIBS="$GTK2_LIBS"
 AC_DEFINE([USE_GTK2],[],[Use Gtk+2.x instead of Gtk+3])
 else
 dnl GTK+3
+if test x"${use_osx}" = "xyes"; then
+PKG_CONFIG_PATH="${PKG_CONFIG_PATH}:/usr/local/opt/libffi/lib/pkgconfig"
+fi
 PKG_CHECK_MODULES(GTK3, gtk+-3.0 >= 3.22, dummy=yes,
 			AC_MSG_ERROR(Gtk+3 >= 3.22 is required))
 GTK_CFLAGS="$GTK3_CFLAGS"
@@ -234,6 +237,7 @@ WIN32_ICONV_LIBS="-liconv"
 dnl  a temoral measure to solve a problem on MinGW glib iconv
 else
 if test x"${use_osx}" = "xyes"; then
+PKG_CONFIG_PATH="${PKG_CONFIG_PATH}:/usr/local/opt/libffi/lib/pkgconfig"
 localedir='share/locale'
 WIN32_ICONV_LIBS="-liconv"
 else

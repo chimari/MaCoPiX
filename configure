@@ -15801,6 +15801,9 @@ GTK_LIBS="$GTK2_LIBS"
 $as_echo "#define USE_GTK2 /**/" >>confdefs.h
 
 else
+if test x"${use_osx}" = "xyes"; then
+PKG_CONFIG_PATH="${PKG_CONFIG_PATH}:/usr/local/opt/libffi/lib/pkgconfig"
+fi
 
 pkg_failed=no
 { $as_echo "$as_me:${as_lineno-$LINENO}: checking for GTK3" >&5
@@ -21604,6 +21607,7 @@ localedir='share/locale'
 WIN32_ICONV_LIBS="-liconv"
 else
 if test x"${use_osx}" = "xyes"; then
+PKG_CONFIG_PATH="${PKG_CONFIG_PATH}:/usr/local/opt/libffi/lib/pkgconfig"
 localedir='share/locale'
 WIN32_ICONV_LIBS="-liconv"
 else

@@ -163,7 +163,11 @@
 #define DEFAULT_URL "http://rosegray.sakura.ne.jp/"
 
 #ifndef USE_WIN32
+#ifdef USE_OSX
+#define DEF_OPEN_URL "open %s"
+#else
 #define DEF_OPEN_URL "xdg-open %s"
+#endif
 #endif
 
 #define HTTP_MASCOT_HOST "rosegray.sakura.ne.jp"
@@ -268,6 +272,9 @@ enum{ FOLDER_DEFAULT,
 #ifdef USE_WIN32
 #define FONT_CLK "arial bold 9"
 #define FONT_BAL "ms pgothic 9"
+#elif defined(USE_OSX)
+#define FONT_CLK "Arial Bold 9"
+#define FONT_BAL "Hiragino Kaku Gothic StdN weight=810 10"
 #else
 #define FONT_CLK "Sans 14"
 #define FONT_BAL "Sans 10"

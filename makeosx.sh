@@ -1,5 +1,6 @@
 #!/bin/sh
 touch configure configure.ac aclocal.m4 Makefile.am Makefile.in
 
-./configure CPPFLAGS=-I/usr/local/opt/openssl/include \
+## libffi & openssl installed as keg-only in Homebrew
+./configure PKG_CONFIG_PATH="/usr/local/opt/libffi/lib/pkgconfig:/usr/local/opt/openssl/lib/pkgconfig" \
   && make
