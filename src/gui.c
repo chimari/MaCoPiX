@@ -10562,7 +10562,7 @@ GtkWidget * make_osx_menu(typMascot *mascot)
   return(menu_bar);
 }
 
-void remake_osx_menu(typMascot mascot){
+void remake_osx_menu(typMascot *mascot){
   gtk_widget_destroy(mascot->osx_menu);
   mascot->osx_menu=make_osx_menu(mascot);
   gtk_container_add(GTK_CONTAINER(mascot->osx_win), mascot->osx_menu);
