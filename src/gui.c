@@ -10461,7 +10461,6 @@ GtkWidget * make_osx_menu(typMascot *mascot)
   GtkWidget *sig_check;
 
   menu_bar = gtk_menu_bar_new();
-  gtk_widget_show(menu_bar);
 
   open_menu=make_open_menu(mascot);
   gtk_widget_show(open_menu);

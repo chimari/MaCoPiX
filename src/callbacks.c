@@ -2688,6 +2688,7 @@ void InitMascot0(typMascot *mascot){
 
 #ifdef USE_GTKMACINTEGRATION
   osxapp = g_object_new(GTKOSX_TYPE_APPLICATION, NULL);
+  gtkosx_application_set_use_quartz_accelerators(osxapp, FALSE);
   menubar=make_osx_menu(mascot);
   gtkosx_application_set_menu_bar(osxapp, GTK_MENU_SHELL(menubar));
   gtkosx_application_ready(osxapp);
