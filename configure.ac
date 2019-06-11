@@ -269,9 +269,11 @@ dnl GtkMACIntegration
  
 if test x"${with_gtkmac}" = "xyes"; then
   if test "$os_osx" == yes; then
+    PKG_CHECK_MODULES(GTKMAC, gtk-mac-integration >= 2.1, dummy=yes,
+			AC_MSG_ERROR(gtk-mac-integration >= 2.1 is required))
+    GTKMAC_CFLAGS="$GTKMAC_CFLAGS"
+    GTKMAC_LIBS="$GTKMAC_LIBS"
     AC_DEFINE([USE_GTKMACINTEGRATION],[],[With gtkmacintegration])
-    GTKMAC_CFLAGS="`pkg-config gtk-mac-integration-gtk2 --cflags`"
-    GTKMAC_LIBS="`pkg-config gtk-mac-integration-gtk2 --libs`"
   else
     GTKMAC_CFALGS=""
     GTKMAC_LIBS=""
