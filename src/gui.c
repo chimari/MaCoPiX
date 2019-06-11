@@ -10471,7 +10471,7 @@ GtkWidget * make_osx_save_menu(typMascot *mascot)
   gtk_widget_show (menu_item);
   gtk_menu_item_set_submenu(GTK_MENU_ITEM(menu_item),save_menu);
 
-  retrun(menu_item);
+  return(menu_item);
 }
 
 GtkWidget * make_osx_new_menu(typMascot *mascot)
