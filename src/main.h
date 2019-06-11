@@ -1245,6 +1245,9 @@ void popup_text_view(GtkWidget *parent, gchar* stock_id, gchar *txt, ...);
 gboolean popup_ask(GtkWidget *parent, gchar* stock_id, ...);
 void unlink_all();
 void AllRandomChangeMascotMenu();
+#ifdef USE_GTKMACINTEGRATIOM
+GtkWidget* make_osx_menu();
+#endif
 GtkWidget* make_popup_menu();
 void create_pop_pass_dialog();
 gchar* create_nkr_change_image_dialog();
