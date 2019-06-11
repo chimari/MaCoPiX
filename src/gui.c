@@ -10545,31 +10545,33 @@ GtkWidget * make_osx_menu(typMascot *mascot)
   gtk_menu_shell_append(GTK_MENU_SHELL(menu_bar), menu_item);
   gtk_menu_item_set_submenu(GTK_MENU_ITEM(menu_item),sub_menu);
 
-  
-  cat_menu=make_cat_menu(mascot);
-  gtk_widget_show(cat_menu);
-
-  menu_item=gtk_menu_item_new_with_label(_("Mascot Launcher"));
-  gtk_widget_show (menu_item);
-  gtk_menu_shell_append(GTK_MENU_SHELL(menu_bar), menu_item);
-  gtk_menu_item_set_submenu(GTK_MENU_ITEM(menu_item),cat_menu);
-  if(mascot->menu_total==0){
-    gtk_widget_set_sensitive(menu_item, FALSE);
-  }
-
+ 
   gtk_widget_show_all(menu_bar);
 
   return(menu_bar);
 }
 
+GtkWidget* remake_osx_cmenu(typMascot *mascot){
+  GtkWidget *menu_item;
+  
+  cat_menu_menu=make_cat_menu(mascot);
+
+  menu_item=gtk_menu_item_new_with_label(_("Mascot Launcher"));
+  gtk_menu_item_set_submenu(GTK_MENU_ITEM(menu_item), cat_menu);
+  if(mascot->menu_total==0){
+    gtk_widget_set_sensitive(menu_item, FALSE);
+  }
+
+  return(menu_item);
+}
+
 void remake_osx_menu(typMascot *mascot){
-  gtk_widget_destroy(mascot->osx_menu);
-  mascot->osx_menu=make_osx_menu(mascot);
-  gtk_container_add(GTK_CONTAINER(mascot->osx_win), mascot->osx_menu);
-  gtk_widget_hide(mascot->osx_menu);
-  gtkosx_application_set_menu_bar(mascot->osx_app,
-				  GTK_MENU_SHELL(mascot->osx_menu));
-  gtkosx_application_ready(mascot->osx_app);
+  gtk_widget_destroy(mascot->osx_cmenu);
+  mascot->osx_cmenu=make_osx_cmenu(mascot);
+  gtkosx_application_insert_app_menu_item(mascot->osx_app,
+					  mascot->osx_cmenu,
+					  1);
+  gtkosx_application_sync_menubar(mascot->osx_app);
 }
 #endif
 

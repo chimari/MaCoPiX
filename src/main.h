@@ -1092,6 +1092,7 @@ struct _typMascot{
   GtkosxApplication *osx_app;
   GtkWidget *osx_win;
   GtkWidget *osx_menu;
+  GtkWidget *osx_cmenu;
 #endif
 };
 

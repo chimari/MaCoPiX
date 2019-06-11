@@ -2690,6 +2690,11 @@ void InitMascot0(typMascot *mascot){
   gtk_container_add(GTK_CONTAINER(mascot->osx_win), mascot->osx_menu);
   gtk_widget_hide(mascot->osx_menu);
   gtkosx_application_set_menu_bar(mascot->osx_app, GTK_MENU_SHELL(mascot->osx_menu));
+
+  mascot->osx_cmenu=make_osx_cmenu(mascot);
+  gtkosx_application_insert_app_menu_item(mascot->osx_app,
+					  mascot->osx_cmenu,
+					  1);
   gtkosx_application_ready(mascot->osx_app);
 #endif
  
