@@ -11469,8 +11469,6 @@ void create_smenu_dialog(typMascot *mascot, gboolean flag_popup)
     
     gtk_main();
     
-    gdkut_flush(main);
-    
     if(selected_smenu==-1){
       if(!flag_popup) exit(1);
     }
