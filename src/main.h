@@ -1260,7 +1260,7 @@ GtkWidget* make_osx_new_menu();
 GtkWidget* make_osx_install_menu();
 GtkWidget* make_osx_config_menu();
 GtkWidget* make_osx_signal_menu();
-GtkWidget* make_osx_cmenu();
+GtkWidget* make_osx_cat_menu();
 #endif
 GtkWidget* make_popup_menu();
 void create_pop_pass_dialog();

@@ -2686,12 +2686,13 @@ void InitMascot0(typMascot *mascot){
 #ifdef USE_GTKMACINTEGRATION
   mascot->osx_app = g_object_new(GTKOSX_TYPE_APPLICATION, NULL);
   gtkosx_application_set_use_quartz_accelerators(mascot->osx_app, FALSE);
-  //mascot->osx_win=gtk_window_new(GTK_WINDOW_POPUP);
-  //mascot->osx_menu=make_osx_menu(mascot);
-  //gtk_container_add(GTK_CONTAINER(mascot->osx_win), mascot->osx_menu);
-  //gtk_widget_hide(mascot->osx_menu);
-  //gtkosx_application_set_menu_bar(mascot->osx_app, GTK_MENU_SHELL(mascot->osx_menu));
+  mascot->osx_win=gtk_window_new(GTK_WINDOW_POPUP);
+  mascot->osx_menu=make_osx_menu(mascot);
+  gtk_container_add(GTK_CONTAINER(mascot->osx_win), mascot->osx_menu);
+  gtk_widget_hide(mascot->osx_menu);
+  gtkosx_application_set_menu_bar(mascot->osx_app, GTK_MENU_SHELL(mascot->osx_menu));
 
+  /*
   menu_item=make_osx_open_menu(mascot);
   gtkosx_application_insert_app_menu_item(mascot->osx_app,
 					  menu_item,
@@ -2717,11 +2718,11 @@ void InitMascot0(typMascot *mascot){
 					  menu_item,
 					  5);
  
-  mascot->osx_cmenu=make_osx_cmenu(mascot);
+  mascot->osx_cmenu=make_osx_cat_menu(mascot);
   gtkosx_application_insert_app_menu_item(mascot->osx_app,
 					  mascot->osx_cmenu,
 					  6);
-  gtkosx_application_sync_menubar(mascot->osx_app);
+					  gtkosx_application_sync_menubar(mascot->osx_app);*/
   gtkosx_application_ready(mascot->osx_app);
 #endif
  

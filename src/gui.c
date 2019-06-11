@@ -10444,114 +10444,6 @@ void make_cat_list(typMascot *mascot, GtkWidget *cat_note, int i_cat)
 
 #ifdef USE_GTKMACINTEGRATION
 // macOS 用メニューの生成
-GtkWidget * make_osx_menu(typMascot *mascot)
-{
-  GtkWidget *menu_bar; 
-  GtkWidget *open_menu; 
-  GtkWidget *save_menu; 
-  GtkWidget *new_menu; 
-  GtkWidget *install_menu; 
-  GtkWidget *cat_menu; 
-  GtkWidget *menu_item;
-  GtkWidget *sub_menu;
-  GtkWidget *popup_button;
-#ifdef USE_BIFF
-  GtkWidget *biff_check;
-#endif  // USE_BIFF
-  GtkWidget *sig_check;
-
-  menu_bar = gtk_menu_bar_new();
-
-  open_menu=make_open_menu(mascot);
-  gtk_widget_show(open_menu);
-
-  menu_item=gtk_menu_item_new_with_label(_("Open"));
-  gtk_widget_show (menu_item);
-  gtk_menu_shell_append(GTK_MENU_SHELL(menu_bar), menu_item);
-  gtk_menu_item_set_submenu(GTK_MENU_ITEM(menu_item),open_menu);
-
-  save_menu=make_save_menu(mascot);
-  gtk_widget_show(save_menu);
-
-  menu_item=gtk_menu_item_new_with_label(_("Save"));
-  gtk_widget_show (menu_item);
-  gtk_menu_shell_append(GTK_MENU_SHELL(menu_bar), menu_item);
-  gtk_menu_item_set_submenu(GTK_MENU_ITEM(menu_item),save_menu);
-
-  new_menu=make_new_menu(mascot);
-  gtk_widget_show(new_menu);
-
-  menu_item=gtk_menu_item_new_with_label(_("New"));
-  gtk_widget_show (menu_item);
-  gtk_menu_shell_append(GTK_MENU_SHELL(menu_bar), menu_item);
-  gtk_menu_item_set_submenu(GTK_MENU_ITEM(menu_item),new_menu);
-
-  install_menu=make_install_menu(mascot);
-  gtk_widget_show(install_menu);
-
-  menu_item=gtk_menu_item_new_with_label(_("Install"));
-  gtk_widget_show (menu_item);
-  gtk_menu_shell_append(GTK_MENU_SHELL(menu_bar), menu_item);
-  gtk_menu_item_set_submenu(GTK_MENU_ITEM(menu_item),install_menu);
-
-
-  sub_menu = gtk_menu_new();
-  gtk_widget_show (sub_menu);
-
-  popup_button =gtk_menu_item_new_with_label (_("Config Dialog"));
-  gtk_widget_show (popup_button);
-  gtk_container_add (GTK_CONTAINER (sub_menu), popup_button);
-  my_signal_connect (popup_button, "activate", create_config_dialog,
-		     (gpointer)mascot);
-  
-  menu_item=gtk_menu_item_new_with_label(_("Config"));
-  gtk_widget_show (menu_item);
-  gtk_menu_shell_append(GTK_MENU_SHELL(menu_bar), menu_item);
-  gtk_menu_item_set_submenu(GTK_MENU_ITEM(menu_item),sub_menu);
-
-
-  sub_menu = gtk_menu_new();
-  gtk_widget_show (sub_menu);
-  
-#ifdef USE_BIFF
-  biff_check =gtk_check_menu_item_new_with_label (_("Biff Check"));
-  gtk_widget_show (biff_check);
-  gtk_container_add (GTK_CONTAINER (sub_menu), biff_check);
-  if(mascot->mail.flag){
-    gtk_check_menu_item_set_active(GTK_CHECK_MENU_ITEM(biff_check),TRUE);
-  }
-  else{
-    gtk_check_menu_item_set_active(GTK_CHECK_MENU_ITEM(biff_check),FALSE);
-  }
-  my_signal_connect (biff_check, "toggled",mail_flag_toggle,
-		     (gpointer)mascot);
-
-#endif  // USE_BIFF
-
-  sig_check =gtk_check_menu_item_new_with_label (_("Time Signal"));
-  gtk_widget_show (sig_check);
-  gtk_container_add (GTK_CONTAINER (sub_menu), sig_check);
-  if(mascot->signal.flag){
-    gtk_check_menu_item_set_active(GTK_CHECK_MENU_ITEM(sig_check),TRUE);
-  }
-  else{
-    gtk_check_menu_item_set_active(GTK_CHECK_MENU_ITEM(sig_check),FALSE);
-  }
-  my_signal_connect (sig_check, "toggled",check_menu_get_toggle,
-		     &mascot->signal.flag);
-
-  menu_item=gtk_menu_item_new_with_label(_("Signal"));
-  gtk_widget_show (menu_item);
-  gtk_menu_shell_append(GTK_MENU_SHELL(menu_bar), menu_item);
-  gtk_menu_item_set_submenu(GTK_MENU_ITEM(menu_item),sub_menu);
-
- 
-  gtk_widget_show_all(menu_bar);
-
-  return(menu_bar);
-}
-
-
 GtkWidget * make_osx_open_menu(typMascot *mascot)
 {
   GtkWidget *open_menu; 
@@ -10699,9 +10591,40 @@ GtkWidget* make_osx_cat_menu(typMascot *mascot){
   return(menu_item);
 }
 
+GtkWidget * make_osx_menu(typMascot *mascot)
+{
+  GtkWidget *menu_bar; 
+  GtkWidget *menu_item;
+
+  menu_bar = gtk_menu_bar_new();
+
+  menu_item=make_osx_open_menu(mascot);
+  gtk_menu_shell_append(GTK_MENU_SHELL(menu_bar), menu_item);
+
+  menu_item=make_osx_save_menu(mascot);
+  gtk_menu_shell_append(GTK_MENU_SHELL(menu_bar), menu_item);
+
+  menu_item=make_osx_new_menu(mascot);
+  gtk_menu_shell_append(GTK_MENU_SHELL(menu_bar), menu_item);
+
+  menu_item=make_osx_install_menu(mascot);
+  gtk_menu_shell_append(GTK_MENU_SHELL(menu_bar), menu_item);
+
+  menu_item=make_osx_config_menu(mascot);
+  gtk_menu_shell_append(GTK_MENU_SHELL(menu_bar), menu_item);
+
+  menu_item=make_osx_signal_menu(mascot);
+  gtk_menu_shell_append(GTK_MENU_SHELL(menu_bar), menu_item);
+ 
+  gtk_widget_show_all(menu_bar);
+
+  return(menu_bar);
+}
+
+
 void remake_osx_menu(typMascot *mascot){
   gtk_widget_destroy(mascot->osx_cmenu);
-  mascot->osx_cmenu=make_osx_cmenu(mascot);
+  mascot->osx_cmenu=make_osx_cat_menu(mascot);
   gtkosx_application_insert_app_menu_item(mascot->osx_app,
 					  mascot->osx_cmenu,
 					  6);
@@ -11768,7 +11691,7 @@ void create_smenu_dialog(typMascot *mascot, gboolean flag_popup)
 	gtk_widget_destroy(mascot->PopupMenu);
 	ReadMenu(mascot,0,NULL);
 	mascot->PopupMenu=make_popup_menu(mascot);
-	remake_osx_menu(mascot);
+	//remake_osx_menu(mascot);
       }
       gtk_widget_destroy(main);
     }
