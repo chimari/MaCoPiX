@@ -10466,7 +10466,7 @@ GtkWidget * make_osx_menu(typMascot *mascot)
   open_menu=make_open_menu(mascot);
   gtk_widget_show(open_menu);
 
-  menu_item=gt_menu_item_new_with_label(_("Open"));
+  menu_item=gtk_menu_item_new_with_label(_("Open"));
   gtk_widget_show (menu_item);
   gtk_menu_shell_append(GTK_MENU_SHELL(menu_bar), menu_item);
   gtk_menu_item_set_submenu(GTK_MENU_ITEM(menu_item),open_menu);
@@ -10474,7 +10474,7 @@ GtkWidget * make_osx_menu(typMascot *mascot)
   save_menu=make_save_menu(mascot);
   gtk_widget_show(save_menu);
 
-  menu_item=gt_menu_item_new_with_label(_("Save"));
+  menu_item=gtk_menu_item_new_with_label(_("Save"));
   gtk_widget_show (menu_item);
   gtk_menu_shell_append(GTK_MENU_SHELL(menu_bar), menu_item);
   gtk_menu_item_set_submenu(GTK_MENU_ITEM(menu_item),save_menu);
@@ -10482,7 +10482,7 @@ GtkWidget * make_osx_menu(typMascot *mascot)
   new_menu=make_new_menu(mascot);
   gtk_widget_show(new_menu);
 
-  menu_item=gt_menu_item_new_with_label(_("New"));
+  menu_item=gtk_menu_item_new_with_label(_("New"));
   gtk_widget_show (menu_item);
   gtk_menu_shell_append(GTK_MENU_SHELL(menu_bar), menu_item);
   gtk_menu_item_set_submenu(GTK_MENU_ITEM(menu_item),new_menu);
@@ -10490,7 +10490,7 @@ GtkWidget * make_osx_menu(typMascot *mascot)
   install_menu=make_install_menu(mascot);
   gtk_widget_show(install_menu);
 
-  menu_item=gt_menu_item_new_with_label(_("Install"));
+  menu_item=gtk_menu_item_new_with_label(_("Install"));
   gtk_widget_show (menu_item);
   gtk_menu_shell_append(GTK_MENU_SHELL(menu_bar), menu_item);
   gtk_menu_item_set_submenu(GTK_MENU_ITEM(menu_item),install_menu);
@@ -10505,7 +10505,7 @@ GtkWidget * make_osx_menu(typMascot *mascot)
   my_signal_connect (popup_buton, "activate", create_config_dialog,
 		     (gpointer)mascot);
   
-  menu_item=gt_menu_item_new_with_label(_("Config"));
+  menu_item=gtk_menu_item_new_with_label(_("Config"));
   gtk_widget_show (menu_item);
   gtk_menu_shell_append(GTK_MENU_SHELL(menu_bar), menu_item);
   gtk_menu_item_set_submenu(GTK_MENU_ITEM(menu_item),sub_menu);
@@ -10541,7 +10541,7 @@ GtkWidget * make_osx_menu(typMascot *mascot)
   my_signal_connect (sig_check, "toggled",check_menu_get_toggle,
 		     &mascot->signal.flag);
 
-  menu_item=gt_menu_item_new_with_label(_("Signal"));
+  menu_item=gtk_menu_item_new_with_label(_("Signal"));
   gtk_widget_show (menu_item);
   gtk_menu_shell_append(GTK_MENU_SHELL(menu_bar), menu_item);
   gtk_menu_item_set_submenu(GTK_MENU_ITEM(menu_item),sub_menu);
@@ -10550,7 +10550,7 @@ GtkWidget * make_osx_menu(typMascot *mascot)
   cat_menu=make_cat_menu(mascot);
   gtk_widget_show(cat_menu);
 
-  menu_item=gt_menu_item_new_with_label(_("Mascot Launcher"));
+  menu_item=gtk_menu_item_new_with_label(_("Mascot Launcher"));
   gtk_widget_show (menu_item);
   gtk_menu_shell_append(GTK_MENU_SHELL(menu_bar), menu_item);
   gtk_menu_item_set_submenu(GTK_MENU_ITEM(menu_item),cat_menu);
