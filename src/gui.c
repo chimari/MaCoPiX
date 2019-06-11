@@ -10575,6 +10575,29 @@ GtkWidget * make_osx_signal_menu(typMascot *mascot)
   return(menu_item);
 }
 
+
+GtkWidget * make_osx_change_menu(typMascot *mascot)
+{
+  GtkWidget *menu_item;
+  GtkWidget *sub_menu;
+  GtkWidget *popup_button;
+
+  sub_menu = gtk_menu_new();
+  gtk_widget_show (sub_menu);
+
+  popup_button =gtk_menu_item_new_with_label (_("Random Change"));
+  gtk_widget_show (popup_button);
+  gtk_container_add (GTK_CONTAINER (sub_menu), popup_button);
+  my_signal_connect (popup_button, "activate",AllRandomChangeMascotMenu,
+		     (gpointer)mascot);
+
+  menu_item=gtk_menu_item_new_with_label(_("Mascot Change"));
+  gtk_widget_show (menu_item);
+  gtk_menu_item_set_submenu(GTK_MENU_ITEM(menu_item),sub_menu);
+
+  return(menu_item);
+}
+
  
 GtkWidget* make_osx_cat_menu(typMascot *mascot){
   GtkWidget *menu_item;
@@ -10616,12 +10639,16 @@ GtkWidget * make_osx_menu(typMascot *mascot)
   menu_item=make_osx_signal_menu(mascot);
   gtk_menu_shell_append(GTK_MENU_SHELL(menu_bar), menu_item);
  
+  menu_item=make_osx_change_menu(mascot);
+  gtk_menu_shell_append(GTK_MENU_SHELL(menu_bar), menu_item);
+ 
   gtk_widget_show_all(menu_bar);
 
   return(menu_bar);
 }
 
 
+/*
 void remake_osx_menu(typMascot *mascot){
   gtk_widget_destroy(mascot->osx_cmenu);
   mascot->osx_cmenu=make_osx_cat_menu(mascot);
@@ -10630,6 +10657,7 @@ void remake_osx_menu(typMascot *mascot){
 					  6);
   gtkosx_application_sync_menubar(mascot->osx_app);
 }
+*/
 #endif
 
 
