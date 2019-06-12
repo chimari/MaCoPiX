@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-06-10 18:35-1000\n"
+"POT-Creation-Date: 2019-06-11 22:46-1000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -89,31 +89,31 @@ msgstr ""
 #. gtk_widget_grab_focus(gtk_dialog_get_widget_for_response(GTK_DIALOG(dialog),
 #. GTK_RESPONSE_OK));
 #.
-#: src/dnd.c:188 src/gui.c:2180 src/gui.c:2505 src/gui.c:2679 src/gui.c:4260
-#: src/gui.c:4322 src/gui.c:4387 src/gui.c:4484 src/gui.c:5167 src/gui.c:5284
-#: src/gui.c:5374 src/gui.c:5540 src/gui.c:5790 src/gui.c:5915 src/gui.c:6065
-#: src/gui.c:11234 src/gui.c:11457 src/gui.c:11814 src/gui.c:11963
-#: src/gui.c:12071 src/gui.c:12182 src/gui.c:12296 src/nokkari.c:890
+#: src/dnd.c:188 src/gui.c:2188 src/gui.c:2513 src/gui.c:2687 src/gui.c:4268
+#: src/gui.c:4330 src/gui.c:4395 src/gui.c:4492 src/gui.c:5175 src/gui.c:5292
+#: src/gui.c:5382 src/gui.c:5548 src/gui.c:5798 src/gui.c:5923 src/gui.c:6073
+#: src/gui.c:11511 src/gui.c:11734 src/gui.c:12092 src/gui.c:12241
+#: src/gui.c:12349 src/gui.c:12460 src/gui.c:12574 src/nokkari.c:890
 #: src/sslmanager.c:157
 msgid "OK"
 msgstr ""
 
-#: src/dnd.c:198 src/gui.c:2171 src/gui.c:2496 src/gui.c:2670 src/gui.c:4251
-#: src/gui.c:4313 src/gui.c:4378 src/gui.c:4475 src/gui.c:5158 src/gui.c:5275
-#: src/gui.c:5365 src/gui.c:5531 src/gui.c:5781 src/gui.c:5906 src/gui.c:11223
-#: src/gui.c:11446 src/gui.c:12171 src/gui.c:12287 src/http-client.c:998
+#: src/dnd.c:198 src/gui.c:2179 src/gui.c:2504 src/gui.c:2678 src/gui.c:4259
+#: src/gui.c:4321 src/gui.c:4386 src/gui.c:4483 src/gui.c:5166 src/gui.c:5283
+#: src/gui.c:5373 src/gui.c:5539 src/gui.c:5789 src/gui.c:5914 src/gui.c:11500
+#: src/gui.c:11723 src/gui.c:12449 src/gui.c:12565 src/http-client.c:998
 #: src/http-client.c:1000 src/http-client.c:1115 src/http-client.c:1117
-#: src/main.c:4319 src/main.c:4321 src/sslmanager.c:167
+#: src/main.c:4334 src/main.c:4336 src/sslmanager.c:167
 msgid "Cancel"
 msgstr ""
 
-#: src/gui.c:464 src/gui.c:5944 src/gui.c:5961
+#: src/gui.c:464 src/gui.c:5952 src/gui.c:5969
 #, c-format
 msgid "Saved Resource as ...%%n    \"%s\""
 msgstr ""
 
-#: src/gui.c:476 src/gui.c:524 src/gui.c:5194 src/gui.c:5206 src/gui.c:5597
-#: src/gui.c:5668
+#: src/gui.c:476 src/gui.c:524 src/gui.c:5202 src/gui.c:5214 src/gui.c:5605
+#: src/gui.c:5676
 #, c-format
 msgid "Saved Mascot as ...%%n    \"%s\""
 msgstr ""
@@ -147,1713 +147,1741 @@ msgstr ""
 msgid "%%aRemove Default Menu from Resource Setting"
 msgstr ""
 
-#: src/gui.c:1637 src/gui.c:1737 src/gui.c:1933
+#: src/gui.c:1645 src/gui.c:1745 src/gui.c:1941
 #, c-format
 msgid "Select New Image for No.%02d"
 msgstr ""
 
-#: src/gui.c:1658 src/gui.c:1773 src/gui.c:1853 src/gui.c:1959 src/gui.c:2866
-#: src/gui.c:2967 src/gui.c:3349 src/gui.c:3468 src/gui.c:3559 src/gui.c:3647
-#: src/gui.c:3850 src/gui.c:4108 src/gui.c:4177 src/gui.c:4659 src/gui.c:4842
-#: src/gui.c:4957 src/gui.c:5032 src/gui.c:5132 src/gui.c:5247 src/gui.c:5501
-#: src/gui.c:5755 src/gui.c:5880
+#: src/gui.c:1666 src/gui.c:1781 src/gui.c:1861 src/gui.c:1967 src/gui.c:2874
+#: src/gui.c:2975 src/gui.c:3357 src/gui.c:3476 src/gui.c:3567 src/gui.c:3655
+#: src/gui.c:3858 src/gui.c:4116 src/gui.c:4185 src/gui.c:4667 src/gui.c:4850
+#: src/gui.c:4965 src/gui.c:5040 src/gui.c:5140 src/gui.c:5255 src/gui.c:5509
+#: src/gui.c:5763 src/gui.c:5888
 msgid "All File"
 msgstr ""
 
-#: src/gui.c:1686 src/gui.c:1991
+#: src/gui.c:1694 src/gui.c:1999
 msgid "Error: File cannot be loaded."
 msgstr ""
 
-#: src/gui.c:1701 src/gui.c:1793 src/gui.c:1883 src/gui.c:2005 src/gui.c:2893
-#: src/gui.c:2998 src/gui.c:3384 src/gui.c:3495 src/gui.c:3586 src/gui.c:3672
-#: src/gui.c:3795 src/gui.c:3878 src/gui.c:4131 src/gui.c:4206 src/gui.c:4708
-#: src/gui.c:4890 src/gui.c:4983 src/gui.c:5079 src/unlha.c:93 src/untar.c:180
+#: src/gui.c:1709 src/gui.c:1801 src/gui.c:1891 src/gui.c:2013 src/gui.c:2901
+#: src/gui.c:3006 src/gui.c:3392 src/gui.c:3503 src/gui.c:3594 src/gui.c:3680
+#: src/gui.c:3803 src/gui.c:3886 src/gui.c:4139 src/gui.c:4214 src/gui.c:4716
+#: src/gui.c:4898 src/gui.c:4991 src/gui.c:5087 src/unlha.c:93 src/untar.c:180
 msgid "Error: File cannot be opened."
 msgstr ""
 
-#: src/gui.c:1757
+#: src/gui.c:1765
 #, c-format
 msgid "Please select the image File for No.%d."
 msgstr ""
 
-#: src/gui.c:1765
+#: src/gui.c:1773
 msgid "The image described in INI cannot be found."
 msgstr ""
 
-#: src/gui.c:1829
+#: src/gui.c:1837
 msgid "Select New Image for Biff"
 msgstr ""
 
-#: src/gui.c:1925
+#: src/gui.c:1933
 msgid "Error: Append Image."
 msgstr ""
 
-#: src/gui.c:1927
+#: src/gui.c:1935
 msgid "The number of images maxes out."
 msgstr ""
 
-#: src/gui.c:2055
+#: src/gui.c:2063
 msgid "Warning : Please select an image to delete in the list."
 msgstr ""
 
-#: src/gui.c:2098
+#: src/gui.c:2106
 #, c-format
 msgid "Image %02d is used in Pattern %02d / Frame %02d\n"
 msgstr ""
 
-#: src/gui.c:2107
+#: src/gui.c:2115
 msgid "Error : Delete Image."
 msgstr ""
 
-#: src/gui.c:2111
+#: src/gui.c:2119
 msgid "Please Change..."
 msgstr ""
 
-#: src/gui.c:2150 src/gui.c:2457
+#: src/gui.c:2158 src/gui.c:2465
 msgid "Error: Append Pattern."
 msgstr ""
 
-#: src/gui.c:2152 src/gui.c:2459
+#: src/gui.c:2160 src/gui.c:2467
 msgid "The number of patterns maxes out."
 msgstr ""
 
-#: src/gui.c:2164
+#: src/gui.c:2172
 msgid "Select Pattern No. to Append"
 msgstr ""
 
-#: src/gui.c:2195
+#: src/gui.c:2203
 msgid "Append Pattern No."
 msgstr ""
 
-#: src/gui.c:2316
+#: src/gui.c:2324
 msgid "Error: Delete Pattern."
 msgstr ""
 
-#: src/gui.c:2318
+#: src/gui.c:2326
 msgid "You cannot delete the Base pattern."
 msgstr ""
 
-#: src/gui.c:2325
+#: src/gui.c:2333
 #, c-format
 msgid "Do you really delete Pattern <b>%02d</b>?"
 msgstr ""
 
-#: src/gui.c:2334 src/gui.c:3065 src/gui.c:3227
+#: src/gui.c:2342 src/gui.c:3073 src/gui.c:3235
 msgid "Warning: Delete Pattern."
 msgstr ""
 
-#: src/gui.c:2475
+#: src/gui.c:2483
 msgid "Error: Copy Pattern."
 msgstr ""
 
-#: src/gui.c:2477
+#: src/gui.c:2485
 msgid "You cannot copy the Base pattern."
 msgstr ""
 
-#: src/gui.c:2489
+#: src/gui.c:2497
 msgid "Pattern Copy"
 msgstr ""
 
-#: src/gui.c:2520
+#: src/gui.c:2528
 #, c-format
 msgid "Pattern Copy No. <b>%02d</b> to No. "
 msgstr ""
 
-#: src/gui.c:2643
+#: src/gui.c:2651
 msgid "Error: Append Frame."
 msgstr ""
 
-#: src/gui.c:2645
+#: src/gui.c:2653
 msgid "The number of frames maxes out."
 msgstr ""
 
-#: src/gui.c:2663
+#: src/gui.c:2671
 msgid "Select Frame No. to Append"
 msgstr ""
 
-#: src/gui.c:2693
+#: src/gui.c:2701
 msgid "Append Frame No."
 msgstr ""
 
-#: src/gui.c:2776 src/gui.c:2793
+#: src/gui.c:2784 src/gui.c:2801
 msgid "Error: Delete Frame."
 msgstr ""
 
-#: src/gui.c:2778
+#: src/gui.c:2786
 msgid "You cannot delete frames anymore."
 msgstr ""
 
-#: src/gui.c:2795
+#: src/gui.c:2803
 msgid "Please select a frame to delete."
 msgstr ""
 
 #. Win構築は重いので先にExposeイベント等をすべて処理してから
 #. while (my_main_iteration(FALSE));
-#: src/gui.c:2847 src/gui.c:3443
+#: src/gui.c:2855 src/gui.c:3451
 msgid "Select Mascot File"
 msgstr ""
 
-#: src/gui.c:2865 src/gui.c:2966 src/gui.c:3467 src/gui.c:4107 src/gui.c:4658
-#: src/gui.c:5131 src/gui.c:5500 src/gui.c:10195
+#: src/gui.c:2873 src/gui.c:2974 src/gui.c:3475 src/gui.c:4115 src/gui.c:4666
+#: src/gui.c:5139 src/gui.c:5508 src/gui.c:10249
 msgid "Mascot File"
 msgstr ""
 
-#: src/gui.c:2933
+#: src/gui.c:2941
 msgid "Error: Append Mascot."
 msgstr ""
 
-#: src/gui.c:2935
+#: src/gui.c:2943
 msgid "The number of mascots maxes out."
 msgstr ""
 
-#: src/gui.c:2942 src/gui.c:4094
+#: src/gui.c:2950 src/gui.c:4102
 msgid "Select New Mascot File"
 msgstr ""
 
-#: src/gui.c:3042
+#: src/gui.c:3050
 msgid "Error: Delete Mascot."
 msgstr ""
 
-#: src/gui.c:3044
+#: src/gui.c:3052
 msgid "You cannot delete mascots anymore."
 msgstr ""
 
-#: src/gui.c:3056
+#: src/gui.c:3064
 #, c-format
 msgid "        <b>%02d</b> : <b>%s</b>"
 msgstr ""
 
-#: src/gui.c:3067
+#: src/gui.c:3075
 msgid "Do you really want to delete the mascot?"
 msgstr ""
 
-#: src/gui.c:3122
+#: src/gui.c:3130
 msgid "Error: Append Category."
 msgstr ""
 
-#: src/gui.c:3124 src/gui.c:3317
+#: src/gui.c:3132 src/gui.c:3325
 msgid "The number of categories maxes out."
 msgstr ""
 
-#: src/gui.c:3206
+#: src/gui.c:3214
 msgid "Error: Delete Category."
 msgstr ""
 
-#: src/gui.c:3208
+#: src/gui.c:3216
 msgid "You can delete no more categories."
 msgstr ""
 
-#: src/gui.c:3216
+#: src/gui.c:3224
 #, c-format
 msgid "       Category <b>%02d</b> : <b>%s</b> (%d registered mascots)"
 msgstr ""
 
-#: src/gui.c:3229
+#: src/gui.c:3237
 msgid "Do you really want to delete the category?"
 msgstr ""
 
-#: src/gui.c:3315
+#: src/gui.c:3323
 msgid "Error: Merge Menu."
 msgstr ""
 
-#: src/gui.c:3328
+#: src/gui.c:3336
 msgid "Select Menu File to Merge"
 msgstr ""
 
-#: src/gui.c:3348 src/gui.c:4840 src/gui.c:5031 src/gui.c:5754 src/gui.c:8339
+#: src/gui.c:3356 src/gui.c:4848 src/gui.c:5039 src/gui.c:5762 src/gui.c:8393
 msgid "Menu File"
 msgstr ""
 
-#: src/gui.c:3389 src/unlha.c:98
+#: src/gui.c:3397 src/unlha.c:98
 #, c-format
 msgid "Cannot Open %s\n"
 msgstr ""
 
-#: src/gui.c:3534 src/gui.c:3622
+#: src/gui.c:3542 src/gui.c:3630
 msgid "Select Sound File"
 msgstr ""
 
-#: src/gui.c:3713
+#: src/gui.c:3721
 msgid "Select the file refered for the mail checking"
 msgstr ""
 
-#: src/gui.c:3829
+#: src/gui.c:3837
 msgid "Select mailer command"
 msgstr ""
 
-#: src/gui.c:4068
+#: src/gui.c:4076
 #, c-format
 msgid "Created New Mascot ...%%n    \"%s\""
 msgstr ""
 
 #. Win構築は重いので先にExposeイベント等をすべて処理してから
 #. while (my_main_iteration(FALSE));
-#: src/gui.c:4164
+#: src/gui.c:4172
 msgid "Select Image for New Mascot"
 msgstr ""
 
-#: src/gui.c:4246 src/gui.c:4308 src/gui.c:4373 src/gui.c:10736
+#: src/gui.c:4254 src/gui.c:4316 src/gui.c:4381 src/gui.c:11013
 msgid "Create New Mascot"
 msgstr ""
 
-#: src/gui.c:4270 src/gui.c:4333 src/gui.c:4397
+#: src/gui.c:4278 src/gui.c:4341 src/gui.c:4405
 msgid "Creating New Mascot..."
 msgstr ""
 
-#: src/gui.c:4283
+#: src/gui.c:4291
 msgid "1. Please select Mascot File Name to be created"
 msgstr ""
 
-#: src/gui.c:4346
+#: src/gui.c:4354
 msgid "2. Please select an Image File Name to be used in Mascot"
 msgstr ""
 
-#: src/gui.c:4410
+#: src/gui.c:4418
 msgid "Mascot File : "
 msgstr ""
 
-#: src/gui.c:4416
+#: src/gui.c:4424
 msgid "Image File : "
 msgstr ""
 
-#: src/gui.c:4425 src/gui.c:4431
+#: src/gui.c:4433 src/gui.c:4439
 msgid "At last, Please Input Descrption for Copyright"
 msgstr ""
 
-#: src/gui.c:4470 src/gui.c:4494
+#: src/gui.c:4478 src/gui.c:4502
 msgid "Please Input POP Password"
 msgstr ""
 
-#: src/gui.c:4505
+#: src/gui.c:4513
 #, c-format
 msgid "Server : %s"
 msgstr ""
 
-#: src/gui.c:4512
+#: src/gui.c:4520
 #, c-format
 msgid "User ID : %s"
 msgstr ""
 
-#: src/gui.c:4527
+#: src/gui.c:4535
 msgid "Password : "
 msgstr ""
 
-#: src/gui.c:4575 src/gui.c:10622
+#: src/gui.c:4583 src/gui.c:10899
 msgid "Open Mascot"
 msgstr ""
 
-#: src/gui.c:4597
+#: src/gui.c:4605
 msgid ""
 "Caution : You're going to install a new mascot into your user's direcroty.\n"
 msgstr ""
 
-#: src/gui.c:4598 src/gui.c:4627 src/gui.c:4775 src/gui.c:4801
+#: src/gui.c:4606 src/gui.c:4635 src/gui.c:4783 src/gui.c:4809
 msgid "    If you already have the file with the same filename,"
 msgstr ""
 
-#: src/gui.c:4599 src/gui.c:4628 src/gui.c:4776 src/gui.c:4802
+#: src/gui.c:4607 src/gui.c:4636 src/gui.c:4784 src/gui.c:4810
 msgid "    it will be overwritten."
 msgstr ""
 
-#: src/gui.c:4600 src/gui.c:4629
+#: src/gui.c:4608 src/gui.c:4637
 msgid ""
 "\n"
 "    If you want to install more than one mascot with a launcher menu,"
 msgstr ""
 
-#: src/gui.c:4601 src/gui.c:4630
+#: src/gui.c:4609 src/gui.c:4638
 msgid "    please install using \"Install Launcher Menu\"."
 msgstr ""
 
-#: src/gui.c:4603
+#: src/gui.c:4611
 msgid "Install New Mascot to User's Directory"
 msgstr ""
 
-#: src/gui.c:4626
+#: src/gui.c:4634
 msgid ""
 "Caution : You're going to install a new mascot into the MaCoPiX common "
 "direcroty.\n"
 msgstr ""
 
-#: src/gui.c:4632
+#: src/gui.c:4640
 msgid "Install New Mascot to the Common Directory"
 msgstr ""
 
-#: src/gui.c:4753
+#: src/gui.c:4761
 msgid "Open Launcher Menu"
 msgstr ""
 
-#: src/gui.c:4774
+#: src/gui.c:4782
 msgid ""
 "Caution : You're going to install a new launcher menu with its mascots into "
 "your user's direcroty.\n"
 msgstr ""
 
-#: src/gui.c:4778
+#: src/gui.c:4786
 msgid "Install New Launcher Menu to User's Directory"
 msgstr ""
 
-#: src/gui.c:4800
+#: src/gui.c:4808
 msgid ""
 "Caution : You're going to install a new launcher menu with mascots into the "
 "MaCoPiX common direcroty.\n"
 msgstr ""
 
-#: src/gui.c:4804
+#: src/gui.c:4812
 msgid "Install New Launcher Menu to the Common Directory"
 msgstr ""
 
-#: src/gui.c:4835
+#: src/gui.c:4843
 msgid "LZH File"
 msgstr ""
 
-#: src/gui.c:4838
+#: src/gui.c:4846
 msgid "TAR+GZ File"
 msgstr ""
 
 #. Win構築は重いので先にExposeイベント等をすべて処理してから
 #. while (my_main_iteration(FALSE));
-#: src/gui.c:4943 src/gui.c:10885
+#: src/gui.c:4951 src/gui.c:11162
 msgid "Convert from Nokkari-Chara"
 msgstr ""
 
-#: src/gui.c:4956 src/gui.c:5246
+#: src/gui.c:4964 src/gui.c:5254
 msgid "Nokkari-Chara File"
 msgstr ""
 
-#: src/gui.c:5016
+#: src/gui.c:5024
 msgid "Select New Launcher Menu File to Create"
 msgstr ""
 
-#: src/gui.c:5062
+#: src/gui.c:5070
 #, c-format
 msgid "Created Menu File%%n    \"%s\""
 msgstr ""
 
-#: src/gui.c:5112
+#: src/gui.c:5120
 msgid "Save Mascot to Other File"
 msgstr ""
 
-#: src/gui.c:5153 src/gui.c:5270 src/gui.c:5526
+#: src/gui.c:5161 src/gui.c:5278 src/gui.c:5534
 msgid "File Save : Overwrite Confirmation"
 msgstr ""
 
-#: src/gui.c:5177 src/gui.c:5295 src/gui.c:5550
+#: src/gui.c:5185 src/gui.c:5303 src/gui.c:5558
 #, c-format
 msgid "File %s already exists."
 msgstr ""
 
-#: src/gui.c:5182 src/gui.c:5299 src/gui.c:5555 src/gui.c:5805 src/gui.c:5930
+#: src/gui.c:5190 src/gui.c:5307 src/gui.c:5563 src/gui.c:5813 src/gui.c:5938
 msgid "Overwrite?"
 msgstr ""
 
-#: src/gui.c:5233
+#: src/gui.c:5241
 msgid "Convert Mascot to Nokkari-Chara"
 msgstr ""
 
-#: src/gui.c:5360
+#: src/gui.c:5368
 msgid "Setup for Release Mascot"
 msgstr ""
 
-#: src/gui.c:5389
+#: src/gui.c:5397
 msgid "Please edit the setting for this mascot"
 msgstr ""
 
-#: src/gui.c:5399
+#: src/gui.c:5407
 msgid "Mascot Name"
 msgstr ""
 
-#: src/gui.c:5416
+#: src/gui.c:5424
 msgid "Copyright"
 msgstr ""
 
-#: src/gui.c:5433 src/gui.c:8356 src/gui.c:9712
+#: src/gui.c:5441 src/gui.c:8410 src/gui.c:9766
 msgid "Character Code"
 msgstr ""
 
-#: src/gui.c:5444
+#: src/gui.c:5452
 msgid "Save Fontset for Clock"
 msgstr ""
 
-#: src/gui.c:5450
+#: src/gui.c:5458
 msgid "Save Colors for Clock"
 msgstr ""
 
-#: src/gui.c:5456
+#: src/gui.c:5464
 msgid "Save Fontset for Balloon"
 msgstr ""
 
-#: src/gui.c:5462
+#: src/gui.c:5470
 msgid "Save Colors for Baloon"
 msgstr ""
 
 #. Win構築は重いので先にExposeイベント等をすべて処理してから
 #. while (my_main_iteration(FALSE));
-#: src/gui.c:5485
+#: src/gui.c:5493
 msgid "Save Mascot for Release"
 msgstr ""
 
-#: src/gui.c:5733
+#: src/gui.c:5741
 msgid "Save Menu to File"
 msgstr ""
 
-#: src/gui.c:5776
+#: src/gui.c:5784
 msgid "Menu Save : Overwrite Confirmation"
 msgstr ""
 
-#: src/gui.c:5800
+#: src/gui.c:5808
 #, c-format
 msgid "Menu File %s already exists."
 msgstr ""
 
-#: src/gui.c:5818 src/gui.c:5833
+#: src/gui.c:5826 src/gui.c:5841
 #, c-format
 msgid "Saved Menu as ...%%n    \"%s\""
 msgstr ""
 
-#: src/gui.c:5859
+#: src/gui.c:5867
 msgid "Save Resource to File"
 msgstr ""
 
-#: src/gui.c:5879 src/gui.c:8322
+#: src/gui.c:5887 src/gui.c:8376
 msgid "Resource File"
 msgstr ""
 
-#: src/gui.c:5901
+#: src/gui.c:5909
 msgid "Resource Save : Overwrite Confirmation"
 msgstr ""
 
-#: src/gui.c:5925
+#: src/gui.c:5933
 #, c-format
 msgid "Resource File %s already exists."
 msgstr ""
 
-#: src/gui.c:6058
+#: src/gui.c:6066
 msgid "Config for MaCoPiX"
 msgstr ""
 
-#: src/gui.c:6160 src/gui.c:8464
+#: src/gui.c:6168 src/gui.c:8518
 msgid "Focus Follow"
 msgstr ""
 
-#: src/gui.c:6169
+#: src/gui.c:6177
 msgid "Offset on the Title Bar"
 msgstr ""
 
-#: src/gui.c:6182
+#: src/gui.c:6190
 msgid "Starting Point"
 msgstr ""
 
-#: src/gui.c:6194
+#: src/gui.c:6202
 msgid "Left upper corner of the focused window"
 msgstr ""
 
-#: src/gui.c:6199
+#: src/gui.c:6207
 msgid "Right upper corner of the focused window"
 msgstr ""
 
-#: src/gui.c:6222
+#: src/gui.c:6230
 msgid "Absolute[pix]"
 msgstr ""
 
-#: src/gui.c:6228
+#: src/gui.c:6236
 msgid "Relative[%]"
 msgstr ""
 
-#: src/gui.c:6257
+#: src/gui.c:6265
 msgid "Title Bar Size"
 msgstr ""
 
-#: src/gui.c:6274
+#: src/gui.c:6282
 msgid "Manual Scaling"
 msgstr ""
 
-#: src/gui.c:6279
+#: src/gui.c:6287
 msgid "Auto Scaling"
 msgstr ""
 
-#: src/gui.c:6284
+#: src/gui.c:6292
 msgid "Auto Scaling (for Compiz)"
 msgstr ""
 
-#: src/gui.c:6310
+#: src/gui.c:6318
 msgid "Window Manager [start-up]"
 msgstr ""
 
-#: src/gui.c:6321
+#: src/gui.c:6329
 msgid "Bar Size (Manual)"
 msgstr ""
 
-#: src/gui.c:6339
+#: src/gui.c:6347
 msgid "Offset for Shaped Bar"
 msgstr ""
 
-#: src/gui.c:6354
+#: src/gui.c:6362
 msgid "Home Position"
 msgstr ""
 
-#: src/gui.c:6368
+#: src/gui.c:6376
 msgid "Auto"
 msgstr ""
 
-#: src/gui.c:6380
+#: src/gui.c:6388
 msgid "  X"
 msgstr ""
 
-#: src/gui.c:6394 src/gui.c:9564
+#: src/gui.c:6402 src/gui.c:9618
 msgid "  Y"
 msgstr ""
 
-#: src/gui.c:6424
+#: src/gui.c:6432
 msgid "Vanish when auto-detection failed"
 msgstr ""
 
-#: src/gui.c:6439
+#: src/gui.c:6447
 msgid "No Focus"
 msgstr ""
 
-#: src/gui.c:6451 src/gui.c:6497 src/gui.c:6569
+#: src/gui.c:6459 src/gui.c:6505 src/gui.c:6577
 msgid "Do Nothing"
 msgstr ""
 
-#: src/gui.c:6456 src/gui.c:6502 src/gui.c:6574
+#: src/gui.c:6464 src/gui.c:6510 src/gui.c:6582
 msgid "Vanish"
 msgstr ""
 
-#: src/gui.c:6462 src/gui.c:6508 src/gui.c:6580
+#: src/gui.c:6470 src/gui.c:6516 src/gui.c:6588
 msgid "Sit on Task Bar"
 msgstr ""
 
-#: src/gui.c:6465 src/gui.c:6511 src/gui.c:6583
+#: src/gui.c:6473 src/gui.c:6519 src/gui.c:6591
 msgid "Move to Home Position"
 msgstr ""
 
-#: src/gui.c:6485
+#: src/gui.c:6493
 msgid "Sticked Out"
 msgstr ""
 
-#: src/gui.c:6531
+#: src/gui.c:6539
 msgid "Management for Window w/o  Title Bar"
 msgstr ""
 
-#: src/gui.c:6541
+#: src/gui.c:6549
 msgid "Ignore Window w/o Title Bar"
 msgstr ""
 
-#: src/gui.c:6555
+#: src/gui.c:6563
 msgid "     Action : "
 msgstr ""
 
-#: src/gui.c:6603
+#: src/gui.c:6611
 msgid "    * Mascot could fail to follow the focus with older window managers."
 msgstr ""
 
-#: src/gui.c:6610
+#: src/gui.c:6618
 msgid "for Windows"
 msgstr ""
 
-#: src/gui.c:6618
+#: src/gui.c:6626
 msgid "Stay on Task Bar"
 msgstr ""
 
-#: src/gui.c:6634
+#: src/gui.c:6638
+msgid "for macOS"
+msgstr ""
+
+#: src/gui.c:6646
+msgid "Drawing Layer"
+msgstr ""
+
+#: src/gui.c:6658
+msgid "Floating Window (never go over Menu Bar)"
+msgstr ""
+
+#: src/gui.c:6663
+msgid "Over Menu Bar"
+msgstr ""
+
+#: src/gui.c:6688
 msgid "Foreground Mapping"
 msgstr ""
 
-#: src/gui.c:6642
+#: src/gui.c:6696
 msgid "Force to Raise to the Foreground"
 msgstr ""
 
-#: src/gui.c:6650
+#: src/gui.c:6704
 msgid "Raise with Mascot shaping (for translucent KWin)"
 msgstr ""
 
-#: src/gui.c:6662 src/gui.c:8557
+#: src/gui.c:6716 src/gui.c:8611
 msgid "Move"
 msgstr ""
 
-#: src/gui.c:6674 src/gui.c:6755 src/gui.c:10556
+#: src/gui.c:6728 src/gui.c:6809 src/gui.c:10613 src/gui.c:10830
 msgid "Time Signal"
 msgstr ""
 
-#: src/gui.c:6681
+#: src/gui.c:6735
 msgid "Use Signal"
 msgstr ""
 
-#: src/gui.c:6696
+#: src/gui.c:6750
 msgid "Mascot Action"
 msgstr ""
 
-#: src/gui.c:6708 src/gui.c:6796 src/gui.c:6940
+#: src/gui.c:6762 src/gui.c:6850 src/gui.c:6994
 msgid "None"
 msgstr ""
 
-#: src/gui.c:6713
+#: src/gui.c:6767
 msgid "Click Action"
 msgstr ""
 
-#: src/gui.c:6718 src/trayicon.c:78
+#: src/gui.c:6772 src/trayicon.c:78
 msgid "Mascot Random Change"
 msgstr ""
 
-#: src/gui.c:6737
+#: src/gui.c:6791
 msgid "External Command"
 msgstr ""
 
-#: src/gui.c:6770
+#: src/gui.c:6824
 msgid "Server Information"
 msgstr ""
 
-#: src/gui.c:6784
+#: src/gui.c:6838
 msgid "Protocol"
 msgstr ""
 
-#: src/gui.c:6801
+#: src/gui.c:6855
 msgid "POP3 (normal)"
 msgstr ""
 
-#: src/gui.c:6806
+#: src/gui.c:6860
 msgid "POP3 (APOP auth)"
 msgstr ""
 
-#: src/gui.c:6812
+#: src/gui.c:6866
 msgid "Local mbox"
 msgstr ""
 
-#: src/gui.c:6817
+#: src/gui.c:6871
 msgid "qmail (Maildir)"
 msgstr ""
 
-#: src/gui.c:6822
+#: src/gui.c:6876
 msgid "MH + Procmail"
 msgstr ""
 
-#: src/gui.c:6855
+#: src/gui.c:6909
 msgid "Server Address"
 msgstr ""
 
-#: src/gui.c:6872
+#: src/gui.c:6926
 msgid "User ID"
 msgstr ""
 
-#: src/gui.c:6890
+#: src/gui.c:6944
 msgid "   Password"
 msgstr ""
 
-#: src/gui.c:6915
+#: src/gui.c:6969
 msgid "Save Password"
 msgstr ""
 
-#: src/gui.c:6945
+#: src/gui.c:6999
 msgid "Use SSL for POP3 Connection"
 msgstr ""
 
-#: src/gui.c:6950
+#: src/gui.c:7004
 msgid "Use STARTTLS to start SSL session"
 msgstr ""
 
-#: src/gui.c:6972
+#: src/gui.c:7026
 msgid "Skip to Verify on SSL Certification"
 msgstr ""
 
-#: src/gui.c:6980
+#: src/gui.c:7034
 msgid "Non-Blocking SSL"
 msgstr ""
 
-#: src/gui.c:6995
+#: src/gui.c:7049
 msgid "   Port No."
 msgstr ""
 
-#: src/gui.c:7009
+#: src/gui.c:7063
 msgid "Local mbox / Maildir / .procmailrc"
 msgstr ""
 
-#: src/gui.c:7025
+#: src/gui.c:7079
 msgid "File / Directory"
 msgstr ""
 
-#: src/gui.c:7052
+#: src/gui.c:7106
 msgid "Operating Information"
 msgstr ""
 
-#: src/gui.c:7065
+#: src/gui.c:7119
 msgid "Interval[sec]"
 msgstr ""
 
-#: src/gui.c:7077
+#: src/gui.c:7131
 msgid "  Mailer"
 msgstr ""
 
-#: src/gui.c:7111
+#: src/gui.c:7165
 msgid "Polling command"
 msgstr ""
 
-#: src/gui.c:7126
+#: src/gui.c:7180
 msgid "Max Mails for POP Scan"
 msgstr ""
 
-#: src/gui.c:7141
+#: src/gui.c:7195
 msgid "Tooltips on biff pix"
 msgstr ""
 
-#: src/gui.c:7151
+#: src/gui.c:7205
 msgid "SPAM exception"
 msgstr ""
 
-#: src/gui.c:7159
+#: src/gui.c:7213
 msgid "Use exception"
 msgstr ""
 
-#: src/gui.c:7175
+#: src/gui.c:7229
 msgid "Mark in Header"
 msgstr ""
 
-#: src/gui.c:7219
+#: src/gui.c:7273
 msgid "Mail List Window"
 msgstr ""
 
-#: src/gui.c:7231
+#: src/gui.c:7285
 msgid "Width"
 msgstr ""
 
-#: src/gui.c:7243
+#: src/gui.c:7297
 msgid "Height"
 msgstr ""
 
-#: src/gui.c:7261 src/gui.c:9667
+#: src/gui.c:7315 src/gui.c:9721
 msgid "Biff"
 msgstr ""
 
-#: src/gui.c:7276
+#: src/gui.c:7330
 msgid "Mascot Magnification"
 msgstr ""
 
-#: src/gui.c:7284
+#: src/gui.c:7338
 msgid "Magnification[%]"
 msgstr ""
 
-#: src/gui.c:7299
+#: src/gui.c:7353
 msgid "Interpolation Style"
 msgstr ""
 
-#: src/gui.c:7312
+#: src/gui.c:7366
 msgid "Nearest-Neighbor"
 msgstr ""
 
-#: src/gui.c:7317
+#: src/gui.c:7371
 msgid "Tiles"
 msgstr ""
 
-#: src/gui.c:7322
+#: src/gui.c:7376
 msgid "Bilinear"
 msgstr ""
 
-#: src/gui.c:7327
+#: src/gui.c:7381
 msgid "Hyper"
 msgstr ""
 
-#: src/gui.c:7348
+#: src/gui.c:7402
 msgid ""
 "Graphic lib. for Image Rendering (Cairo enables trancelucency w/composited "
 "desktop)"
 msgstr ""
 
-#: src/gui.c:7357
+#: src/gui.c:7411
 msgid "Current Desktop"
 msgstr ""
 
-#: src/gui.c:7366
+#: src/gui.c:7420
 msgid "Translucency is partly supported by Windows native graphics."
 msgstr ""
 
-#: src/gui.c:7372
+#: src/gui.c:7426
 msgid "Current system does not support translucent windows."
 msgstr ""
 
-#: src/gui.c:7377
+#: src/gui.c:7431
 msgid "Current system support translucent windows."
 msgstr ""
 
-#: src/gui.c:7382
+#: src/gui.c:7436
 msgid "Translucent support is UNKNOWN.    "
 msgstr ""
 
-#: src/gui.c:7386
+#: src/gui.c:7440
 msgid "Forced translucent rendering"
 msgstr ""
 
-#: src/gui.c:7398
+#: src/gui.c:7452
 msgid ""
 "Use Cairo for Mascot and Biff image rendering (Support anti-aliased outline)."
 msgstr ""
 
-#: src/gui.c:7411
+#: src/gui.c:7465
 msgid "Shadow of Mascot"
 msgstr ""
 
-#: src/gui.c:7423
+#: src/gui.c:7477
 msgid "Drop Shadow of Mascot"
 msgstr ""
 
-#: src/gui.c:7432
+#: src/gui.c:7486
 msgid "    Offset  X"
 msgstr ""
 
-#: src/gui.c:7450 src/gui.c:8506 src/gui.c:8543 src/gui.c:8711 src/gui.c:8740
-#: src/gui.c:8799 src/gui.c:9025
+#: src/gui.c:7504 src/gui.c:8560 src/gui.c:8597 src/gui.c:8765 src/gui.c:8794
+#: src/gui.c:8853 src/gui.c:9079
 msgid "Y"
 msgstr ""
 
-#: src/gui.c:7472
+#: src/gui.c:7526
 msgid "Opacity [%]"
 msgstr ""
 
-#: src/gui.c:7495
+#: src/gui.c:7549
 msgid "Use Cairo for Panel Clock rendering."
 msgstr ""
 
-#: src/gui.c:7497
+#: src/gui.c:7551
 msgid "Support translucent panel clock (by Cairo)."
 msgstr ""
 
-#: src/gui.c:7508
+#: src/gui.c:7562
 msgid "Use Cairo for Balloon rendering."
 msgstr ""
 
-#: src/gui.c:7510
+#: src/gui.c:7564
 msgid "Support translucent balloon (by Cairo)."
 msgstr ""
 
-#: src/gui.c:7523
+#: src/gui.c:7577
 msgid "Rendering"
 msgstr ""
 
-#: src/gui.c:7537
+#: src/gui.c:7591
 msgid "Default for Clock"
 msgstr ""
 
-#: src/gui.c:7549 src/gui.c:7657 src/gui.c:8664 src/gui.c:8976
+#: src/gui.c:7603 src/gui.c:7711 src/gui.c:8718 src/gui.c:9030
 msgid "Fontset"
 msgstr ""
 
-#: src/gui.c:7563 src/gui.c:7670 src/gui.c:8829 src/gui.c:9098
+#: src/gui.c:7617 src/gui.c:7724 src/gui.c:8883 src/gui.c:9152
 msgid "Text"
 msgstr ""
 
-#: src/gui.c:7584 src/gui.c:7689 src/gui.c:8848 src/gui.c:9117
+#: src/gui.c:7638 src/gui.c:7743 src/gui.c:8902 src/gui.c:9171
 msgid "BG"
 msgstr ""
 
-#: src/gui.c:7608 src/gui.c:7712 src/gui.c:8869 src/gui.c:9140
+#: src/gui.c:7662 src/gui.c:7766 src/gui.c:8923 src/gui.c:9194
 msgid "Border"
 msgstr ""
 
-#: src/gui.c:7628 src/gui.c:8888
+#: src/gui.c:7682 src/gui.c:8942
 msgid "Shadow"
 msgstr ""
 
-#: src/gui.c:7646
+#: src/gui.c:7700
 msgid "Default for Balloon"
 msgstr ""
 
-#: src/gui.c:7730
+#: src/gui.c:7784
 msgid "Colors for From/Subject List"
 msgstr ""
 
-#: src/gui.c:7741
+#: src/gui.c:7795
 msgid "Text (odd)"
 msgstr ""
 
-#: src/gui.c:7760
+#: src/gui.c:7814
 msgid "BG (odd)"
 msgstr ""
 
-#: src/gui.c:7778
+#: src/gui.c:7832
 msgid "Text (even)"
 msgstr ""
 
-#: src/gui.c:7797
+#: src/gui.c:7851
 msgid "BG (even)"
 msgstr ""
 
-#: src/gui.c:7814
+#: src/gui.c:7868
 msgid "Default Opacity"
 msgstr ""
 
-#: src/gui.c:7816
+#: src/gui.c:7870
 msgid "Default Opacity (Enable ONLY w/Compositing Window Managers)"
 msgstr ""
 
-#: src/gui.c:7826
+#: src/gui.c:7880
 msgid "Take precedence default opacities over mascot settings"
 msgstr ""
 
-#: src/gui.c:7839
+#: src/gui.c:7893
 msgid "Mascot [%]"
 msgstr ""
 
-#: src/gui.c:7844
+#: src/gui.c:7898
 msgid "Biff Image [%]"
 msgstr ""
 
-#: src/gui.c:7851
+#: src/gui.c:7905
 msgid "Balloon [%]"
 msgstr ""
 
-#: src/gui.c:7856
+#: src/gui.c:7910
 msgid "Clock [%]"
 msgstr ""
 
-#: src/gui.c:7922 src/gui.c:7936 src/gui.c:8946 src/gui.c:9199
+#: src/gui.c:7976 src/gui.c:7990 src/gui.c:9000 src/gui.c:9253
 msgid "BG only"
 msgstr ""
 
-#: src/gui.c:7950
+#: src/gui.c:8004
 msgid "Font/Color"
 msgstr ""
 
-#: src/gui.c:7965 src/gui.c:10182
+#: src/gui.c:8019 src/gui.c:10236
 msgid "Duet Animation"
 msgstr ""
 
-#: src/gui.c:7972
+#: src/gui.c:8026
 msgid "Synchronize with CLICK animation   "
 msgstr ""
 
-#: src/gui.c:7981
+#: src/gui.c:8035
 msgid "Synchronize with RANDOM animation"
 msgstr ""
 
-#: src/gui.c:7993
+#: src/gui.c:8047
 msgid "Socket Message"
 msgstr ""
 
-#: src/gui.c:8005
+#: src/gui.c:8059
 msgid "Balloon printing"
 msgstr ""
 
-#: src/gui.c:8017
+#: src/gui.c:8071
 msgid "Lump Sum"
 msgstr ""
 
-#: src/gui.c:8022
+#: src/gui.c:8076
 msgid "Stepping"
 msgstr ""
 
-#: src/gui.c:8045
+#: src/gui.c:8099
 msgid "  Stepping interval [frame]"
 msgstr ""
 
-#: src/gui.c:8061
+#: src/gui.c:8115
 msgid "  Default expiration [ms]"
 msgstr ""
 
-#: src/gui.c:8076
+#: src/gui.c:8130
 msgid "Auto Install"
 msgstr ""
 
-#: src/gui.c:8084
+#: src/gui.c:8138
 msgid "Auto Mascot Install to User Dir."
 msgstr ""
 
-#: src/gui.c:8094
+#: src/gui.c:8148
 msgid "User &amp; Common Dir Consistency Check"
 msgstr ""
 
-#: src/gui.c:8106
+#: src/gui.c:8160
 msgid "Manual"
 msgstr ""
 
-#: src/gui.c:8111
+#: src/gui.c:8165
 msgid "Auto Overwrite"
 msgstr ""
 
-#: src/gui.c:8116
+#: src/gui.c:8170
 msgid "Ignore"
 msgstr ""
 
-#: src/gui.c:8139
+#: src/gui.c:8193
 msgid "Sound Command"
 msgstr ""
 
-#: src/gui.c:8155
+#: src/gui.c:8209
 #, c-format
 msgid "(\"%s\" will be translated to the sound file.)"
 msgstr ""
 
-#: src/gui.c:8162
+#: src/gui.c:8216
 msgid "GNU tar Command [for *.tar.gz Extraction]"
 msgstr ""
 
-#: src/gui.c:8178
+#: src/gui.c:8232
 #, c-format
 msgid "(1st \"%s\" : *.tar.gz file, 2nd \"%s\" : temp dir.)"
 msgstr ""
 
-#: src/gui.c:8185
+#: src/gui.c:8239
 msgid "Tray Icon"
 msgstr ""
 
-#: src/gui.c:8193
+#: src/gui.c:8247
 msgid "Show Tray Icon in Task Bar"
 msgstr ""
 
-#: src/gui.c:8207
+#: src/gui.c:8261
 msgid "Misc."
 msgstr ""
 
-#: src/gui.c:8225
+#: src/gui.c:8279
 msgid "About This Program"
 msgstr ""
 
-#: src/gui.c:8366 src/gui.c:9722
+#: src/gui.c:8420 src/gui.c:9776
 msgid "(Based on the locale environment)"
 msgstr ""
 
-#: src/gui.c:8374
+#: src/gui.c:8428
 #, c-format
 msgid ""
 "Browser Command <span size=\"smaller\">(\"%s\" will be translated to a "
 "URL.)</span>"
 msgstr ""
 
-#: src/gui.c:8396 src/gui.c:9738
+#: src/gui.c:8450 src/gui.c:9792
 msgid "Info."
 msgstr ""
 
-#: src/gui.c:8402
+#: src/gui.c:8456
 msgid "Resource"
 msgstr ""
 
-#: src/gui.c:8447 src/gui.c:8573
+#: src/gui.c:8501 src/gui.c:8627
 msgid "Mode"
 msgstr ""
 
-#: src/gui.c:8459 src/gui.c:8483
+#: src/gui.c:8513 src/gui.c:8537
 msgid "Fix Position"
 msgstr ""
 
-#: src/gui.c:8493 src/gui.c:8530 src/gui.c:8699 src/gui.c:8728 src/gui.c:9013
+#: src/gui.c:8547 src/gui.c:8584 src/gui.c:8753 src/gui.c:8782 src/gui.c:9067
 msgid "X"
 msgstr ""
 
-#: src/gui.c:8519
+#: src/gui.c:8573
 msgid "Mascot Offset for Focus Follow"
 msgstr ""
 
-#: src/gui.c:8585
+#: src/gui.c:8639
 msgid "No Clock"
 msgstr ""
 
-#: src/gui.c:8590
+#: src/gui.c:8644
 msgid "Clock on Image"
 msgstr ""
 
-#: src/gui.c:8595
+#: src/gui.c:8649
 msgid "Panel Clock"
 msgstr ""
 
-#: src/gui.c:8618
+#: src/gui.c:8672
 msgid "Digit Type"
 msgstr ""
 
-#: src/gui.c:8630
+#: src/gui.c:8684
 msgid "14:00:00"
 msgstr ""
 
-#: src/gui.c:8635
+#: src/gui.c:8689
 msgid "14:00"
 msgstr ""
 
-#: src/gui.c:8640
+#: src/gui.c:8694
 msgid "PM  2:00:00"
 msgstr ""
 
-#: src/gui.c:8645
+#: src/gui.c:8699
 msgid "PM  2:00"
 msgstr ""
 
-#: src/gui.c:8681 src/gui.c:8994
+#: src/gui.c:8735 src/gui.c:9048
 msgid "Size/Position"
 msgstr ""
 
-#: src/gui.c:8695
+#: src/gui.c:8749
 msgid "Panel Position"
 msgstr ""
 
-#: src/gui.c:8724 src/gui.c:9008
+#: src/gui.c:8778 src/gui.c:9062
 msgid "Text Offset"
 msgstr ""
 
-#: src/gui.c:8753 src/gui.c:9039
+#: src/gui.c:8807 src/gui.c:9093
 msgid "Border Width"
 msgstr ""
 
-#: src/gui.c:8767
+#: src/gui.c:8821
 msgid "Decoration"
 msgstr ""
 
-#: src/gui.c:8781
+#: src/gui.c:8835
 msgid "Drop Shadow"
 msgstr ""
 
-#: src/gui.c:8789
+#: src/gui.c:8843
 msgid "   Shadow Offset  X"
 msgstr ""
 
-#: src/gui.c:8813
+#: src/gui.c:8867
 msgid "Rounded Corner for Panel Clock"
 msgstr ""
 
-#: src/gui.c:8821 src/gui.c:9090
+#: src/gui.c:8875 src/gui.c:9144
 msgid "Color"
 msgstr ""
 
-#: src/gui.c:8907 src/gui.c:9159
+#: src/gui.c:8961 src/gui.c:9213
 msgid "Back to Default"
 msgstr ""
 
-#: src/gui.c:8919 src/gui.c:9171 src/gui.c:9298
+#: src/gui.c:8973 src/gui.c:9225 src/gui.c:9352
 msgid "Opacity"
 msgstr ""
 
-#: src/gui.c:8927 src/gui.c:9179 src/gui.c:9309 src/gui.c:9577
+#: src/gui.c:8981 src/gui.c:9233 src/gui.c:9363 src/gui.c:9631
 msgid "Opacity Alpha[%]"
 msgstr ""
 
-#: src/gui.c:8964
+#: src/gui.c:9018
 msgid "Clock"
 msgstr ""
 
-#: src/gui.c:9052
+#: src/gui.c:9106
 msgid "Default Position"
 msgstr ""
 
-#: src/gui.c:9065 src/gui.c:9519
+#: src/gui.c:9119 src/gui.c:9573
 msgid "Left side of mascot"
 msgstr ""
 
-#: src/gui.c:9070 src/gui.c:9524
+#: src/gui.c:9124 src/gui.c:9578
 msgid "Right side of mascot"
 msgstr ""
 
-#: src/gui.c:9209
+#: src/gui.c:9263
 msgid "Control Characters for Balloon Messages"
 msgstr ""
 
-#: src/gui.c:9225
+#: src/gui.c:9279
 msgid "([n]+1) frames waiting. (default : n=1)"
 msgstr ""
 
-#: src/gui.c:9232
+#: src/gui.c:9286
 msgid "([n]+1) frames waiting with a new line. (default : n=10)"
 msgstr ""
 
-#: src/gui.c:9239
+#: src/gui.c:9293
 msgid "New line."
 msgstr ""
 
-#: src/gui.c:9246
+#: src/gui.c:9300
 msgid "New page after ([n]+1) frames waiting. (default : n=10)"
 msgstr ""
 
-#: src/gui.c:9253
+#: src/gui.c:9307
 msgid "Number of arrived mails. (only for biff message)"
 msgstr ""
 
-#: src/gui.c:9260
+#: src/gui.c:9314
 msgid "From: of the latest mail. (only for biff message with POP)"
 msgstr ""
 
-#: src/gui.c:9267
+#: src/gui.c:9321
 msgid "Subject: of the latest mail. (only for biff message with POP)"
 msgstr ""
 
-#: src/gui.c:9286
+#: src/gui.c:9340
 msgid "Balloon"
 msgstr ""
 
-#: src/gui.c:9300
+#: src/gui.c:9354
 msgid "Opacity (Enable ONLY w/Compositing Window Managers)"
 msgstr ""
 
-#: src/gui.c:9350
+#: src/gui.c:9404
 msgid "Append"
 msgstr ""
 
-#: src/gui.c:9362
+#: src/gui.c:9416
 msgid "Delete"
 msgstr ""
 
-#: src/gui.c:9374
+#: src/gui.c:9428
 msgid "Images"
 msgstr ""
 
-#: src/gui.c:9410
+#: src/gui.c:9464
 msgid "Append Pattern"
 msgstr ""
 
-#: src/gui.c:9421
+#: src/gui.c:9475
 msgid "Copy Pattern"
 msgstr ""
 
-#: src/gui.c:9432
+#: src/gui.c:9486
 msgid "Delete Pattern"
 msgstr ""
 
-#: src/gui.c:9446
+#: src/gui.c:9500
 msgid "Animation"
 msgstr ""
 
-#: src/gui.c:9462
+#: src/gui.c:9516
 msgid "Biff Image"
 msgstr ""
 
-#: src/gui.c:9472
+#: src/gui.c:9526
 msgid "Image File"
 msgstr ""
 
-#: src/gui.c:9506
+#: src/gui.c:9560
 msgid "Position"
 msgstr ""
 
-#: src/gui.c:9547
+#: src/gui.c:9601
 msgid "        X"
 msgstr ""
 
-#: src/gui.c:9595
+#: src/gui.c:9649
 msgid "Biff Action"
 msgstr ""
 
-#: src/gui.c:9605 src/gui.c:10231 src/gui.c:10260
+#: src/gui.c:9659 src/gui.c:10285 src/gui.c:10314
 msgid "Message"
 msgstr ""
 
-#: src/gui.c:9619 src/gui.c:10279
+#: src/gui.c:9673 src/gui.c:10333
 msgid "Sound File"
 msgstr ""
 
-#: src/gui.c:9651 src/gui.c:10301
+#: src/gui.c:9705 src/gui.c:10355
 msgid "Clear"
 msgstr ""
 
-#: src/gui.c:9657 src/gui.c:10306
+#: src/gui.c:9711 src/gui.c:10360
 msgid "Test"
 msgstr ""
 
-#: src/gui.c:9680
+#: src/gui.c:9734
 msgid "About This Mascot"
 msgstr ""
 
-#: src/gui.c:9688 src/gui.c:13215
+#: src/gui.c:9742 src/gui.c:13493
 msgid "Name"
 msgstr ""
 
-#: src/gui.c:9700 src/gui.c:11708 src/main.c:4139
+#: src/gui.c:9754 src/gui.c:11986 src/main.c:4154
 msgid "File"
 msgstr ""
 
-#: src/gui.c:9744
+#: src/gui.c:9798
 msgid "Mascot"
 msgstr ""
 
-#: src/gui.c:9760
+#: src/gui.c:9814
 msgid "Menu"
 msgstr ""
 
-#: src/gui.c:9891
+#: src/gui.c:9945
 msgid "Append Category"
 msgstr ""
 
-#: src/gui.c:9901
+#: src/gui.c:9955
 msgid "Delete Category"
 msgstr ""
 
-#: src/gui.c:9911
+#: src/gui.c:9965
 msgid "Merge Menu"
 msgstr ""
 
-#: src/gui.c:9944
+#: src/gui.c:9998
 msgid "No menu files are loaded currently."
 msgstr ""
 
-#: src/gui.c:9948
+#: src/gui.c:10002
 msgid "You can find a menu to create new one in the popup,"
 msgstr ""
 
-#: src/gui.c:9952
+#: src/gui.c:10006
 msgid " and edit it here."
 msgstr ""
 
-#: src/gui.c:9979 src/gui.c:12396 src/gui.c:13192
+#: src/gui.c:10033 src/gui.c:12674 src/gui.c:13470
 msgid "No."
 msgstr ""
 
-#: src/gui.c:9985
+#: src/gui.c:10039
 msgid "Image File Name"
 msgstr ""
 
-#: src/gui.c:10048
+#: src/gui.c:10102
 #, c-format
 msgid "Base"
 msgstr ""
 
-#: src/gui.c:10072
+#: src/gui.c:10126
 msgid "Append Frame"
 msgstr ""
 
-#: src/gui.c:10083
+#: src/gui.c:10137
 msgid "Delete Frame"
 msgstr ""
 
-#: src/gui.c:10094
+#: src/gui.c:10148
 msgid "Test Anime"
 msgstr ""
 
-#: src/gui.c:10105
+#: src/gui.c:10159
 msgid "Random"
 msgstr ""
 
-#: src/gui.c:10117
+#: src/gui.c:10171
 msgid " Click"
 msgstr ""
 
-#: src/gui.c:10134
+#: src/gui.c:10188
 msgid "Balloon Offset X[Left]"
 msgstr ""
 
-#: src/gui.c:10146
+#: src/gui.c:10200
 msgid " Y[Left]"
 msgstr ""
 
-#: src/gui.c:10158
+#: src/gui.c:10212
 msgid "  X[Right]"
 msgstr ""
 
-#: src/gui.c:10170
+#: src/gui.c:10224
 msgid " Y[Right]"
 msgstr ""
 
-#: src/gui.c:10216
+#: src/gui.c:10270
 msgid " Pattern"
 msgstr ""
 
-#: src/gui.c:10241
+#: src/gui.c:10295
 msgid " Delay"
 msgstr ""
 
-#: src/gui.c:10360 src/gui.c:11723
+#: src/gui.c:10414 src/gui.c:12001
 msgid "Category"
 msgstr ""
 
-#: src/gui.c:10415
+#: src/gui.c:10469
 msgid "Append Mascot"
 msgstr ""
 
-#: src/gui.c:10426
+#: src/gui.c:10480
 msgid "Delete Mascot"
 msgstr ""
 
-#: src/gui.c:10474 src/gui.c:11606
+#: src/gui.c:10509 src/gui.c:10748 src/gui.c:11884
 msgid "Open"
 msgstr ""
 
-#: src/gui.c:10488 src/gui.c:10825
+#: src/gui.c:10524 src/gui.c:10762 src/gui.c:11102
 msgid "Save"
 msgstr ""
 
-#: src/gui.c:10502
+#: src/gui.c:10539 src/gui.c:10776
 msgid "New"
 msgstr ""
 
-#: src/gui.c:10516 src/gui.c:11546
+#: src/gui.c:10555 src/gui.c:10790 src/gui.c:11824
 msgid "Install"
 msgstr ""
 
-#: src/gui.c:10529 src/trayicon.c:91
+#: src/gui.c:10572
+msgid "Config Dialog"
+msgstr ""
+
+#: src/gui.c:10578 src/gui.c:10803 src/trayicon.c:91
 msgid "Config"
 msgstr ""
 
-#: src/gui.c:10539
+#: src/gui.c:10599 src/gui.c:10813
 msgid "Biff Check"
 msgstr ""
 
-#: src/gui.c:10582
-msgid "Mascot Launcher"
+#: src/gui.c:10625
+msgid "Signal"
 msgstr ""
 
-#: src/gui.c:10600 src/gui.c:11525 src/gui.c:11533 src/trayicon.c:113
-msgid "Exit"
-msgstr ""
-
-#: src/gui.c:10635 src/gui.c:10694
-msgid "Launcher Menu"
-msgstr ""
-
-#: src/gui.c:10648 src/gui.c:10717
-msgid "For Developper"
-msgstr ""
-
-#: src/gui.c:10667 src/trayicon.c:100
-msgid "Save All"
-msgstr ""
-
-#: src/gui.c:10676
-msgid "Save Mascot"
-msgstr ""
-
-#: src/gui.c:10681
-msgid "Save Mascot As..."
-msgstr ""
-
-#: src/gui.c:10704
-msgid "Save Resource"
-msgstr ""
-
-#: src/gui.c:10746
-msgid "Create New Launcher Menu"
-msgstr ""
-
-#: src/gui.c:10765 src/gui.c:11554
-msgid "Launcher Menu [User]"
-msgstr ""
-
-#: src/gui.c:10772 src/gui.c:11561
-msgid "Launcher Menu [Common]"
-msgstr ""
-
-#: src/gui.c:10786 src/gui.c:11573
-msgid "Mascot [User]"
-msgstr ""
-
-#: src/gui.c:10793 src/gui.c:11580
-msgid "Mascot [Common]"
-msgstr ""
-
-#: src/gui.c:10807
-msgid "Download Official Mascots"
-msgstr ""
-
-#: src/gui.c:10834
-msgid "Set as Default"
-msgstr ""
-
-#: src/gui.c:10843
-msgid "Remove from Default"
-msgstr ""
-
-#: src/gui.c:10861
-msgid "File Select"
-msgstr ""
-
-#: src/gui.c:10867
-msgid "Launcher"
-msgstr ""
-
-#: src/gui.c:10903
-msgid "Save for Release"
-msgstr ""
-
-#: src/gui.c:10909
-msgid "Convert to Nokkari-Chara"
-msgstr ""
-
-#: src/gui.c:10932 src/gui.c:10966
+#: src/gui.c:10642 src/gui.c:11209 src/gui.c:11243
 msgid "Random Change"
 msgstr ""
 
-#: src/gui.c:11135
+#: src/gui.c:10648
+msgid "Mascot Change"
+msgstr ""
+
+#: src/gui.c:10662 src/gui.c:10856
+msgid "Mascot Launcher"
+msgstr ""
+
+#: src/gui.c:10874 src/gui.c:11803 src/gui.c:11811 src/trayicon.c:113
+msgid "Exit"
+msgstr ""
+
+#: src/gui.c:10912 src/gui.c:10971
+msgid "Launcher Menu"
+msgstr ""
+
+#: src/gui.c:10925 src/gui.c:10994
+msgid "For Developper"
+msgstr ""
+
+#: src/gui.c:10944 src/trayicon.c:100
+msgid "Save All"
+msgstr ""
+
+#: src/gui.c:10953
+msgid "Save Mascot"
+msgstr ""
+
+#: src/gui.c:10958
+msgid "Save Mascot As..."
+msgstr ""
+
+#: src/gui.c:10981
+msgid "Save Resource"
+msgstr ""
+
+#: src/gui.c:11023
+msgid "Create New Launcher Menu"
+msgstr ""
+
+#: src/gui.c:11042 src/gui.c:11832
+msgid "Launcher Menu [User]"
+msgstr ""
+
+#: src/gui.c:11049 src/gui.c:11839
+msgid "Launcher Menu [Common]"
+msgstr ""
+
+#: src/gui.c:11063 src/gui.c:11851
+msgid "Mascot [User]"
+msgstr ""
+
+#: src/gui.c:11070 src/gui.c:11858
+msgid "Mascot [Common]"
+msgstr ""
+
+#: src/gui.c:11084
+msgid "Download Official Mascots"
+msgstr ""
+
+#: src/gui.c:11111
+msgid "Set as Default"
+msgstr ""
+
+#: src/gui.c:11120
+msgid "Remove from Default"
+msgstr ""
+
+#: src/gui.c:11138
+msgid "File Select"
+msgstr ""
+
+#: src/gui.c:11144
+msgid "Launcher"
+msgstr ""
+
+#: src/gui.c:11180
+msgid "Save for Release"
+msgstr ""
+
+#: src/gui.c:11186
+msgid "Convert to Nokkari-Chara"
+msgstr ""
+
+#: src/gui.c:11412
 msgid "MaCoPiX : Consistency Check for Common & User Dir."
 msgstr ""
 
-#: src/gui.c:11152
+#: src/gui.c:11429
 msgid "WARNING"
 msgstr ""
 
-#: src/gui.c:11161
+#: src/gui.c:11438
 msgid "Menu file : "
 msgstr ""
 
-#: src/gui.c:11164
+#: src/gui.c:11441
 msgid "Mascot file : "
 msgstr ""
 
-#: src/gui.c:11169
+#: src/gui.c:11446
 msgid "  File in User Dir is older than the corresponded one in Common Dir."
 msgstr ""
 
-#: src/gui.c:11178
+#: src/gui.c:11455
 msgid "     [User Dir]"
 msgstr ""
 
-#: src/gui.c:11183 src/gui.c:11196
+#: src/gui.c:11460 src/gui.c:11473
 #, c-format
 msgid "     %4d/%02d/%02d %02d:%02d:%02d"
 msgstr ""
 
-#: src/gui.c:11191
+#: src/gui.c:11468
 msgid "      [Common Dir]"
 msgstr ""
 
-#: src/gui.c:11204
+#: src/gui.c:11481
 msgid "Do you want to overwite the newer file to User Dir?"
 msgstr ""
 
-#: src/gui.c:11209
+#: src/gui.c:11486
 msgid "Don't ask this from the next time."
 msgstr ""
 
-#: src/gui.c:11314
+#: src/gui.c:11591
 msgid "MaCoPiX : Starting up"
 msgstr ""
 
-#: src/gui.c:11331
+#: src/gui.c:11608
 msgid "No Menu Files are installed!!"
 msgstr ""
 
-#: src/gui.c:11336
+#: src/gui.c:11613
 msgid "Please install one menu file at least,"
 msgstr ""
 
-#: src/gui.c:11341
+#: src/gui.c:11618
 msgid "You can appoint a mascot file in option in order to start MaCoPiX,"
 msgstr ""
 
-#: src/gui.c:11346
+#: src/gui.c:11623
 msgid "or directly download &amp; install them from MaCoPiX official web."
 msgstr ""
 
-#: src/gui.c:11351
+#: src/gui.c:11628
 msgid "Download &amp; install MaCoPiX official mascots."
 msgstr ""
 
-#: src/gui.c:11366
+#: src/gui.c:11643
 msgid "See more details of the mascots in MaCoPiX official web."
 msgstr ""
 
-#: src/gui.c:11391
+#: src/gui.c:11668
 msgid "Menus and Mascots can be installed by the menu bar of this window."
 msgstr ""
 
-#: src/gui.c:11395
+#: src/gui.c:11672
 msgid "Or, drag &amp; drop a mascot menu archive (*.tar.gz) directly"
 msgstr ""
 
-#: src/gui.c:11399
+#: src/gui.c:11676
 msgid "into this window, in order to install it."
 msgstr ""
 
-#: src/gui.c:11418
+#: src/gui.c:11695
 msgid "MaCoPiX : Launcher Menu Selection"
 msgstr ""
 
-#: src/gui.c:11422
+#: src/gui.c:11699
 msgid "MaCoPiX : Start Menu Selection"
 msgstr ""
 
-#: src/gui.c:11591
+#: src/gui.c:11869
 msgid "Download & Install Official Mascots [User]"
 msgstr ""
 
-#: src/gui.c:11614
+#: src/gui.c:11892
 msgid "Installed Mascot"
 msgstr ""
 
-#: src/gui.c:11713
+#: src/gui.c:11991
 msgid "Dir."
 msgstr ""
 
-#: src/gui.c:11718
+#: src/gui.c:11996
 msgid "Entry"
 msgstr ""
 
-#: src/gui.c:11745
+#: src/gui.c:12023
 msgid "User"
 msgstr ""
 
-#: src/gui.c:11749
+#: src/gui.c:12027
 msgid "Common"
 msgstr ""
 
-#: src/gui.c:11753
+#: src/gui.c:12031
 msgid "Unknown"
 msgstr ""
 
-#: src/gui.c:11762
+#: src/gui.c:12040
 #, c-format
 msgid "%4d categories"
 msgstr ""
 
-#: src/gui.c:11765
+#: src/gui.c:12043
 #, c-format
 msgid "%4d mascots"
 msgstr ""
 
-#: src/gui.c:11775
+#: src/gui.c:12053
 msgid "-- Combined Menu --"
 msgstr ""
 
-#: src/gui.c:11898 src/gui.c:12005
+#: src/gui.c:12176 src/gui.c:12283
 msgid "MaCoPiX : Message"
 msgstr ""
 
-#: src/gui.c:12121
+#: src/gui.c:12399
 msgid "MaCoPiX : Dialog"
 msgstr ""
 
-#: src/gui.c:12255
+#: src/gui.c:12533
 msgid "Selected File\n"
 msgstr ""
 
-#: src/gui.c:12257
+#: src/gui.c:12535
 msgid "cannot be opend as MaCoPiX menu.\n"
 msgstr ""
 
-#: src/gui.c:12281
+#: src/gui.c:12559
 msgid "MaCoPiX : Deletion of temporay files"
 msgstr ""
 
-#: src/gui.c:12307
+#: src/gui.c:12585
 msgid "Install of the new menu file has been completed."
 msgstr ""
 
-#: src/gui.c:12313
+#: src/gui.c:12591
 msgid "Remove the temporary direcotry?"
 msgstr ""
 
-#: src/gui.c:12428
+#: src/gui.c:12706
 msgid "Image File <span size=\"smaller\">(Double-Click to change)</span>"
 msgstr ""
 
-#: src/gui.c:12605
+#: src/gui.c:12883
 msgid "Frame No."
 msgstr ""
 
-#: src/gui.c:12628
+#: src/gui.c:12906
 msgid "Image No."
 msgstr ""
 
-#: src/gui.c:12653
+#: src/gui.c:12931
 msgid "Min Stay"
 msgstr ""
 
-#: src/gui.c:12678
+#: src/gui.c:12956
 msgid "Max Stay"
 msgstr ""
 
-#: src/gui.c:12715
+#: src/gui.c:12993
 msgid "<span size=\"smaller\">Block Loop</span> Next Frame"
 msgstr ""
 
-#: src/gui.c:12741
+#: src/gui.c:13019
 msgid "Min Loop"
 msgstr ""
 
-#: src/gui.c:12767
+#: src/gui.c:13045
 msgid "Max Loop"
 msgstr ""
 
-#: src/gui.c:13245
+#: src/gui.c:13523
 msgid "Mascot File <span size=\"smaller\">(Double-Click to change)</span>"
 msgstr ""
 
@@ -1903,7 +1931,7 @@ msgstr ""
 msgid "Checking the latest version of the official mascot list ..."
 msgstr ""
 
-#: src/http-client.c:1046 src/main.c:4382
+#: src/http-client.c:1046 src/main.c:4397
 msgid "Error : Failed to download the mascot archive file (tar.gz)."
 msgstr ""
 
@@ -2028,8 +2056,8 @@ msgstr ""
 msgid " Cannot read the Menu File correctly!!"
 msgstr ""
 
-#: src/main.c:663 src/main.c:910 src/main.c:979 src/main.c:2217 src/main.c:2515
-#: src/main.c:2634 src/main.c:2663 src/main.c:3532 src/sockmsg.c:409
+#: src/main.c:663 src/main.c:910 src/main.c:979 src/main.c:2232 src/main.c:2530
+#: src/main.c:2649 src/main.c:2678 src/main.c:3547 src/sockmsg.c:409
 #: src/sockmsg.c:421
 msgid "(Invalid Character Code)"
 msgstr ""
@@ -2090,226 +2118,226 @@ msgstr ""
 msgid "Creating User-SoundDir %s .\n"
 msgstr ""
 
-#: src/main.c:2110 src/main.c:2868 src/main.c:3093
+#: src/main.c:2125 src/main.c:2883 src/main.c:3108
 msgid "Cannot Find Mascot File."
 msgstr ""
 
-#: src/main.c:2987 src/main.c:3275
+#: src/main.c:3002 src/main.c:3290
 msgid "Cannot Find Image."
 msgstr ""
 
-#: src/main.c:3431
+#: src/main.c:3446
 msgid "Cannot Find Sound File."
 msgstr ""
 
-#: src/main.c:3493
+#: src/main.c:3508
 #, c-format
 msgid "Cannot find resource file %s.\n"
 msgstr ""
 
-#: src/main.c:3494
+#: src/main.c:3509
 msgid "Loading default resource file...\n"
 msgstr ""
 
-#: src/main.c:4092
+#: src/main.c:4107
 msgid "MaCoPiX : Download & Install Mascot"
 msgstr ""
 
-#: src/main.c:4097
+#: src/main.c:4112
 msgid ""
 "Select a mascot file to download &amp; install into your <i>User directory</"
 "i>."
 msgstr ""
 
-#: src/main.c:4113
+#: src/main.c:4128
 msgid ""
 "<span color=\"#FF0000\"><b>Please note that all existing files will be "
 "overwritten.</b></span>"
 msgstr ""
 
-#: src/main.c:4149
+#: src/main.c:4164
 msgid "Name (E)"
 msgstr ""
 
-#: src/main.c:4159
+#: src/main.c:4174
 #, c-format
 msgid "Name (%s)"
 msgstr ""
 
-#: src/main.c:4171
+#: src/main.c:4186
 msgid "Registered"
 msgstr ""
 
-#: src/main.c:4181
+#: src/main.c:4196
 msgid "Ver."
 msgstr ""
 
-#: src/main.c:4191
+#: src/main.c:4206
 msgid "Date"
 msgstr ""
 
-#: src/main.c:4201
+#: src/main.c:4216
 msgid "Code"
 msgstr ""
 
-#: src/main.c:4225 src/main.c:4228
+#: src/main.c:4240 src/main.c:4243
 msgid "(<i>Invalid Character Code</i>)"
 msgstr ""
 
-#: src/main.c:4267
+#: src/main.c:4282
 #, c-format
 msgid "%d mascot"
 msgstr ""
 
-#: src/main.c:4270
+#: src/main.c:4285
 msgid "<i>unkown</i>"
 msgstr ""
 
-#: src/main.c:4312 src/main.c:4314
+#: src/main.c:4327 src/main.c:4329
 msgid "Download / Install"
 msgstr ""
 
-#: src/main.c:4405
+#: src/main.c:4420
 msgid "Error : Cannot read the downloaded mascot list."
 msgstr ""
 
-#: src/main.c:4666 src/main.c:4699 src/main.c:4806
+#: src/main.c:4681 src/main.c:4714 src/main.c:4821
 #, c-format
 msgid "Option \"%s\" is not found. Ignoring...\n"
 msgstr ""
 
-#: src/main.c:4858
+#: src/main.c:4873
 #, c-format
 msgid "macopix COMMON DIR:%s\n"
 msgstr ""
 
-#: src/main.c:4869
+#: src/main.c:4884
 msgid " macopix : Mascot Constructive Pilot for X   Ver"
 msgstr ""
 
-#: src/main.c:4870
+#: src/main.c:4885
 #, c-format
 msgid "  [usage] %% macopix [options] (mascot file)\n"
 msgstr ""
 
-#: src/main.c:4871
+#: src/main.c:4886
 msgid "     -h, --help               : Print this message\n"
 msgstr ""
 
-#: src/main.c:4873
+#: src/main.c:4888
 msgid "     -c, --common-dir         : Print COMMON Directory\n"
 msgstr ""
 
-#: src/main.c:4876
+#: src/main.c:4891
 msgid "     -b, --biff               : Turn on the biff function\n"
 msgstr ""
 
-#: src/main.c:4878
+#: src/main.c:4893
 msgid "     -s, --signal             : Turn on the time signal\n"
 msgstr ""
 
-#: src/main.c:4879
+#: src/main.c:4894
 #, c-format
 msgid "     -o, --offset offset[%%]   : Set offset-value for Focus Following\n"
 msgstr ""
 
-#: src/main.c:4880
+#: src/main.c:4895
 msgid "     -r, --rcfile rc-file     : Set the resource file\n"
 msgstr ""
 
-#: src/main.c:4881
-msgid "     -m, --menu   menu-file   : Set the file for quick menu\n"
-msgstr ""
-
-#: src/main.c:4882
-msgid ""
-"     -mg --mag    magnify     : Set magnification percentage of mascot\n"
-msgstr ""
-
-#: src/main.c:4883
-msgid ""
-"     -i, --ip-style (0|1|2|3) : Set interpolation style for magnification\n"
-msgstr ""
-
-#: src/main.c:4884
-msgid "## For Installation\n"
-msgstr ""
-
-#: src/main.c:4885
-msgid "     -a, --auto-install       : Set mascot auto install ON\n"
-msgstr ""
-
-#: src/main.c:4886
-msgid "     -na --no-auto-install    : Set mascot auto install OFF\n"
-msgstr ""
-
-#: src/main.c:4887
-msgid "     -O, --over-write         : Permit to overwrite files in user dir\n"
-msgstr ""
-
-#: src/main.c:4888
-msgid ""
-"     --install-user-mascot (mascot)  : Mascot Installation to User Dir.\n"
-msgstr ""
-
-#: src/main.c:4889
-msgid "     --install-user-menu (menu)      : Menu Installation to User Dir.\n"
-msgstr ""
-
-#: src/main.c:4891
-msgid ""
-"     --install-common-mascot (mascot): Mascot Installation to Common Dir.\n"
-msgstr ""
-
-#: src/main.c:4892
-msgid ""
-"     --install-common-menu (menu)    : Menu Installation to Common Dir.\n"
-msgstr ""
-
-#: src/main.c:4895
-msgid "## For Socket Message\n"
-msgstr ""
-
 #: src/main.c:4896
-msgid ""
-"     --sockmsg                : Start MaCoPiX as Socket Message Receiver\n"
+msgid "     -m, --menu   menu-file   : Set the file for quick menu\n"
 msgstr ""
 
 #: src/main.c:4897
 msgid ""
-"     --message (text)         : Send Message to Socket Message Receiver\n"
+"     -mg --mag    magnify     : Set magnification percentage of mascot\n"
 msgstr ""
 
 #: src/main.c:4898
-msgid "     --message-expire (time)  : Socket Message Expire Time[ms]\n"
+msgid ""
+"     -i, --ip-style (0|1|2|3) : Set interpolation style for magnification\n"
 msgstr ""
 
 #: src/main.c:4899
-msgid "     --message-type-lump      : Force to Set Lump Sum Balloon\n"
+msgid "## For Installation\n"
 msgstr ""
 
 #: src/main.c:4900
-msgid "     --message-type-step      : Force to Set Stepping Balloon\n"
+msgid "     -a, --auto-install       : Set mascot auto install ON\n"
 msgstr ""
 
 #: src/main.c:4901
-msgid "     --message-step (frame)   : Stepping Interval Frame for SockeMsg\n"
+msgid "     -na --no-auto-install    : Set mascot auto install OFF\n"
 msgstr ""
 
 #: src/main.c:4902
-msgid "     -nc, --no-duet-click     : Duet Animation [Click] OFF\n"
+msgid "     -O, --over-write         : Permit to overwrite files in user dir\n"
 msgstr ""
 
 #: src/main.c:4903
+msgid ""
+"     --install-user-mascot (mascot)  : Mascot Installation to User Dir.\n"
+msgstr ""
+
+#: src/main.c:4904
+msgid "     --install-user-menu (menu)      : Menu Installation to User Dir.\n"
+msgstr ""
+
+#: src/main.c:4906
+msgid ""
+"     --install-common-mascot (mascot): Mascot Installation to Common Dir.\n"
+msgstr ""
+
+#: src/main.c:4907
+msgid ""
+"     --install-common-menu (menu)    : Menu Installation to Common Dir.\n"
+msgstr ""
+
+#: src/main.c:4910
+msgid "## For Socket Message\n"
+msgstr ""
+
+#: src/main.c:4911
+msgid ""
+"     --sockmsg                : Start MaCoPiX as Socket Message Receiver\n"
+msgstr ""
+
+#: src/main.c:4912
+msgid ""
+"     --message (text)         : Send Message to Socket Message Receiver\n"
+msgstr ""
+
+#: src/main.c:4913
+msgid "     --message-expire (time)  : Socket Message Expire Time[ms]\n"
+msgstr ""
+
+#: src/main.c:4914
+msgid "     --message-type-lump      : Force to Set Lump Sum Balloon\n"
+msgstr ""
+
+#: src/main.c:4915
+msgid "     --message-type-step      : Force to Set Stepping Balloon\n"
+msgstr ""
+
+#: src/main.c:4916
+msgid "     --message-step (frame)   : Stepping Interval Frame for SockeMsg\n"
+msgstr ""
+
+#: src/main.c:4917
+msgid "     -nc, --no-duet-click     : Duet Animation [Click] OFF\n"
+msgstr ""
+
+#: src/main.c:4918
 msgid "     -nr, --no-duet-random    : Duet Animation [Random] OFF\n"
 msgstr ""
 
-#: src/main.c:4998
+#: src/main.c:5013
 #, c-format
 msgid "%8d%2d%4dMacopix already running in SockMsg Mode"
 msgstr ""
 
-#: src/main.c:5010
+#: src/main.c:5025
 msgid "Macopix not running in SockMsg Mode\n"
 msgstr ""
 
