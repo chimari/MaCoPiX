@@ -322,6 +322,7 @@ int MoveToFocus(typMascot *mascot, gboolean force_fl)
   unsigned int width,height,width_root,height_root;
   int rx,ry,wx,wy,mask_return,realXPos;
   gint win_bar_size;
+  gint qr_ans;
 #endif
   gboolean eflag=FALSE;
   gint flag_homepos=HOMEPOS_NEVER;
@@ -377,7 +378,8 @@ int MoveToFocus(typMascot *mascot, gboolean force_fl)
 #endif
 
   if(G_UNLIKELY(error == BadWindow)){
-    g_warning("BadWindow error");
+    g_warning("BadWindow error 1");
+    return(-1);
   }
   
   parent = 0;
@@ -439,17 +441,22 @@ int MoveToFocus(typMascot *mascot, gboolean force_fl)
 #else
 	gdk_error_trap_push ();
 #endif
-	XQueryTree(GDK_WINDOW_XDISPLAY(gtk_widget_get_window(mascot->win_main)),
-		   wf,&rootwin,&parent,&children,&nchildren);
-	if(errflag ==0)  XFree(children);
+	qr_ans=XQueryTree(GDK_WINDOW_XDISPLAY(gtk_widget_get_window(mascot->win_main)),
+			  wf,&rootwin,&parent,&children,&nchildren);
+	if(qr_ans !=0)  XFree(children);
 #ifdef USE_GTK3
 	error=   gdk_x11_display_error_trap_pop (gtk_widget_get_display(mascot->win_main));
 #else
 	error = gdk_error_trap_pop ();
 #endif
+	if(qr_ans==0){
+	  g_warning("Failed XQueryTree");
+	  return(-1);
+	}
 
 	if(G_UNLIKELY(error == BadWindow)){
-	  g_warning("BadWindow error");
+	  g_warning("BadWindow error 2");
+	  return(-1);
 	}
       }
       else{
@@ -464,17 +471,23 @@ int MoveToFocus(typMascot *mascot, gboolean force_fl)
 #else
 	  gdk_error_trap_push ();
 #endif
-	  XQueryTree(GDK_WINDOW_XDISPLAY(gtk_widget_get_window(mascot->win_main)),
+	  qr_ans=XQueryTree(GDK_WINDOW_XDISPLAY(gtk_widget_get_window(mascot->win_main)),
 		     wf,&rootwin,&parent,&children,&nchildren);
-	  if(errflag ==0)  XFree(children);
+	  if(qr_ans !=0)  XFree(children);
 #ifdef USE_GTK3
 	  error=   gdk_x11_display_error_trap_pop (gtk_widget_get_display(mascot->win_main));
 #else
 	  error = gdk_error_trap_pop ();
 #endif
 	  
+	  if(qr_ans==0){
+	    g_warning("Failed XQueryTree");
+	    return(-1);
+	  }
+	  
 	  if(G_UNLIKELY(error == BadWindow)){
-	    g_warning("BadWindow error");
+	    g_warning("BadWindow error 3");
+	    return(-1);
 	  }
 	}
 	else{
@@ -543,7 +556,8 @@ int MoveToFocus(typMascot *mascot, gboolean force_fl)
 #endif
 
 	      if(G_UNLIKELY(error == BadWindow)){
-		g_warning("BadWindow error");
+		g_warning("BadWindow error 4");
+		return(-1);
 	      }
 	    }
 	    else{
@@ -561,17 +575,22 @@ int MoveToFocus(typMascot *mascot, gboolean force_fl)
 #else
 	    gdk_error_trap_push ();
 #endif
-	    XQueryTree(GDK_WINDOW_XDISPLAY(gtk_widget_get_window(mascot->win_main)),
-	    	       wf,&rootwin,&parent,&children,&nchildren);
-	    if(errflag ==0)  XFree(children);
+	    qr_ans=XQueryTree(GDK_WINDOW_XDISPLAY(gtk_widget_get_window(mascot->win_main)),
+			      wf,&rootwin,&parent,&children,&nchildren);
+	    if(qr_ans !=0)  XFree(children);
 #ifdef USE_GTK3
 	      error=   gdk_x11_display_error_trap_pop (gtk_widget_get_display(mascot->win_main));
 #else
 	      error = gdk_error_trap_pop ();
 #endif
+	      if(qr_ans==0){
+		g_warning("Failed XQueryTree");
+		return(-1);
+	      }
 
 	      if(G_UNLIKELY(error == BadWindow)){
-		g_warning("BadWindow error");
+		g_warning("BadWindow error 5");
+		return(-1);
 	      }
 	  }
 	  else{
@@ -630,16 +649,23 @@ int MoveToFocus(typMascot *mascot, gboolean force_fl)
 #else
 	gdk_error_trap_push ();
 #endif
-	XQueryTree(GDK_WINDOW_XDISPLAY(gtk_widget_get_window(mascot->win_main)),
-		   wf,&rootwin,&parent,&children,&nchildren);
+	qr_ans=XQueryTree(GDK_WINDOW_XDISPLAY(gtk_widget_get_window(mascot->win_main)),
+			  wf,&rootwin,&parent,&children,&nchildren);
+	if(qr_ans !=0)  XFree(children);
 #ifdef USE_GTK3
 	error=   gdk_x11_display_error_trap_pop (gtk_widget_get_display(mascot->win_main));
 #else
 	error = gdk_error_trap_pop ();
 #endif
 
+	if(qr_ans==0){
+	  g_warning("Failed XQueryTree");
+	  return(-1);
+	}
+
 	if(G_UNLIKELY(error == BadWindow)){
-	  g_warning("BadWindow error");
+	  g_warning("BadWindow error 6");
+	  return(-1);
 	}
 	wf=parent;
 	if(errflag ==0){
@@ -668,7 +694,8 @@ int MoveToFocus(typMascot *mascot, gboolean force_fl)
 #endif
 
 	if(G_UNLIKELY(error == BadWindow)){
-	  g_warning("BadWindow error");
+	  g_warning("BadWindow error 7");
+	  return(-1);
 	}
       }
       else{
