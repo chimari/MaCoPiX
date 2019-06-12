@@ -102,6 +102,7 @@ void MacPrintCurrentWindows(){
 
 
 void MacGetFocusWin(int *x, int *y, int *w, int *h){
+  gboolean win_flag=FALSE;
   *x=-1;
   *y=-1;
   *w=-1;
@@ -119,30 +120,37 @@ void MacGetFocusWin(int *x, int *y, int *w, int *h){
     NSNumber* windowid = (NSNumber*)[nswindowsdescription objectForKey:@"kCGWindowNumber"];
     NSString* windowName = (NSString*)[nswindowsdescription objectForKey:@"kCGWindowOwnerName"];
     CFDictionaryRef windowdescription = (CFDictionaryRef)CFArrayGetValueAtIndex ((CFArrayRef)windowArray, i);
-    
-    
-    if((windowid)&&(strncasecmp([windowName UTF8String], "macopix", strlen("macopix"))!=0)){
-      int layer;
-      CFNumberGetValue(CFDictionaryGetValue(windowdescription, kCGWindowLayer), kCFNumberIntType, &layer);
-      if(layer==0){
-	CFDictionaryRef bounds = (CFDictionaryRef)CFDictionaryGetValue (windowdescription, kCGWindowBounds);
-	if(bounds){
-	  CGRectMakeWithDictionaryRepresentation(bounds, &rect);
-	  *x=(int)rect.origin.x;
-	  *y=(int)rect.origin.y;
-	  *w=(int)rect.size.width;
-	  *h=(int)rect.size.height;
-	  if((x!=0)||(y!=0)){
-	    //printf("%s:%s\n", [windowName UTF8String], [[windowid stringValue] UTF8String]);
-	    //CFRelease(nswindowsdescription);
-	    break;
-	  }
-	  CFRelease(bounds);
-	}
+
+    if(windowid){
+      if(!windowName){
+	win_flag=TRUE;
       }
-      //CFRelease(nswindowsdescription);
+      else if(strncasecmp([windowName UTF8String], "macopix", strlen("macopix"))!=0){
+	win_flag=TRUE;
+      }
+
+      if(win_flag){
+	int layer;
+	CFNumberGetValue(CFDictionaryGetValue(windowdescription, kCGWindowLayer), kCFNumberIntType, &layer);
+	if(layer==0){
+	  CFDictionaryRef bounds = (CFDictionaryRef)CFDictionaryGetValue (windowdescription, kCGWindowBounds);
+	  if(bounds){
+	    CGRectMakeWithDictionaryRepresentation(bounds, &rect);
+	    *x=(int)rect.origin.x;
+	    *y=(int)rect.origin.y;
+	    *w=(int)rect.size.width;
+	    *h=(int)rect.size.height;
+	    if((x!=0)||(y!=0)){
+	      //printf("%s:%s\n", [windowName UTF8String], [[windowid stringValue] UTF8String]);
+	      //CFRelease(nswindowsdescription);
+	      break;
+	    }
+	    CFRelease(bounds);
+	  }
+	}
+	//CFRelease(nswindowsdescription);
+      }
     }
-   
   }
   //[windows release];
   //CFRelease(windowArray);
