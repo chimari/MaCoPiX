@@ -3039,7 +3039,15 @@ void map_balloon(typMascot *mascot, gboolean flag){
     gtk_widget_map(mascot->balloon_main);
     gtk_widget_map(mascot->dw_balloon);
 #ifdef USE_OSX
-    MacMapWin(mascot->balloon_main, TRUE);
+    switch(mascot->mac_layer){
+    case MAC_LAYER_TOP:
+      MacSetWidgetLayer(mascot->balloon_main, TRUE);
+      MoveBalloon(mascot,mascot->x,mascot->y);
+      break;
+    default:
+      MacSetWidgetLayer(mascot->balloon_main, FALSE);
+      break;
+    }
 #endif
   }
   else{
@@ -3050,7 +3058,7 @@ void map_balloon(typMascot *mascot, gboolean flag){
     gtk_widget_unmap(mascot->balloon_main);
     gtk_widget_unmap(mascot->dw_balloon);
 #ifdef USE_OSX
-    MacMapWin(mascot->balloon_main, FALSE);
+    MacSetWidgetLayer(mascot->balloon_main, FALSE);
 #endif
   }
 }
@@ -3070,6 +3078,16 @@ void map_clock(typMascot *mascot, gboolean flag){
 #endif
     gtk_widget_map(mascot->clock_main);
     gtk_widget_map(mascot->dw_clock);
+#ifdef USE_OSX
+    switch(mascot->mac_layer){
+    case MAC_LAYER_TOP:
+      MacSetWidgetLayer(mascot->clock_main, TRUE);
+      break;
+    default:
+      MacSetWidgetLayer(mascot->clock_main, FALSE);
+      break;
+    }
+#endif
   }
   else{
 #ifdef FG_DRAW
@@ -3079,6 +3097,9 @@ void map_clock(typMascot *mascot, gboolean flag){
     gtk_widget_unmap(mascot->clock_main);
     gtk_widget_unmap(mascot->dw_clock);
   }
+#ifdef USE_OSX
+  MacSetWidgetLayer(mascot->clock_main, FALSE);
+#endif
 }
 
 #ifdef USE_BIFF
@@ -3086,10 +3107,23 @@ void map_biff(typMascot *mascot, gboolean flag){
   if(flag){
     gtk_widget_map(mascot->biff_pix);
     gtk_widget_map(mascot->dw_biff);
+#ifdef USE_OSX
+    switch(mascot->mac_layer){
+    case MAC_LAYER_TOP:
+      MacSetWidgetLayer(mascot->biff_pix, TRUE);
+      break;
+    default:
+      MacSetWidgetLayer(mascot->biff_pix, FALSE);
+      break;
+    }
+#endif
   }
   else{
     gtk_widget_unmap(mascot->biff_pix);
     gtk_widget_unmap(mascot->dw_biff);
+#ifdef USE_OSX
+    MacSetWidgetLayer(mascot->biff_pix, FALSE);
+#endif
   }
 }
 #endif

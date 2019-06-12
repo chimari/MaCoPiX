@@ -5230,7 +5230,7 @@ int main(int argc, char **argv)
 #endif
 
 #ifdef USE_OSX
-  MacGoTop(Mascot->mac_layer);
+  MacSetLayer(Mascot);
 #endif
 
   gtk_main();

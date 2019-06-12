@@ -1410,7 +1410,8 @@ gint ssl_write();
 
 // macOS
 #ifdef USE_OSX
-void MacGoTop();
+void MacSetWidgetLayer();
+void MacSetLayer();
 void MacMapWin();
 void MacGetFocusWin();
 void MacGetRootWin();

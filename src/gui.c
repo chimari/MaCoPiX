@@ -9895,7 +9895,7 @@ void create_config_dialog(GtkWidget *widget, gpointer gdata){
   mascot->PopupMenu=make_popup_menu(mascot);
 
 #ifdef USE_OSX
-  MacGoTop(mascot->mac_layer);
+  MacSetLayer(mascot);
 #endif
 
   while (my_main_iteration(FALSE));
@@ -11330,7 +11330,7 @@ void ChangeMascot(typMascot *mascot){
   gtk_widget_realize(mascot->dw_balfg);
 #endif
 #ifdef USE_OSX
-  MacGoTop(mascot->mac_layer);
+  MacSetLayer(mascot);
 #endif
 }
 
@@ -11369,7 +11369,7 @@ void NkrChangeMascot(typMascot *mascot){
   gtk_widget_realize(mascot->dw_balfg);
 #endif
 #ifdef USE_OSX
-  MacGoTop(mascot->mac_layer);
+  MacSetLayer(mascot);
 #endif
 }
 

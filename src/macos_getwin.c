@@ -28,29 +28,37 @@ void MacMapWin(GtkWidget *w, gboolean f){
   }
 }
 
-void MacGoTop(gint mode){
-  NSApplication *thisApp = [NSApplication sharedApplication];
-  //[thisApp activateIgnoringOtherApps:YES];
+void MacSetWidgetLayer(GtkWidget *w, gboolean top_flag){
+  NSWindow *nswin = gdk_quartz_window_get_nswindow(gtk_widget_get_window(w));
 
-  NSArray* owin = [NSApp orderedWindows];
-
-  for(int i = [owin count]-1; i>=0;i--){
-    NSWindow *window = [[NSApp windows]objectAtIndex:i];
-    //[window setCollectionBehavior:NSWindowCollectionBehaviorCanJoinAllSpaces | NSWindowCollectionBehaviorFullScreenAuxiliary];
-    //[window setCollectionBehavior:NSWindowCollectionBehaviorCanJoinAllSpaces];
-    switch(mode){
-    case MAC_LAYER_TOP:
-      [window setLevel: NSMainMenuWindowLevel+1];
-      break;
-
-    default:
-      [window setLevel: NSFloatingWindowLevel];
-      break;
-    }
-    [window setHasShadow:NO];
-    [window setCollectionBehavior:NSWindowCollectionBehaviorCanJoinAllSpaces | NSWindowCollectionBehaviorStationary | NSWindowCollectionBehaviorTransient | NSWindowCollectionBehaviorIgnoresCycle];
+  if(top_flag){
+    [nswin setLevel: NSMainMenuWindowLevel+1];
   }
-  
+  else{
+    [nswin setLevel: NSFloatingWindowLevel];
+  }
+    [nswin setHasShadow:NO];
+    [nswin setCollectionBehavior:NSWindowCollectionBehaviorCanJoinAllSpaces | NSWindowCollectionBehaviorStationary | NSWindowCollectionBehaviorTransient | NSWindowCollectionBehaviorIgnoresCycle];
+}
+
+
+void MacSetLayer(typMascot *mascot){
+  // Main 
+  switch(mascot->mac_layer){
+  case MAC_LAYER_TOP:
+    MacSetWidgetLayer(mascot->win_main, TRUE);
+    MacSetWidgetLayer(mascot->balloon_main, TRUE);
+    MacSetWidgetLayer(mascot->clock_main, TRUE);
+    MacSetWidgetLayer(mascot->biff_pix, TRUE);
+    break;
+
+  default:
+    MacSetWidgetLayer(mascot->win_main, FALSE);
+    MacSetWidgetLayer(mascot->balloon_main, FALSE);
+    MacSetWidgetLayer(mascot->clock_main, FALSE);
+    MacSetWidgetLayer(mascot->biff_pix, FALSE);
+    break;
+  }
 }
 
 // for debug
