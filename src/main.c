@@ -1354,6 +1354,15 @@ void ReadRC(typMascot *mascot, gboolean def_flag)
 			      &mascot->task_force))
       mascot->task_force=FALSE;
 #endif
+#ifdef USE_OSX
+    if(xmms_cfg_read_boolean(cfgfile, field_tmp, "mac_layer",
+			     &i_buf)){
+      mascot->mac_layer=i_buf;
+    }
+    else{
+      mascot->mac_layer=MAC_LAYER_TOP;
+    }
+#endif
     if(!xmms_cfg_read_boolean(cfgfile, field_tmp, "no_capbar",
 			      &mascot->no_capbar))
       mascot->no_capbar=FALSE;
@@ -1609,6 +1618,9 @@ void ReadRC(typMascot *mascot, gboolean def_flag)
 #ifdef USE_WIN32
     mascot->task_force=FALSE;
 #endif
+#ifdef USE_OSX
+    mascot->mac_layer=MAC_LAYER_TOP;
+#endif
     mascot->no_capbar=FALSE;
     mascot->bar_size=0;
     mascot->bar_offset=0;
@@ -1787,6 +1799,9 @@ void SaveRC(typMascot *mascot,  gboolean def_flag)
   xmms_cfg_write_int(cfgfile, field_tmp, "autobar2",mascot->focus_autobar);
 #ifdef USE_WIN32
   xmms_cfg_write_boolean(cfgfile, field_tmp, "task_force",mascot->task_force);
+#endif
+#ifdef USE_OSX
+  xmms_cfg_write_boolean(cfgfile, field_tmp, "mac_layer",mascot->mac_layer);
 #endif
   xmms_cfg_write_boolean(cfgfile, field_tmp, "no_capbar",mascot->no_capbar);
   xmms_cfg_write_int(cfgfile, field_tmp, "bar_size",mascot->bar_size);
@@ -5215,7 +5230,7 @@ int main(int argc, char **argv)
 #endif
 
 #ifdef USE_OSX
-  MacGoTop();
+  MacGoTop(Mascot->mac_layer);
 #endif
 
   gtk_main();

@@ -339,8 +339,16 @@ enum{ FF_BAR_ABS, FF_BAR_REL };
 // MOVE mode
 enum{
   MOVE_FIX,
-    MOVE_FOCUS
-    }MoveMode;
+  MOVE_FOCUS
+}MoveMode;
+
+#ifdef USE_OSX
+enum {
+     MAC_LAYER_DEFAULT,
+     MAC_LAYER_TOP,
+     NUM_MAC_LAYER
+}MAC_LAYER_MODE;
+#endif
 
 // Focus Follow 基準位置
 enum{ FF_SIDE_LEFT, FF_SIDE_RIGHT } FFPos;
@@ -989,6 +997,9 @@ struct _typMascot{
   guint focus_autobar;
 #ifdef USE_WIN32
   gboolean task_force;
+#endif
+#ifdef USE_OSX
+  gint mac_layer;
 #endif
   gboolean no_capbar;
   gint bar_size;

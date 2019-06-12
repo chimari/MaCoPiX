@@ -962,6 +962,14 @@ static void uri_clicked(GtkButton *button, gpointer gdata)
 	       NULL, 
 	       NULL, 
 	       SW_SHOWNORMAL);
+  /*
+#elif defined(USE_OSX)
+  typMascot *mascot=(typMascot *)gdata;
+  gchar *tmp_com;
+
+  tmp_com=g_strdup_printf(mascot->url_command, DEFAULT_URL);
+  system(tmp_com);
+  g_free(tmp_com);*/
 #else
   typMascot *mascot=(typMascot *)gdata;
   gchar *tmp_com;
@@ -6626,6 +6634,52 @@ void create_config_dialog(GtkWidget *widget, gpointer gdata){
 
 #endif
 
+#ifdef USE_OSX
+      frame = gtkut_frame_new (_("for macOS"));
+      gtkut_table_attach(table1, frame, 0, 2, 3, 4,
+			 GTK_FILL,GTK_SHRINK,0,0);
+      gtk_container_set_border_width (GTK_CONTAINER (frame), 5);
+      
+      table2 = gtkut_table_new(2,1,FALSE, 0, 0, 5);
+      gtk_container_add (GTK_CONTAINER (frame), table2);
+
+      label = gtkut_label_new (_("Drawing Layer"));
+      gtkut_pos(label, POS_START, POS_CENTER);
+      gtkut_table_attach(table2, label, 0, 1, 0, 1,
+			 GTK_FILL,GTK_SHRINK,0,0);
+      {
+	GtkListStore *store;
+	GtkTreeIter iter, iter_set;	  
+	GtkCellRenderer *renderer;
+	
+	store = gtk_list_store_new(2, G_TYPE_STRING, G_TYPE_INT);
+	
+	gtk_list_store_append(store, &iter);
+	gtk_list_store_set(store, &iter, 0, _("Floating Window (never go over Menu Bar)"),
+			   1, MAC_LAYER_DEFAULT, -1);
+	if(mascot->mac_layer==MAC_LAYER_DEFAULT) iter_set=iter;
+	
+	gtk_list_store_append(store, &iter);
+	gtk_list_store_set(store, &iter, 0, _("Over Menu Bar"),
+			   1, HOMEPOS_VANISH, -1);
+	if(mascot->mac_layer==MAC_LAYER_TOP) iter_set=iter;
+	
+	combo = gtk_combo_box_new_with_model(GTK_TREE_MODEL(store));
+	gtkut_table_attach_defaults (table2, combo, 1, 2, 0, 1);
+	g_object_unref(store);
+	
+	renderer = gtk_cell_renderer_text_new();
+	gtk_cell_layout_pack_start(GTK_CELL_LAYOUT(combo),renderer, TRUE);
+	gtk_cell_layout_set_attributes (GTK_CELL_LAYOUT(combo), renderer, "text",0,NULL);
+	
+	
+	gtk_combo_box_set_active_iter(GTK_COMBO_BOX(combo),&iter_set);
+	gtk_widget_show(combo);
+	my_signal_connect (combo,"changed",cc_get_combo_box,
+			   &mascot->mac_layer);
+      }
+#endif
+
 
       table2=gtkut_table_new(1,2,FALSE,0, 0, 0);
       gtkut_table_attach_defaults(table1, table2, 0, 2, 3, 4);
@@ -9841,7 +9895,7 @@ void create_config_dialog(GtkWidget *widget, gpointer gdata){
   mascot->PopupMenu=make_popup_menu(mascot);
 
 #ifdef USE_OSX
-  MacGoTop();
+  MacGoTop(mascot->mac_layer);
 #endif
 
   while (my_main_iteration(FALSE));
@@ -11276,7 +11330,7 @@ void ChangeMascot(typMascot *mascot){
   gtk_widget_realize(mascot->dw_balfg);
 #endif
 #ifdef USE_OSX
-  MacGoTop();
+  MacGoTop(mascot->mac_layer);
 #endif
 }
 
@@ -11315,7 +11369,7 @@ void NkrChangeMascot(typMascot *mascot){
   gtk_widget_realize(mascot->dw_balfg);
 #endif
 #ifdef USE_OSX
-  MacGoTop();
+  MacGoTop(mascot->mac_layer);
 #endif
 }
 
