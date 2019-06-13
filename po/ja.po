@@ -1214,7 +1214,7 @@ msgstr "(\"%s\"は音声ファイルに置換されます)"
 
 #: src/gui.c:8216
 msgid "GNU tar Command [for *.tar.gz Extraction]"
-msgstr "GNU tar コマンド [*.tar.gz　解凍用]"
+msgstr "GNU tar コマンド [*.tar.gz 解凍用]"
 
 #: src/gui.c:8232
 #, c-format

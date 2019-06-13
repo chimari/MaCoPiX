@@ -1,7 +1,7 @@
 ##################################################################
         Desktop Mascot Program for UNIX                           
       macopix : Mascot Constructive Pilot for X                   
-						     ver 3.0.1    
+						     ver 3.1.0    
                       Document in English : README                
                                                                   
                              2019.06.06  Kurumi Chimari           
@@ -37,7 +37,7 @@
     - macOS El Capitan (10.11) or later
   .
   
-  The Windows and macOS versions are distributed as compiled (binary) package.
+  Windows and macOS versions are distributed as compiled (binary) package.
   Most of the text in this document describes about MaCoPiX UNIX
   version. So, fo windows, please see Readme-win32.jp (sorry, Japanese
   only, yet).

@@ -1,4 +1,5 @@
 2019.6.XX   ver3.1.0  - macOS に対応.
+	              - XQeuryTree が失敗したときの処理を追加
 
 2019.6.06   ver3.0.1  - メイルの From/Subject 取得時の Buffer overflow 対策.
                       - Gtk+2 でTreeView のスクロールをViewport から container
