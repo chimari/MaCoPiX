@@ -2,9 +2,9 @@
 
 TGTPATH="@executable_path/../Resources/lib/"
 OPTPATH="/usr/local/opt/"
-CPPATH="/Volumes/MaCoPiX_macOS/macopix.app/Contents/Resources/lib/"
-MACOPIX_BIN="/Volumes/MaCoPiX_macOS/macopix.app/Contents/MacOS/macopix-bin"
-LOCALEPATH="/Volumes/MaCoPiX_macOS/macopix.app/Contents/Resources/share/locale/ja/LC_MESSAGES/"
+CPPATH="/Volumes/MaCoPiX_macOS/MaCoPiX.app/Contents/Resources/lib/"
+MACOPIX_BIN="/Volumes/MaCoPiX_macOS/MaCoPiX.app/Contents/MacOS/MaCoPiX-bin"
+LOCALEPATH="/Volumes/MaCoPiX_macOS/MaCoPiX.app/Contents/Resources/share/locale/ja/LC_MESSAGES/"
 
 cp src/macopix ${MACOPIX_BIN}
 cp po/ja.gmo ${LOCALEPATH}macopix.mo
