@@ -127,6 +127,8 @@ void MacGetFocusWin(int *x, int *y, int *w, int *h){
       }
       else if(strncasecmp([windowName UTF8String], "macopix", strlen("macopix"))!=0){
 	win_flag=TRUE;
+      }else{
+	win_flag=FALSE;
       }
 
       if(win_flag){

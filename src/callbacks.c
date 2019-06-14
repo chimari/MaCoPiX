@@ -942,6 +942,16 @@ void drag_begin(GtkWidget * widget, GdkEventButton * event, gpointer gdata)
   else if(event->button == 3){
 #ifdef USE_GTK3
     gtk_menu_popup_at_pointer (GTK_MENU(mascot->PopupMenu), c_eve);
+#ifdef USE_OSX
+    switch(mascot->mac_layer){
+    case MAC_LAYER_TOP:
+      MacSetWidgetLayer(mascot->PopupMenu, TRUE);
+      break;
+    default:
+      MacSetWidgetLayer(mascot->PopupMenu, FALSE);
+      break;
+    }
+#endif
 #else
     gtk_menu_popup (GTK_MENU(mascot->PopupMenu), NULL, NULL, NULL, NULL, 
 		    event->button, event->time);
