@@ -26,8 +26,10 @@ INCLUDES        = $(GTK_CFLAGS) $(GLIB_CFLAGS) $(GNUTLS_CFLAGS)\
 		  $(DISABLE_DEPRECATED) $(OSX_CADD) $(GTKMAC_CFLAGS)
 LDADD           = $(GTK_LIBS) $(GLIB_LIBS) $(WINMM_LIBS)\
                    $(MACOPIX_RES)  $(WINSOCK_LIBS) $(UNLHA32_LIBS)  $(TAR32_LIBS) $(GNUTLS_LIBS) $(WIN32_ICONV_LIBS) $(OSX_LDADD) $(GTKMAC_LIBS) $(LIBICONV)
-AM_CPPFLAGS = -DLOCALEDIR=\""$(localedir)"\"  -DCOMMON_DIR=\""$(commondir)"\"\
-            -DPREFIX_DIR=\""$(prefixdir)"\" 
+AM_CPPFLAGS = -DLOCALEDIR=\""$(localedir)"\" \
+	      -DCOMMON_DIR=\""$(commondir)"\" \
+	      -DPREFIX_DIR=\""$(prefixdir)"\" \
+	      -DTHEMEDIR=\""$(themedir)"\"
 
 resource_files=$(shell $(GLIB_COMPILE_RESOURCES) --sourcedir=$(srcdir) --generate-dependencies $(srcdir)/gresource.xml)
 

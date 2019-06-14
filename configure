@@ -646,6 +646,7 @@ GNUTLS_CFLAGS
 DISABLE_DEPRECATED
 GTKMAC_LIBS
 GTKMAC_CFLAGS
+themedir
 WIN32_ICONV_LIBS
 POMAKEFILEDEPS
 MKINSTALLDIRS
@@ -887,6 +888,8 @@ enable_threads
 with_libpth_prefix
 with_included_gettext
 with_libintl_prefix
+with_localedir
+with_themedir
 with_maintain
 with_gtkmac
 enable_cairo
@@ -1594,6 +1597,8 @@ Optional Packages:
   --with-included-gettext use the GNU gettext library included here
   --with-libintl-prefix[=DIR]  search for libintl in DIR/include and DIR/lib
   --without-libintl-prefix     don't search for libintl in includedir and libdir
+  --with-localedir=DIR    Locale directory
+  --with-themedir=DIR     Icon theme directory
   --with-maintain         For Maintainer
   --with-gtkmac           make with gtkmacintegration
   --with-gnutls           Make with GNUTLS instead of OpenSSL
@@ -21623,6 +21628,22 @@ else
 WIN32_ICONV_LIBS=""
 localedir='${prefix}/${DATADIRNAME}/locale'
 fi
+fi
+
+
+
+# Check whether --with-localedir was given.
+if test "${with_localedir+set}" = set; then :
+  withval=$with_localedir; localedir="$withval"
+fi
+
+
+
+themedir='${datadir}/${PACKAGE}/icons'
+
+# Check whether --with-themedir was given.
+if test "${with_themedir+set}" = set; then :
+  withval=$with_themedir; themedir="$withval"
 fi
 
 

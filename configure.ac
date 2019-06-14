@@ -245,8 +245,18 @@ WIN32_ICONV_LIBS=""
 localedir='${prefix}/${DATADIRNAME}/locale'
 fi
 fi
-AC_SUBST(localedir)
 AC_SUBST(WIN32_ICONV_LIBS)
+
+AC_ARG_WITH(localedir,
+	[  --with-localedir=DIR    Locale directory],
+	[localedir="$withval"])
+AC_SUBST(localedir)
+
+themedir='${datadir}/${PACKAGE}/icons'
+AC_ARG_WITH(themedir,
+	[  --with-themedir=DIR     Icon theme directory],
+	[themedir="$withval"])
+AC_SUBST(themedir)
 
 dnl for Maintainer mode (DISABLE_DEPRECATED)
 AC_ARG_WITH(maintain,
