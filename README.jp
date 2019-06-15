@@ -64,7 +64,7 @@
   以下の環境で動作します。
       - X Window Systemが動作するUNIX環境
       - Microsoft Windows (7以降, 10推奨)
-      - macOS (10.11 ElCapitan以降、64bit only)
+      - macOS : OS X 10.9 (Mavericks) 以降、 64bit only
 
    [for UNIX]
      ・Gtk+3 (3.22以降) もしくはGtk+2 (2.24以降) およびそれに付随する gdk-pixbuf, cairo

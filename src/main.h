@@ -279,8 +279,8 @@ enum{ FOLDER_DEFAULT,
 #define FONT_CLK "arial bold 9"
 #define FONT_BAL "ms pgothic 9"
 #elif defined(USE_OSX)
-#define FONT_CLK "Arial Bold 9"
-#define FONT_BAL "Hiragino Kaku Gothic StdN weight=810 10"
+#define FONT_CLK "Apple LiGothic 10"
+#define FONT_BAL "Hiragino Maru Gothic Pro 10"
 #else
 #define FONT_CLK "Sans 14"
 #define FONT_BAL "Sans 10"

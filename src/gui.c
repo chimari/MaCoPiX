@@ -12085,7 +12085,7 @@ void popup_message(GtkWidget *parent, gchar* stock_id,gint delay, ...){
     dialog = gtk_dialog_new();
   }
   else{
-    dialog = gtk_dialog_new_with_buttons("MaCoPiX : Message",
+    dialog = gtk_dialog_new_with_buttons(_("MaCoPiX : Message"),
 					 GTK_WINDOW(parent),
 					 GTK_DIALOG_MODAL,
 #ifdef USE_GTK3
@@ -12097,7 +12097,7 @@ void popup_message(GtkWidget *parent, gchar* stock_id,gint delay, ...){
   }
   gtk_container_set_border_width(GTK_CONTAINER(dialog),5);
   gtk_window_set_transient_for(GTK_WINDOW(dialog),GTK_WINDOW(parent));
-  gtk_window_set_title(GTK_WINDOW(dialog),"MaCoPiX : Message");
+  gtk_window_set_title(GTK_WINDOW(dialog),_("MaCoPiX : Message"));
 
 #if !GTK_CHECK_VERSION(2,21,8)
   gtk_dialog_set_has_separator(GTK_DIALOG(dialog),FALSE);

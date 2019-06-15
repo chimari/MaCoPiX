@@ -34,7 +34,7 @@
   MaCoPiX is a Gtk based desktop mascot program running under
     - UNIX (X window systems)
     - Microsoft Windows (7 or later)
-    - macOS El Capitan (10.11) or later
+    - macOS : OS X 10.9 (Mavericks) or later
   .
   
   Windows and macOS versions are distributed as compiled (binary) package.
@@ -48,7 +48,7 @@
 
   Currently, you can make following types of mascots using MaCoPiX.
          - Focus follower (Window sitters : likely ActX)
-         - Fix style      (Desktop wappen?)
+         - Fixed style    (Desktop wappen?)
   Furthermore, you can select with or without a digital clock for
   each types of mascots. So, MaCoPiX can be used as a sort of desktop clock
   applications. (But the clock function could be still poor.)

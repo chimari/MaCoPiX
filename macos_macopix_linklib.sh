@@ -20,6 +20,7 @@ install_name_tool -change	${OPTPATH}cairo/lib/libcairo.2.dylib ${TGTPATH}libcair
 install_name_tool -change	${OPTPATH}gdk-pixbuf/lib/libgdk_pixbuf-2.0.0.dylib ${TGTPATH}libgdk_pixbuf-2.0.0.dylib ${MACOPIX_BIN}
 install_name_tool -change	${OPTPATH}glib/lib/libgio-2.0.0.dylib ${TGTPATH}libgio-2.0.0.dylib ${MACOPIX_BIN}
 install_name_tool -change	${OPTPATH}glib/lib/libgobject-2.0.0.dylib ${TGTPATH}libgobject-2.0.0.dylib ${MACOPIX_BIN}
+install_name_tool -change	${OPTPATH}glib/lib/libgmodule-2.0.0.dylib ${TGTPATH}libgmodule-2.0.0.dylib ${MACOPIX_BIN}
 install_name_tool -change	${OPTPATH}glib/lib/libglib-2.0.0.dylib ${TGTPATH}libglib-2.0.0.dylib ${MACOPIX_BIN}
 install_name_tool -change	${OPTPATH}gettext/lib/libintl.8.dylib ${TGTPATH}libintl.8.dylib	 ${MACOPIX_BIN}
 install_name_tool -change       ${OPTPATH}openssl/lib/libssl.1.0.0.dylib ${TGTPATH}libssl.1.0.0.dylib ${MACOPIX_BIN}
@@ -37,6 +38,7 @@ cp	${OPTPATH}cairo/lib/libcairo.2.dylib ${CPPATH}
 cp	${OPTPATH}gdk-pixbuf/lib/libgdk_pixbuf-2.0.0.dylib ${CPPATH}
 cp	${OPTPATH}glib/lib/libgio-2.0.0.dylib ${CPPATH}
 cp	${OPTPATH}glib/lib/libgobject-2.0.0.dylib ${CPPATH}
+cp	${OPTPATH}glib/lib/libgmodule-2.0.0.dylib ${CPPATH}
 cp	${OPTPATH}glib/lib/libglib-2.0.0.dylib ${CPPATH}
 cp	${OPTPATH}gettext/lib/libintl.8.dylib ${CPPATH}
 cp	${OPTPATH}openssl/lib/libssl.1.0.0.dylib ${CPPATH}
@@ -170,6 +172,11 @@ LIBFILE="libgobject-2.0.0.dylib"
 	install_name_tool -change ${OPTPATH}glib/lib/libgobject-2.0.0.dylib ${TGTPATH}libgobject-2.0.0.dylib ${CPPATH}${LIBFILE}
 	install_name_tool -change /usr/local/Cellar/glib/2.60.3/lib/libglib-2.0.0.dylib ${TGTPATH}libglib-2.0.0.dylib ${CPPATH}${LIBFILE}
 	install_name_tool -change ${OPTPATH}libffi/lib/libffi.6.dylib    ${TGTPATH}libffi.6.dylib    ${CPPATH}${LIBFILE}
+	install_name_tool -change ${OPTPATH}gettext/lib/libintl.8.dylib  ${TGTPATH}libintl.8.dylib  ${CPPATH}${LIBFILE}
+LIBFILE="libgmodule-2.0.0.dylib"
+##	/usr/local/Cellar/glib/2.60.3/lib/libglib-2.0.0.dylib 
+	install_name_tool -change ${OPTPATH}glib/lib/libgmodule-2.0.0.dylib ${TGTPATH}libgmodule-2.0.0.dylib ${CPPATH}${LIBFILE}
+	install_name_tool -change /usr/local/Cellar/glib/2.60.3/lib/libglib-2.0.0.dylib ${TGTPATH}libglib-2.0.0.dylib ${CPPATH}${LIBFILE}
 	install_name_tool -change ${OPTPATH}gettext/lib/libintl.8.dylib  ${TGTPATH}libintl.8.dylib  ${CPPATH}${LIBFILE}
 LIBFILE="libglib-2.0.0.dylib"
 	install_name_tool -change ${OPTPATH}glib/lib/libglib-2.0.0.dylib 	       ${TGTPATH}libglib-2.0.0.dylib 	       ${CPPATH}${LIBFILE}
