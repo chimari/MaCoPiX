@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: macopix 1.6.2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-06-11 22:46-1000\n"
+"POT-Creation-Date: 2019-06-14 12:47-1000\n"
 "PO-Revision-Date: 2008-05-23 19:29-1000\n"
 "Last-Translator: Kurumi Chimari <chimari@rosegray.sakura.ne.jp>\n"
 "Language-Team: Japansese <chimari@rosegray.sakura.ne.jp>\n"
@@ -29,36 +29,36 @@ msgstr "%s(件名が取得できませんでした)%s"
 msgid "POP3 access error"
 msgstr "POP3アクセスエラーです"
 
-#: src/callbacks.c:2093
+#: src/callbacks.c:2130
 #, c-format
 msgid "%d/%d/%d(%s)"
 msgstr "%d年%d月%d日(%s)"
 
-#: src/callbacks.c:2255
+#: src/callbacks.c:2292
 msgid "Sun"
 msgstr "日"
 
-#: src/callbacks.c:2258
+#: src/callbacks.c:2295
 msgid "Mon"
 msgstr "月"
 
-#: src/callbacks.c:2261
+#: src/callbacks.c:2298
 msgid "Tue"
 msgstr "火"
 
-#: src/callbacks.c:2264
+#: src/callbacks.c:2301
 msgid "Wed"
 msgstr "水"
 
-#: src/callbacks.c:2267
+#: src/callbacks.c:2304
 msgid "Thu"
 msgstr "木"
 
-#: src/callbacks.c:2270
+#: src/callbacks.c:2307
 msgid "Fri"
 msgstr "金"
 
-#: src/callbacks.c:2273
+#: src/callbacks.c:2310
 msgid "Sat"
 msgstr "土"
 
@@ -1943,7 +1943,7 @@ msgstr "ダウンロード中 %ld バイト"
 msgid "Waiting for HTTP server response ..."
 msgstr "HTTPサーバーからのレスポンスを待機しています..."
 
-#: src/http-client.c:948
+#: src/http-client.c:948 src/main.c:4109
 msgid "MaCoPiX : Downloading Official Mascot List"
 msgstr "MaCoPiX : 公式マスコットリストのダウンロード"
 

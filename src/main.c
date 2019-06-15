@@ -4106,7 +4106,7 @@ void create_dl_smenu_dialog(typMascot *mascot, gboolean flag_popup){
     dialog = gtk_dialog_new();
     gtk_window_set_title(GTK_WINDOW(dialog), _("MaCoPiX : Download & Install Mascot"));
     gtk_container_set_border_width(GTK_CONTAINER(gtk_dialog_get_content_area(GTK_DIALOG(dialog))),5);
-    gtk_window_set_title(GTK_WINDOW(dialog),"MaCoPiX : Downloading Official Mascot List");
+    gtk_window_set_title(GTK_WINDOW(dialog),_("MaCoPiX : Downloading Official Mascot List"));
     gtk_window_set_decorated(GTK_WINDOW(dialog),TRUE);
 
     label=gtkut_label_new(_("Select a mascot file to download &amp; install into your <i>User directory</i>."));

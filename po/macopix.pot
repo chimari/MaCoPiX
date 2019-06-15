@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-06-11 22:46-1000\n"
+"POT-Creation-Date: 2019-06-14 12:47-1000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -31,36 +31,36 @@ msgstr ""
 msgid "POP3 access error"
 msgstr ""
 
-#: src/callbacks.c:2093
+#: src/callbacks.c:2130
 #, c-format
 msgid "%d/%d/%d(%s)"
 msgstr ""
 
-#: src/callbacks.c:2255
+#: src/callbacks.c:2292
 msgid "Sun"
 msgstr ""
 
-#: src/callbacks.c:2258
+#: src/callbacks.c:2295
 msgid "Mon"
 msgstr ""
 
-#: src/callbacks.c:2261
+#: src/callbacks.c:2298
 msgid "Tue"
 msgstr ""
 
-#: src/callbacks.c:2264
+#: src/callbacks.c:2301
 msgid "Wed"
 msgstr ""
 
-#: src/callbacks.c:2267
+#: src/callbacks.c:2304
 msgid "Thu"
 msgstr ""
 
-#: src/callbacks.c:2270
+#: src/callbacks.c:2307
 msgid "Fri"
 msgstr ""
 
-#: src/callbacks.c:2273
+#: src/callbacks.c:2310
 msgid "Sat"
 msgstr ""
 
@@ -1919,7 +1919,7 @@ msgstr ""
 msgid "Waiting for HTTP server response ..."
 msgstr ""
 
-#: src/http-client.c:948
+#: src/http-client.c:948 src/main.c:4109
 msgid "MaCoPiX : Downloading Official Mascot List"
 msgstr ""
 
