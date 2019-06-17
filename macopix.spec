@@ -1,6 +1,6 @@
 Summary: MaCoPiX = Mascot Constructive Pilot for X
 Name: macopix
-Version: 3.1.0
+Version: 3.2.0
 Release: 1%{?_dist_release}
 License: GPL3
 Group: Amusements/Games
@@ -49,5 +49,8 @@ rm -rf %{buildroot}
 /usr/local/share/man/man1/macopix.1
 
 %changelog
+* Mon Jun 17 2019 Kurumi Chimari <chimari@rosegray.sakura.ne.jp>
+- Supported macOS.
+
 * Wed May 22 2019 Kurumi Chimari <chimari@rosegray.sakura.ne.jp>
 - first release for version 3.0.0

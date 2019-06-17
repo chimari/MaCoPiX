@@ -2315,7 +2315,7 @@ gchar *ini_week(gint day_of_week){
 }
 
 // 任意コマンド実行
-void ext_play(typMascot *mascot, char *exe_command)
+void ext_play(typMascot *mascot, gchar *exe_command)
 {
 #ifdef USE_WIN32
   STARTUPINFO si;
@@ -2333,13 +2333,13 @@ void ext_play(typMascot *mascot, char *exe_command)
     }
       
   }
-#elif defined(USE_OSX)
-  system(exe_command);
+  //#elif defined(USE_OSX)
+  //  system(exe_command);
 #else
   static pid_t pid;
   gchar *cmdline;
   gint ret;
-  
+
   if(exe_command){
     waitpid(pid,0,WNOHANG);
     if(strcmp(exe_command,"\0")!=0){

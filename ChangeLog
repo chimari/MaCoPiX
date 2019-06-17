@@ -1,5 +1,6 @@
-2019.6.XX   ver3.1.0  - Now supporting macOS.
-	              - Error operation for XQeuryTree failure.
+2019.6.17   ver3.2.0  - Now supporting macOS.
+	              - Error operation for XQeuryTree failure in UNIX ver.
+	              - Icon renewal.
 
 2019.6.06   ver3.0.1  - Fixing Buffer overflows on getting From/Subject list
 	                in the Biff function.

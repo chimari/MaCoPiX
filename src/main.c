@@ -1068,6 +1068,7 @@ void ReadRC(typMascot *mascot, gboolean def_flag)
   gint i_buf;
   gboolean b_buf;
   gchar *tmp;
+  gchar *c_buf;
 
   // USER_DIRがないときは作成する  : おそらく初回起動時のみ
 #ifdef USE_WIN32
@@ -1197,9 +1198,14 @@ void ReadRC(typMascot *mascot, gboolean def_flag)
     if(!xmms_cfg_read_string(cfgfile, field_tmp, "sound_command",
 			  &mascot->sound_command))
       mascot->sound_command=NULL;
-    if(!xmms_cfg_read_string(cfgfile, field_tmp, "url_command",
-			  &mascot->url_command))
+    if(mascot->url_command) g_free(mascot->url_command);
+    if(xmms_cfg_read_string(cfgfile, field_tmp, "url_command",
+			    &c_buf)){
+      mascot->url_command=g_strdup(c_buf);
+    }
+    else{
       mascot->url_command=g_strdup(DEF_OPEN_URL);
+    }
 #endif
     if(!xmms_cfg_read_int(cfgfile, field_tmp, "cons_check_mode",
 			  &mascot->cons_check_mode))

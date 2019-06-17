@@ -466,8 +466,6 @@ EXTRA_DIST = \
 	macopix_res.rc.in\
         gresource.xml\
         macopix.ico\
-	def_biff.xpm\
-	def_biff_r.xpm\
 	tar64.dll\
 	tar32.dll
 

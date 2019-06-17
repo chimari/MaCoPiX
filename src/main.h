@@ -166,7 +166,7 @@
 
 
 // Homepage URL
-#define DEFAULT_URL "http://rosegray.sakura.ne.jp/"
+#define DEFAULT_URL "http://rosegray.sakura.ne.jp/macopix/"
 
 #ifndef USE_WIN32
 #ifdef USE_OSX

@@ -953,8 +953,10 @@ static void mc_down_cat (GtkWidget *widget, gpointer gdata)
 
 }
 
-static void uri_clicked(GtkButton *button, gpointer gdata)
+static void uri_clicked(GtkWidget *w, gpointer gdata)
 {
+  typMascot *mascot=(typMascot *)gdata;
+
 #ifdef USE_WIN32
   ShellExecute(NULL, 
 	       "open", 
@@ -971,11 +973,10 @@ static void uri_clicked(GtkButton *button, gpointer gdata)
   system(tmp_com);
   g_free(tmp_com);*/
 #else
-  typMascot *mascot=(typMascot *)gdata;
   gchar *tmp_com;
-
+  
   tmp_com=g_strdup_printf(mascot->url_command, DEFAULT_URL);
-  ext_play(tmp_com);
+  ext_play(mascot, tmp_com);
   g_free(tmp_com);
 #endif
 }
@@ -8266,6 +8267,8 @@ void create_config_dialog(GtkWidget *widget, gpointer gdata){
     // ¾ðÊó
     i_resource++;
     {
+      GdkPixbuf *pixbuf, *pixbuf2;
+      GtkWidget *pixmap;
       GtkWidget *entry;
       gchar buf[1024];
 #if HAVE_SYS_UTSNAME_H
@@ -8281,8 +8284,20 @@ void create_config_dialog(GtkWidget *widget, gpointer gdata){
       gtkut_table_attach(table, frame, 0, 1, 0, 1,
 			 GTK_FILL,GTK_SHRINK,0,0);
 
+      hbox = gtkut_hbox_new(FALSE,2);
+      gtk_container_set_border_width (GTK_CONTAINER (hbox), 5);
+      gtk_container_add (GTK_CONTAINER (frame), hbox);
+
+      pixbuf = gdk_pixbuf_new_from_resource ("/icons/macopix_icon.png", NULL);
+      pixbuf2=gdk_pixbuf_scale_simple(pixbuf,
+				      96,96,GDK_INTERP_BILINEAR);
+      pixmap = gtk_image_new_from_pixbuf(pixbuf2);
+      g_object_unref(pixbuf);
+      g_object_unref(pixbuf2);
+      gtk_box_pack_start(GTK_BOX(hbox), pixmap,FALSE, FALSE, 0);
+      
       vbox = gtkut_vbox_new(FALSE,0);
-      gtk_container_add (GTK_CONTAINER (frame), vbox);
+      gtk_box_pack_start(GTK_BOX(hbox), vbox,TRUE, TRUE, 0);
       gtk_container_set_border_width (GTK_CONTAINER (vbox), 5);
       label = gtkut_label_new ("<span size=\"larger\"><b>MaCoPiX</b> : <b>Mascot Constructive Pilot for X</b></span>   version "VERSION);
       gtkut_pos(label, POS_CENTER, POS_CENTER);
