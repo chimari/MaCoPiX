@@ -11,7 +11,7 @@ EXTRA_DIST =  config.rpath\
 	makewin32.sh\
 	makewin64.sh\
 	makeosx.sh\
-	macos_macopics_linklib.sh\
+	macos_macopix_linklib.sh\
 	macopix.ico\
 	macopix.spec
 
