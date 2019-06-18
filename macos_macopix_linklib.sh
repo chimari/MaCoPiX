@@ -5,10 +5,13 @@ OPTPATH="/usr/local/opt/"
 CPPATH="/Volumes/MaCoPiX_macOS/MaCoPiX.app/Contents/Resources/lib/"
 MACOPIX_BIN="/Volumes/MaCoPiX_macOS/MaCoPiX.app/Contents/MacOS/MaCoPiX-bin"
 LOCALEPATH="/Volumes/MaCoPiX_macOS/MaCoPiX.app/Contents/Resources/share/locale/ja/LC_MESSAGES/"
+LOCAL_IMPATH="/usr/local/opt/gtk+3/lib/gtk-3.0/3.0.0/immodules/"
+TGT_IMPATH="/Volumes/MaCoPiX_macOS/MaCoPiX.app/Contents/Resources/lib/gtk-3.0/3.0.0/immodules/"
 
 cp src/macopix ${MACOPIX_BIN}
 cp po/ja.gmo ${LOCALEPATH}macopix.mo
 
+## Change links in MaCoPiX-bin
 install_name_tool -change	${OPTPATH}gtk-mac-integration/lib/libgtkmacintegration-gtk3.2.dylib ${TGTPATH}libgtkmacintegration-gtk3.2.dylib ${MACOPIX_BIN}
 install_name_tool -change	${OPTPATH}gtk+3/lib/libgtk-3.0.dylib ${TGTPATH}libgtk-3.0.dylib ${MACOPIX_BIN} 
 install_name_tool -change	${OPTPATH}gtk+3/lib/libgdk-3.0.dylib ${TGTPATH}libgdk-3.0.dylib ${MACOPIX_BIN}
@@ -237,3 +240,252 @@ LIBFILE="libpcre.1.dylib"
 
 LIBFILE="libgraphite2.3.dylib"
 	install_name_tool -change ${OPTPATH}graphite2/lib/libgraphite2.3.dylib ${TGTPATH}libgraphite2.3.dylib ${CPPATH}${LIBFILE}
+
+
+## IMMODULES
+
+cp ${LOCAL_IMPATH}im-am-et.so             ${TGT_IMPATH}im-am-et.so
+cp ${LOCAL_IMPATH}im-cedilla.so           ${TGT_IMPATH}im-cedilla.so
+cp ${LOCAL_IMPATH}im-cyrillic-translit.so ${TGT_IMPATH}im-cyrillic-translit.so
+cp ${LOCAL_IMPATH}im-inuktitut.so         ${TGT_IMPATH}im-inuktitut.so
+cp ${LOCAL_IMPATH}im-ipa.so               ${TGT_IMPATH}im-ipa.so
+cp ${LOCAL_IMPATH}im-multipress.so        ${TGT_IMPATH}im-multipress.so
+cp ${LOCAL_IMPATH}im-quartz.so            ${TGT_IMPATH}im-quartz.so
+cp ${LOCAL_IMPATH}im-thai.so              ${TGT_IMPATH}im-thai.so
+cp ${LOCAL_IMPATH}im-ti-er.so             ${TGT_IMPATH}im-ti-er.so
+cp ${LOCAL_IMPATH}im-ti-et.so             ${TGT_IMPATH}im-ti-et.so
+cp ${LOCAL_IMPATH}im-viqr.so              ${TGT_IMPATH}im-viqr.so
+
+
+chmod +w ${TGT_IMPATH}im-am-et.so	       
+chmod +w ${TGT_IMPATH}im-cedilla.so	       
+chmod +w ${TGT_IMPATH}im-cyrillic-translit.so 
+chmod +w ${TGT_IMPATH}im-inuktitut.so	       
+chmod +w ${TGT_IMPATH}im-ipa.so	       
+chmod +w ${TGT_IMPATH}im-multipress.so	       
+chmod +w ${TGT_IMPATH}im-quartz.so	       
+chmod +w ${TGT_IMPATH}im-thai.so	       
+chmod +w ${TGT_IMPATH}im-ti-er.so	       
+chmod +w ${TGT_IMPATH}im-ti-et.so	       
+chmod +w ${TGT_IMPATH}im-viqr.so              
+	
+LIBFILE="im-am-et.so"
+	install_name_tool -change /usr/local/Cellar/gtk+3/3.24.8/lib/libgtk-3.0.dylib ${TGTPATH}libgtk-3.0.dylib ${TGT_IMPATH}${LIBFILE}
+	install_name_tool -change /usr/local/Cellar/gtk+3/3.24.8/lib/libgdk-3.0.dylib ${TGTPATH}libgdk-3.0.dylib ${TGT_IMPATH}${LIBFILE}
+	install_name_tool -change ${OPTPATH}glib/lib/libgmodule-2.0.0.dylib           ${TGTPATH}libgmodule-2.0.0.dylib ${TGT_IMPATH}${LIBFILE}            
+	install_name_tool -change ${OPTPATH}pango/lib/libpangocairo-1.0.0.dylib       ${TGTPATH}libpangocairo-1.0.0.dylib ${TGT_IMPATH}${LIBFILE}        
+	install_name_tool -change ${OPTPATH}cairo/lib/libcairo-gobject.2.dylib 	      ${TGTPATH}libcairo-gobject.2.dylib ${TGT_IMPATH}${LIBFILE} 	       
+	install_name_tool -change ${OPTPATH}cairo/lib/libcairo.2.dylib 		      ${TGTPATH}libcairo.2.dylib ${TGT_IMPATH}${LIBFILE} 		       
+	install_name_tool -change ${OPTPATH}gdk-pixbuf/lib/libgdk_pixbuf-2.0.0.dylib  ${TGTPATH}libgdk_pixbuf-2.0.0.dylib ${TGT_IMPATH}${LIBFILE}   
+	install_name_tool -change ${OPTPATH}atk/lib/libatk-1.0.0.dylib 		      ${TGTPATH}libatk-1.0.0.dylib ${TGT_IMPATH}${LIBFILE} 		       
+	install_name_tool -change ${OPTPATH}libepoxy/lib/libepoxy.0.dylib 	      ${TGTPATH}libepoxy.0.dylib ${TGT_IMPATH}${LIBFILE} 	       
+	install_name_tool -change ${OPTPATH}fribidi/lib/libfribidi.0.dylib 	      ${TGTPATH}libfribidi.0.dylib ${TGT_IMPATH}${LIBFILE} 	       
+	install_name_tool -change ${OPTPATH}glib/lib/libgio-2.0.0.dylib 	      ${TGTPATH}libgio-2.0.0.dylib ${TGT_IMPATH}${LIBFILE} 	       
+	install_name_tool -change ${OPTPATH}harfbuzz/lib/libharfbuzz.0.dylib 	      ${TGTPATH}libharfbuzz.0.dylib ${TGT_IMPATH}${LIBFILE} 	       
+	install_name_tool -change ${OPTPATH}pango/lib/libpangoft2-1.0.0.dylib 	      ${TGTPATH}libpangoft2-1.0.0.dylib ${TGT_IMPATH}${LIBFILE} 	       
+	install_name_tool -change ${OPTPATH}pango/lib/libpango-1.0.0.dylib 	      ${TGTPATH}libpango-1.0.0.dylib ${TGT_IMPATH}${LIBFILE} 	       
+	install_name_tool -change ${OPTPATH}glib/lib/libgobject-2.0.0.dylib 	      ${TGTPATH}libgobject-2.0.0.dylib ${TGT_IMPATH}${LIBFILE} 	       
+	install_name_tool -change ${OPTPATH}glib/lib/libglib-2.0.0.dylib 	      ${TGTPATH}libglib-2.0.0.dylib ${TGT_IMPATH}${LIBFILE} 	       
+	install_name_tool -change ${OPTPATH}fontconfig/lib/libfontconfig.1.dylib      ${TGTPATH}libfontconfig.1.dylib ${TGT_IMPATH}${LIBFILE}       
+	install_name_tool -change ${OPTPATH}freetype/lib/libfreetype.6.dylib 	      ${TGTPATH}libfreetype.6.dylib ${TGT_IMPATH}${LIBFILE} 	       
+	install_name_tool -change ${OPTPATH}gettext/lib/libintl.8.dylib               ${TGTPATH}libintl.8.dylib ${TGT_IMPATH}${LIBFILE}                 
+LIBFILE="im-cedilla.so"
+	install_name_tool -change /usr/local/Cellar/gtk+3/3.24.8/lib/libgtk-3.0.dylib ${TGTPATH}libgtk-3.0.dylib ${TGT_IMPATH}${LIBFILE}
+	install_name_tool -change /usr/local/Cellar/gtk+3/3.24.8/lib/libgdk-3.0.dylib ${TGTPATH}libgdk-3.0.dylib ${TGT_IMPATH}${LIBFILE}
+	install_name_tool -change ${OPTPATH}glib/lib/libgmodule-2.0.0.dylib           ${TGTPATH}libgmodule-2.0.0.dylib ${TGT_IMPATH}${LIBFILE}           
+	install_name_tool -change ${OPTPATH}pango/lib/libpangocairo-1.0.0.dylib       ${TGTPATH}libpangocairo-1.0.0.dylib ${TGT_IMPATH}${LIBFILE}       
+	install_name_tool -change ${OPTPATH}cairo/lib/libcairo-gobject.2.dylib 	      ${TGTPATH}libcairo-gobject.2.dylib ${TGT_IMPATH}${LIBFILE} 	      
+	install_name_tool -change ${OPTPATH}cairo/lib/libcairo.2.dylib 		      ${TGTPATH}libcairo.2.dylib ${TGT_IMPATH}${LIBFILE} 		      
+	install_name_tool -change ${OPTPATH}gdk-pixbuf/lib/libgdk_pixbuf-2.0.0.dylib  ${TGTPATH}libgdk_pixbuf-2.0.0.dylib ${TGT_IMPATH}${LIBFILE}  
+	install_name_tool -change ${OPTPATH}atk/lib/libatk-1.0.0.dylib 		      ${TGTPATH}libatk-1.0.0.dylib ${TGT_IMPATH}${LIBFILE} 		      
+	install_name_tool -change ${OPTPATH}libepoxy/lib/libepoxy.0.dylib 	      ${TGTPATH}libepoxy.0.dylib ${TGT_IMPATH}${LIBFILE} 	      
+	install_name_tool -change ${OPTPATH}fribidi/lib/libfribidi.0.dylib 	      ${TGTPATH}libfribidi.0.dylib ${TGT_IMPATH}${LIBFILE} 	      
+	install_name_tool -change ${OPTPATH}glib/lib/libgio-2.0.0.dylib 	      ${TGTPATH}libgio-2.0.0.dylib ${TGT_IMPATH}${LIBFILE} 	      
+	install_name_tool -change ${OPTPATH}harfbuzz/lib/libharfbuzz.0.dylib 	      ${TGTPATH}libharfbuzz.0.dylib ${TGT_IMPATH}${LIBFILE} 	      
+	install_name_tool -change ${OPTPATH}pango/lib/libpangoft2-1.0.0.dylib 	      ${TGTPATH}libpangoft2-1.0.0.dylib ${TGT_IMPATH}${LIBFILE} 	      
+	install_name_tool -change ${OPTPATH}pango/lib/libpango-1.0.0.dylib 	      ${TGTPATH}libpango-1.0.0.dylib ${TGT_IMPATH}${LIBFILE} 	      
+	install_name_tool -change ${OPTPATH}glib/lib/libgobject-2.0.0.dylib 	      ${TGTPATH}libgobject-2.0.0.dylib ${TGT_IMPATH}${LIBFILE} 	      
+	install_name_tool -change ${OPTPATH}glib/lib/libglib-2.0.0.dylib 	      ${TGTPATH}libglib-2.0.0.dylib ${TGT_IMPATH}${LIBFILE} 	      
+	install_name_tool -change ${OPTPATH}fontconfig/lib/libfontconfig.1.dylib      ${TGTPATH}libfontconfig.1.dylib ${TGT_IMPATH}${LIBFILE}      
+	install_name_tool -change ${OPTPATH}freetype/lib/libfreetype.6.dylib 	      ${TGTPATH}libfreetype.6.dylib ${TGT_IMPATH}${LIBFILE} 	      
+	install_name_tool -change ${OPTPATH}gettext/lib/libintl.8.dylib               ${TGTPATH}libintl.8.dylib ${TGT_IMPATH}${LIBFILE}               
+LIBFILE="im-cyrillic-translit.so"
+	install_name_tool -change /usr/local/Cellar/gtk+3/3.24.8/lib/libgtk-3.0.dylib ${TGTPATH}libgtk-3.0.dylib ${TGT_IMPATH}${LIBFILE}
+	install_name_tool -change /usr/local/Cellar/gtk+3/3.24.8/lib/libgdk-3.0.dylib ${TGTPATH}libgdk-3.0.dylib ${TGT_IMPATH}${LIBFILE}
+	install_name_tool -change ${OPTPATH}glib/lib/libgmodule-2.0.0.dylib          ${TGTPATH}libgmodule-2.0.0.dylib ${TGT_IMPATH}${LIBFILE}            
+	install_name_tool -change ${OPTPATH}pango/lib/libpangocairo-1.0.0.dylib      ${TGTPATH}libpangocairo-1.0.0.dylib ${TGT_IMPATH}${LIBFILE}        
+	install_name_tool -change ${OPTPATH}cairo/lib/libcairo-gobject.2.dylib 	     ${TGTPATH}libcairo-gobject.2.dylib ${TGT_IMPATH}${LIBFILE} 	       
+	install_name_tool -change ${OPTPATH}cairo/lib/libcairo.2.dylib 		     ${TGTPATH}libcairo.2.dylib ${TGT_IMPATH}${LIBFILE} 		       
+	install_name_tool -change ${OPTPATH}gdk-pixbuf/lib/libgdk_pixbuf-2.0.0.dylib ${TGTPATH}libgdk_pixbuf-2.0.0.dylib ${TGT_IMPATH}${LIBFILE}   
+	install_name_tool -change ${OPTPATH}atk/lib/libatk-1.0.0.dylib 		     ${TGTPATH}libatk-1.0.0.dylib ${TGT_IMPATH}${LIBFILE} 		       
+	install_name_tool -change ${OPTPATH}libepoxy/lib/libepoxy.0.dylib 	     ${TGTPATH}libepoxy.0.dylib ${TGT_IMPATH}${LIBFILE} 	       
+	install_name_tool -change ${OPTPATH}fribidi/lib/libfribidi.0.dylib 	     ${TGTPATH}libfribidi.0.dylib ${TGT_IMPATH}${LIBFILE} 	       
+	install_name_tool -change ${OPTPATH}glib/lib/libgio-2.0.0.dylib 	     ${TGTPATH}libgio-2.0.0.dylib ${TGT_IMPATH}${LIBFILE} 	       
+	install_name_tool -change ${OPTPATH}harfbuzz/lib/libharfbuzz.0.dylib 	     ${TGTPATH}libharfbuzz.0.dylib ${TGT_IMPATH}${LIBFILE} 	       
+	install_name_tool -change ${OPTPATH}pango/lib/libpangoft2-1.0.0.dylib 	     ${TGTPATH}libpangoft2-1.0.0.dylib ${TGT_IMPATH}${LIBFILE} 	       
+	install_name_tool -change ${OPTPATH}pango/lib/libpango-1.0.0.dylib 	     ${TGTPATH}libpango-1.0.0.dylib ${TGT_IMPATH}${LIBFILE} 	       
+	install_name_tool -change ${OPTPATH}glib/lib/libgobject-2.0.0.dylib 	     ${TGTPATH}libgobject-2.0.0.dylib ${TGT_IMPATH}${LIBFILE} 	       
+	install_name_tool -change ${OPTPATH}glib/lib/libglib-2.0.0.dylib 	     ${TGTPATH}libglib-2.0.0.dylib ${TGT_IMPATH}${LIBFILE} 	       
+	install_name_tool -change ${OPTPATH}fontconfig/lib/libfontconfig.1.dylib     ${TGTPATH}libfontconfig.1.dylib ${TGT_IMPATH}${LIBFILE}       
+	install_name_tool -change ${OPTPATH}freetype/lib/libfreetype.6.dylib 	     ${TGTPATH}libfreetype.6.dylib ${TGT_IMPATH}${LIBFILE} 	       
+	install_name_tool -change ${OPTPATH}gettext/lib/libintl.8.dylib              ${TGTPATH}libintl.8.dylib ${TGT_IMPATH}${LIBFILE}                  
+LIBFILE="im-inuktitut.so"
+	install_name_tool -change /usr/local/Cellar/gtk+3/3.24.8/lib/libgtk-3.0.dylib ${TGTPATH}libgtk-3.0.dylib ${TGT_IMPATH}${LIBFILE}
+	install_name_tool -change /usr/local/Cellar/gtk+3/3.24.8/lib/libgdk-3.0.dylib ${TGTPATH}libgdk-3.0.dylib ${TGT_IMPATH}${LIBFILE}
+	install_name_tool -change ${OPTPATH}glib/lib/libgmodule-2.0.0.dylib           ${TGTPATH}libgmodule-2.0.0.dylib ${TGT_IMPATH}${LIBFILE}           
+	install_name_tool -change ${OPTPATH}pango/lib/libpangocairo-1.0.0.dylib       ${TGTPATH}libpangocairo-1.0.0.dylib ${TGT_IMPATH}${LIBFILE}       
+	install_name_tool -change ${OPTPATH}cairo/lib/libcairo-gobject.2.dylib 	      ${TGTPATH}libcairo-gobject.2.dylib ${TGT_IMPATH}${LIBFILE} 	      
+	install_name_tool -change ${OPTPATH}cairo/lib/libcairo.2.dylib 		      ${TGTPATH}libcairo.2.dylib ${TGT_IMPATH}${LIBFILE} 		      
+	install_name_tool -change ${OPTPATH}gdk-pixbuf/lib/libgdk_pixbuf-2.0.0.dylib  ${TGTPATH}libgdk_pixbuf-2.0.0.dylib ${TGT_IMPATH}${LIBFILE}  
+	install_name_tool -change ${OPTPATH}atk/lib/libatk-1.0.0.dylib 		      ${TGTPATH}libatk-1.0.0.dylib ${TGT_IMPATH}${LIBFILE} 		      
+	install_name_tool -change ${OPTPATH}libepoxy/lib/libepoxy.0.dylib 	      ${TGTPATH}libepoxy.0.dylib ${TGT_IMPATH}${LIBFILE} 	      
+	install_name_tool -change ${OPTPATH}fribidi/lib/libfribidi.0.dylib 	      ${TGTPATH}libfribidi.0.dylib ${TGT_IMPATH}${LIBFILE} 	      
+	install_name_tool -change ${OPTPATH}glib/lib/libgio-2.0.0.dylib 	      ${TGTPATH}libgio-2.0.0.dylib ${TGT_IMPATH}${LIBFILE} 	      
+	install_name_tool -change ${OPTPATH}harfbuzz/lib/libharfbuzz.0.dylib 	      ${TGTPATH}libharfbuzz.0.dylib ${TGT_IMPATH}${LIBFILE} 	      
+	install_name_tool -change ${OPTPATH}pango/lib/libpangoft2-1.0.0.dylib 	      ${TGTPATH}libpangoft2-1.0.0.dylib ${TGT_IMPATH}${LIBFILE} 	      
+	install_name_tool -change ${OPTPATH}pango/lib/libpango-1.0.0.dylib 	      ${TGTPATH}libpango-1.0.0.dylib ${TGT_IMPATH}${LIBFILE} 	      
+	install_name_tool -change ${OPTPATH}glib/lib/libgobject-2.0.0.dylib 	      ${TGTPATH}libgobject-2.0.0.dylib ${TGT_IMPATH}${LIBFILE} 	      
+	install_name_tool -change ${OPTPATH}glib/lib/libglib-2.0.0.dylib 	      ${TGTPATH}libglib-2.0.0.dylib ${TGT_IMPATH}${LIBFILE} 	      
+	install_name_tool -change ${OPTPATH}fontconfig/lib/libfontconfig.1.dylib      ${TGTPATH}libfontconfig.1.dylib ${TGT_IMPATH}${LIBFILE}      
+	install_name_tool -change ${OPTPATH}freetype/lib/libfreetype.6.dylib 	      ${TGTPATH}libfreetype.6.dylib ${TGT_IMPATH}${LIBFILE} 	      
+	install_name_tool -change ${OPTPATH}gettext/lib/libintl.8.dylib               ${TGTPATH}libintl.8.dylib ${TGT_IMPATH}${LIBFILE}               
+LIBFILE="im-ipa.so"
+	install_name_tool -change /usr/local/Cellar/gtk+3/3.24.8/lib/libgtk-3.0.dylib ${TGTPATH}libgtk-3.0.dylib ${TGT_IMPATH}${LIBFILE}
+	install_name_tool -change /usr/local/Cellar/gtk+3/3.24.8/lib/libgdk-3.0.dylib ${TGTPATH}libgdk-3.0.dylib ${TGT_IMPATH}${LIBFILE}
+	install_name_tool -change ${OPTPATH}glib/lib/libgmodule-2.0.0.dylib          ${TGTPATH}libgmodule-2.0.0.dylib ${TGT_IMPATH}${LIBFILE}           
+	install_name_tool -change ${OPTPATH}pango/lib/libpangocairo-1.0.0.dylib      ${TGTPATH}libpangocairo-1.0.0.dylib ${TGT_IMPATH}${LIBFILE}       
+	install_name_tool -change ${OPTPATH}cairo/lib/libcairo-gobject.2.dylib 	     ${TGTPATH}libcairo-gobject.2.dylib ${TGT_IMPATH}${LIBFILE} 	      
+	install_name_tool -change ${OPTPATH}cairo/lib/libcairo.2.dylib 		     ${TGTPATH}libcairo.2.dylib ${TGT_IMPATH}${LIBFILE} 		      
+	install_name_tool -change ${OPTPATH}gdk-pixbuf/lib/libgdk_pixbuf-2.0.0.dylib ${TGTPATH}libgdk_pixbuf-2.0.0.dylib ${TGT_IMPATH}${LIBFILE}  
+	install_name_tool -change ${OPTPATH}atk/lib/libatk-1.0.0.dylib 		     ${TGTPATH}libatk-1.0.0.dylib ${TGT_IMPATH}${LIBFILE} 		      
+	install_name_tool -change ${OPTPATH}libepoxy/lib/libepoxy.0.dylib 	     ${TGTPATH}libepoxy.0.dylib ${TGT_IMPATH}${LIBFILE} 	      
+	install_name_tool -change ${OPTPATH}fribidi/lib/libfribidi.0.dylib 	     ${TGTPATH}libfribidi.0.dylib ${TGT_IMPATH}${LIBFILE} 	      
+	install_name_tool -change ${OPTPATH}glib/lib/libgio-2.0.0.dylib 	     ${TGTPATH}libgio-2.0.0.dylib ${TGT_IMPATH}${LIBFILE} 	      
+	install_name_tool -change ${OPTPATH}harfbuzz/lib/libharfbuzz.0.dylib 	     ${TGTPATH}libharfbuzz.0.dylib ${TGT_IMPATH}${LIBFILE} 	      
+	install_name_tool -change ${OPTPATH}pango/lib/libpangoft2-1.0.0.dylib 	     ${TGTPATH}libpangoft2-1.0.0.dylib ${TGT_IMPATH}${LIBFILE} 	      
+	install_name_tool -change ${OPTPATH}pango/lib/libpango-1.0.0.dylib 	     ${TGTPATH}libpango-1.0.0.dylib ${TGT_IMPATH}${LIBFILE} 	      
+	install_name_tool -change ${OPTPATH}glib/lib/libgobject-2.0.0.dylib 	     ${TGTPATH}libgobject-2.0.0.dylib ${TGT_IMPATH}${LIBFILE} 	      
+	install_name_tool -change ${OPTPATH}glib/lib/libglib-2.0.0.dylib 	     ${TGTPATH}libglib-2.0.0.dylib ${TGT_IMPATH}${LIBFILE} 	      
+	install_name_tool -change ${OPTPATH}fontconfig/lib/libfontconfig.1.dylib     ${TGTPATH}libfontconfig.1.dylib ${TGT_IMPATH}${LIBFILE}      
+	install_name_tool -change ${OPTPATH}freetype/lib/libfreetype.6.dylib 	     ${TGTPATH}libfreetype.6.dylib ${TGT_IMPATH}${LIBFILE} 	      
+	install_name_tool -change ${OPTPATH}gettext/lib/libintl.8.dylib              ${TGTPATH}libintl.8.dylib ${TGT_IMPATH}${LIBFILE}                
+LIBFILE="im-multipress.so"
+	install_name_tool -change /usr/local/Cellar/gtk+3/3.24.8/lib/libgtk-3.0.dylib ${TGTPATH}libgtk-3.0.dylib ${TGT_IMPATH}${LIBFILE}
+	install_name_tool -change /usr/local/Cellar/gtk+3/3.24.8/lib/libgdk-3.0.dylib ${TGTPATH}libgdk-3.0.dylib ${TGT_IMPATH}${LIBFILE}
+	install_name_tool -change ${OPTPATH}glib/lib/libgmodule-2.0.0.dylib          ${TGTPATH}libgmodule-2.0.0.dylib ${TGT_IMPATH}${LIBFILE}           
+	install_name_tool -change ${OPTPATH}pango/lib/libpangocairo-1.0.0.dylib      ${TGTPATH}libpangocairo-1.0.0.dylib ${TGT_IMPATH}${LIBFILE}       
+	install_name_tool -change ${OPTPATH}cairo/lib/libcairo-gobject.2.dylib 	     ${TGTPATH}libcairo-gobject.2.dylib ${TGT_IMPATH}${LIBFILE} 	      
+	install_name_tool -change ${OPTPATH}cairo/lib/libcairo.2.dylib 		     ${TGTPATH}libcairo.2.dylib ${TGT_IMPATH}${LIBFILE} 		      
+	install_name_tool -change ${OPTPATH}gdk-pixbuf/lib/libgdk_pixbuf-2.0.0.dylib ${TGTPATH}libgdk_pixbuf-2.0.0.dylib ${TGT_IMPATH}${LIBFILE}  
+	install_name_tool -change ${OPTPATH}atk/lib/libatk-1.0.0.dylib 		     ${TGTPATH}libatk-1.0.0.dylib ${TGT_IMPATH}${LIBFILE} 		      
+	install_name_tool -change ${OPTPATH}libepoxy/lib/libepoxy.0.dylib 	     ${TGTPATH}libepoxy.0.dylib ${TGT_IMPATH}${LIBFILE} 	      
+	install_name_tool -change ${OPTPATH}fribidi/lib/libfribidi.0.dylib 	     ${TGTPATH}libfribidi.0.dylib ${TGT_IMPATH}${LIBFILE} 	      
+	install_name_tool -change ${OPTPATH}glib/lib/libgio-2.0.0.dylib 	     ${TGTPATH}libgio-2.0.0.dylib ${TGT_IMPATH}${LIBFILE} 	      
+	install_name_tool -change ${OPTPATH}harfbuzz/lib/libharfbuzz.0.dylib 	     ${TGTPATH}libharfbuzz.0.dylib ${TGT_IMPATH}${LIBFILE} 	      
+	install_name_tool -change ${OPTPATH}pango/lib/libpangoft2-1.0.0.dylib 	     ${TGTPATH}libpangoft2-1.0.0.dylib ${TGT_IMPATH}${LIBFILE} 	      
+	install_name_tool -change ${OPTPATH}pango/lib/libpango-1.0.0.dylib 	     ${TGTPATH}libpango-1.0.0.dylib ${TGT_IMPATH}${LIBFILE} 	      
+	install_name_tool -change ${OPTPATH}glib/lib/libgobject-2.0.0.dylib 	     ${TGTPATH}libgobject-2.0.0.dylib ${TGT_IMPATH}${LIBFILE} 	      
+	install_name_tool -change ${OPTPATH}glib/lib/libglib-2.0.0.dylib 	     ${TGTPATH}libglib-2.0.0.dylib ${TGT_IMPATH}${LIBFILE} 	      
+	install_name_tool -change ${OPTPATH}fontconfig/lib/libfontconfig.1.dylib     ${TGTPATH}libfontconfig.1.dylib ${TGT_IMPATH}${LIBFILE}      
+	install_name_tool -change ${OPTPATH}freetype/lib/libfreetype.6.dylib 	     ${TGTPATH}libfreetype.6.dylib ${TGT_IMPATH}${LIBFILE} 	      
+	install_name_tool -change ${OPTPATH}gettext/lib/libintl.8.dylib              ${TGTPATH}libintl.8.dylib ${TGT_IMPATH}${LIBFILE}                
+LIBFILE="im-quartz.so"
+	install_name_tool -change /usr/local/Cellar/gtk+3/3.24.8/lib/libgtk-3.0.dylib ${TGTPATH}libgtk-3.0.dylib ${TGT_IMPATH}${LIBFILE}
+	install_name_tool -change /usr/local/Cellar/gtk+3/3.24.8/lib/libgdk-3.0.dylib ${TGTPATH}libgdk-3.0.dylib ${TGT_IMPATH}${LIBFILE}
+	install_name_tool -change ${OPTPATH}glib/lib/libgmodule-2.0.0.dylib          ${TGTPATH}libgmodule-2.0.0.dylib ${TGT_IMPATH}${LIBFILE}           
+	install_name_tool -change ${OPTPATH}pango/lib/libpangocairo-1.0.0.dylib      ${TGTPATH}libpangocairo-1.0.0.dylib ${TGT_IMPATH}${LIBFILE}       
+	install_name_tool -change ${OPTPATH}cairo/lib/libcairo-gobject.2.dylib 	     ${TGTPATH}libcairo-gobject.2.dylib ${TGT_IMPATH}${LIBFILE} 	      
+	install_name_tool -change ${OPTPATH}cairo/lib/libcairo.2.dylib 		     ${TGTPATH}libcairo.2.dylib ${TGT_IMPATH}${LIBFILE} 		      
+	install_name_tool -change ${OPTPATH}gdk-pixbuf/lib/libgdk_pixbuf-2.0.0.dylib ${TGTPATH}libgdk_pixbuf-2.0.0.dylib ${TGT_IMPATH}${LIBFILE}  
+	install_name_tool -change ${OPTPATH}atk/lib/libatk-1.0.0.dylib 		     ${TGTPATH}libatk-1.0.0.dylib ${TGT_IMPATH}${LIBFILE} 		      
+	install_name_tool -change ${OPTPATH}libepoxy/lib/libepoxy.0.dylib 	     ${TGTPATH}libepoxy.0.dylib ${TGT_IMPATH}${LIBFILE} 	      
+	install_name_tool -change ${OPTPATH}fribidi/lib/libfribidi.0.dylib 	     ${TGTPATH}libfribidi.0.dylib ${TGT_IMPATH}${LIBFILE} 	      
+	install_name_tool -change ${OPTPATH}glib/lib/libgio-2.0.0.dylib 	     ${TGTPATH}libgio-2.0.0.dylib ${TGT_IMPATH}${LIBFILE} 	      
+	install_name_tool -change ${OPTPATH}harfbuzz/lib/libharfbuzz.0.dylib 	     ${TGTPATH}libharfbuzz.0.dylib ${TGT_IMPATH}${LIBFILE} 	      
+	install_name_tool -change ${OPTPATH}pango/lib/libpangoft2-1.0.0.dylib 	     ${TGTPATH}libpangoft2-1.0.0.dylib ${TGT_IMPATH}${LIBFILE} 	      
+	install_name_tool -change ${OPTPATH}pango/lib/libpango-1.0.0.dylib 	     ${TGTPATH}libpango-1.0.0.dylib ${TGT_IMPATH}${LIBFILE} 	      
+	install_name_tool -change ${OPTPATH}glib/lib/libgobject-2.0.0.dylib 	     ${TGTPATH}libgobject-2.0.0.dylib ${TGT_IMPATH}${LIBFILE} 	      
+	install_name_tool -change ${OPTPATH}glib/lib/libglib-2.0.0.dylib 	     ${TGTPATH}libglib-2.0.0.dylib ${TGT_IMPATH}${LIBFILE} 	      
+	install_name_tool -change ${OPTPATH}fontconfig/lib/libfontconfig.1.dylib     ${TGTPATH}libfontconfig.1.dylib ${TGT_IMPATH}${LIBFILE}      
+	install_name_tool -change ${OPTPATH}freetype/lib/libfreetype.6.dylib 	     ${TGTPATH}libfreetype.6.dylib ${TGT_IMPATH}${LIBFILE} 	      
+	install_name_tool -change ${OPTPATH}gettext/lib/libintl.8.dylib              ${TGTPATH}libintl.8.dylib ${TGT_IMPATH}${LIBFILE}                
+LIBFILE="im-thai.so"
+	install_name_tool -change /usr/local/Cellar/gtk+3/3.24.8/lib/libgtk-3.0.dylib ${TGTPATH}libgtk-3.0.dylib ${TGT_IMPATH}${LIBFILE}
+	install_name_tool -change /usr/local/Cellar/gtk+3/3.24.8/lib/libgdk-3.0.dylib ${TGTPATH}libgdk-3.0.dylib ${TGT_IMPATH}${LIBFILE}
+	install_name_tool -change ${OPTPATH}glib/lib/libgmodule-2.0.0.dylib          ${TGTPATH}libgmodule-2.0.0.dylib ${TGT_IMPATH}${LIBFILE}           
+	install_name_tool -change ${OPTPATH}pango/lib/libpangocairo-1.0.0.dylib      ${TGTPATH}libpangocairo-1.0.0.dylib ${TGT_IMPATH}${LIBFILE}       
+	install_name_tool -change ${OPTPATH}cairo/lib/libcairo-gobject.2.dylib 	     ${TGTPATH}libcairo-gobject.2.dylib ${TGT_IMPATH}${LIBFILE} 	      
+	install_name_tool -change ${OPTPATH}cairo/lib/libcairo.2.dylib 		     ${TGTPATH}libcairo.2.dylib ${TGT_IMPATH}${LIBFILE} 		      
+	install_name_tool -change ${OPTPATH}gdk-pixbuf/lib/libgdk_pixbuf-2.0.0.dylib ${TGTPATH}libgdk_pixbuf-2.0.0.dylib ${TGT_IMPATH}${LIBFILE}  
+	install_name_tool -change ${OPTPATH}atk/lib/libatk-1.0.0.dylib 		     ${TGTPATH}libatk-1.0.0.dylib ${TGT_IMPATH}${LIBFILE} 		      
+	install_name_tool -change ${OPTPATH}libepoxy/lib/libepoxy.0.dylib 	     ${TGTPATH}libepoxy.0.dylib ${TGT_IMPATH}${LIBFILE} 	      
+	install_name_tool -change ${OPTPATH}fribidi/lib/libfribidi.0.dylib 	     ${TGTPATH}libfribidi.0.dylib ${TGT_IMPATH}${LIBFILE} 	      
+	install_name_tool -change ${OPTPATH}glib/lib/libgio-2.0.0.dylib 	     ${TGTPATH}libgio-2.0.0.dylib ${TGT_IMPATH}${LIBFILE} 	      
+	install_name_tool -change ${OPTPATH}harfbuzz/lib/libharfbuzz.0.dylib 	     ${TGTPATH}libharfbuzz.0.dylib ${TGT_IMPATH}${LIBFILE} 	      
+	install_name_tool -change ${OPTPATH}pango/lib/libpangoft2-1.0.0.dylib 	     ${TGTPATH}libpangoft2-1.0.0.dylib ${TGT_IMPATH}${LIBFILE} 	      
+	install_name_tool -change ${OPTPATH}pango/lib/libpango-1.0.0.dylib 	     ${TGTPATH}libpango-1.0.0.dylib ${TGT_IMPATH}${LIBFILE} 	      
+	install_name_tool -change ${OPTPATH}glib/lib/libgobject-2.0.0.dylib 	     ${TGTPATH}libgobject-2.0.0.dylib ${TGT_IMPATH}${LIBFILE} 	      
+	install_name_tool -change ${OPTPATH}glib/lib/libglib-2.0.0.dylib 	     ${TGTPATH}libglib-2.0.0.dylib ${TGT_IMPATH}${LIBFILE} 	      
+	install_name_tool -change ${OPTPATH}fontconfig/lib/libfontconfig.1.dylib     ${TGTPATH}libfontconfig.1.dylib ${TGT_IMPATH}${LIBFILE}      
+	install_name_tool -change ${OPTPATH}freetype/lib/libfreetype.6.dylib 	     ${TGTPATH}libfreetype.6.dylib ${TGT_IMPATH}${LIBFILE} 	      
+	install_name_tool -change ${OPTPATH}gettext/lib/libintl.8.dylib              ${TGTPATH}libintl.8.dylib ${TGT_IMPATH}${LIBFILE}                
+LIBFILE="im-ti-er.so"
+	install_name_tool -change /usr/local/Cellar/gtk+3/3.24.8/lib/libgtk-3.0.dylib ${TGTPATH}libgtk-3.0.dylib ${TGT_IMPATH}${LIBFILE}
+	install_name_tool -change /usr/local/Cellar/gtk+3/3.24.8/lib/libgdk-3.0.dylib ${TGTPATH}libgdk-3.0.dylib ${TGT_IMPATH}${LIBFILE}
+	install_name_tool -change ${OPTPATH}glib/lib/libgmodule-2.0.0.dylib          ${TGTPATH}libgmodule-2.0.0.dylib ${TGT_IMPATH}${LIBFILE}            
+	install_name_tool -change ${OPTPATH}pango/lib/libpangocairo-1.0.0.dylib      ${TGTPATH}libpangocairo-1.0.0.dylib ${TGT_IMPATH}${LIBFILE}        
+	install_name_tool -change ${OPTPATH}cairo/lib/libcairo-gobject.2.dylib 	     ${TGTPATH}libcairo-gobject.2.dylib ${TGT_IMPATH}${LIBFILE} 	       
+	install_name_tool -change ${OPTPATH}cairo/lib/libcairo.2.dylib 		     ${TGTPATH}libcairo.2.dylib ${TGT_IMPATH}${LIBFILE} 		       
+	install_name_tool -change ${OPTPATH}gdk-pixbuf/lib/libgdk_pixbuf-2.0.0.dylib ${TGTPATH}libgdk_pixbuf-2.0.0.dylib ${TGT_IMPATH}${LIBFILE}    
+	install_name_tool -change ${OPTPATH}atk/lib/libatk-1.0.0.dylib 		     ${TGTPATH}libatk-1.0.0.dylib ${TGT_IMPATH}${LIBFILE} 		       
+	install_name_tool -change ${OPTPATH}libepoxy/lib/libepoxy.0.dylib 	     ${TGTPATH}libepoxy.0.dylib ${TGT_IMPATH}${LIBFILE} 	       
+	install_name_tool -change ${OPTPATH}fribidi/lib/libfribidi.0.dylib 	     ${TGTPATH}libfribidi.0.dylib ${TGT_IMPATH}${LIBFILE} 	       
+	install_name_tool -change ${OPTPATH}glib/lib/libgio-2.0.0.dylib 	     ${TGTPATH}libgio-2.0.0.dylib ${TGT_IMPATH}${LIBFILE} 	       
+	install_name_tool -change ${OPTPATH}harfbuzz/lib/libharfbuzz.0.dylib 	     ${TGTPATH}libharfbuzz.0.dylib ${TGT_IMPATH}${LIBFILE} 	       
+	install_name_tool -change ${OPTPATH}pango/lib/libpangoft2-1.0.0.dylib 	     ${TGTPATH}libpangoft2-1.0.0.dylib ${TGT_IMPATH}${LIBFILE} 	       
+	install_name_tool -change ${OPTPATH}pango/lib/libpango-1.0.0.dylib 	     ${TGTPATH}libpango-1.0.0.dylib ${TGT_IMPATH}${LIBFILE} 	       
+	install_name_tool -change ${OPTPATH}glib/lib/libgobject-2.0.0.dylib 	     ${TGTPATH}libgobject-2.0.0.dylib ${TGT_IMPATH}${LIBFILE} 	       
+	install_name_tool -change ${OPTPATH}glib/lib/libglib-2.0.0.dylib 	     ${TGTPATH}libglib-2.0.0.dylib ${TGT_IMPATH}${LIBFILE} 	       
+	install_name_tool -change ${OPTPATH}fontconfig/lib/libfontconfig.1.dylib     ${TGTPATH}libfontconfig.1.dylib ${TGT_IMPATH}${LIBFILE}       
+	install_name_tool -change ${OPTPATH}freetype/lib/libfreetype.6.dylib 	     ${TGTPATH}libfreetype.6.dylib ${TGT_IMPATH}${LIBFILE} 	       
+	install_name_tool -change ${OPTPATH}gettext/lib/libintl.8.dylib              ${TGTPATH}libintl.8.dylib ${TGT_IMPATH}${LIBFILE}                   
+LIBFILE="im-ti-et.so"
+	install_name_tool -change /usr/local/Cellar/gtk+3/3.24.8/lib/libgtk-3.0.dylib ${TGTPATH}libgtk-3.0.dylib ${TGT_IMPATH}${LIBFILE}
+	install_name_tool -change /usr/local/Cellar/gtk+3/3.24.8/lib/libgdk-3.0.dylib ${TGTPATH}libgdk-3.0.dylib ${TGT_IMPATH}${LIBFILE}
+	install_name_tool -change ${OPTPATH}glib/lib/libgmodule-2.0.0.dylib          ${TGTPATH}libgmodule-2.0.0.dylib ${TGT_IMPATH}${LIBFILE}           
+	install_name_tool -change ${OPTPATH}pango/lib/libpangocairo-1.0.0.dylib      ${TGTPATH}libpangocairo-1.0.0.dylib ${TGT_IMPATH}${LIBFILE}       
+	install_name_tool -change ${OPTPATH}cairo/lib/libcairo-gobject.2.dylib 	     ${TGTPATH}libcairo-gobject.2.dylib ${TGT_IMPATH}${LIBFILE} 	      
+	install_name_tool -change ${OPTPATH}cairo/lib/libcairo.2.dylib 		     ${TGTPATH}libcairo.2.dylib ${TGT_IMPATH}${LIBFILE} 		      
+	install_name_tool -change ${OPTPATH}gdk-pixbuf/lib/libgdk_pixbuf-2.0.0.dylib ${TGTPATH}libgdk_pixbuf-2.0.0.dylib ${TGT_IMPATH}${LIBFILE}  
+	install_name_tool -change ${OPTPATH}atk/lib/libatk-1.0.0.dylib 		     ${TGTPATH}libatk-1.0.0.dylib ${TGT_IMPATH}${LIBFILE} 		      
+	install_name_tool -change ${OPTPATH}libepoxy/lib/libepoxy.0.dylib 	     ${TGTPATH}libepoxy.0.dylib ${TGT_IMPATH}${LIBFILE} 	      
+	install_name_tool -change ${OPTPATH}fribidi/lib/libfribidi.0.dylib 	     ${TGTPATH}libfribidi.0.dylib ${TGT_IMPATH}${LIBFILE} 	      
+	install_name_tool -change ${OPTPATH}glib/lib/libgio-2.0.0.dylib 	     ${TGTPATH}libgio-2.0.0.dylib ${TGT_IMPATH}${LIBFILE} 	      
+	install_name_tool -change ${OPTPATH}harfbuzz/lib/libharfbuzz.0.dylib 	     ${TGTPATH}libharfbuzz.0.dylib ${TGT_IMPATH}${LIBFILE} 	      
+	install_name_tool -change ${OPTPATH}pango/lib/libpangoft2-1.0.0.dylib 	     ${TGTPATH}libpangoft2-1.0.0.dylib ${TGT_IMPATH}${LIBFILE} 	      
+	install_name_tool -change ${OPTPATH}pango/lib/libpango-1.0.0.dylib 	     ${TGTPATH}libpango-1.0.0.dylib ${TGT_IMPATH}${LIBFILE} 	      
+	install_name_tool -change ${OPTPATH}glib/lib/libgobject-2.0.0.dylib 	     ${TGTPATH}libgobject-2.0.0.dylib ${TGT_IMPATH}${LIBFILE} 	      
+	install_name_tool -change ${OPTPATH}glib/lib/libglib-2.0.0.dylib 	     ${TGTPATH}libglib-2.0.0.dylib ${TGT_IMPATH}${LIBFILE} 	      
+	install_name_tool -change ${OPTPATH}fontconfig/lib/libfontconfig.1.dylib     ${TGTPATH}libfontconfig.1.dylib ${TGT_IMPATH}${LIBFILE}      
+	install_name_tool -change ${OPTPATH}freetype/lib/libfreetype.6.dylib 	     ${TGTPATH}libfreetype.6.dylib ${TGT_IMPATH}${LIBFILE} 	      
+	install_name_tool -change ${OPTPATH}gettext/lib/libintl.8.dylib              ${TGTPATH}libintl.8.dylib ${TGT_IMPATH}${LIBFILE}                
+LIBFILE="im-viqr.so"
+	install_name_tool -change /usr/local/Cellar/gtk+3/3.24.8/lib/libgtk-3.0.dylib ${TGTPATH}libgtk-3.0.dylib ${TGT_IMPATH}${LIBFILE}
+	install_name_tool -change /usr/local/Cellar/gtk+3/3.24.8/lib/libgdk-3.0.dylib ${TGTPATH}libgdk-3.0.dylib ${TGT_IMPATH}${LIBFILE}
+	install_name_tool -change ${OPTPATH}glib/lib/libgmodule-2.0.0.dylib          ${TGTPATH}libgmodule-2.0.0.dylib ${TGT_IMPATH}${LIBFILE}           
+	install_name_tool -change ${OPTPATH}pango/lib/libpangocairo-1.0.0.dylib      ${TGTPATH}libpangocairo-1.0.0.dylib ${TGT_IMPATH}${LIBFILE}       
+	install_name_tool -change ${OPTPATH}cairo/lib/libcairo-gobject.2.dylib 	     ${TGTPATH}libcairo-gobject.2.dylib ${TGT_IMPATH}${LIBFILE} 	      
+	install_name_tool -change ${OPTPATH}cairo/lib/libcairo.2.dylib 		     ${TGTPATH}libcairo.2.dylib ${TGT_IMPATH}${LIBFILE} 		      
+	install_name_tool -change ${OPTPATH}gdk-pixbuf/lib/libgdk_pixbuf-2.0.0.dylib ${TGTPATH}libgdk_pixbuf-2.0.0.dylib ${TGT_IMPATH}${LIBFILE}  
+	install_name_tool -change ${OPTPATH}atk/lib/libatk-1.0.0.dylib 		     ${TGTPATH}libatk-1.0.0.dylib ${TGT_IMPATH}${LIBFILE} 		      
+	install_name_tool -change ${OPTPATH}libepoxy/lib/libepoxy.0.dylib 	     ${TGTPATH}libepoxy.0.dylib ${TGT_IMPATH}${LIBFILE} 	      
+	install_name_tool -change ${OPTPATH}fribidi/lib/libfribidi.0.dylib 	     ${TGTPATH}libfribidi.0.dylib ${TGT_IMPATH}${LIBFILE} 	      
+	install_name_tool -change ${OPTPATH}glib/lib/libgio-2.0.0.dylib 	     ${TGTPATH}libgio-2.0.0.dylib ${TGT_IMPATH}${LIBFILE} 	      
+	install_name_tool -change ${OPTPATH}harfbuzz/lib/libharfbuzz.0.dylib 	     ${TGTPATH}libharfbuzz.0.dylib ${TGT_IMPATH}${LIBFILE} 	      
+	install_name_tool -change ${OPTPATH}pango/lib/libpangoft2-1.0.0.dylib 	     ${TGTPATH}libpangoft2-1.0.0.dylib ${TGT_IMPATH}${LIBFILE} 	      
+	install_name_tool -change ${OPTPATH}pango/lib/libpango-1.0.0.dylib 	     ${TGTPATH}libpango-1.0.0.dylib ${TGT_IMPATH}${LIBFILE} 	      
+	install_name_tool -change ${OPTPATH}glib/lib/libgobject-2.0.0.dylib 	     ${TGTPATH}libgobject-2.0.0.dylib ${TGT_IMPATH}${LIBFILE} 	      
+	install_name_tool -change ${OPTPATH}glib/lib/libglib-2.0.0.dylib 	     ${TGTPATH}libglib-2.0.0.dylib ${TGT_IMPATH}${LIBFILE} 	      
+	install_name_tool -change ${OPTPATH}fontconfig/lib/libfontconfig.1.dylib     ${TGTPATH}libfontconfig.1.dylib ${TGT_IMPATH}${LIBFILE}      
+	install_name_tool -change ${OPTPATH}freetype/lib/libfreetype.6.dylib 	     ${TGTPATH}libfreetype.6.dylib ${TGT_IMPATH}${LIBFILE} 	   
+	install_name_tool -change ${OPTPATH}gettext/lib/libintl.8.dylib              ${TGTPATH}libintl.8.dylib ${TGT_IMPATH}${LIBFILE}    
