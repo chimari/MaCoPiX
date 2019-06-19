@@ -6320,7 +6320,7 @@ void create_config_dialog(GtkWidget *widget, gpointer gdata){
       gtkut_table_attach_defaults (table2, label, 0, 1, 1, 2);
       {
 #ifdef USE_OSX
-	label = gtkut_label_new ("Quartz Compositer");
+	label = gtkut_label_new ("Quartz Compositor");
 #else
 	label = gtkut_label_new (GetCurrentWMName(mascot->conf_main));
 #endif

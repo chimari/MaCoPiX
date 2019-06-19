@@ -65,6 +65,9 @@ cp     	${OPTPATH}graphite2/lib/libgraphite2.3.dylib ${CPPATH}
 cp ${OPTPATH}jpeg/lib/libjpeg.9.dylib	${CPPATH}libjpeg.9.dylib
 cp ${OPTPATH}libpng/lib/libpng16.16.dylib ${CPPATH}libpng16.16.dylib
 cp ${OPTPATH}libtiff/lib/libtiff.5.dylib ${CPPATH}libtiff.5.dylib
+cp ${OPTPATH}librsvg/lib/librsvg-2.2.dylib ${CPPATH}librsvg-2.2.dylib
+cp ${OPTPATH}libcroco/lib/libcroco-0.6.3.dylib ${CPPATH}libcroco-0.6.3.dylib
+cp ${OPTPATH}libxml2/lib/libxml2.2.dylib ${CPPATH}libxml2.2.dylib 
 
 chmod 755 ${CPPATH}*dylib
 
@@ -252,6 +255,33 @@ LIBFILE="libgraphite2.3.dylib"
 LIBFILE="libtiff.5.dylib"
 	install_name_tool -change ${OPTPATH}libtiff/lib/libtiff.5.dylib ${TGTPATH}libtiff.5.dylib  ${CPPATH}${LIBFILE}
 	install_name_tool -change ${OPTPATH}jpeg/lib/libjpeg.9.dylib ${TGTPATH}libjpeg.9.dylib   ${CPPATH}${LIBFILE}
+
+LIBFILE="librsvg-2.2.dylib"
+	install_name_tool -change ${OPTPATH}librsvg/lib/librsvg-2.2.dylib ${TGTPATH}librsvg-2.2.dylib ${CPPATH}${LIBFILE}
+	install_name_tool -change ${OPTPATH}libpng/lib/libpng16.16.dylib ${TGTPATH}libpng16.16.dylib ${CPPATH}${LIBFILE}
+	install_name_tool -change ${OPTPATH}gdk-pixbuf/lib/libgdk_pixbuf-2.0.0.dylib ${TGTPATH}libgdk_pixbuf-2.0.0.dylib ${CPPATH}${LIBFILE} 
+	install_name_tool -change ${OPTPATH}glib/lib/libgio-2.0.0.dylib ${TGTPATH}libgio-2.0.0.dylib ${CPPATH}${LIBFILE}
+	install_name_tool -change ${OPTPATH}pango/lib/libpangocairo-1.0.0.dylib ${TGTPATH}libpangocairo-1.0.0.dylib ${CPPATH}${LIBFILE}
+	install_name_tool -change ${OPTPATH}cairo/lib/libcairo.2.dylib ${TGTPATH}libcairo.2.dylib ${CPPATH}${LIBFILE}
+	install_name_tool -change ${OPTPATH}pango/lib/libpangoft2-1.0.0.dylib ${TGTPATH}libpangoft2-1.0.0.dylib ${CPPATH}${LIBFILE}
+	install_name_tool -change ${OPTPATH}pango/lib/libpango-1.0.0.dylib ${TGTPATH}libpango-1.0.0.dylib ${CPPATH}${LIBFILE}
+	install_name_tool -change ${OPTPATH}glib/lib/libgobject-2.0.0.dylib ${TGTPATH}libgobject-2.0.0.dylib ${CPPATH}${LIBFILE}
+	install_name_tool -change ${OPTPATH}fontconfig/lib/libfontconfig.1.dylib ${TGTPATH}libfontconfig.1.dylib ${CPPATH}${LIBFILE}
+	install_name_tool -change ${OPTPATH}freetype/lib/libfreetype.6.dylib ${TGTPATH}libfreetype.6.dylib ${CPPATH}${LIBFILE}
+	install_name_tool -change ${OPTPATH}libcroco/lib/libcroco-0.6.3.dylib ${TGTPATH}libcroco-0.6.3.dylib ${CPPATH}${LIBFILE}
+	install_name_tool -change ${OPTPATH}glib/lib/libglib-2.0.0.dylib ${TGTPATH}libglib-2.0.0.dylib ${CPPATH}${LIBFILE}
+	install_name_tool -change ${OPTPATH}gettext/lib/libintl.8.dylib ${TGTPATH}libintl.8.dylib ${CPPATH}${LIBFILE}
+	install_name_tool -change ${OPTPATH}libxml2/lib/libxml2.2.dylib ${TGTPATH}libxml2.2.dylib ${CPPATH}${LIBFILE}
+
+LIBFILE="libcroco-0.6.3.dylib"
+	install_name_tool -change ${OPTPATH}libcroco/lib/libcroco-0.6.3.dylib ${TGTPATH}libcroco-0.6.3.dylib ${CPPATH}${LIBFILE}
+	install_name_tool -change ${OPTPATH}glib/lib/libglib-2.0.0.dylib ${TGTPATH}libglib-2.0.0.dylib ${CPPATH}${LIBFILE}
+	install_name_tool -change ${OPTPATH}gettext/lib/libintl.8.dylib ${TGTPATH}libintl.8.dylib ${CPPATH}${LIBFILE}
+	install_name_tool -change ${OPTPATH}libxml2/lib/libxml2.2.dylib ${TGTPATH}libxml2.2.dylib ${CPPATH}${LIBFILE}
+
+LIBFILE="libxml2.2.dylib"
+	install_name_tool -change ${OPTPATH}libxml2/lib/libxml2.2.dylib ${TGTPATH}libxml2.2.dylib ${CPPATH}${LIBFILE}
+
 
 ## IMMODULES
 
@@ -502,6 +532,7 @@ cp ${LOCAL_PLPATH}libpixbufloader-jpeg.so ${TGT_PLPATH}libpixbufloader-jpeg.so
 cp ${LOCAL_PLPATH}libpixbufloader-png.so  ${TGT_PLPATH}libpixbufloader-png.so	 
 cp ${LOCAL_PLPATH}libpixbufloader-pnm.so  ${TGT_PLPATH}libpixbufloader-pnm.so	 
 cp ${LOCAL_PLPATH}libpixbufloader-qtif.so ${TGT_PLPATH}libpixbufloader-qtif.so	 
+cp /usr/local/lib/gdk-pixbuf-2.0/2.10.0/loaders/libpixbufloader-svg.so  ${TGT_PLPATH}libpixbufloader-svg.so
 cp ${LOCAL_PLPATH}libpixbufloader-tga.so  ${TGT_PLPATH}libpixbufloader-tga.so	 
 cp ${LOCAL_PLPATH}libpixbufloader-tiff.so ${TGT_PLPATH}libpixbufloader-tiff.so	 
 cp ${LOCAL_PLPATH}libpixbufloader-xbm.so  ${TGT_PLPATH}libpixbufloader-xbm.so	 
@@ -549,6 +580,22 @@ LIBFILE="libpixbufloader-qtif.so"
 	install_name_tool -change ${OPTPATH}glib/lib/libgobject-2.0.0.dylib  ${TGTPATH}libgobject-2.0.0.dylib ${TGT_PLPATH}${LIBFILE}
 	install_name_tool -change ${OPTPATH}glib/lib/libglib-2.0.0.dylib  ${TGTPATH}libglib-2.0.0.dylib ${TGT_PLPATH}${LIBFILE}
 	install_name_tool -change ${OPTPATH}gettext/lib/libintl.8.dylib  ${TGTPATH}libintl.8.dylib ${TGT_PLPATH}${LIBFILE}
+LIBFILE="libpixbufloader-svg.so"
+	install_name_tool -change /usr/local/Cellar/librsvg/2.44.14/lib/librsvg-2.2.dylib ${TGTPATH}librsvg-2.2.dylib ${TGT_PLPATH}${LIBFILE}
+	install_name_tool -change ${OPTPATH}libpng/lib/libpng16.16.dylib ${TGTPATH}libpng16.16.dylib  ${TGT_PLPATH}${LIBFILE}
+	install_name_tool -change ${OPTPATH}gdk-pixbuf/lib/libgdk_pixbuf-2.0.0.dylib ${TGTPATH}libgdk_pixbuf-2.0.0.dylib ${TGT_PLPATH}${LIBFILE}
+	install_name_tool -change ${OPTPATH}glib/lib/libgio-2.0.0.dylib ${TGTPATH}libgio-2.0.0.dylib ${TGT_PLPATH}${LIBFILE}
+	install_name_tool -change ${OPTPATH}pango/lib/libpangocairo-1.0.0.dylib ${TGTPATH}libpangocairo-1.0.0.dylib ${TGT_PLPATH}${LIBFILE}
+	install_name_tool -change ${OPTPATH}cairo/lib/libcairo.2.dylib ${TGTPATH}libcairo.2.dylib ${TGT_PLPATH}${LIBFILE}
+	install_name_tool -change ${OPTPATH}pango/lib/libpangoft2-1.0.0.dylib ${TGTPATH}libpangoft2-1.0.0.dylib ${TGT_PLPATH}${LIBFILE}
+	install_name_tool -change ${OPTPATH}pango/lib/libpango-1.0.0.dylib ${TGTPATH}libpango-1.0.0.dylib ${TGT_PLPATH}${LIBFILE}
+	install_name_tool -change ${OPTPATH}glib/lib/libgobject-2.0.0.dylib ${TGTPATH}libgobject-2.0.0.dylib ${TGT_PLPATH}${LIBFILE}
+	install_name_tool -change ${OPTPATH}fontconfig/lib/libfontconfig.1.dylib ${TGTPATH}libfontconfig.1.dylib ${TGT_PLPATH}${LIBFILE}
+	install_name_tool -change ${OPTPATH}freetype/lib/libfreetype.6.dylib ${TGTPATH}libfreetype.6.dylib ${TGT_PLPATH}${LIBFILE}
+	install_name_tool -change ${OPTPATH}libcroco/lib/libcroco-0.6.3.dylib ${TGTPATH}libcroco-0.6.3.dylib ${TGT_PLPATH}${LIBFILE}
+	install_name_tool -change ${OPTPATH}glib/lib/libglib-2.0.0.dylib ${TGTPATH}libglib-2.0.0.dylib ${TGT_PLPATH}${LIBFILE}
+	install_name_tool -change ${OPTPATH}gettext/lib/libintl.8.dylib ${TGTPATH}libintl.8.dylib ${TGT_PLPATH}${LIBFILE}
+	install_name_tool -change ${OPTPATH}libxml2/lib/libxml2.2.dylib ${TGTPATH}libxml2.2.dylib ${TGT_PLPATH}${LIBFILE}
 LIBFILE="libpixbufloader-tga.so"
 	install_name_tool -change /usr/local/Cellar/gdk-pixbuf/2.38.1/lib/libgdk_pixbuf-2.0.0.dylib ${TGTPATH}libgdk_pixbuf-2.0.0.dylib ${TGT_PLPATH}${LIBFILE}
 	install_name_tool -change ${OPTPATH}glib/lib/libgobject-2.0.0.dylib  ${TGTPATH}libgobject-2.0.0.dylib ${TGT_PLPATH}${LIBFILE}
