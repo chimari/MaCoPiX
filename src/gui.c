@@ -10820,7 +10820,7 @@ GtkWidget * make_popup_menu(typMascot *mascot)
   gtk_container_add (GTK_CONTAINER (popup_menu), popup_button);
   my_signal_connect (popup_button, "activate", create_config_dialog, (gpointer)mascot);
 
-  bar =gtk_menu_item_new();
+  bar =gtk_separator_menu_item_new();
   gtk_widget_show (bar);
   gtk_container_add (GTK_CONTAINER (popup_menu), bar);
 
@@ -10837,7 +10837,7 @@ GtkWidget * make_popup_menu(typMascot *mascot)
   my_signal_connect (biff_check, "toggled",mail_flag_toggle,
 		     (gpointer)mascot);
 
-  bar =gtk_menu_item_new();
+  bar =gtk_separator_menu_item_new();
   gtk_widget_show (bar);
   gtk_container_add (GTK_CONTAINER (popup_menu), bar);
 #endif  // USE_BIFF
@@ -10855,7 +10855,7 @@ GtkWidget * make_popup_menu(typMascot *mascot)
 		     &mascot->signal.flag);
 
 
-  bar =gtk_menu_item_new();
+  bar =gtk_separator_menu_item_new();
   gtk_widget_show (bar);
   gtk_container_add (GTK_CONTAINER (popup_menu), bar);
 
@@ -10876,7 +10876,7 @@ GtkWidget * make_popup_menu(typMascot *mascot)
     gtk_widget_set_sensitive(popup_button, FALSE);
   }
 
-  bar =gtk_menu_item_new();
+  bar =gtk_separator_menu_item_new();
   gtk_widget_show (bar);
   gtk_container_add (GTK_CONTAINER (popup_menu), bar);
 
@@ -10917,7 +10917,7 @@ GtkWidget * make_open_menu(typMascot *mascot)
   my_signal_connect (popup_button, "activate",create_file_selection_dialog,
 		     (gpointer)minst[MENU_SELECT]);
 
-  bar =gtk_menu_item_new();
+  bar =gtk_separator_menu_item_new();
   gtk_widget_show (bar);
   gtk_container_add (GTK_CONTAINER (popup_menu), bar);
 
@@ -10930,7 +10930,7 @@ GtkWidget * make_open_menu(typMascot *mascot)
   gtk_menu_item_set_submenu(GTK_MENU_ITEM(popup_button),launcher_menu);
 
 
-  bar =gtk_menu_item_new();
+  bar =gtk_separator_menu_item_new();
   gtk_widget_show (bar);
   gtk_container_add (GTK_CONTAINER (popup_menu), bar);
 
@@ -10961,7 +10961,7 @@ GtkWidget * make_save_menu(typMascot *mascot)
   gtk_container_add (GTK_CONTAINER (popup_menu), popup_button);
   my_signal_connect (popup_button, "activate",MenuSaveAll, (gpointer)mascot);
 
-  bar =gtk_menu_item_new();
+  bar =gtk_separator_menu_item_new();
   gtk_widget_show (bar);
   gtk_container_add (GTK_CONTAINER (popup_menu), bar);
 
@@ -10976,7 +10976,7 @@ GtkWidget * make_save_menu(typMascot *mascot)
   my_signal_connect (popup_button, "activate",create_save_mascot_dialog,
 		     (gpointer)mascot);
 
-  bar =gtk_menu_item_new();
+  bar =gtk_separator_menu_item_new();
   gtk_widget_show (bar);
   gtk_container_add (GTK_CONTAINER (popup_menu), bar);
 
@@ -10989,7 +10989,7 @@ GtkWidget * make_save_menu(typMascot *mascot)
   gtk_menu_item_set_submenu(GTK_MENU_ITEM(popup_button),menu_menu);
 
 
-  bar =gtk_menu_item_new();
+  bar =gtk_separator_menu_item_new();
   gtk_widget_show (bar);
   gtk_container_add (GTK_CONTAINER (popup_menu), bar);
 
@@ -10999,7 +10999,7 @@ GtkWidget * make_save_menu(typMascot *mascot)
   my_signal_connect (popup_button, "activate",create_save_rc_dialog,
 		     (gpointer)mascot);
 
-  bar =gtk_menu_item_new();
+  bar =gtk_separator_menu_item_new();
   gtk_widget_show (bar);
   gtk_container_add (GTK_CONTAINER (popup_menu), bar);
 
@@ -11031,7 +11031,7 @@ GtkWidget * make_new_menu(typMascot *mascot)
   my_signal_connect (popup_button, "activate",create_new_mascot_dialog,
 		     (gpointer)mascot);
 
-  bar =gtk_menu_item_new();
+  bar =gtk_separator_menu_item_new();
   gtk_widget_show (bar);
   gtk_container_add (GTK_CONTAINER (popup_menu), bar);
 
@@ -11071,7 +11071,7 @@ GtkWidget * make_install_menu(typMascot *mascot)
   }
 #endif
 
-  bar =gtk_menu_item_new();
+  bar =gtk_separator_menu_item_new();
   gtk_widget_show (bar);
   gtk_container_add (GTK_CONTAINER (popup_menu), bar);
 
@@ -11092,7 +11092,7 @@ GtkWidget * make_install_menu(typMascot *mascot)
   }
 #endif
 
-  bar =gtk_menu_item_new();
+  bar =gtk_separator_menu_item_new();
   gtk_widget_show (bar);
   gtk_container_add (GTK_CONTAINER (popup_menu), bar);
   
@@ -11227,7 +11227,7 @@ GtkWidget * make_cat_menu(typMascot *mascot)
   my_signal_connect (popup_button, "activate",AllRandomChangeMascotMenu,
 		     (gpointer)mascot);
 
-  bar =gtk_menu_item_new();
+  bar =gtk_separator_menu_item_new();
   gtk_widget_show (bar);
   gtk_container_add (GTK_CONTAINER (popup_menu), bar);
 
@@ -11262,7 +11262,7 @@ GtkWidget * make_tgt_menu(typMascot *mascot, int i_cat)
 		     (gpointer)mcat[i_cat]);
 
 
-  bar =gtk_menu_item_new();
+  bar =gtk_separator_menu_item_new();
   gtk_widget_show (bar);
   gtk_container_add (GTK_CONTAINER (popup_menu), bar);
 
@@ -11859,7 +11859,7 @@ GtkWidget *make_start_menubar(typMascot *mascot){
 #endif
 
 
-  bar =gtk_menu_item_new();
+  bar =gtk_separator_menu_item_new();
   gtk_widget_show (bar);
   gtk_container_add (GTK_CONTAINER (menu), bar);
 
@@ -11877,7 +11877,7 @@ GtkWidget *make_start_menubar(typMascot *mascot){
 		     (gpointer)mascot);
 #endif
 
-  bar =gtk_menu_item_new();
+  bar =gtk_separator_menu_item_new();
   gtk_widget_show (bar);
   gtk_container_add (GTK_CONTAINER (menu), bar);
 

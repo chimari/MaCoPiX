@@ -1,7 +1,7 @@
 #################################################################
        Desktop Mascots Program for UNIX/MS Windows
        macopix : Mascot Constructive Pilot for X                 
-                                                    ver 3.2.0    
+                                                    ver 3.2.2    
                  Quick document for Windows(binary) version
                                                                  
                             2019.06.06  Kurumi Chimari           
@@ -10,7 +10,7 @@
 #################################################################
 
 -------------------------------------------------------------------------------
-[ Name         ] MaCoPiX_3.2.0-Win
+[ Name         ] MaCoPiX_3.2.2-Win
 [ Developer    ] Kurumi Chimari
 [ URL          ] http://rosegray.sakura.ne.jp/
 [ e-mail       ] chimari@rosegray.sakura.ne.jp
