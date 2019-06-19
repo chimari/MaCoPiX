@@ -2,6 +2,7 @@
 <gresources>
     <gresource prefix="/icons">
       <file alias="macopix_icon.png" preprocess="to-pixdata">icons/macopix_icon.png</file>
+      <file alias="macopix_icon_s.png" preprocess="to-pixdata">icons/macopix_icon_s.png</file>
       <file alias="def_biff.png"     preprocess="to-pixdata">icons/def_biff.png</file>
       <file alias="def_biff_r.png"   preprocess="to-pixdata">icons/def_biff_r.png</file>
     </gresource>

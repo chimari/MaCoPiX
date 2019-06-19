@@ -5089,8 +5089,12 @@ int main(int argc, char **argv)
   gdk_rgb_init();
 #endif
 
-#ifndef USE_WIN32  
+#ifndef USE_WIN32
+#ifdef USE_GTK3
   icon = gdk_pixbuf_new_from_resource ("/icons/macopix_icon.png", NULL);
+#else
+  icon = gdk_pixbuf_new_from_resource ("/icons/macopix_icon_s.png", NULL);
+#endif
   gtk_window_set_default_icon(icon);
 #endif
 
