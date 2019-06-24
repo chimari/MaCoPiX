@@ -361,15 +361,35 @@ int MoveToFocus(typMascot *mascot, gboolean force_fl)
 
   XGetInputFocus(GDK_WINDOW_XDISPLAY(gtk_widget_get_window(mascot->win_main)),
 		 &wf, &i);
-  XGetGeometry(GDK_WINDOW_XDISPLAY(gtk_widget_get_window(mascot->win_main)),
-	       GDK_ROOT_WINDOW(),
-	       &rootwin,
-	       &x_root,
-	       &y_root,
-	       &width_root,
-	       &height_root,
-	       &border,
-	       &depth);
+#ifdef USE_GTK3
+  error=   gdk_x11_display_error_trap_pop (gtk_widget_get_display(mascot->win_main));
+#else
+  error = gdk_error_trap_pop ();
+#endif
+  if(G_UNLIKELY(error == BadWindow)){
+    g_warning("BadWindow error in XGetInputFocus 0");
+    return(-1);
+  }
+  else if(G_UNLIKELY(error == BadValue)){
+    g_warning("BadValue error in XGetInputFocus 0");
+    return(-1);
+  }
+
+#ifdef USE_GTK3  
+  gdk_x11_display_error_trap_push (gtk_widget_get_display(mascot->win_main));
+#else
+  gdk_error_trap_push ();
+#endif
+
+  qr_ans=XGetGeometry(GDK_WINDOW_XDISPLAY(gtk_widget_get_window(mascot->win_main)),
+		      GDK_ROOT_WINDOW(),
+		      &rootwin,
+		      &x_root,
+		      &y_root,
+		      &width_root,
+		      &height_root,
+		      &border,
+		      &depth);
 
 #ifdef USE_GTK3
   error=   gdk_x11_display_error_trap_pop (gtk_widget_get_display(mascot->win_main));
@@ -377,8 +397,17 @@ int MoveToFocus(typMascot *mascot, gboolean force_fl)
   error = gdk_error_trap_pop ();
 #endif
 
+  if(qr_ans==0){
+    g_warning("Failed XGetGeometry 1");
+    return(-1);
+  }
+  
   if(G_UNLIKELY(error == BadWindow)){
-    g_warning("BadWindow error 1");
+    g_warning("BadWindow error in XGetGeometry 1");
+    return(-1);
+  }
+  else if(G_UNLIKELY(error == BadDrawable)){
+    g_warning("BadDrawable error in XGetGeometry 1");
     return(-1);
   }
   
@@ -449,13 +478,13 @@ int MoveToFocus(typMascot *mascot, gboolean force_fl)
 #else
 	error = gdk_error_trap_pop ();
 #endif
-	if(qr_ans==0){
-	  g_warning("Failed XQueryTree");
+ 	if(qr_ans==0){
+	  g_warning("Failed XQueryTree 1");
 	  return(-1);
 	}
 
 	if(G_UNLIKELY(error == BadWindow)){
-	  g_warning("BadWindow error 2");
+	  g_warning("BadWindow error in XQueryTree 1");
 	  return(-1);
 	}
       }
@@ -481,12 +510,12 @@ int MoveToFocus(typMascot *mascot, gboolean force_fl)
 #endif
 	  
 	  if(qr_ans==0){
-	    g_warning("Failed XQueryTree");
+	    g_warning("Failed XQueryTree 2");
 	    return(-1);
 	  }
 	  
 	  if(G_UNLIKELY(error == BadWindow)){
-	    g_warning("BadWindow error 3");
+	    g_warning("BadWindow error in XQueryTree 2");
 	    return(-1);
 	  }
 	}
@@ -496,9 +525,33 @@ int MoveToFocus(typMascot *mascot, gboolean force_fl)
 	}
 	
 	if(errflag ==0){
-	  XGetGeometry(GDK_WINDOW_XDISPLAY(gtk_widget_get_window(mascot->win_main)),
-		       wf,&rootwin,&x,&y,&width,&height,
-		       &border,&depth);
+#ifdef USE_GTK3  
+	  gdk_x11_display_error_trap_push (gtk_widget_get_display(mascot->win_main));
+#else
+	  gdk_error_trap_push ();
+#endif
+	  qr_ans=XGetGeometry(GDK_WINDOW_XDISPLAY(gtk_widget_get_window(mascot->win_main)),
+			      wf,&rootwin,&x,&y,&width,&height,
+			      &border,&depth);
+#ifdef USE_GTK3
+	  error=   gdk_x11_display_error_trap_pop (gtk_widget_get_display(mascot->win_main));
+#else
+	  error = gdk_error_trap_pop ();
+#endif
+	  
+	  if(qr_ans==0){
+	    g_warning("Failed XGetGeometry 2");
+	    return(-1);
+	  }
+	  
+	  if(G_UNLIKELY(error == BadWindow)){
+	    g_warning("BadWindow error in XGetGeometry 2");
+	    return(-1);
+	  }
+	  else if(G_UNLIKELY(error == BadDrawable)){
+	    g_warning("BadDrawable error in XGetGeometry 2");
+	    return(-1);
+	  }
 	}
 	else{
 	  errflag   = 0;
@@ -523,10 +576,35 @@ int MoveToFocus(typMascot *mascot, gboolean force_fl)
 	    }
 	    break;
 	  }
-	  XGetGeometry(GDK_WINDOW_XDISPLAY(gtk_widget_get_window(mascot->win_main)),
-		       parent,&rootwin,&x_root,&y_root,
-		       &width,&height,&border,&depth);
+#ifdef USE_GTK3  
+	  gdk_x11_display_error_trap_push (gtk_widget_get_display(mascot->win_main));
+#else
+	  gdk_error_trap_push ();
+#endif
+	  qr_ans=XGetGeometry(GDK_WINDOW_XDISPLAY(gtk_widget_get_window(mascot->win_main)),
+			      parent,&rootwin,&x_root,&y_root,
+			      &width,&height,&border,&depth);
 	     
+#ifdef USE_GTK3
+	  error=   gdk_x11_display_error_trap_pop (gtk_widget_get_display(mascot->win_main));
+#else
+	  error = gdk_error_trap_pop ();
+#endif
+	  
+	  if(qr_ans==0){
+	    g_warning("Failed XGetGeometry 3");
+	    return(-1);
+	  }	  
+
+	  if(G_UNLIKELY(error == BadWindow)){
+	    g_warning("BadWindow error in XGetGeometry 3");
+	    return(-1);
+	  }
+	  else if(G_UNLIKELY(error == BadDrawable)){
+	    g_warning("BadDrawable error in XGetGeometry 3");
+	    return(-1);
+	  }
+	  
 	  if((width==width_root)&&(height==height_root)){
 	    eflag=TRUE;
 	    break; // For Enlightenment
@@ -556,7 +634,7 @@ int MoveToFocus(typMascot *mascot, gboolean force_fl)
 #endif
 
 	      if(G_UNLIKELY(error == BadWindow)){
-		g_warning("BadWindow error 4");
+		g_warning("BadWindow error in XQueryPointer 1");
 		return(-1);
 	      }
 	    }
@@ -584,12 +662,12 @@ int MoveToFocus(typMascot *mascot, gboolean force_fl)
 	      error = gdk_error_trap_pop ();
 #endif
 	      if(qr_ans==0){
-		g_warning("Failed XQueryTree");
+		g_warning("Failed XQueryTree 3");
 		return(-1);
 	      }
 
 	      if(G_UNLIKELY(error == BadWindow)){
-		g_warning("BadWindow error 5");
+		g_warning("BadWindow error  in XQueryTree 3");
 		return(-1);
 	      }
 	  }
@@ -601,9 +679,34 @@ int MoveToFocus(typMascot *mascot, gboolean force_fl)
 	}
 
 	if(errflag ==0){
-	  XGetGeometry(GDK_WINDOW_XDISPLAY(gtk_widget_get_window(mascot->win_main)),
-	  	       wf,&rootwin,&x,&y,&width,&height,
-	  	       &border,&depth);
+#ifdef USE_GTK3  
+	  gdk_x11_display_error_trap_push (gtk_widget_get_display(mascot->win_main));
+#else
+	  gdk_error_trap_push ();
+#endif
+	  qr_ans=XGetGeometry(GDK_WINDOW_XDISPLAY(gtk_widget_get_window(mascot->win_main)),
+			      wf,&rootwin,&x,&y,&width,&height,
+			      &border,&depth);
+#ifdef USE_GTK3
+	  error=   gdk_x11_display_error_trap_pop (gtk_widget_get_display(mascot->win_main));
+#else
+	  error = gdk_error_trap_pop ();
+#endif
+	  
+	  if(qr_ans==0){
+	    g_warning("Failed XGetGeometry 4");
+	    return(-1);
+	  }
+	  
+	  if(G_UNLIKELY(error == BadWindow)){
+	    g_warning("BadWindow error in XGetGeometry 4");
+	    return(-1);
+	  }
+	  else if(G_UNLIKELY(error == BadDrawable)){
+	    g_warning("BadDrawable error in XGetGeometry 4");
+	    return(-1);
+	  }
+
 	  // フォーカスするWindowが存在しない Offset"%"のとき
 	  //		if (mascot->flag_xp==FF_BAR_REL){
 	  // if((x<0)&&(y<0)&&(depth==0)&&(border==0)){
@@ -635,8 +738,32 @@ int MoveToFocus(typMascot *mascot, gboolean force_fl)
     }
     else{  // タイトルバーのサイズをマニュアル設定モード
       if(errflag ==0){
-	XGetGeometry(GDK_WINDOW_XDISPLAY(gtk_widget_get_window(mascot->win_main)),
-		     wf,&rootwin,&x,&y,&width,&height,&border,&depth);
+#ifdef USE_GTK3  
+	gdk_x11_display_error_trap_push (gtk_widget_get_display(mascot->win_main));
+#else
+	gdk_error_trap_push ();
+#endif
+	qr_ans=XGetGeometry(GDK_WINDOW_XDISPLAY(gtk_widget_get_window(mascot->win_main)),
+			    wf,&rootwin,&x,&y,&width,&height,&border,&depth);
+#ifdef USE_GTK3
+	error=   gdk_x11_display_error_trap_pop (gtk_widget_get_display(mascot->win_main));
+#else
+	error = gdk_error_trap_pop ();
+#endif
+	if(qr_ans==0){
+	  g_warning("Failed XGetGeometry 5");
+	  return(-1);
+	}
+	  
+	if(G_UNLIKELY(error == BadWindow)){
+	  g_warning("BadWindow error in XGetGeometry 5");
+	  return(-1);
+	}
+	else if(G_UNLIKELY(error == BadDrawable)){
+	  g_warning("BadDrawable error in XGetGeometry 5");
+	  return(-1);
+	}
+	
       }
       else{
 	errflag = 0;
@@ -659,18 +786,41 @@ int MoveToFocus(typMascot *mascot, gboolean force_fl)
 #endif
 
 	if(qr_ans==0){
-	  g_warning("Failed XQueryTree");
+	  g_warning("Failed XQueryTree 4");
 	  return(-1);
 	}
 
 	if(G_UNLIKELY(error == BadWindow)){
-	  g_warning("BadWindow error 6");
+	  g_warning("BadWindow error  in XQueryTree 4");
 	  return(-1);
 	}
 	wf=parent;
 	if(errflag ==0){
-	  XGetGeometry(GDK_WINDOW_XDISPLAY(gtk_widget_get_window(mascot->win_main)),
-		       wf,&rootwin,&x,&y,&width,&height,&border,&depth);
+#ifdef USE_GTK3  
+	  gdk_x11_display_error_trap_push (gtk_widget_get_display(mascot->win_main));
+#else
+	  gdk_error_trap_push ();
+#endif
+	  qr_ans=XGetGeometry(GDK_WINDOW_XDISPLAY(gtk_widget_get_window(mascot->win_main)),
+			      wf,&rootwin,&x,&y,&width,&height,&border,&depth);
+#ifdef USE_GTK3
+	  error=   gdk_x11_display_error_trap_pop (gtk_widget_get_display(mascot->win_main));
+#else
+	  error = gdk_error_trap_pop ();
+#endif
+	  if(qr_ans==0){
+	    g_warning("Failed XGetGeometry 6");
+	    return(-1);
+	  }
+	  
+	  if(G_UNLIKELY(error == BadWindow)){
+	    g_warning("BadWindow error in XGetGeometry 6");
+	    return(-1);
+	  }
+	  else if(G_UNLIKELY(error == BadDrawable)){
+	    g_warning("BadDrawable error in XGetGeometry 6");
+	    return(-1);
+	  }
 	}
 	else{
 	  errflag = 0;
@@ -694,7 +844,7 @@ int MoveToFocus(typMascot *mascot, gboolean force_fl)
 #endif
 
 	if(G_UNLIKELY(error == BadWindow)){
-	  g_warning("BadWindow error 7");
+	  g_warning("BadWindow error in XQueryPointer 2");
 	  return(-1);
 	}
       }
@@ -2690,7 +2840,8 @@ void InitMascot0(typMascot *mascot){
   gint nmon, i_mon;
 #elif defined(USE_OSX)
   GtkWidget *menu_item;
-#else  
+#else
+  gint qr_ans;
   Window rootwin;
 #endif
   int x_root, y_root, width_root, height_root, border, depth;
@@ -2730,50 +2881,32 @@ void InitMascot0(typMascot *mascot){
   gtk_widget_hide(mascot->osx_menu);
   gtkosx_application_set_menu_bar(mascot->osx_app, GTK_MENU_SHELL(mascot->osx_menu));
 
-  /*
-  menu_item=make_osx_open_menu(mascot);
-  gtkosx_application_insert_app_menu_item(mascot->osx_app,
-					  menu_item,
-					  0);
-  menu_item=make_osx_save_menu(mascot);
-  gtkosx_application_insert_app_menu_item(mascot->osx_app,
-					  menu_item,
-					  1);
-  menu_item=make_osx_new_menu(mascot);
-  gtkosx_application_insert_app_menu_item(mascot->osx_app,
-					  menu_item,
-					  2); 
-  menu_item=make_osx_install_menu(mascot);
-  gtkosx_application_insert_app_menu_item(mascot->osx_app,
-					  menu_item,
-					  3);
-  menu_item=make_osx_config_menu(mascot);
-  gtkosx_application_insert_app_menu_item(mascot->osx_app,
-					  menu_item,
-					  4);
-  menu_item=make_osx_signal_menu(mascot);
-  gtkosx_application_insert_app_menu_item(mascot->osx_app,
-					  menu_item,
-					  5);
- 
-  mascot->osx_cmenu=make_osx_cat_menu(mascot);
-  gtkosx_application_insert_app_menu_item(mascot->osx_app,
-					  mascot->osx_cmenu,
-					  6);
-					  gtkosx_application_sync_menubar(mascot->osx_app);*/
   gtkosx_application_ready(mascot->osx_app);
 #endif
  
+#else  // UNIX
+#ifdef USE_GTK3  
+  gdk_x11_display_error_trap_push (gtk_widget_get_display(mascot->win_main));
 #else
-  XGetGeometry(GDK_WINDOW_XDISPLAY(gtk_widget_get_window(mascot->win_main)),
-	       GDK_ROOT_WINDOW(),
-	       &rootwin,
-	       &x_root,
-	       &y_root,
-	       &width_root,
-	       &height_root,
-	       &border,
-	       &depth);
+  gdk_error_trap_push ();
+#endif
+  qr_ans=XGetGeometry(gdk_x11_get_default_xdisplay(),
+		      GDK_ROOT_WINDOW(),
+		      &rootwin,
+		      &x_root,
+		      &y_root,
+		      &width_root,
+		      &height_root,
+		      &border,
+		      &depth);
+#ifdef USE_GTK3
+  gdk_x11_display_error_trap_pop_ignored (gtk_widget_get_display(mascot->win_main));
+#else
+  gdk_error_trap_pop ();
+#endif
+  if(qr_ans==0){
+    g_warning("Failed XGetGeometry for Root Window");
+  }
 #endif
   mascot->width_root=width_root;
   mascot->height_root=height_root;

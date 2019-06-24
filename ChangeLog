@@ -1,3 +1,6 @@
+2019.6.23   ver3.2.3  - Error treatments for X functions in MoveToFocus
+	                (callbacks.c) for UNIX X11.
+
 2019.6.18   ver3.2.2  - Adjustments in popup menu displays.
                       - immmodules support in macOS.
 

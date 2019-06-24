@@ -1,6 +1,6 @@
 Summary: MaCoPiX = Mascot Constructive Pilot for X
 Name: macopix
-Version: 3.2.2
+Version: 3.2.3
 Release: 1%{?_dist_release}
 License: GPL3
 Group: Amusements/Games
