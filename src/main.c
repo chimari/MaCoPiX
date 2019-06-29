@@ -5047,6 +5047,14 @@ int main(int argc, char **argv)
   gtk_set_locale();
 #endif
 
+#ifdef USE_GTK3
+#ifndef USE_WIN32
+#ifndef USE_OSX
+  gdk_set_allowed_backends("x11");
+#endif
+#endif
+#endif
+
   gtk_init(&argc, &argv);
 
 #ifdef USE_GTK3
