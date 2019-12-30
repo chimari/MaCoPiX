@@ -754,6 +754,8 @@ struct _typScanMenu{
 typedef struct _typMail typMail;
 struct _typMail{
   gboolean flag;
+  gboolean running;
+  gboolean init;
   gint  type;
   gchar *pop_id;
   gchar *pop_pass;
@@ -807,7 +809,9 @@ struct _typMail{
   gchar *ssl_sub;
   gchar *ssl_iss;
   glong ssl_verify;
- };
+
+  gchar *pop_froms;
+};
 
 
 
@@ -1091,14 +1095,22 @@ struct _typMascot{
   gchar *http_path;
   gchar *http_dlfile;
   glong http_dlsz;
+
+  // http download thread
+  GThread   *pthread;
+  GCancellable   *pcancel;
+  GMainLoop *ploop;
+  gboolean pabort;
   GtkWidget *pdialog;
   GtkWidget *pbar;
   gboolean http_ok;
-#ifdef USE_WIN32
-  HANDLE hThread_http;
-  unsigned int dwThreadID_http;
-#endif
 
+  // POP3 access thread
+  GThread   *mthread;
+  GCancellable   *mcancel;
+  GMainLoop *mloop;
+  gboolean mabort;
+  
 #ifdef USE_GTKMACINTEGRATION
   GtkosxApplication *osx_app;
   GtkWidget *osx_win;
@@ -1138,7 +1150,6 @@ GdkPixmap *pixmap_sdw;
 gint window_x, window_y;
 gboolean supports_alpha;
 gboolean flag_balloon;
-typMascot *Mascot;
 
 pid_t http_pid;
 
@@ -1283,6 +1294,7 @@ gint select_menu_from_ext();
 
 // mail.c
 #ifdef USE_BIFF
+gboolean MonitorBiff();
 gint SetMailChecker();
 void make_biff_pix();
 void mail_arg_init();

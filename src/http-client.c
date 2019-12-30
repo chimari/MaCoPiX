@@ -6,17 +6,11 @@
 
 #ifdef USE_WIN32
 #include <ws2tcpip.h>
-#define BUF_LEN 65535             /* バッファのサイズ */
-#else
-#define BUF_LEN 65535             /* バッファのサイズ */
 #endif
-
-#define BUFFSIZE 65535
+#define BUF_LEN 65535             /* バッファのサイズ */
 
 void check_msg_from_parent();
 static gint fd_check_io();
-//gint fd_recv();
-//gint fd_gets();
 char *read_line();
 void read_response();
 gint fd_write();
@@ -26,20 +20,10 @@ void write_to_SSLserver();
 #endif
 void error();
 void PortReq();
-//int sftp_c();
-//int sftp_get_c();
-//int ftp_c();
 
-#ifdef USE_WIN32
-unsigned __stdcall http_c_nonssl();
-#ifdef USE_SSL
-unsigned __stdcall http_c_ssl();
-#endif
-#else
 int http_c_nonssl();
 #ifdef USE_SSL
 int http_c_ssl();
-#endif
 #endif
 
 void unchunk();
@@ -53,9 +37,6 @@ gint ssl_write();
 #endif
 
 gboolean progress_timeout();
-#ifndef USE_WIN32
-void httpdl_signal();
-#endif
 
 void dl_mascot_list();
 
@@ -64,7 +45,8 @@ void write_dlsz();
 void unlink_dlsz();
 glong get_dlsz();
 
-static void cancel_http();
+static void thread_cancel_http();
+gboolean delete_http();
 
 #ifdef POP_DEBUG
 gboolean debug_flg=TRUE;
@@ -72,88 +54,40 @@ gboolean debug_flg=TRUE;
 gboolean debug_flg=FALSE;
 #endif
 
-void check_msg_from_parent(){
-#ifdef USE_WIN32
-  MSG msg;
-  
-  PeekMessage(&msg, NULL, 0, 0, PM_NOREMOVE);
-
-  if(msg.message==WM_QUIT) {
-    fprintf(stderr,"Terminated from parent.\n");
-    gtk_main_quit();
-    _endthreadex(0);
+void check_msg_from_parent(typMascot *mascot){
+  if(mascot->pabort){
+    g_thread_exit(NULL);
   }
-#endif
 }
 
 static gint fd_check_io(gint fd, GIOCondition cond)
 {
-	struct timeval timeout;
-	fd_set fds;
-	guint io_timeout=60;
-
-	timeout.tv_sec  = io_timeout;
-	timeout.tv_usec = 0;
-
-	FD_ZERO(&fds);
-	FD_SET(fd, &fds);
-
-	if (cond == G_IO_IN) {
-		select(fd + 1, &fds, NULL, NULL,
-		       io_timeout > 0 ? &timeout : NULL);
-	} else {
-		select(fd + 1, NULL, &fds, NULL,
-		       io_timeout > 0 ? &timeout : NULL);
-	}
-
-	if (FD_ISSET(fd, &fds)) {
-		return 0;
-	} else {
-		g_warning("Socket IO timeout\n");
-		return -1;
-	}
-}
-
-/*
-gint fd_recv(gint fd, gchar *buf, gint len, gint flags)
-{
-  gint ret;
+  struct timeval timeout;
+  fd_set fds;
+  guint io_timeout=60;
   
-  if (fd_check_io(fd, G_IO_IN) < 0)
-    return -1;
+  timeout.tv_sec  = io_timeout;
+  timeout.tv_usec = 0;
+  
+  FD_ZERO(&fds);
+  FD_SET(fd, &fds);
 
-  ret = recv(fd, buf, len, flags);
-#ifdef USE_WIN32
-  if (ret == SOCKET_ERROR) {
-    fprintf(stderr,"Recv() Error TimeOut...  %d\n",WSAGetLastError());
+  if (cond == G_IO_IN) {
+    select(fd + 1, &fds, NULL, NULL,
+	   io_timeout > 0 ? &timeout : NULL);
+  } else {
+    select(fd + 1, NULL, &fds, NULL,
+	   io_timeout > 0 ? &timeout : NULL);
   }
-#endif
-  return ret;
-}
-
-
-gint fd_gets(gint fd, gchar *buf, gint len)
-{
-  gchar *newline, *bp = buf;
-  gint n;
   
-  if (--len < 1)
+  if (FD_ISSET(fd, &fds)) {
+    return 0;
+  } else {
+    g_warning("Socket IO timeout\n");
     return -1;
-  do {
-    if ((n = fd_recv(fd, bp, len, MSG_PEEK)) <= 0)
-      return -1;
-    if ((newline = memchr(bp, '\n', n)) != NULL)
-      n = newline - bp + 1;
-    if ((n = fd_recv(fd, bp, n, 0)) < 0)
-      return -1;
-    bp += n;
-    len -= n;
-  } while (!newline && len);
-  
-  *bp = '\0';
-  return bp - buf;
+  }
 }
-*/
+
 
 /*--------------------------------------------------
  * ソケットから1行読み込む
@@ -189,39 +123,6 @@ void read_response(int socket, char *p){
 
 }
 
-/*
-gint fd_write(gint fd, const gchar *buf, gint len)
-{
-#ifdef USE_WIN32
-  gint ret;
-#endif
-  if (fd_check_io(fd, G_IO_OUT) < 0)
-    return -1;
-  
-#ifdef USE_WIN32
-  ret = send(fd, buf, len, 0);
-  if (ret == SOCKET_ERROR) {
-    gint err;
-    err = WSAGetLastError();
-    switch (err) {
-    case WSAEWOULDBLOCK:
-      errno = EAGAIN;
-      break;
-    default:
-      fprintf(stderr,"last error = %d\n", err);
-      errno = 0;
-      break;
-    }
-    if (err != WSAEWOULDBLOCK)
-      g_warning("fd_write() failed with %d (errno = %d)\n",
-		err, errno);
-  }
-  return ret;
-#else
-  return write(fd, buf, len);
-#endif
-}
-*/
 
 /*--------------------------------------------------
  * 指定されたソケット socket に文字列 p を送信。
@@ -286,45 +187,23 @@ void PortReq(char *IPaddr , int *i1 , int *i2 , int *i3 , int *i4 , int *i5 , in
 }
 
 
+gpointer thread_get_mascot_list(gpointer gdata){
+  typMascot *mascot=(typMascot *)gdata;
 
-int get_mascot_list(typMascot *mascot){
-#ifdef USE_WIN32
-  DWORD dwErrorNumber;
+  mascot->http_dlsz=0;
+  mascot->pabort=FALSE;
+  
+  http_c_nonssl(mascot);
 
-  mascot->hThread_http = (HANDLE)_beginthreadex(NULL,0,
-						http_c_nonssl,
-						(LPVOID)mascot,
-						0,
-						&mascot->dwThreadID_http);
-  if (mascot->hThread_http == NULL) {
-    dwErrorNumber = GetLastError();
-    fprintf(stderr,"_beginthreadex() error(%ld).\n", dwErrorNumber);
-  }
-  else{
-    CloseHandle(mascot->hThread_http);
-  }
-  mascot->dwThreadID_http=0;
-#else
-
-  waitpid(http_pid,0,WNOHANG);
-
-  if( (http_pid = fork()) <0){
-    fprintf(stderr,"fork error\n");
-  }
-  else if(http_pid ==0) {
-    http_c_nonssl(mascot);
-    kill(getppid(), SIGHTTPDL);  //calling dss_signal
-    _exit(1);
-  }
-#endif
-
-  return 0;
+  if(mascot->ploop) g_main_loop_quit(mascot->ploop);
 }
+
+
 
 void unchunk(gchar *dss_tmp){
   FILE *fp_read, *fp_write;
   gchar *unchunk_tmp;
-  gchar cbuf[BUFFSIZE];
+  gchar cbuf[BUF_LEN];
   gchar *dbuf=NULL;
   gchar *cpp;
   gchar *chunkptr, *endptr;
@@ -340,7 +219,7 @@ void unchunk(gchar *dss_tmp){
   fp_write=fopen(unchunk_tmp,"wb");
   
   while(!feof(fp_read)){
-    if(fgets(cbuf,BUFFSIZE-1,fp_read)){
+    if(fgets(cbuf,BUF_LEN-1,fp_read)){
       cpp=cbuf;
       
       read_size=strlen(cpp);
@@ -384,130 +263,9 @@ void unchunk(gchar *dss_tmp){
   g_free(unchunk_tmp);
 }
 
-/*
-#ifdef USE_SSL
- gint ssl_gets(SSL *ssl, gchar *buf, gint len)
-{
-  gchar *newline, *bp = buf;
-  gint n;
-  gint i;
-  
-  if (--len < 1)
-    return -1;
-  do {
-    if ((n = ssl_peek(ssl, bp, len)) <= 0)
-	return -1;
-    if ((newline = memchr(bp, '\n', n)) != NULL)
-      n = newline - bp + 1;
-    if ((n = ssl_read(ssl, bp, n)) < 0)
-      return -1;
-    bp += n;
-    len -= n;
-  } while (!newline && len);
-  
-  *bp = '\0';
-  return bp - buf;
-}
-#endif
 
-#ifdef USE_SSL
- gint ssl_read(SSL *ssl, gchar *buf, gint len)
-{
-	gint err, ret;
-
-	if (SSL_pending(ssl) == 0) {
-		if (fd_check_io(SSL_get_rfd(ssl), G_IO_IN) < 0)
-			return -1;
-	}
-
-	ret = SSL_read(ssl, buf, len);
-
-	switch ((err = SSL_get_error(ssl, ret))) {
-	case SSL_ERROR_NONE:
-		return ret;
-	case SSL_ERROR_WANT_READ:
-	case SSL_ERROR_WANT_WRITE:
-		errno = EAGAIN;
-		return -1;
-	case SSL_ERROR_ZERO_RETURN:
-		return 0;
-	default:
-		g_warning("SSL_read() returned error %d, ret = %d\n", err, ret);
-		if (ret == 0)
-			return 0;
-		return -1;
-	}
-}
-#endif
-*/
- 
-/* peek at the socket data without actually reading it */
- /*
-#ifdef USE_SSL
-gint ssl_peek(SSL *ssl, gchar *buf, gint len)
-{
-	gint err, ret;
-
-	if (SSL_pending(ssl) == 0) {
-		if (fd_check_io(SSL_get_rfd(ssl), G_IO_IN) < 0)
-			return -1;
-	}
-
-	ret = SSL_peek(ssl, buf, len);
-
-	switch ((err = SSL_get_error(ssl, ret))) {
-	case SSL_ERROR_NONE:
-		return ret;
-	case SSL_ERROR_WANT_READ:
-	case SSL_ERROR_WANT_WRITE:
-		errno = EAGAIN;
-		return -1;
-	case SSL_ERROR_ZERO_RETURN:
-		return 0;
-	case SSL_ERROR_SYSCALL:
-	  // End of file
-	  //printf("SSL_ERROR_SYSCALL ret=%d  %d\n",ret,(gint)strlen(buf));
-	        return 0;
-	default:
-		g_warning("SSL_peek() returned error %d, ret = %d\n", err, ret);
-		if (ret == 0)
-			return 0;
-		return -1;
-	}
-}
-#endif
-
-#ifdef USE_SSL
-gint ssl_write(SSL *ssl, const gchar *buf, gint len)
-{
-	gint ret;
-
-	ret = SSL_write(ssl, buf, len);
-
-	switch (SSL_get_error(ssl, ret)) {
-	case SSL_ERROR_NONE:
-		return ret;
-	case SSL_ERROR_WANT_READ:
-	case SSL_ERROR_WANT_WRITE:
-		errno = EAGAIN;
-		return -1;
-	default:
-		return -1;
-	}
-}
-#endif
-*/
-
-
-#ifdef USE_WIN32
-unsigned __stdcall http_c_nonssl(LPVOID lpvPipe)
-#else
 int http_c_nonssl(typMascot *mascot)
-#endif
 {
-#ifdef USE_WIN32
-  typMascot *mascot=(typMascot *) lpvPipe;
-#endif
   int command_socket;           /* コマンド用ソケット */
   int size;
   
@@ -527,7 +285,7 @@ int http_c_nonssl(typMascot *mascot)
   gchar *rand16=NULL;
   gint plen;
 
-  check_msg_from_parent();
+  check_msg_from_parent(mascot);
    
   /* ホストの情報 (IP アドレスなど) を取得 */
   memset(&hints, 0, sizeof(hints));
@@ -536,38 +294,26 @@ int http_c_nonssl(typMascot *mascot)
 
   if ((err = getaddrinfo(mascot->http_host, "http", &hints, &res)) !=0){
     fprintf(stderr, "Bad hostname [%s]\n", mascot->http_host);
-#ifdef USE_WIN32
-    gtk_main_quit();
-    _endthreadex(0);
-#endif
     return(MACOPIX_HTTP_ERROR_GETHOST);
   }
 
-  check_msg_from_parent();
+  check_msg_from_parent(mascot);
    
   /* ソケット生成 */
   if( (command_socket = socket(res->ai_family, res->ai_socktype, res->ai_protocol)) < 0){
     fprintf(stderr, "Failed to create a new socket.\n");
-#ifdef USE_WIN32
-    gtk_main_quit();
-    _endthreadex(0);
-#endif
     return(MACOPIX_HTTP_ERROR_SOCKET);
   }
   
-  check_msg_from_parent();
+  check_msg_from_parent(mascot);
    
   /* サーバに接続 */
   if( connect(command_socket, res->ai_addr, res->ai_addrlen) == -1){
     fprintf(stderr, "Failed to connect to %s .\n", mascot->http_host);
-#ifdef USE_WIN32
-    gtk_main_quit();
-    _endthreadex(0);
-#endif
     return(MACOPIX_HTTP_ERROR_CONNECT);
   }
   
-  check_msg_from_parent();
+  check_msg_from_parent(mascot);
    
   // AddrInfoの解放
   freeaddrinfo(res);
@@ -624,37 +370,22 @@ int http_c_nonssl(typMascot *mascot)
       
   fclose(fp_write);
 
-  check_msg_from_parent();
+  check_msg_from_parent(mascot);
 
   if(chunked_flag) unchunk(mascot->http_dlfile);
 
-#ifndef USE_WIN32
     if((chmod(mascot->http_dlfile,(S_IRUSR | S_IWUSR | S_IRGRP | S_IWGRP |S_IROTH | S_IWOTH ))) != 0){
     g_print("Cannot Chmod Temporary File %s!  Please check!!!\n",mascot->http_dlfile);
   }
-#endif
   
-#ifdef USE_WIN32
-  closesocket(command_socket);
-  gtk_main_quit();
-  _endthreadex(0);
-#else
   close(command_socket);
 
   return 0;
-#endif
 }
 
 #ifdef USE_SSL
-#ifdef USE_WIN32
-unsigned __stdcall http_c_ssl(LPVOID lpvPipe)
-#else
 int http_c_ssl(typMascot *mascot)
-#endif
 {
-#ifdef USE_WIN32
-  typMascot *mascot=(typMascot *) lpvPipe; 
-#endif
   int command_socket;           /* コマンド用ソケット */
   int size;
 
@@ -679,7 +410,7 @@ int http_c_ssl(typMascot *mascot)
   SSL_CTX *ctx;
 
    
-  check_msg_from_parent();
+  check_msg_from_parent(mascot);
 
   /* ホストの情報 (IP アドレスなど) を取得 */
   memset(&hints, 0, sizeof(hints));
@@ -688,38 +419,26 @@ int http_c_ssl(typMascot *mascot)
 
   if ((err = getaddrinfo(mascot->http_host, "https", &hints, &res)) !=0){
     fprintf(stderr, "Bad hostname [%s]\n", mascot->http_host);
-#ifdef USE_WIN32
-    gtk_main_quit();
-    _endthreadex(0);
-#endif
     return(MACOPIX_HTTP_ERROR_GETHOST);
   }
 
-  check_msg_from_parent();
+  check_msg_from_parent(mascot);
 
     /* ソケット生成 */
   if( (command_socket = socket(res->ai_family, res->ai_socktype, res->ai_protocol)) < 0){
     fprintf(stderr, "Failed to create a new socket.\n");
-#ifdef USE_WIN32
-    gtk_main_quit();
-    _endthreadex(0);
-#endif
     return(MACOPIX_HTTP_ERROR_SOCKET);
   }
 
-  check_msg_from_parent();
+  check_msg_from_parent(mascot);
   
   /* サーバに接続 */
   if( connect(command_socket, res->ai_addr, res->ai_addrlen) == -1){
     fprintf(stderr, "Failed to connect to %s .\n", mascot->http_host);
-#ifdef USE_WIN32
-    gtk_main_quit();
-    _endthreadex(0);
-#endif
     return(MACOPIX_HTTP_ERROR_CONNECT);
   }
 
-  check_msg_from_parent();
+  check_msg_from_parent(mascot);
 
   SSL_load_error_strings();
   SSL_library_init();
@@ -736,14 +455,10 @@ int http_c_ssl(typMascot *mascot)
     }
     g_warning("SSL_connect() failed with error %d, ret=%d (%s)\n",
 	      err, ret, ERR_error_string(ERR_get_error(), NULL));
-#ifdef USE_WIN32
-    gtk_main_quit();
-    _endthreadex(0);
-#endif
     return (MACOPIX_HTTP_ERROR_CONNECT);
   }
 
-  check_msg_from_parent();
+  check_msg_from_parent(mascot);
   
   // AddrInfoの解放
   freeaddrinfo(res);
@@ -788,33 +503,24 @@ int http_c_ssl(typMascot *mascot)
       
   fclose(fp_write);
 
-  check_msg_from_parent();
+  check_msg_from_parent(mascot);
 
   if(chunked_flag) unchunk(mascot->http_dlfile);
 
-#ifndef USE_WIN32
     if((chmod(mascot->http_dlfile,(S_IRUSR | S_IWUSR | S_IRGRP | S_IWGRP |S_IROTH | S_IWOTH ))) != 0){
     g_print("Cannot Chmod Temporary File %s!  Please check!!!\n",mascot->http_dlfile);
   }
-#endif
 
   SSL_shutdown(ssl);
   SSL_free(ssl);
   SSL_CTX_free(ctx);
   ERR_free_strings();
   
-#ifdef USE_WIN32
-  closesocket(command_socket);
-  gtk_main_quit();
-  _endthreadex(0);
-#else
   close(command_socket);
 
   return 0;
-#endif
 }
 #endif  //USE_SSL
-
 
 
 gboolean progress_timeout( gpointer data ){
@@ -885,19 +591,6 @@ gboolean progress_timeout( gpointer data ){
 }
 
 
-#ifndef USE_WIN32
-void httpdl_signal(int sig){
-  pid_t child_pid=0;
-
-  gtk_main_quit();
-
-  do{
-    int child_ret;
-    child_pid=waitpid(http_pid, &child_ret,WNOHANG);
-  } while((child_pid>0)||(child_pid!=-1));
-}
-#endif
-
 void popup_dl_mascot_list(GtkWidget *w, gpointer gdata){
   typMascot *mascot = (typMascot *)gdata;
   
@@ -913,11 +606,8 @@ void smenu_dl_mascot_list(GtkWidget *w, gpointer gdata){
 }
 
 void dl_mascot_list(typMascot *mascot,  gboolean flag_popup){
-  GtkWidget *dialog, *vbox, *label, *button, *bar;
+  GtkWidget *vbox, *label, *button, *bar;
   gint timer=-1;
-#ifndef USE_WIN32
-  static struct sigaction act;
-#endif
   gchar *tmp;
 
   mascot->http_ok=TRUE;
@@ -940,13 +630,14 @@ void dl_mascot_list(typMascot *mascot,  gboolean flag_popup){
 
   if(access(mascot->http_dlfile, F_OK)==0) unlink(mascot->http_dlfile);
 
-  dialog = gtk_dialog_new();
+  mascot->pdialog = gtk_dialog_new();
+  my_signal_connect(mascot->pdialog, "delete-event", delete_http, (gpointer)mascot);
   
-  gtk_window_set_position(GTK_WINDOW(dialog), GTK_WIN_POS_CENTER);
-  gtk_container_set_border_width(GTK_CONTAINER(dialog),5);
-  gtk_container_set_border_width(GTK_CONTAINER(gtk_dialog_get_content_area(GTK_DIALOG(dialog))),5);
-  gtk_window_set_title(GTK_WINDOW(dialog),_("MaCoPiX : Downloading Official Mascot List"));
-  gtk_window_set_decorated(GTK_WINDOW(dialog),TRUE);
+  gtk_window_set_position(GTK_WINDOW(mascot->pdialog), GTK_WIN_POS_CENTER);
+  gtk_container_set_border_width(GTK_CONTAINER(mascot->pdialog),5);
+  gtk_container_set_border_width(GTK_CONTAINER(gtk_dialog_get_content_area(GTK_DIALOG(mascot->pdialog))),5);
+  gtk_window_set_title(GTK_WINDOW(mascot->pdialog),_("MaCoPiX : Downloading Official Mascot List"));
+  gtk_window_set_decorated(GTK_WINDOW(mascot->pdialog),TRUE);
 
   label=gtkut_label_new(_("Downloading the latest version of the official mascot list ..."));
 #ifdef USE_GTK3
@@ -955,13 +646,13 @@ void dl_mascot_list(typMascot *mascot,  gboolean flag_popup){
 #else
   gtk_misc_set_alignment (GTK_MISC (label), 0.0, 0.5);
 #endif
-  gtk_box_pack_start(GTK_BOX(gtk_dialog_get_content_area(GTK_DIALOG(dialog))),
+  gtk_box_pack_start(GTK_BOX(gtk_dialog_get_content_area(GTK_DIALOG(mascot->pdialog))),
 		     label,TRUE,TRUE,0);
   gtk_widget_show(label);
   
   mascot->http_dlsz=-1;
   mascot->pbar=gtk_progress_bar_new();
-  gtk_box_pack_start(GTK_BOX(gtk_dialog_get_content_area(GTK_DIALOG(dialog))),
+  gtk_box_pack_start(GTK_BOX(gtk_dialog_get_content_area(GTK_DIALOG(mascot->pdialog))),
 		     mascot->pbar,TRUE,TRUE,0);
   gtk_progress_bar_pulse(GTK_PROGRESS_BAR(mascot->pbar));
 #ifdef USE_GTK3
@@ -981,7 +672,7 @@ void dl_mascot_list(typMascot *mascot,  gboolean flag_popup){
 #else
   bar = gtk_hseparator_new();
 #endif
-  gtk_box_pack_start(GTK_BOX(gtk_dialog_get_content_area(GTK_DIALOG(dialog))),
+  gtk_box_pack_start(GTK_BOX(gtk_dialog_get_content_area(GTK_DIALOG(mascot->pdialog))),
 		     bar,FALSE, FALSE, 0);
 
   label=gtkut_label_new(_("Checking the latest version of the official mascot list ..."));
@@ -991,7 +682,7 @@ void dl_mascot_list(typMascot *mascot,  gboolean flag_popup){
 #else
   gtk_misc_set_alignment (GTK_MISC (label), 0.0, 0.5);
 #endif
-  gtk_box_pack_start(GTK_BOX(gtk_dialog_get_content_area(GTK_DIALOG(dialog))),
+  gtk_box_pack_start(GTK_BOX(gtk_dialog_get_content_area(GTK_DIALOG(mascot->pdialog))),
 		     label,FALSE,FALSE,0);
 
 #ifdef USE_GTK3
@@ -999,35 +690,36 @@ void dl_mascot_list(typMascot *mascot,  gboolean flag_popup){
 #else
   button=gtkut_button_new_from_stock(_("Cancel"),GTK_STOCK_CANCEL);
 #endif
-  gtk_dialog_add_action_widget(GTK_DIALOG(dialog),button,GTK_RESPONSE_CANCEL);
+  gtk_dialog_add_action_widget(GTK_DIALOG(mascot->pdialog),button,
+			       GTK_RESPONSE_CANCEL);
   my_signal_connect(button,"pressed",
-		    cancel_http, 
+		    thread_cancel_http, 
 		    (gpointer)mascot);
 
-  gtk_widget_show_all(dialog);
+  gtk_widget_show_all(mascot->pdialog);
 
   timer=g_timeout_add(100, 
 		      (GSourceFunc)progress_timeout,
 		      (gpointer)mascot);
+ 
+  gtk_window_set_modal(GTK_WINDOW(mascot->pdialog),TRUE);
   
-#ifndef USE_WIN32
-  act.sa_handler=httpdl_signal;
-  sigemptyset(&act.sa_mask);
-  act.sa_flags=0;
-  if(sigaction(SIGHTTPDL, &act, NULL)==-1){
-    fprintf(stderr,"Error in sigaction (SIGHTTODL).\n");
-  }
-#endif
+  mascot->ploop=g_main_loop_new(NULL, FALSE);
+  mascot->pcancel=g_cancellable_new();
+  mascot->pthread=g_thread_new("macopix_get_mascot_list",
+			       thread_get_mascot_list,
+			       (gpointer)mascot);
+  g_main_loop_run(mascot->ploop);
+  g_thread_join(mascot->pthread);
+  g_main_loop_unref(mascot->ploop);
+  mascot->ploop=NULL;
+  //get_mascot_list(mascot);
+  //gtk_main();
   
-  gtk_window_set_modal(GTK_WINDOW(dialog),TRUE);
-  
-  get_mascot_list(mascot);
-  gtk_main();
-  
-  gtk_window_set_modal(GTK_WINDOW(dialog),FALSE);
+  gtk_window_set_modal(GTK_WINDOW(mascot->pdialog),FALSE);
   if(timer!=-1) g_source_remove(timer);
 
-  if(GTK_IS_WIDGET(dialog)) gtk_widget_destroy(dialog);
+  if(GTK_IS_WIDGET(mascot->pdialog)) gtk_widget_destroy(mascot->pdialog);
 
   if(access(mascot->http_dlfile, F_OK)==0){
     create_dl_smenu_dialog(mascot, flag_popup);
@@ -1054,31 +746,29 @@ void dl_mascot_list(typMascot *mascot,  gboolean flag_popup){
 
 
 void dl_mascot_tgz(typMascot *mascot){
-  GtkWidget *dialog, *vbox, *label, *button, *bar;
+  GtkWidget *vbox, *label, *button, *bar;
   gint timer=-1;
-#ifndef USE_WIN32
-  static struct sigaction act;
-#endif
 
-  dialog = gtk_dialog_new();
+  mascot->pdialog = gtk_dialog_new();
+  my_signal_connect(mascot->pdialog, "delete-event", delete_http, (gpointer)mascot);
 
   mascot->http_ok=TRUE;
   
-  gtk_window_set_position(GTK_WINDOW(dialog), GTK_WIN_POS_CENTER);
-  gtk_container_set_border_width(GTK_CONTAINER(dialog),5);
-  gtk_container_set_border_width(GTK_CONTAINER(gtk_dialog_get_content_area(GTK_DIALOG(dialog))),5);
-  gtk_window_set_title(GTK_WINDOW(dialog),_("MaCoPiX : Downloading Official Mascot tar.gz file"));
-  gtk_window_set_decorated(GTK_WINDOW(dialog),TRUE);
+  gtk_window_set_position(GTK_WINDOW(mascot->pdialog), GTK_WIN_POS_CENTER);
+  gtk_container_set_border_width(GTK_CONTAINER(mascot->pdialog),5);
+  gtk_container_set_border_width(GTK_CONTAINER(gtk_dialog_get_content_area(GTK_DIALOG(mascot->pdialog))),5);
+  gtk_window_set_title(GTK_WINDOW(mascot->pdialog),_("MaCoPiX : Downloading Official Mascot tar.gz file"));
+  gtk_window_set_decorated(GTK_WINDOW(mascot->pdialog),TRUE);
 
   label=gtkut_label_new(_("Downloading an official mascot ..."));
   gtkut_pos(label, POS_START, POS_CENTER);
-  gtk_box_pack_start(GTK_BOX(gtk_dialog_get_content_area(GTK_DIALOG(dialog))),
+  gtk_box_pack_start(GTK_BOX(gtk_dialog_get_content_area(GTK_DIALOG(mascot->pdialog))),
 		     label,TRUE,TRUE,0);
   gtk_widget_show(label);
 
   mascot->http_dlsz=-1;
   mascot->pbar=gtk_progress_bar_new();
-  gtk_box_pack_start(GTK_BOX(gtk_dialog_get_content_area(GTK_DIALOG(dialog))),
+  gtk_box_pack_start(GTK_BOX(gtk_dialog_get_content_area(GTK_DIALOG(mascot->pdialog))),
 		     mascot->pbar,TRUE,TRUE,0);
   gtk_progress_bar_pulse(GTK_PROGRESS_BAR(mascot->pbar));
 #ifdef USE_GTK3
@@ -1098,7 +788,7 @@ void dl_mascot_tgz(typMascot *mascot){
 #else
   bar = gtk_hseparator_new();
 #endif
-  gtk_box_pack_start(GTK_BOX(gtk_dialog_get_content_area(GTK_DIALOG(dialog))),
+  gtk_box_pack_start(GTK_BOX(gtk_dialog_get_content_area(GTK_DIALOG(mascot->pdialog))),
 		     bar,FALSE, FALSE, 0);
 
   label=gtkut_label_new(_("Downloading ..."));
@@ -1108,7 +798,7 @@ void dl_mascot_tgz(typMascot *mascot){
 #else
   gtk_misc_set_alignment (GTK_MISC (label), 0.0, 0.5);
 #endif
-  gtk_box_pack_start(GTK_BOX(gtk_dialog_get_content_area(GTK_DIALOG(dialog))),
+  gtk_box_pack_start(GTK_BOX(gtk_dialog_get_content_area(GTK_DIALOG(mascot->pdialog))),
 		     label,FALSE,FALSE,0);
 
 #ifdef USE_GTK3
@@ -1116,35 +806,35 @@ void dl_mascot_tgz(typMascot *mascot){
 #else
   button=gtkut_button_new_from_stock(_("Cancel"),GTK_STOCK_CANCEL);
 #endif
-  gtk_dialog_add_action_widget(GTK_DIALOG(dialog),button,GTK_RESPONSE_CANCEL);
+  gtk_dialog_add_action_widget(GTK_DIALOG(mascot->pdialog),button,GTK_RESPONSE_CANCEL);
   my_signal_connect(button,"pressed",
-		    cancel_http, 
+		    thread_cancel_http, 
 		    (gpointer)mascot);
   
-  gtk_widget_show_all(dialog);
+  gtk_widget_show_all(mascot->pdialog);
 
   timer=g_timeout_add(100, 
 		      (GSourceFunc)progress_timeout,
 		      (gpointer)mascot);
   
-#ifndef USE_WIN32
-  act.sa_handler=httpdl_signal;
-  sigemptyset(&act.sa_mask);
-  act.sa_flags=0;
-  if(sigaction(SIGHTTPDL, &act, NULL)==-1){
-    fprintf(stderr,"Error in sigaction (SIGHTTPDL).\n");
-  }
-#endif
-  
-  gtk_window_set_modal(GTK_WINDOW(dialog),TRUE);
+  gtk_window_set_modal(GTK_WINDOW(mascot->pdialog),TRUE);
 
-  get_mascot_list(mascot);
-  gtk_main();
+  mascot->ploop=g_main_loop_new(NULL, FALSE);
+  mascot->pcancel=g_cancellable_new();
+  mascot->pthread=g_thread_new("macopix_get_mascot_list",
+			       thread_get_mascot_list,
+			       (gpointer)mascot);
+  g_main_loop_run(mascot->ploop);
+  g_thread_join(mascot->pthread);
+  g_main_loop_unref(mascot->ploop);
+  mascot->ploop=NULL;
+  //get_mascot_list(mascot);
+  //gtk_main();
   
-  gtk_window_set_modal(GTK_WINDOW(dialog),FALSE);
+  gtk_window_set_modal(GTK_WINDOW(mascot->pdialog),FALSE);
   if(timer!=-1) g_source_remove(timer);
 
-  if(GTK_IS_WIDGET(dialog)) gtk_widget_destroy(dialog);
+  if(GTK_IS_WIDGET(mascot->pdialog)) gtk_widget_destroy(mascot->pdialog);
 }
 
 
@@ -1249,39 +939,31 @@ glong get_dlsz(typMascot *mascot){
 }
 
 
-static void cancel_http(GtkWidget *w, gpointer gdata){
-  typMascot *mascot = (typMascot *)gdata;
-  pid_t child_pid=0;
-
+static void thread_cancel_http(GtkWidget *w, gpointer gdata)
+{
+  typMascot *mascot=(typMascot *)gdata;
   mascot->http_ok=FALSE;
 
-#ifdef USE_WIN32
-  if(mascot->dwThreadID_http){
-    PostThreadMessage(mascot->dwThreadID_http, WM_QUIT, 0, 0);
-    WaitForSingleObject(mascot->hThread_http, INFINITE);
-    CloseHandle(mascot->hThread_http);
-    gtk_main_quit();
-  }
-  else{
-    gtk_main_quit();
-  }
-#else
-  if(http_pid){
-    kill(http_pid, SIGKILL);
-    gtk_main_quit();
+  if(GTK_IS_WIDGET(mascot->pdialog)) gtk_widget_unmap(mascot->pdialog);
 
-    do{
-      int child_ret;
-      child_pid=waitpid(http_pid, &child_ret,WNOHANG);
-    } while((child_pid>0)||(child_pid!=-1));
- 
-    http_pid=0;
-  }
-  else{
-    gtk_main_quit();
-  }
-#endif
+  g_cancellable_cancel(mascot->pcancel);
+  g_object_unref(mascot->pcancel); 
 
+  mascot->pabort=TRUE;
+
+  http_pid=0;
+  
   unlink_dlsz(mascot);
   if(access(mascot->http_dlfile, F_OK)==0) unlink(mascot->http_dlfile);
+
+  if(mascot->ploop) g_main_loop_quit(mascot->ploop);
 }
+
+
+gboolean delete_http(GtkWidget *w, GdkEvent *event, gpointer gdata)
+{
+  thread_cancel_http(w,gdata);
+
+  return(TRUE);
+}
+

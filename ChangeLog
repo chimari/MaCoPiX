@@ -1,3 +1,7 @@
+2019.12.28  ver3.4.0  - Revised multi-thread operations.
+	                All multi-thread tasks changed into glib based ones.
+                      - Removed a global typMascot argument (Mascot).
+
 2019.6.23   ver3.2.3  - Error treatments for X functions in MoveToFocus
 	                (callbacks.c) for UNIX X11.
 

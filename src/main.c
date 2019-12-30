@@ -4932,6 +4932,7 @@ void usage(void)
 
 int main(int argc, char **argv)
 {
+  typMascot *mascot;
 #ifndef USE_WIN32  
   GdkPixbuf *icon;
 #endif
@@ -4965,9 +4966,6 @@ int main(int argc, char **argv)
   // Initialize Global Args in Each Files
   FlagInstalledMenu=FALSE;
   gui_arg_init();
-#ifdef USE_BIFF
-  mail_arg_init();
-#endif
   balloon_arg_init();
   callbacks_arg_init();
 
@@ -5039,9 +5037,12 @@ int main(int argc, char **argv)
 
   RANDOMIZE();    /* 乱数系初期化 */
 
-  Mascot=g_malloc0(sizeof(typMascot));
+  mascot=g_malloc0(sizeof(typMascot));
+#ifdef USE_BIFF
+  mail_arg_init(mascot);
+#endif
 
-  get_rc_option(argc, argv, Mascot);
+  get_rc_option(argc, argv, mascot);
 
 #ifndef USE_GTK3
   gtk_set_locale();
@@ -5073,23 +5074,26 @@ int main(int argc, char **argv)
 #endif
 #endif
   
-  InitDefCol(Mascot);
+  InitDefCol(mascot);
 
-  ReadRC(Mascot,FALSE);
+  ReadRC(mascot,FALSE);
 
-  Mascot->http_host=NULL;
-  Mascot->http_path=NULL;
-  Mascot->http_dlfile=NULL;
+  mascot->http_host=NULL;
+  mascot->http_path=NULL;
+  mascot->http_dlfile=NULL;
 #ifndef USE_WIN32  
-  Mascot->url_command=g_strdup(DEF_OPEN_URL);
+  mascot->url_command=g_strdup(DEF_OPEN_URL);
 #endif
 
 #ifdef USE_BIFF
-  Mascot->mail.flag=FALSE;
+  mascot->mail.flag=FALSE;
+  mascot->mail.running=FALSE;
+  mascot->mail.init=TRUE;
+  mascot->mloop=NULL;
 #endif
-  Mascot->signal.flag=FALSE;
-  Mascot->flag_consow=FALSE;
-  get_option(argc, argv, Mascot);
+  mascot->signal.flag=FALSE;
+  mascot->flag_consow=FALSE;
+  get_option(argc, argv, mascot);
 
 
   // Gdk-Pixbufで使用
@@ -5111,13 +5115,13 @@ int main(int argc, char **argv)
   //gtk_widget_push_visual(gdk_imlib_get_visual());
   //gtk_widget_push_colormap(gdk_imlib_get_colormap());
 
-  create_conf_num(Mascot);
+  create_conf_num(mascot);
 
   // メニューの読み込みと作成
-  Mascot->installed_menu_dir=NULL;
-  Mascot->menu_code=NULL;
-  ReadMenu(Mascot,0,NULL);
-  Mascot->PopupMenu=make_popup_menu(Mascot);
+  mascot->installed_menu_dir=NULL;
+  mascot->menu_code=NULL;
+  ReadMenu(mascot,0,NULL);
+  mascot->PopupMenu=make_popup_menu(mascot);
   
 #ifdef USE_WIN32   // Initialize Winsock2
   nErrorStatus = WSAStartup(MAKEWORD(2,0), &wsaData);
@@ -5134,46 +5138,46 @@ int main(int argc, char **argv)
   ssl_init();
 #endif
     
-  if(!Mascot->file){
-    if(Mascot->menu_file){
-      Mascot->file=g_strdup(all_random_menu_mascot_file(Mascot));
+  if(!mascot->file){
+    if(mascot->menu_file){
+      mascot->file=g_strdup(all_random_menu_mascot_file(mascot));
     }
     else{
       // 起動メニュー選択
-      create_smenu_dialog(Mascot,FALSE);
+      create_smenu_dialog(mascot,FALSE);
 
-      if(Mascot->menu_file){
-	ReadMenu(Mascot,0,NULL);
-	Mascot->PopupMenu=make_popup_menu(Mascot);
-	Mascot->file=g_strdup(all_random_menu_mascot_file(Mascot));
+      if(mascot->menu_file){
+	ReadMenu(mascot,0,NULL);
+	mascot->PopupMenu=make_popup_menu(mascot);
+	mascot->file=g_strdup(all_random_menu_mascot_file(mascot));
       }
     }
   }
  
 
-  make_mascot(Mascot);
+  make_mascot(mascot);
   
-  make_balloon(Mascot);
+  make_balloon(mascot);
 #ifdef FG_DRAW
-  make_balloon_fg(Mascot);
+  make_balloon_fg(mascot);
 #endif
-  make_clock(Mascot);
+  make_clock(mascot);
 #ifdef FG_DRAW
-  make_clock_fg(Mascot);
+  make_clock_fg(mascot);
 #endif
 #ifdef USE_BIFF
-  make_biff_pix(Mascot);
+  make_biff_pix(mascot);
 #endif
 
-  InitComposite(Mascot);
-  LoadPixmaps(Mascot);  
+  InitComposite(mascot);
+  LoadPixmaps(mascot);  
 
-  Mascot->flag_ow=FALSE;
+  mascot->flag_ow=FALSE;
 
 #ifdef USE_BIFF
-  LoadBiffPixmap(Mascot->biff_pix, Mascot);
+  LoadBiffPixmap(mascot->biff_pix, mascot);
 #ifndef __GTK_TOOLTIP_H__
-  Mascot->mail.tooltips=gtk_tooltips_new();
+  mascot->mail.tooltips=gtk_tooltips_new();
 #endif
 #endif
 
@@ -5181,57 +5185,57 @@ int main(int argc, char **argv)
   timer=g_timeout_add_full(G_PRIORITY_HIGH,
 			   INTERVAL, 
 			   (GSourceFunc)time_update, 
-			   (gpointer)Mascot,
+			   (gpointer)mascot,
 			   NULL);
 
 
   // 初期配置
-  if(Mascot->move==MOVE_FIX){
-    MoveMascot(Mascot,Mascot->xfix,Mascot->yfix);
+  if(mascot->move==MOVE_FIX){
+    MoveMascot(mascot,mascot->xfix,mascot->yfix);
   }
   else{
-    MoveMascot(Mascot,-Mascot->height-100,-Mascot->width-100);
+    MoveMascot(mascot,-mascot->height-100,-mascot->width-100);
   }
 
-  gdk_window_set_cursor(gtk_widget_get_window(Mascot->win_main),
-			Mascot->cursor.normal);
+  gdk_window_set_cursor(gtk_widget_get_window(mascot->win_main),
+			mascot->cursor.normal);
 #ifdef USE_BIFF
-  gdk_window_set_cursor(gtk_widget_get_window(Mascot->biff_pix),Mascot->cursor.biff);
+  gdk_window_set_cursor(gtk_widget_get_window(mascot->biff_pix),mascot->cursor.biff);
 #endif // USE_BIFF
 
 #ifdef FG_DRAW
-  gtk_widget_show_all(Mascot->win_sdw);
+  gtk_widget_show_all(mascot->win_sdw);
 #endif
-  gtk_widget_show_all(Mascot->win_main);
-  map_main(Mascot, TRUE);
+  gtk_widget_show_all(mascot->win_main);
+  map_main(mascot, TRUE);
 
 #ifdef FG_DRAW
-  gtk_widget_show_all(Mascot->balloon_fg);
+  gtk_widget_show_all(mascot->balloon_fg);
 #endif
-  gtk_widget_show_all(Mascot->balloon_main);
-  map_balloon(Mascot, FALSE);
+  gtk_widget_show_all(mascot->balloon_main);
+  map_balloon(mascot, FALSE);
 
 #ifdef FG_DRAW
-  gtk_widget_show_all(Mascot->clock_fg);
+  gtk_widget_show_all(mascot->clock_fg);
 #endif
-  gtk_widget_show_all(Mascot->clock_main);
+  gtk_widget_show_all(mascot->clock_main);
     
-  if(Mascot->clkmode!=CLOCK_PANEL){
-    map_clock(Mascot, FALSE);
+  if(mascot->clkmode!=CLOCK_PANEL){
+    map_clock(mascot, FALSE);
   }
   else{
-    DrawPanelClock0(Mascot);
-    map_clock(Mascot, TRUE);
+    DrawPanelClock0(mascot);
+    map_clock(mascot, TRUE);
   }
 
-  if(Mascot->clkmode!=CLOCK_NO){
-    clock_update(Mascot,TRUE);
-    clock_update(Mascot,TRUE);
+  if(mascot->clkmode!=CLOCK_NO){
+    clock_update(mascot,TRUE);
+    clock_update(mascot,TRUE);
   }
 
 #ifdef USE_BIFF
-  gtk_widget_show_all(Mascot->biff_pix);
-  map_biff(Mascot, FALSE);
+  gtk_widget_show_all(mascot->biff_pix);
+  map_biff(mascot, FALSE);
 #endif // USE_BIFF
 
 
@@ -5240,22 +5244,25 @@ int main(int argc, char **argv)
 #endif
 
 #ifdef USE_BIFF
-  SetMailChecker((gpointer)Mascot);
+  g_timeout_add(1000, 
+		(GSourceFunc)MonitorBiff,
+		(gpointer)mascot);
+  //SetMailChecker(mascot);
 #endif
 
 #ifdef USE_SOCKMSG
-  if(sockmsg_flag) sockmsg_set_mascot(Mascot);
+  if(sockmsg_flag) sockmsg_set_mascot(mascot);
 #endif
 
 #ifdef USE_OSX
-  MacSetLayer(Mascot);
+  MacSetLayer(mascot);
 #endif
 
   gtk_main();
 
 #ifdef USE_SOCKMSG
   if(sockmsg_flag) sockmsg_done();
-  if(Mascot->duet_open) duet_sv_done(Mascot->duet_file,TRUE);
+  if(mascot->duet_open) duet_sv_done(mascot->duet_file,TRUE);
 #endif
 
 #ifdef USE_SSL

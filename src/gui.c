@@ -1452,9 +1452,12 @@ void quit_all(GtkWidget *w, gpointer gdata)
   trayicon_destroy(mascot);
 #endif
 #ifdef USE_BIFF
+  /*
 #ifndef USE_WIN32
   kill_pop3();
 #endif
+  */
+  //thread_cancel_pop3(mascot);
 #endif
   gtk_main_quit();
   exit(0);

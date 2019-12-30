@@ -109,7 +109,7 @@ int popReadLine(char *ptr, int size,  guint ssl_mode)
 
   ret = sock_gets(Sockfd, ptr, size, ssl_mode);
 
-  pop_debug_print("Recv() %s\n", ptr);
+  //pop_debug_print("Recv() %s\n", ptr);
 
 #ifdef USE_WIN32
   if (ret == SOCKET_ERROR) {
@@ -164,69 +164,13 @@ int popWriteLine(char *ptr, guint ssl_mode)
 
   ret = sock_write_all(Sockfd, ptr, strlen(ptr), ssl_mode);
 
-  pop_debug_print("Send() %s",ptr);
+  //pop_debug_print("Send() %s",ptr);
 
   if (ret < 0 ) {
     return(errno);
   }
 
   return(0);
-
-  /*
-#ifdef USE_WIN32
-  gint ret, err;
-  gint i;
-
-  i=0;
-  do{
-    ret=send(Sockfd, ptr, strlen(ptr), 0);
-   
-    if(ret==SOCKET_ERROR){
-      pop_debug_print("Send() Error TimeOut...  %d\n",WSAGetLastError());
-      Sleep(1000);
-    }
-    i++;
-  }while((ret==SOCKET_ERROR)&&(i<10));
-
-  if(ret==SOCKET_ERROR){
-    return(errno);
-  }
-
-
-  i=0;
-  if(!strstr(ptr, "\r\n")){
-    do{
-      ret = send(Sockfd, "\r\n", strlen("\r\n"), 0);
-      if( ret==SOCKET_ERROR ){
-	pop_debug_print("Send() Error TimeOut...  %d\n",WSAGetLastError());
-	Sleep(1000);
-      }
-      i++;
-    }while((ret==SOCKET_ERROR)&&(i<10));
-  }
-
-  if(ret==SOCKET_ERROR){
-    return(errno);
-  }
-
-  return(0);
-#else
-  int funcret;
-
-  funcret = fputs(ptr, Wfp);
-  if( funcret < 0 ){
-    return(errno);
-  }
-  if(!strstr(ptr, "\r\n")){
-    funcret = fputs("\r\n", Wfp);
-    if( funcret < 0 ){
-      return(errno);
-    }
-  }
-  fflush(Wfp);
-  return(0);
-#endif
-  */
 }
 
 

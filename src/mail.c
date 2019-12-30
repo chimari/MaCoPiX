@@ -45,10 +45,6 @@
 #define BUFFSIZE 200
 #define HEADER_MAX 256
 #define MIME_BUFFSIZE 1024
-//#define BUFFSIZE 1024
-//#define BUFFSIZE5 1024
-//#define HEADER_MAX 1024
-//#define MIME_BUFFSIZE 8192
 
 void biff_init();
 
@@ -59,22 +55,16 @@ void mail_check();
 void mail_check_mbox();
 void mail_check_qmail();
 void mail_check_pop3();
-#ifdef USE_WIN32
-unsigned __stdcall get_pop3();
-#else
 int get_pop3();
-#endif
+gpointer thread_get_pop3();
+void thread_cancel_pop3();
 gchar * fs_get_mbox();
 gchar * fs_get_procmail();
 gchar * fs_get_qmail();
 void fs_get_pop3();
 void pop3_error();
-#ifndef USE_WIN32
-void pop3_signal();
-void pop3_data_read();
-#endif
-char* strbuf();
 
+gchar * my_str_add();
 
 void make_fs_max();
 static void close_biff();
@@ -83,12 +73,6 @@ static void mailer_start();
 void strip_last_ret();
 
 // global argument
-#ifndef USE_WIN32
-int pop3_fd[2];
-int pop3_pid=0;
-#endif
-
-gchar *pop_froms;
 time_t former_newest;
 
 
@@ -108,8 +92,8 @@ void biff_init(typMascot *mascot)
   mascot->mail.last_f= NULL;
   if(mascot->mail.last_s) g_free(mascot->mail.last_s);
   mascot->mail.last_s=NULL;
-  if(pop_froms) g_free(pop_froms);
-  pop_froms=strbuf(NULL);
+  if(mascot->mail.pop_froms) g_free(mascot->mail.pop_froms);
+  mascot->mail.pop_froms=NULL;
   gtk_widget_set_tooltip_text(mascot->biff_pix,
 			      _("Initializing Biff..."));
 
@@ -141,57 +125,66 @@ void biff_init(typMascot *mascot)
 }    
 
 
-gint SetMailChecker(gpointer gdata){
-  typMascot *mascot;
+gboolean MonitorBiff (gpointer gdata){
+  typMascot *mascot=(typMascot *)gdata;
 
-  mascot=(typMascot *)gdata;
+
+  if(mascot->mail.flag){
+    if(!mascot->mail.running){
+      if(mascot->mail.init){
+	biff_init(mascot);
+	mascot->mail.init=FALSE;
+      }
+      mascot->mail.proc_id
+	=(gint)g_timeout_add(100,
+			     (GSourceFunc)MailChecker,
+			     (gpointer)mascot);
+      mascot->mail.running=TRUE;
+      pop_debug_print("proc_id=%d\n",mascot->mail.proc_id);
+    }
+    else if (mascot->mail.proc_id<0){  // 2nd time
+      mascot->mail.proc_id
+	=(gint)g_timeout_add((guint32)(mascot->mail.interval*1000),
+			     (GSourceFunc)MailChecker,
+			     (gpointer)mascot);
+      
+      pop_debug_print("proc_id=%d\n",mascot->mail.proc_id);
+    }
+  }
+
+  return(TRUE);
+}
+
+
+gint SetMailChecker(typMascot *mascot){
+  thread_cancel_pop3(mascot);
 
   if(mascot->mail.proc_id>0){
     g_source_remove((guint)mascot->mail.proc_id);
-    fflush(stdin);
-    fflush(stdout);
+    mascot->mail.proc_id=-1;
+    mascot->mail.running=FALSE;
   }
   map_biff(mascot, FALSE);
 
-  if(mascot->mail.flag){
-    biff_init(mascot);
-    MailChecker(mascot);
-    mascot->mail.proc_id
-      =(gint)g_timeout_add((guint32)(mascot->mail.interval*1000),
-			   (GSourceFunc)MailChecker,
-			   (gpointer)mascot);
-
-    pop_debug_print("proc_id=%d\n",mascot->mail.proc_id);
-  }
-
+  mascot->mail.init=TRUE;
+  
   return(0);
 }
 
-gint ResetMailChecker(gpointer gdata){
-  typMascot *mascot;
 
-  mascot=(typMascot *)gdata;
 
-  if(mascot->mail.pop_child_fl){
-    return (0);
-  }
-
+gint ResetMailChecker(typMascot *mascot){
+  thread_cancel_pop3(mascot);
+  mascot->mail.running=FALSE;
+ 
   if(mascot->mail.proc_id>0){
     g_source_remove((guint)mascot->mail.proc_id);
-    fflush(stdin);
-    fflush(stdout);
+    mascot->mail.proc_id=-1;
+    mascot->mail.running=FALSE;
   }
   map_biff(mascot, FALSE);
 
-  if(mascot->mail.flag){
-    MailChecker(mascot);
-    mascot->mail.proc_id
-      =(gint)g_timeout_add((guint32)(mascot->mail.interval*1000),
-			   (GSourceFunc)MailChecker,
-			   (gpointer)mascot);
-
-    pop_debug_print("proc_id=%d\n",mascot->mail.proc_id);
-  }
+  mascot->mail.init=FALSE;
 
   return (0);
 }
@@ -215,7 +208,8 @@ gboolean MailChecker(gpointer gdata){
     display_biff_balloon(mascot);
 
   gdkut_flush(mascot->win_main);
-  return(TRUE);
+  mascot->mail.proc_id=-1;
+  return(FALSE);
 }
 
 
@@ -332,7 +326,7 @@ void display_biff_balloon(typMascot *mascot)
 #ifdef USE_SSL
     mascot->mail.ssl_cert_res=ssl_manager_verify_cert(mascot);
     if(mascot->mail.ssl_cert_res==SSL_CERT_ACCEPT)
-      ResetMailChecker((gpointer)mascot);
+      ResetMailChecker(mascot);
 #endif
   }
   else if(mascot->mail.status != NO_MAIL){
@@ -373,24 +367,13 @@ void remap_biff_pix(typMascot *mascot){
 }
 
 void mail_check(typMascot *mascot){
-#ifndef USE_WIN32
-  static struct sigaction act;
-#endif
-
   switch(mascot->mail.type){     
   case MAIL_LOCAL:
   case MAIL_PROCMAIL:
     mail_check_mbox(mascot);
     break;
   case MAIL_POP3: 
-  case MAIL_APOP: 
-#ifndef USE_WIN32
-    act.sa_handler=pop3_signal;
-    sigemptyset(&act.sa_mask);
-    act.sa_flags=0;
-    if(sigaction(SIGUSR1, &act,NULL)==-1)
-      fprintf(stderr,"sigaction error\n");
-#endif
+  case MAIL_APOP:
     mail_check_pop3(mascot);
     break;
   case MAIL_QMAIL:
@@ -532,180 +515,35 @@ void mail_check_qmail(typMascot *mascot){
 
 
 void mail_check_pop3(typMascot *mascot){
-#ifdef USE_WIN32
-  DWORD dwErrorNumber;
-  SECURITY_ATTRIBUTES SecAttrib;    // セキュリティ属性
-  //DWORD dwThreadID;
-  unsigned int dwThreadID;
-  HANDLE hPipe;
-  HANDLE hThread;
-  BOOL fConnected; 
-
   if(mascot->mail.pop_child_fl){
     return ;
   }
   mascot->mail.pop_child_fl=TRUE;
 
-  /*hThread = CreateThread(NULL, 0, (LPTHREAD_START_ROUTINE)get_pop3,
-    (LPVOID)mascot, 0, &dwThreadID);*/
   pop_debug_print("Begin POP Thread.\n");
-  hThread = (HANDLE)_beginthreadex(NULL,0,
-				   get_pop3,
-				   (LPVOID)mascot, 0, &dwThreadID);
-				   
-  if (hThread == NULL) {
-    dwErrorNumber = GetLastError();
-    fprintf(stderr,"_beginthreadex() error(%ld).\n", dwErrorNumber);
-    //ExitProcess(dwErrorNumber);
-    pop3_error(mascot);
-    mascot->mail.pop_child_fl=FALSE;
-  }
-  else{
-    CloseHandle(hThread);
-  }
 
-
-#else
-  int status = 0;
-  char *buff = NULL;
-  char *buf=NULL;
-  //char buf[BUFFSIZE];
-
-  if(mascot->mail.pop_child_fl){
-    return ;
-  }
-  mascot->mail.pop_child_fl=TRUE;
-
-  if(pipe(pop3_fd)==-1) {
-    fprintf(stderr,"pipe open error\n");
-  }
-  waitpid(pop3_pid,0,WNOHANG);
-
-  if( (pop3_pid = fork()) <0){
-    fprintf(stderr,"fork error\n");
-  }
-  else if(pop3_pid ==0) {
-    pop_debug_print("child\n");
-
-    status = get_pop3(mascot);
-
-    pop_debug_print("get pop3 end\n");
-    pop_debug_print("pop3 fs status = %d\n", mascot->mail.pop3_fs_status);
-
-    buff = strbuf(NULL);  // stand by buff
-    //sprintf(buf,"%d\n",mascot->mail.status); // Write mail status
-    buf=g_strdup_printf("%d\n",mascot->mail.status); // Write mail status
-    buff = strbuf(buf);
-    if(buf) g_free(buf);
-    if(status == POP3_SSL_CERT){
-      if(mascot->mail.ssl_sub!=NULL){
-	//sprintf(buf,"%s\n",mascot->mail.ssl_sub);  // SSL subject
-	buf=g_strdup_printf("%s\n",mascot->mail.ssl_sub);  // SSL subject
-      }
-      else{
-	//sprintf(buf,"\n");  
-	buf=g_strdup("\n");  
-      }
-      buff = strbuf(buf);
-      if(buf) g_free(buf);
-      
-      if(mascot->mail.ssl_iss!=NULL){
-	//sprintf(buf,"%s\n",mascot->mail.ssl_iss);  // SSL issuer
-	buf=g_strdup_printf("%s\n",mascot->mail.ssl_iss);  // SSL issuer
-      }
-      else{
-	//sprintf(buf,"\n");  
-	buf=g_strdup("\n");  
-      }
-      buff = strbuf(buf);
-      if(buf) g_free(buf);
-
-      //sprintf(buf,"%ld\n",mascot->mail.ssl_verify);  // SSL verify_result
-      buf=g_strdup_printf("%ld\n",mascot->mail.ssl_verify);  // SSL verify_result
-      buff = strbuf(buf);
-      if(buf) g_free(buf);
-    }
-    if((status != POP3_ERROR)&&(status != POP3_SSL_CERT)){          // POP status is GOOD?
-      //sprintf(buf,"%d\n",mascot->mail.count);  // write total mail count
-      buf=g_strdup_printf("%d\n",mascot->mail.count);  // write total mail count
-      buff = strbuf(buf);
-      if(buf) g_free(buf);
-      //sprintf(buf,"%d\n",mascot->mail.fetched_count);  // write fetched mail count
-      buf=g_strdup_printf("%d\n",mascot->mail.fetched_count);  // write fetched mail count
-      buff = strbuf(buf);
-      if(buf) g_free(buf);
-      //sprintf(buf,"%d\n",mascot->mail.pop3_fs_status);  // write POP status
-      buf=g_strdup_printf("%d\n",mascot->mail.pop3_fs_status);  // write POP status
-      buff = strbuf(buf);
-      if(buf) g_free(buf);
-      //sprintf(buf,"%d\n",mascot->mail.spam_count);  // write SPAM count
-      buf=g_strdup_printf("%d\n",mascot->mail.spam_count);  // write SPAM count
-      buff = strbuf(buf);
-      if(buf) g_free(buf);
-      if(mascot->mail.last_f!=NULL){
-	//sprintf(buf,"%s\n",mascot->mail.last_f);  // Last_from
-	buf=g_strdup_printf("%s\n",mascot->mail.last_f);  // Last_from
-      }
-      else{
-	//sprintf(buf,"\n");  
-	buf=g_strdup("\n");  
-      }
-      buff = strbuf(buf);
-      if(buf) g_free(buf);
-      if(mascot->mail.last_s!=NULL){
-	//sprintf(buf,"%s\n",mascot->mail.last_s);  // Last_subject
-	buf=g_strdup_printf("%s\n",mascot->mail.last_s);  // Last_subject
-      }
-      else{
-	//sprintf(buf,"\n");  
-	buf=g_strdup("\n");  
-      }
-      buff = strbuf(buf);
-      if(buf) g_free(buf);
-
-      buff = strbuf(pop_froms);                // write fs data
-    }
-    if(close(STDOUT_FILENO)==-1) fprintf(stderr,"pipe close error\n");
-    if(dup2(pop3_fd[1],STDOUT_FILENO)==-1)
-       fprintf(stderr,"pipe duplicate error\n");
-    if(close(pop3_fd[0])==-1) fprintf(stderr,"pipe close error\n");
-
-    pop_debug_print("pipe open/close end\n");
-    pop_debug_print("buff size = %d\n", (int)strlen(buff));
-
-    printf ("%s",buff);
-    if(buff) g_free(buff);
-    
-    pop_debug_print("child end\n");
-
-    fflush(stdout);
-    fflush(stdin);
-    fflush(stderr);
-    kill(getppid(), SIGUSR1);  //calling pop3_data_read
-     _exit(-1);
-  }
-  else{
-
-    pop_debug_print("Parent: --------------------------------\n");
-    pop_debug_print("Parent: forked a child with pid = %d\n", (int)pop3_pid);
-    pop_debug_print("Parent: mail status = %d\n", mascot->mail.status);
-
-  }
-#endif //USE_WIN32
+  mascot->mloop=g_main_loop_new(NULL, FALSE);
+  mascot->mcancel=g_cancellable_new();
+  mascot->mthread=g_thread_new("macopix_get_pop3",
+			    thread_get_pop3, (gpointer)mascot);
+  g_main_loop_run(mascot->mloop);
+  g_thread_join(mascot->mthread);
+  g_main_loop_unref(mascot->mloop);
+  mascot->mloop=NULL;
+  
+  mascot->mail.pop_child_fl=FALSE;
 }
 
-#ifdef USE_WIN32
-unsigned __stdcall get_pop3(LPVOID lpvPipe)
+
+
+int get_pop3(typMascot *mascot)
 {
-  typMascot *mascot;
   signed int ret;
   int num;
   long size;
   gchar *apop_key;
   int wo_spam;
   int pre_mail_count;
-
-  mascot = (typMascot *)lpvPipe;
 
   pre_mail_count = mascot->mail.count;  // store mail count
 
@@ -732,9 +570,7 @@ unsigned __stdcall get_pop3(LPVOID lpvPipe)
     }
     mascot->mail.pop_child_fl=FALSE;
     mascot->mail.pop_readed=TRUE;
-    _endthreadex(0);
-    //ExitThread(0);
-    //return(POP3_ERROR);
+    return(-1);
   }
 
   pop_debug_print("POP LOGIN %s %s %s\n",mascot->mail.pop_id, mascot->mail.pop_pass,
@@ -749,9 +585,7 @@ unsigned __stdcall get_pop3(LPVOID lpvPipe)
     pop3_error(mascot);
     mascot->mail.pop_child_fl=FALSE;
     mascot->mail.pop_readed=TRUE;
-    _endthreadex(0);
-    //ExitThread(0);
-    //return(POP3_ERROR);
+    return(-1);
   }
 
   pop_debug_print("POP STAT\n");
@@ -766,13 +600,11 @@ unsigned __stdcall get_pop3(LPVOID lpvPipe)
     pop3_error(mascot);
     mascot->mail.pop_child_fl=FALSE;
     mascot->mail.pop_readed=TRUE;
-    _endthreadex(0);
-    //ExitThread(0);
-    //return(POP3_ERROR);
+    return(-1);
   }
 
   pop_debug_print("mail: %d, size: %ld\n", num, size);
-
+ 
   if(num == 0){  // メール無し
     mascot->mail.status = NO_MAIL;
     mascot->mail.fetched_count = 0;
@@ -782,8 +614,8 @@ unsigned __stdcall get_pop3(LPVOID lpvPipe)
     mascot->mail.last_f = NULL;
     if(mascot->mail.last_s) g_free(mascot->mail.last_s);
     mascot->mail.last_s =  NULL;
-    if(pop_froms) g_free(pop_froms);
-    pop_froms = strbuf(NULL);
+    if(mascot->mail.pop_froms) g_free(mascot->mail.pop_froms);
+    mascot->mail.pop_froms = NULL;
   }
   else{
     wo_spam = mascot->mail.count - mascot->mail.spam_count;
@@ -804,8 +636,8 @@ unsigned __stdcall get_pop3(LPVOID lpvPipe)
       mascot->mail.last_f = NULL;
       if(mascot->mail.last_f) g_free(mascot->mail.last_s);
       mascot->mail.last_s =  NULL;
-      if(pop_froms) g_free(pop_froms);
-      pop_froms = strbuf(NULL);
+      if(mascot->mail.pop_froms) g_free(mascot->mail.pop_froms);
+      mascot->mail.pop_froms = NULL;
       mascot->mail.count = 0;
       mascot->mail.spam_count = 0;
       fs_get_pop3(num,mascot);
@@ -817,14 +649,13 @@ unsigned __stdcall get_pop3(LPVOID lpvPipe)
       mascot->mail.last_f = NULL;
       if(mascot->mail.last_s) g_free(mascot->mail.last_s);
       mascot->mail.last_s =  NULL;
-      if(pop_froms) g_free(pop_froms);
-      pop_froms = strbuf(NULL);
+      if(mascot->mail.pop_froms) g_free(mascot->mail.pop_froms);
+      mascot->mail.pop_froms = NULL;
     }
     else if((num - mascot->mail.spam_count) == wo_spam){
       mascot->mail.status = KEEP_NEW_MAIL; // 増えたのがSPAMだけだったとき
     }
   }
-
 
   pop_debug_print("data read end\n");
 
@@ -891,12 +722,9 @@ unsigned __stdcall get_pop3(LPVOID lpvPipe)
       buf=g_strdup_printf(_(" \n     ***** %d mails are skipped *****\n \n"),
 			  mascot->mail.count - mascot->mail.displayed_count);
 
-      tmp_froms=strdup(pop_froms);
-      if(pop_froms) g_free(pop_froms);
-      //pop_froms=strbuf(NULL);
-      //pop_froms=strbuf(buf);
-      //pop_froms=strbuf(tmp_froms);
-      pop_froms=g_strconcat(buf,tmp_froms,NULL);
+      tmp_froms=strdup(mascot->mail.pop_froms);
+      if(mascot->mail.pop_froms) g_free(mascot->mail.pop_froms);
+      mascot->mail.pop_froms=g_strconcat(buf,tmp_froms,NULL);
       if(tmp_froms) g_free(tmp_froms);
       if(buf) g_free(buf);
     }
@@ -904,7 +732,7 @@ unsigned __stdcall get_pop3(LPVOID lpvPipe)
 
   mascot->mail.pop_child_fl=FALSE;
   mascot->mail.pop_readed=TRUE;
-  
+
   pop_debug_print("POP Thread: status = %d\n",mascot->mail.status);
   pop_debug_print("POP Thread: pop3 fs status = %d\n",mascot->mail.pop3_fs_status);
   pop_debug_print("POP Thread: count = %d\n",mascot->mail.count);
@@ -915,8 +743,8 @@ unsigned __stdcall get_pop3(LPVOID lpvPipe)
     pop_debug_print("Last From:       %s\n",mascot->mail.last_f);
   if(mascot->mail.last_s!=NULL)
     pop_debug_print("Last Subject:    %s\n",mascot->mail.last_s);
-  if(pop_froms!=NULL)
-    pop_debug_print("data2 = %s\n",pop_froms);
+  if(mascot->mail.pop_froms!=NULL)
+    pop_debug_print("data2 = %s\n",mascot->mail.pop_froms);
 
   pop_debug_print("POP Thread: Done\n");
 
@@ -925,128 +753,33 @@ unsigned __stdcall get_pop3(LPVOID lpvPipe)
 
 
   if(apop_key) g_free(apop_key);
-  _endthreadex(0);
-  //ExitThread(0);
-  //return(mascot->mail.status);
+
+  return(0);
 }
-#else
-int get_pop3(typMascot *mascot)
+
+
+gpointer thread_get_pop3(gpointer gdata){
+  typMascot *mascot=(typMascot *)gdata;
+
+  mascot->mabort=FALSE;
+  get_pop3(mascot);
+
+  if(mascot->mloop) g_main_loop_quit(mascot->mloop);
+}
+
+
+void thread_cancel_pop3(typMascot *mascot)
 {
-  signed int ret;
-  int num;
-  long size;
-  gchar *apop_key;
-  int wo_spam;
+  if(mascot->mloop){
+    g_cancellable_cancel(mascot->mcancel);
+    g_object_unref(mascot->mcancel); 
 
-  pop_debug_print("Conncet %s : %d\n", mascot->mail.pop_server, mascot->mail.pop_port);
+    mascot->mabort=TRUE;
 
-  apop_key=g_malloc0(sizeof(gchar)*BUFFSIZE);
-  memset(apop_key, '\0', BUFFSIZE);
-  ret = popConnect(mascot->mail.pop_server, mascot->mail.pop_port, apop_key, 
-		   mascot->mail.ssl_mode, mascot->mail.ssl_nonblock, 
-		   mascot->mail.ssl_cert_res,
-		   &mascot->mail.ssl_sub, &mascot->mail.ssl_iss,
-		   &mascot->mail.ssl_verify, mascot->mail.type);
-  if( ret != 0 ){
-    if(apop_key) g_free(apop_key);
-    if(ret==-(30+4)){
-      pop_debug_print("popConnect() [ret=%d] :  Certification is required\n", ret);
-      mascot->mail.status = POP3_SSL_CERT;
-      return(POP3_SSL_CERT);
-    }
-    else{
-      fprintf(stderr, "ERR: popConnect() [ret=%d]\n", ret);
-      mascot->mail.status = POP3_ERROR;
-      return(POP3_ERROR);
-    }
+    g_main_loop_quit(mascot->mloop);
   }
-
-  pop_debug_print("POP LOGIN %s %s %s\n",mascot->mail.pop_id, mascot->mail.pop_pass,
-	 apop_key);
-
-  ret = popLogin(mascot->mail.pop_id, mascot->mail.pop_pass, apop_key, mascot->mail.ssl_mode, mascot->mail.type);
-  if( ret != 0 ){
-    fprintf(stderr, "ERR: popLogin() [ret=%d]\n", ret);
-    mascot->mail.status = POP3_ERROR;
-    popQuit(mascot->mail.ssl_mode);
-    popClose();
-    if(apop_key) g_free(apop_key);
-    return(POP3_ERROR);
-  }
-  
-  pop_debug_print("POP STAT\n");
-
-  ret = popStat(&num, &size, mascot->mail.ssl_mode);
-  if( ret != 0 ){
-    fprintf(stderr, "ERR: popStat() [ret=%d]\n", ret);
-    mascot->mail.status = POP3_ERROR;
-    popQuit(mascot->mail.ssl_mode);
-    popClose();
-    if(apop_key) g_free(apop_key);
-    return(POP3_ERROR);
-  }
-
-  pop_debug_print("mail: %d, size: %ld\n", num, size);
-
-  if(num == 0){  // メール無し
-    mascot->mail.status = NO_MAIL;
-    mascot->mail.fetched_count = 0;
-    mascot->mail.spam_count = 0;
-    mascot->mail.pop3_fs_status = POP3_OK_NORMAL;
-    if(mascot->mail.last_f) g_free(mascot->mail.last_f);
-    mascot->mail.last_f = NULL;
-    if(mascot->mail.last_s) g_free(mascot->mail.last_s);
-    mascot->mail.last_s =  NULL;
-    if(pop_froms) g_free(pop_froms);
-    pop_froms = strbuf(NULL);
-  }
-  else{
-    wo_spam = mascot->mail.count - mascot->mail.spam_count;
-
-    if(num == mascot->mail.count){  // メール増減なし
-      mascot->mail.status = KEEP_NEW_MAIL;
-      mascot->mail.fetched_count = 0;
-      mascot->mail.pop3_fs_status = POP3_OK_NORMAL;
-      if(pop_froms) g_free(pop_froms);  // 前の fs をクリア
-      pop_froms = strbuf(NULL);
-    }
-    else if(num > mascot->mail.count){  // メール増えた
-      mascot->mail.status = NEW_MAIL;
-      fs_get_pop3(num,mascot); // ここでSPAMの数が更新される
-    }
-    else{  // メール数が減っていたらすべて新規メールと見なす
-      mascot->mail.status = NEW_MAIL;      
-      if(mascot->mail.last_f) g_free(mascot->mail.last_f);
-      mascot->mail.last_f = NULL;
-      if(mascot->mail.last_s) g_free(mascot->mail.last_s);
-      mascot->mail.last_s =  NULL;
-      if(pop_froms) g_free(pop_froms);
-      pop_froms = strbuf(NULL);
-      mascot->mail.count = 0;
-      mascot->mail.spam_count = 0;
-      fs_get_pop3(num,mascot);
-    }
-
-    if( num == mascot->mail.spam_count){
-      mascot->mail.status = NO_MAIL; // SPAMだけのとき
-    }
-    else if((num - mascot->mail.spam_count) == wo_spam){
-      mascot->mail.status = KEEP_NEW_MAIL; // 増えたのがSPAMだけだったとき
-    }
-  }
-
-  pop_debug_print("data read end\n");
-
-  popQuit(mascot->mail.ssl_mode);
-  popClose();
-  if(apop_key) g_free(apop_key);
-
-  pop_debug_print("pop quit\n");
-
-  mascot->mail.count = num;
-  return(mascot->mail.status);
 }
-#endif //USE_WIN32
+
 
 void pop3_error(typMascot *mascot){
   if( mascot->mail.status < 0){  // POP3 status is ERR
@@ -1060,192 +793,11 @@ void pop3_error(typMascot *mascot){
     mascot->mail.last_f = NULL;
     if(mascot->mail.last_s) g_free(mascot->mail.last_s);
     mascot->mail.last_s =  NULL;
-    if(pop_froms) g_free(pop_froms);
-    pop_froms = strbuf(NULL);
+    if(mascot->mail.pop_froms) g_free(mascot->mail.pop_froms);
+    mascot->mail.pop_froms = NULL;
   }
 }
 
-#ifndef USE_WIN32
-void pop3_signal(int sig){
-  pop_debug_print("get child end\n");
-
-  pop3_data_read(Mascot);
-}
-
-void pop3_data_read(typMascot *mascot)
-{
-  FILE *fp;
-  gchar buf[BUFFSIZE];
-  int pre_mail_count;
-  gint i_step;
-  pid_t child_pid=0;
-  
-  if(mascot->mail.pop_child_fl){
-    pre_mail_count = mascot->mail.count;  // store mail count
-
-    pop_debug_print("Parent: pop3 data read\n");
-
-    if(close(pop3_fd[1])==-1) fprintf(stderr,"pipe close error\n");
-    pop_debug_print("Parent: pop3_fd[1] closed\n");
-    if( (fp = fdopen( pop3_fd[0], "r" )) == NULL ){
-      fprintf(stderr,"pipe open error\n");    
-    }
-    else{
-      if(fgets( buf,BUFFSIZE-1,fp )==NULL) exit(1);  // read mail status
-      //if((buf=fgets_new(fp))==NULL) exit(1);  // read mail status
-      mascot->mail.status = atoi(buf);
-      if( mascot->mail.status == POP3_ERROR){  // POP3 status is ERR
-	pop3_error(mascot);
-      }
-#ifdef USE_SSL
-      else if( mascot->mail.status == POP3_SSL_CERT){  // SSL Certification
-	if(mascot->mail.ssl_sub) g_free(mascot->mail.ssl_sub);
-	if(fgets( buf,BUFFSIZE-1,fp )==NULL) exit(1);
-	//if((buf=fgets_new(fp))==NULL) exit(1);
-	if(strlen(buf)>=2){
-	  mascot->mail.ssl_sub = g_strdup(buf);
-	  strip_last_ret(mascot->mail.ssl_sub);
-	}
-	else{
-	  mascot->mail.ssl_sub = NULL;
-	}
-
-	if(mascot->mail.ssl_iss) g_free(mascot->mail.ssl_iss);
-	if(fgets( buf,BUFFSIZE-1,fp )==NULL) exit(1);
-	//if((buf=fgets_new(fp))==NULL) exit(1);
-	if(strlen(buf)>=2){
-	  mascot->mail.ssl_iss = g_strdup(buf);
-	  strip_last_ret(mascot->mail.ssl_iss);
-	}
-	else{
-	  mascot->mail.ssl_iss = NULL;
-	}
-	
-	if(fgets( buf,BUFFSIZE-1,fp )==NULL) exit(1);  // SSL verify_result
-	//if((buf=fgets_new(fp))==NULL) exit(1);  // SSL verify_result
-	mascot->mail.ssl_verify = atoi(buf);
-      }
-#endif
-      else{
-	if(fgets( buf,BUFFSIZE-1,fp )==NULL) exit(1);  // read total mail count
-	//if((buf=fgets_new(fp))==NULL) exit(1);  // read total mail count
-	mascot->mail.count = atoi(buf);
-	if(fgets( buf,BUFFSIZE-1,fp )==NULL) exit(1);  // read fetched mail count
-	//if((buf=fgets_new(fp))==NULL) exit(1);  // read fetched mail count
-	mascot->mail.fetched_count = atoi(buf);
-	if(fgets( buf,BUFFSIZE-1,fp )==NULL) exit(1);  // read pop status
-	//if((buf=fgets_new(fp))==NULL) exit(1);  // read pop status
-	mascot->mail.pop3_fs_status = atoi(buf);
-	if(fgets( buf,BUFFSIZE-1,fp )==NULL) exit(1);  // read SPAM count
-	//if((buf=fgets_new(fp))==NULL) exit(1);  // read SPAM count
-	mascot->mail.spam_count = atoi(buf);
-
-	if(fgets( buf,BUFFSIZE-1,fp )==NULL) exit(1);  // Last From
-	//if((buf=fgets_new(fp))==NULL) exit(1);  // Last From
-	if(mascot->mail.last_f) g_free(mascot->mail.last_f);  
-	if(strlen(buf)>=2){
-	  if(g_utf8_validate(buf,-1,NULL)){
-	    mascot->mail.last_f = g_strdup(buf);
-	    strip_last_ret(mascot->mail.last_f);
-	  }
-	  else{
-	    mascot->mail.last_f = g_strdup(_("(Decode Error)"));
-	  }
-	}
-	else{
-	  mascot->mail.last_f = NULL;
-	}
-	if(fgets( buf,BUFFSIZE-1,fp )==NULL) exit(1);  // Last Sub
-	//if((buf=fgets_new(fp))==NULL) exit(1);  // Last Sub
-	if(mascot->mail.last_s) g_free(mascot->mail.last_s);  
-	if(strlen(buf)>=2){
-	  if(g_utf8_validate(buf,-1,NULL)){
-	    mascot->mail.last_s = g_strdup(buf);
-	    strip_last_ret(mascot->mail.last_s);
-	  }
-	  else{
-	    mascot->mail.last_s = g_strdup(_("(Decode Error)"));
-	  }
-	}
-	else{
-	  mascot->mail.last_s = NULL;
-	}
-
-	if(mascot->mail.count == 0){
-	  if(pop_froms) g_free(pop_froms);  // fs data clear
- 	  pop_froms = strbuf(NULL);
-	  mascot->mail.displayed_count = 0;
-	}
-	else {
-	  if(mascot->mail.pop3_fs_status == POP3_OK_NORMAL){
-	    if(pre_mail_count > mascot->mail.count){  //メール減った
-	      // メール減った場合は全部取り直しなので fs clear
-	      mascot->mail.displayed_count = mascot->mail.fetched_count; 
-	      if(pop_froms) g_free(pop_froms);
-	      pop_froms = strbuf(NULL);
-	    } 
-	    else {
-	      mascot->mail.displayed_count += mascot->mail.fetched_count; 
-	    }
-
-	    
-	    while(fgets( buf,BUFFSIZE-1,fp ) != NULL ){
-	      //while((buf=fgets_new(fp)) != NULL ){
-	      if(strlen(buf)<5){
-		pop_debug_print("Parent: abnormal prms?\n");
-		break;
-	      }
-	      pop_froms = strbuf( buf );
-	    }
-	  }
-	  else if(mascot->mail.pop3_fs_status == POP3_OK_FS_OVER){
-	    //ここは無条件で fs clear してよい
-	    mascot->mail.displayed_count = mascot->mail.fetched_count; 
-
-	    if(pop_froms) g_free(pop_froms);    // fs data clear
-	    pop_froms = strbuf(NULL);
-	    sprintf(buf,_(" \n     ***** %d mails are skipped *****\n \n"),
-		    mascot->mail.count - mascot->mail.displayed_count);
-	    pop_froms = strbuf( buf );
-	    while(fgets( buf,BUFFSIZE-1,fp ) != NULL ){
-	      //while((buf=fgets_new(fp)) != NULL ){
-	      if(strlen(buf)<5){
-		pop_debug_print("Parent: abnormal prms?\n");
-		break;
-	      }
-	      pop_froms = strbuf( buf );
-	    }
-	  }
-	}
-      }
-      if(close(pop3_fd[0])==-1) fprintf(stderr,"pipe close error\n");
-      fclose( fp );
-    }
-
-    mascot->mail.pop_child_fl=FALSE;
-    mascot->mail.pop_readed=TRUE;
-
-    pop_debug_print("Parent: status = %d\n",mascot->mail.status);
-    pop_debug_print("Parent: pop3 fs status = %d\n",mascot->mail.pop3_fs_status);
-    pop_debug_print("Parent: count = %d\n",mascot->mail.count);
-    pop_debug_print("Parent: fetched count = %d\n",mascot->mail.fetched_count);
-    pop_debug_print("Parent: disped count = %d\n",mascot->mail.displayed_count);
-    pop_debug_print("Parent: spam count = %d\n",mascot->mail.spam_count);
-    if(mascot->mail.last_f!=NULL)
-      pop_debug_print("Last From:       %s\n",mascot->mail.last_f);
-    if(mascot->mail.last_s!=NULL)
-      pop_debug_print("Last Subject:    %s\n",mascot->mail.last_s);
-    if(pop_froms!=NULL)
-      pop_debug_print("data2 = %s\n",pop_froms);
-
-    do{
-      int child_ret;
-      child_pid=waitpid(pop3_pid, &child_ret,WNOHANG);
-    } while((child_pid>0)||(child_pid!=-1));
-  }
-}
-
-#endif
 
 // メールボックスから From: Subject: を取得
 gchar * fs_get_mbox(typMascot *mascot){
@@ -1258,7 +810,7 @@ gchar * fs_get_mbox(typMascot *mascot){
   int i; 
   char *f, *s, *sdel;
   
-  froms=strbuf(NULL);
+  froms=NULL;
   mascot->mail.spam_count=0;
   
   if((fp=fopen(mascot->mail.file,"r"))!= NULL){
@@ -1376,20 +928,20 @@ gchar * fs_get_mbox(typMascot *mascot){
 	if ( (!spam_flag) || (!mascot->mail.spam_check) ){
 	  if (f) {
 	    conv_unmime_header_overwrite(f);
-	    froms=strbuf(f);
+	    froms=my_str_add(froms,f);
 	    g_free(f);
 	  }
 	  else{
-	    froms=strbuf(_("From: (no From: in original)\n"));
+	    froms=my_str_add(froms,_("From: (no From: in original)\n"));
 	  }
 	  if (s) {
-	    froms=strbuf(" ");
+	    froms=my_str_add(froms," ");
 	    conv_unmime_header_overwrite(s);
-	    froms=strbuf(s);
+	    froms=my_str_add(froms,s);
 	    g_free(s);
 	  }
 	  else{
-	    froms=strbuf(_(" Subject: (no Subject: in original)\n"));
+	    froms=my_str_add(froms,_(" Subject: (no Subject: in original)\n"));
 	  }
 	}
 ed_fl = FALSE;  /* tnaka */
@@ -1415,7 +967,7 @@ gchar *  fs_get_procmail(typMascot  *mascot){
     gchar *f, *s, *sdel;
 
 
-    froms=strbuf(NULL);
+    froms=NULL;
 
     if((fp=fopen(mascot->mail.file,"r"))==NULL){
       return(NULL);
@@ -1521,20 +1073,20 @@ gchar *  fs_get_procmail(typMascot  *mascot){
 		//
 		if (f) {
 		  conv_unmime_header_overwrite(f);
-		  froms=strbuf(f);
+		  froms=my_str_add(froms,f);
 		  g_free(f);
 		}
 		else{
-		  froms=strbuf(_("From: (no From: in original)\n"));
+		  froms=my_str_add(froms,_("From: (no From: in original)\n"));
 		}
 		if (s) {
-		  froms=strbuf(" ");
+		  froms=my_str_add(froms," ");
 		  conv_unmime_header_overwrite(s);
-		  froms=strbuf(s);
+		  froms=my_str_add(froms,s);
 		  g_free(s);
 		}
 		else{
-		  froms=strbuf(_(" Subject: (no Subject: in original)\n"));
+		  froms=my_str_add(froms,_(" Subject: (no Subject: in original)\n"));
 		}
 	    }
 	}
@@ -1565,7 +1117,7 @@ gchar * fs_get_qmail(typMascot *mascot){
     gchar *f, *s, *sdel;
 
     mascot->mail.spam_count=0;
-    froms=strbuf(NULL);
+    froms=NULL;
 
     if ((dp=opendir(mascot->mail.file))==NULL){
       return(NULL);
@@ -1688,20 +1240,20 @@ gchar * fs_get_qmail(typMascot *mascot){
 		//
 		if (f) {
 		  conv_unmime_header_overwrite(f);
-		  froms=strbuf(f);
+		  froms=my_str_add(froms,f);
 		  g_free(f);
 		}
 		else{
-		  froms=strbuf(_("From: (no From: in original)\n"));
+		  froms=my_str_add(froms,_("From: (no From: in original)\n"));
 		}
 		if (s) {
-		    froms=strbuf(" ");
+		    froms=my_str_add(froms," ");
 		    conv_unmime_header_overwrite(s);
-		    froms=strbuf(s);
+		    froms=my_str_add(froms, s);
 		    g_free(s);
 		}
 		else{
-		  froms=strbuf(_(" Subject: (no Subject: in original)\n"));
+		  froms=my_str_add(froms,_(" Subject: (no Subject: in original)\n"));
 		}
 
 	    }
@@ -1721,17 +1273,12 @@ void fs_get_pop3(int num, typMascot *mascot){
   char buffer[POP_MAX_LINE];
   int mail_cnt, header, header_line, i, j;
   int mail_cnt_start;
-  char *f, *s, *sdel, tmp_fs[256];
+  char *f, *s, *sdel;
   int disp=0;
   gboolean spam_flag;
-#ifndef USE_WIN32
-  char *tmp_froms;
-  
-  tmp_froms=strbuf(NULL); 
-#endif
 
   pop_debug_print("fs read num = %d mail_count = %d\n", 
-	  num, mascot->mail.count); 
+	  num, mascot->mail.count);
 
   if((num - mascot->mail.count) > mascot->mail.pop_max_fs){  //overflow
     mail_cnt_start = num - mascot->mail.pop_max_fs +1;
@@ -1755,9 +1302,9 @@ void fs_get_pop3(int num, typMascot *mascot){
     funcret = popWriteLine(buffer, mascot->mail.ssl_mode);
     if( funcret != 0 ){
       fprintf(stderr,"write err = %d\n",funcret);
-#ifndef USE_WIN32
-      mascot->mail.status=POP3_ERROR;
-#endif
+      //#ifndef USE_WIN32
+      //mascot->mail.status=POP3_ERROR;
+      //#endif
       return;
     }
     for(header=0; header < HEADER_MAX; header++){
@@ -1765,9 +1312,9 @@ void fs_get_pop3(int num, typMascot *mascot){
       //pop_debug_print("%d %d   %s\n",mail_cnt,header,buffer_header[header]);
       if( funcret != 0 ){
 	fprintf(stderr,"read err\n");
-#ifndef USE_WIN32
-      mascot->mail.status=POP3_ERROR;
-#endif
+	//#ifndef USE_WIN32
+	//	mascot->mail.status=POP3_ERROR;
+	//#endif
 	return;
       }
       if( strcmp(buffer_header[header], ".\r\n") == 0 )      break;
@@ -1856,7 +1403,6 @@ void fs_get_pop3(int num, typMascot *mascot){
     }
     
 
-
     if (f) {
       conv_unmime_header_overwrite(f);
       {
@@ -1868,29 +1414,18 @@ void fs_get_pop3(int num, typMascot *mascot){
 	  }
 	}
       }
-#ifdef USE_WIN32
-      pop_froms=strbuf(f);
-#else
-      tmp_froms=strbuf(f);
-#endif
+      mascot->mail.pop_froms=my_str_add(mascot->mail.pop_froms,f);
       if(mascot->mail.last_f) g_free(mascot->mail.last_f);
       mascot->mail.last_f=g_strdup(f+strlen("From: "));
       strip_last_ret(mascot->mail.last_f);
       if(f) g_free(f);
     }
     else{
-#ifdef USE_WIN32
-      pop_froms=strbuf(_("From: (no From: in original)\n"));
-#else
-      tmp_froms=strbuf(_("From: (no From: in original)\n"));
-#endif
+      mascot->mail.pop_froms=my_str_add(mascot->mail.pop_froms,
+					_("From: (no From: in original)\n"));
     }
     if (s) {
-#ifdef USE_WIN32
-      pop_froms=strbuf(" ");
-#else
-      tmp_froms=strbuf(" ");
-#endif
+      mascot->mail.pop_froms=my_str_add(mascot->mail.pop_froms," ");
       conv_unmime_header_overwrite(s);
       {
 	gint n;
@@ -1903,11 +1438,7 @@ void fs_get_pop3(int num, typMascot *mascot){
       }
       pop_debug_print("s=%s\n",s);
 
-#ifdef USE_WIN32
-      pop_froms=strbuf(s);
-#else
-      tmp_froms=strbuf(s);
-#endif
+      mascot->mail.pop_froms=my_str_add(mascot->mail.pop_froms,s);
       if(mascot->mail.last_s) g_free(mascot->mail.last_s);
       mascot->mail.last_s=g_strdup(s+strlen("Subject: "));
       strip_last_ret(mascot->mail.last_s);
@@ -1915,52 +1446,28 @@ void fs_get_pop3(int num, typMascot *mascot){
     }
     else{
       pop_debug_print("s=!!!! No Subject !!!!\n");
-#ifdef USE_WIN32
-      pop_froms=strbuf(_(" Subject: (no Subject: in original)\n"));
-#else
-      tmp_froms=strbuf(_(" Subject: (no Subject: in original)\n"));
-#endif
+      mascot->mail.pop_froms=my_str_add(mascot->mail.pop_froms,
+					_(" Subject: (no Subject: in original)\n"));
     }
   }
-#ifndef USE_WIN32
-  if(pop_froms) g_free(pop_froms);
-  pop_froms=strbuf(NULL);
-  pop_froms=strbuf(tmp_froms);
-  if(tmp_froms) g_free(tmp_froms);
-#endif
+  
   pop_debug_print("fs_get_pop3 end\n");
 }
 
 
 
-//
-char* strbuf(char *p)
-{
-  static char    *start = NULL;
-  static char    *next;
-  static int      len, len2, l;
-  
-  if (p == NULL) {
-    len = len2 = 4096;
-    start = next = (char *) g_malloc(len + 1);
-    start[0] = '\0';
-  } else if (start != NULL) {
-    l = strlen(p);
-    while (len - l < 0) {
-      char           *p;
-      len2 += 256;
-      len += 256;
-      p = (char *) g_realloc(start, len2 + 1);
-      start = p;
-      next = p + len2 - len;
-                }
-    strcpy(next,p);
-    len -= l;
-    next += l;
+gchar * my_str_add(gchar *src_str, gchar *add_str){
+  gchar *ret;
+  if(!src_str){
+    ret=g_strdup(add_str);
   }
-  return start;
-}
+  else{
+    ret=g_strconcat(src_str, add_str, NULL);
+    g_free(src_str);
+  }
 
+  return(ret);
+}
 
 
 void make_fs_max(GtkWidget *widget, typMascot *mascot){
@@ -2065,7 +1572,7 @@ void create_biff_dialog(typMascot *mascot)
     break;
   case MAIL_POP3: 
   case MAIL_APOP: 
-    tmp_froms=g_strdup(pop_froms);
+    tmp_froms=g_strdup(mascot->mail.pop_froms);
     make_fs_max(biff_tbl, mascot);
     break;
   case MAIL_QMAIL:
@@ -2276,8 +1783,8 @@ gchar* set_mhdir(){
   return mhd;
 }
 
-void mail_arg_init(){
-  pop_froms=NULL;
+void mail_arg_init(typMascot *mascot){
+  mascot->mail.pop_froms=NULL;
   former_newest=0;
 }
 
@@ -2286,6 +1793,7 @@ void strip_last_ret(gchar *p){
 }
 
 
+/*
 #ifndef USE_WIN32
 void kill_pop3(){
   pid_t child_pid=0;
@@ -2298,7 +1806,7 @@ void kill_pop3(){
   } while(child_pid>0);
 }
 #endif
-
+*/
 
 #endif // USE_BIFF
 
