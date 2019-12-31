@@ -240,7 +240,12 @@ LIBFILE="libgraphite2.3.dylib"
 	install_name_tool -change ${OPTPATH}graphite2/lib/libgraphite2.3.dylib ${TGTPATH}libgraphite2.3.dylib ${CPPATH}${LIBFILE}
 
 
-nkf -Lm -O ${DOC_PATH}README.txt README
-nkf -Lm -O ${DOC_PATH}READMEjp.txt README.jp
-nkf -Lm -O ${DOC_PATH}ChangeLog.txt ChangeLog
-nkf -Lm -O ${DOC_PATH}ChangeLog_jp.txt ChangeLog.jp
+nkf -Lu -O README
+mv nkf.out ${DOC_PATH}README.txt	
+nkf -Lu -w -O README.jp
+mv nkf.out ${DOC_PATH}READMEjp.txt
+nkf -Lu -O ChangeLog
+mv nkf.out ${DOC_PATH}ChangeLog.txt
+nkf -Lu -w -O ChangeLog.jp
+mv nkf.out ${DOC_PATH}ChangeLog_jp.txt
+
