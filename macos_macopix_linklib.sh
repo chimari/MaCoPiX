@@ -5,6 +5,7 @@ OPTPATH="/usr/local/opt/"
 CPPATH="/Volumes/MaCoPiX_macOS/MaCoPiX.app/Contents/Resources/lib/"
 MACOPIX_BIN="/Volumes/MaCoPiX_macOS/MaCoPiX.app/Contents/MacOS/MaCoPiX-bin"
 LOCALEPATH="/Volumes/MaCoPiX_macOS/MaCoPiX.app/Contents/Resources/share/locale/ja/LC_MESSAGES/"
+DOC_PATH="/Volumes/MaCoPiX_macOS/Documents/"
 
 cp src/macopix ${MACOPIX_BIN}
 cp po/ja.gmo ${LOCALEPATH}macopix.mo
@@ -237,3 +238,9 @@ LIBFILE="libpcre.1.dylib"
 
 LIBFILE="libgraphite2.3.dylib"
 	install_name_tool -change ${OPTPATH}graphite2/lib/libgraphite2.3.dylib ${TGTPATH}libgraphite2.3.dylib ${CPPATH}${LIBFILE}
+
+
+nkf -Lm -O ${DOC_PATH}README.txt README
+nkf -Lm -O ${DOC_PATH}READMEjp.txt README.jp
+nkf -Lm -O ${DOC_PATH}ChangeLog.txt ChangeLog
+nkf -Lm -O ${DOC_PATH}ChangeLog_jp.txt ChangeLog.jp
