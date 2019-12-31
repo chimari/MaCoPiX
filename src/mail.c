@@ -765,6 +765,8 @@ gpointer thread_get_pop3(gpointer gdata){
   get_pop3(mascot);
 
   if(mascot->mloop) g_main_loop_quit(mascot->mloop);
+
+  return(NULL);
 }
 
 

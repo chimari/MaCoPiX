@@ -196,6 +196,8 @@ gpointer thread_get_mascot_list(gpointer gdata){
   http_c_nonssl(mascot);
 
   if(mascot->ploop) g_main_loop_quit(mascot->ploop);
+
+  return(NULL);
 }
 
 
