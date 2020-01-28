@@ -19,12 +19,12 @@ msgstr ""
 
 #: src/balloon.c:509
 #, c-format
-msgid "%s(From is not avairable)%s"
+msgid "%s(From is not available)%s"
 msgstr ""
 
 #: src/balloon.c:522
 #, c-format
-msgid "%s(Subject is not avairable)%s"
+msgid "%s(Subject is not available)%s"
 msgstr ""
 
 #: src/balloon.c:529
@@ -374,7 +374,7 @@ msgid "Select Sound File"
 msgstr ""
 
 #: src/gui.c:3725
-msgid "Select the file refered for the mail checking"
+msgid "Select the file referred for the mail checking"
 msgstr ""
 
 #: src/gui.c:3841
@@ -417,7 +417,7 @@ msgid "Image File : "
 msgstr ""
 
 #: src/gui.c:4437 src/gui.c:4443
-msgid "At last, Please Input Descrption for Copyright"
+msgid "At last, Please Input Description for Copyright"
 msgstr ""
 
 #: src/gui.c:4482 src/gui.c:4506
@@ -444,7 +444,7 @@ msgstr ""
 
 #: src/gui.c:4609
 msgid ""
-"Caution : You're going to install a new mascot into your user's direcroty.\n"
+"Caution : You're going to install a new mascot into your user's directory.\n"
 msgstr ""
 
 #: src/gui.c:4610 src/gui.c:4639 src/gui.c:4787 src/gui.c:4813
@@ -472,7 +472,7 @@ msgstr ""
 #: src/gui.c:4638
 msgid ""
 "Caution : You're going to install a new mascot into the MaCoPiX common "
-"direcroty.\n"
+"directory.\n"
 msgstr ""
 
 #: src/gui.c:4644
@@ -486,7 +486,7 @@ msgstr ""
 #: src/gui.c:4786
 msgid ""
 "Caution : You're going to install a new launcher menu with its mascots into "
-"your user's direcroty.\n"
+"your user's directory.\n"
 msgstr ""
 
 #: src/gui.c:4790
@@ -496,7 +496,7 @@ msgstr ""
 #: src/gui.c:4812
 msgid ""
 "Caution : You're going to install a new launcher menu with mascots into the "
-"MaCoPiX common direcroty.\n"
+"MaCoPiX common directory.\n"
 msgstr ""
 
 #: src/gui.c:4816
@@ -1623,7 +1623,7 @@ msgid "Launcher Menu"
 msgstr ""
 
 #: src/gui.c:10945 src/gui.c:11014
-msgid "For Developper"
+msgid "For Developer"
 msgstr ""
 
 #: src/gui.c:10964 src/trayicon.c:100
@@ -1724,7 +1724,7 @@ msgid "      [Common Dir]"
 msgstr ""
 
 #: src/gui.c:11501
-msgid "Do you want to overwite the newer file to User Dir?"
+msgid "Do you want to overwrite the newer file to User Dir?"
 msgstr ""
 
 #: src/gui.c:11506
@@ -1834,11 +1834,11 @@ msgid "Selected File\n"
 msgstr ""
 
 #: src/gui.c:12555
-msgid "cannot be opend as MaCoPiX menu.\n"
+msgid "cannot be opened as MaCoPiX menu.\n"
 msgstr ""
 
 #: src/gui.c:12579
-msgid "MaCoPiX : Deletion of temporay files"
+msgid "MaCoPiX : Deletion of temporary files"
 msgstr ""
 
 #: src/gui.c:12605
@@ -1846,7 +1846,7 @@ msgid "Install of the new menu file has been completed."
 msgstr ""
 
 #: src/gui.c:12611
-msgid "Remove the temporary direcotry?"
+msgid "Remove the temporary directory?"
 msgstr ""
 
 #: src/gui.c:12726
@@ -2066,7 +2066,7 @@ msgid "Installed Mascot [%2d/%2d] \"%s\"\n"
 msgstr ""
 
 #: src/main.c:728
-msgid "Mascot instllation has been completed."
+msgid "Mascot installation has been completed."
 msgstr ""
 
 #: src/main.c:772
@@ -2188,7 +2188,7 @@ msgid "%d mascot"
 msgstr ""
 
 #: src/main.c:4291
-msgid "<i>unkown</i>"
+msgid "<i>unknown</i>"
 msgstr ""
 
 #: src/main.c:4333 src/main.c:4335
@@ -2407,7 +2407,7 @@ msgid ""
 " Congratulations!!\n"
 "===================\n"
 "\n"
-"  You've scceeded to convert with no errors.\n"
+"  You've succeeded to convert with no errors.\n"
 "\n"
 "  Please use this mascot on Nokkari-Chara ver1.40 or later.\n"
 msgstr ""
@@ -2448,7 +2448,7 @@ msgstr ""
 
 #: src/utils.c:88
 #, c-format
-msgid "Cannot read status of directry %s .\n"
+msgid "Cannot read status of directory %s .\n"
 msgstr ""
 
 #: src/utils.c:92

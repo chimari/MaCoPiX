@@ -85,7 +85,7 @@ void check_common_dir(void){
 
     if (access(COMMON_DIR, F_OK) == 0) {
 	if (stat(COMMON_DIR, &st)<0){
-	    fprintf(stderr,_("Cannot read status of directry %s .\n"),COMMON_DIR);
+	    fprintf(stderr,_("Cannot read status of directory %s .\n"),COMMON_DIR);
 	    exit(1);
 	}
 	if (! S_ISDIR(st.st_mode)) {

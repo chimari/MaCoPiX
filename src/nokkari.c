@@ -880,7 +880,7 @@ void create_nkr_dialog(typMascot *mascot)
 			NULL);
   }
   else{
-    nkr_msg=g_strdup(_("\n Congratulations!!\n===================\n\n  You've scceeded to convert with no errors.\n\n  Please use this mascot on Nokkari-Chara ver1.40 or later.\n"));
+    nkr_msg=g_strdup(_("\n Congratulations!!\n===================\n\n  You've succeeded to convert with no errors.\n\n  Please use this mascot on Nokkari-Chara ver1.40 or later.\n"));
   }
 
   gtk_text_buffer_get_start_iter(text_buffer, &start_iter);
