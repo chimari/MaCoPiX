@@ -31,7 +31,7 @@
 
 2008.6.24   ver1.7.4  - Fixed a bug on compilation under Gtk+2.10 or earlier.
 
-2008.5.24   ver1.7.3  - "Drop Shadow of Mascot" is  now avairable also on
+2008.5.24   ver1.7.3  - "Drop Shadow of Mascot" is  now available also on
 	                Windows. But no anti-aliased for image and shadow
 	                outlines.
 

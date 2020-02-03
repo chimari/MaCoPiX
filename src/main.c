@@ -725,7 +725,7 @@ void ReadMenu(typMascot *mascot, gint offset_i_cat, gchar *merge_file)
 			GTK_STOCK_DIALOG_INFO,
 #endif
 			install_log,
-			_("Mascot instllation has been completed."),
+			_("Mascot installation has been completed."),
 			NULL);
 	g_free(install_log);
       }
@@ -4288,7 +4288,7 @@ void create_dl_smenu_dialog(typMascot *mascot, gboolean flag_popup){
 	tmp=g_strdup_printf(_("%d mascot"), num);
       }
       else{
-	tmp=g_strdup(_("<i>unkown</i>"));
+	tmp=g_strdup(_("<i>unknown</i>"));
       }
       label=gtkut_label_new(_(tmp));
       gtkut_pos(label, POS_CENTER, POS_CENTER);

@@ -506,7 +506,7 @@ void DoBalloon(typMascot *mascot)
 	   sprintf(w_tmp_m3,"%s%s%s",
 		   w_tmp_m, mascot->mail.last_f, w_tmp_m2);
 	else
-	  sprintf(w_tmp_m3,_("%s(From is not avairable)%s"),
+	  sprintf(w_tmp_m3,_("%s(From is not available)%s"),
 		   w_tmp_m, w_tmp_m2);
 	strcpy(w_tmp, w_tmp_m3);
       }
@@ -519,7 +519,7 @@ void DoBalloon(typMascot *mascot)
 	  sprintf(w_tmp_m3,"%s%s%s",
 		  w_tmp_m, mascot->mail.last_s, w_tmp_m2);
 	else
-	  sprintf(w_tmp_m3,_("%s(Subject is not avairable)%s"),
+	  sprintf(w_tmp_m3,_("%s(Subject is not available)%s"),
 		   w_tmp_m, w_tmp_m2);
 	strcpy(w_tmp, w_tmp_m3);
       }

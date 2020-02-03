@@ -3722,7 +3722,7 @@ static void create_mail_file_dialog(GtkWidget *w, gpointer gdata)
   // Win構築は重いので先にExposeイベント等をすべて処理してから
   while (my_main_iteration(FALSE));
 
-  fdialog = gtk_file_chooser_dialog_new(_("Select the file refered for the mail checking"),
+  fdialog = gtk_file_chooser_dialog_new(_("Select the file referred for the mail checking"),
  					GTK_WINDOW(mascot->conf_main),
 					GTK_FILE_CHOOSER_ACTION_OPEN,
 #ifdef USE_GTK3
@@ -4434,13 +4434,13 @@ static void create_new_mascot_dialog(GtkWidget *w, gpointer gdata)
   label=gtkut_label_new("");
   gtkut_pos(label, POS_CENTER, POS_CENTER);
   gtkut_table_attach_defaults (table, label, 0, 2, 2, 3);
-  label=gtkut_label_new(_("At last, Please Input Descrption for Copyright"));
+  label=gtkut_label_new(_("At last, Please Input Description for Copyright"));
   gtkut_pos(label, POS_CENTER, POS_CENTER);
   gtkut_table_attach_defaults (table, label, 0, 2, 3, 4);
 
   entry = gtk_entry_new ();
   gtk_entry_set_text(GTK_ENTRY(entry),"Copyright (C) ");
-  label=gtkut_label_new(_("At last, Please Input Descrption for Copyright"));
+  label=gtkut_label_new(_("At last, Please Input Description for Copyright"));
   gtkut_pos(label, POS_CENTER, POS_CENTER);
   gtkut_table_attach_defaults (table, entry, 0, 2, 4, 5);
   my_signal_connect (entry,"changed",cc_get_entry,&copyright);
@@ -4606,7 +4606,7 @@ static void create_file_selection_dialog(GtkWidget *widget, gpointer gdata)
 		  GTK_STOCK_DIALOG_WARNING,
 #endif
 		  POPUP_TIMEOUT*3,
-		  _("Caution : You're going to install a new mascot into your user's direcroty.\n"),
+		  _("Caution : You're going to install a new mascot into your user's directory.\n"),
 		  _("    If you already have the file with the same filename,"),
 		  _("    it will be overwritten."),
 		  _("\n    If you want to install more than one mascot with a launcher menu,"),
@@ -4635,7 +4635,7 @@ static void create_file_selection_dialog(GtkWidget *widget, gpointer gdata)
 		  GTK_STOCK_DIALOG_WARNING,
 #endif
 		  POPUP_TIMEOUT*3,
-		  _("Caution : You're going to install a new mascot into the MaCoPiX common direcroty.\n"),
+		  _("Caution : You're going to install a new mascot into the MaCoPiX common directory.\n"),
 		  _("    If you already have the file with the same filename,"),
 		  _("    it will be overwritten."),
 		  _("\n    If you want to install more than one mascot with a launcher menu,"),
@@ -4783,7 +4783,7 @@ static void create_menu_selection_dialog(GtkWidget *widget, gpointer gdata)
 		  GTK_STOCK_DIALOG_WARNING,
 #endif
 		  POPUP_TIMEOUT*3,
-		  _("Caution : You're going to install a new launcher menu with its mascots into your user's direcroty.\n"),
+		  _("Caution : You're going to install a new launcher menu with its mascots into your user's directory.\n"),
 		  _("    If you already have the file with the same filename,"),
 		  _("    it will be overwritten."),
 		  NULL);
@@ -4809,7 +4809,7 @@ static void create_menu_selection_dialog(GtkWidget *widget, gpointer gdata)
 		  GTK_STOCK_DIALOG_WARNING,
 #endif
 		  POPUP_TIMEOUT*3,
-		  _("Caution : You're going to install a new launcher menu with mascots into the MaCoPiX common direcroty.\n"),
+		  _("Caution : You're going to install a new launcher menu with mascots into the MaCoPiX common directory.\n"),
 		  _("    If you already have the file with the same filename,"),
 		  _("    it will be overwritten."),
 		  NULL);
@@ -10942,7 +10942,7 @@ GtkWidget * make_open_menu(typMascot *mascot)
   develop_menu=make_open_develop_menu(mascot);
   gtk_widget_show (develop_menu);
 
-  popup_button =gtk_menu_item_new_with_label (_("For Developper"));
+  popup_button =gtk_menu_item_new_with_label (_("For Developer"));
   gtk_widget_show (popup_button);
   gtk_container_add (GTK_CONTAINER (popup_menu), popup_button);
   gtk_menu_item_set_submenu(GTK_MENU_ITEM(popup_button),develop_menu);
@@ -11011,7 +11011,7 @@ GtkWidget * make_save_menu(typMascot *mascot)
   develop_menu=make_develop_menu(mascot);
   gtk_widget_show (develop_menu);
 
-  popup_button =gtk_menu_item_new_with_label (_("For Developper"));
+  popup_button =gtk_menu_item_new_with_label (_("For Developer"));
   gtk_widget_show (popup_button);
   gtk_container_add (GTK_CONTAINER (popup_menu), popup_button);
   gtk_menu_item_set_submenu(GTK_MENU_ITEM(popup_button),develop_menu);
@@ -11498,7 +11498,7 @@ void create_cons_dialog(typMascot *mascot,
   gtkut_table_attach(cons_tbl2, label, 1, 2, 1, 2,
 		     GTK_SHRINK,GTK_SHRINK,0,0);
 
-  label = gtkut_label_new(_("Do you want to overwite the newer file to User Dir?"));
+  label = gtkut_label_new(_("Do you want to overwrite the newer file to User Dir?"));
   gtkut_pos(label, POS_START, POS_CENTER);
   gtk_box_pack_start(GTK_BOX(vbox), label,FALSE, FALSE, 0);
   
@@ -12552,7 +12552,7 @@ gint select_menu_from_ext(typMascot *mascot, gchar *dest_file){
 		  POPUP_TIMEOUT*3,
 		  _("Selected File\n"),
 		  dest_file,
-		  _("cannot be opend as MaCoPiX menu.\n"),
+		  _("cannot be opened as MaCoPiX menu.\n"),
 		  NULL);
   }
 
@@ -12576,7 +12576,7 @@ void unlink_all(typMascot *mascot, gchar *dirname)
   dialog=gtk_dialog_new();
   gtk_window_set_modal(GTK_WINDOW(dialog),TRUE);
   gtk_window_set_title(GTK_WINDOW(dialog),
-		       _("MaCoPiX : Deletion of temporay files"));
+		       _("MaCoPiX : Deletion of temporary files"));
   gtk_window_set_position(GTK_WINDOW(dialog), GTK_WIN_POS_CENTER);
   gtk_container_set_border_width(GTK_CONTAINER(dialog),5);
   gtk_window_set_transient_for(GTK_WINDOW(dialog), NULL);
@@ -12608,7 +12608,7 @@ void unlink_all(typMascot *mascot, gchar *dirname)
   label=gtkut_label_new(" ");
   gtk_box_pack_start(GTK_BOX(gtk_dialog_get_content_area(GTK_DIALOG(dialog))),
 		     label,TRUE,TRUE,0);
-  label=gtkut_label_new(_("Remove the temporary direcotry?"));
+  label=gtkut_label_new(_("Remove the temporary directory?"));
   gtk_box_pack_start(GTK_BOX(gtk_dialog_get_content_area(GTK_DIALOG(dialog))),
 		       label,TRUE,TRUE,0);
   tmp=g_strdup_printf("\"%s\"",to_utf8(dirname));
