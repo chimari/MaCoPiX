@@ -16949,7 +16949,7 @@ fi
 
 
 
-ALL_LINGUAS="ja"
+ALL_LINGUAS="ja uk"
 
   { $as_echo "$as_me:${as_lineno-$LINENO}: checking whether NLS is requested" >&5
 $as_echo_n "checking whether NLS is requested... " >&6; }

@@ -220,7 +220,7 @@ dnl gresource
 AC_PATH_PROG([GLIB_COMPILE_RESOURCES], [glib-compile-resources])
 
 dnl for gettext
-ALL_LINGUAS="ja"
+ALL_LINGUAS="ja uk"
 AM_GNU_GETTEXT
 GETTEXT_PACKAGE=macopix
 AC_SUBST(LOCALEDIR)
