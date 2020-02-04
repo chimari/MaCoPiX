@@ -1,0 +1,2556 @@
+# translation of uk.po to Ukrainian
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+#
+# Yuri Chornoivan <yurchor@ukr.net>, 2007, 2008, 2020.
+msgid ""
+msgstr ""
+"Project-Id-Version: uk\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2019-12-29 18:03-1000\n"
+"PO-Revision-Date: 2020-01-28 20:42+0200\n"
+"Last-Translator: Yuri Chornoivan <yurchor@ukr.net>\n"
+"Language-Team: Ukrainian <translation@linux.org.ua>\n"
+"Language: uk\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Lokalize 20.03.70\n"
+"Plural-Forms:  nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n"
+"%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
+
+#: src/balloon.c:509
+#, c-format
+msgid "%s(From is not available)%s"
+msgstr "%s(Вихідна адреса невідома)%s"
+
+#: src/balloon.c:522
+#, c-format
+msgid "%s(Subject is not available)%s"
+msgstr "%s(Тема невідома)%s"
+
+#: src/balloon.c:529
+msgid "POP3 access error"
+msgstr "Помилка доступу до POP3"
+
+#: src/callbacks.c:2280
+#, c-format
+msgid "%d/%d/%d(%s)"
+msgstr "%d/%d/%d(%s)"
+
+#: src/callbacks.c:2442
+msgid "Sun"
+msgstr "Нд"
+
+#: src/callbacks.c:2445
+msgid "Mon"
+msgstr "Пн"
+
+#: src/callbacks.c:2448
+msgid "Tue"
+msgstr "Вт"
+
+#: src/callbacks.c:2451
+msgid "Wed"
+msgstr "Ср"
+
+#: src/callbacks.c:2454
+msgid "Thu"
+msgstr "Чт"
+
+#: src/callbacks.c:2457
+msgid "Fri"
+msgstr "Пт"
+
+#: src/callbacks.c:2460
+msgid "Sat"
+msgstr "Сб"
+
+#: src/dnd.c:156
+#, c-format
+msgid ""
+"Do you want to install the mascot menu archive,\n"
+"     \"%s\"\n"
+"to your system [\"%s\"]? \n"
+"(Files are automatically overwritten.)"
+msgstr ""
+"Ви бажаєте встановити архів меню маскота,\n"
+"     «%s»\n"
+"на вашу систему [«%s»]? \n"
+"(Файли буде автоматично переписано.)"
+
+#: src/dnd.c:170
+msgid "MaCoPiX : Installing Mascot Menu File"
+msgstr "MaCoPiX: Встановлення файла меню маскота"
+
+#.
+#. button=gtkut_dialog_add_button(GTK_DIALOG(dialog),
+#. _("OK"),
+#. #ifdef USE_GTK3
+#. "emblem-default",
+#. #else
+#. GTK_STOCK_OK,
+#. #endif
+#. GTK_RESPONSE_OK);
+#. gtk_widget_grab_focus(gtk_dialog_get_widget_for_response(GTK_DIALOG(dialog),
+#. GTK_RESPONSE_OK));
+#.
+#: src/dnd.c:188 src/gui.c:2192 src/gui.c:2517 src/gui.c:2691 src/gui.c:4272
+#: src/gui.c:4334 src/gui.c:4399 src/gui.c:4496 src/gui.c:5179 src/gui.c:5296
+#: src/gui.c:5386 src/gui.c:5552 src/gui.c:5802 src/gui.c:5927 src/gui.c:6077
+#: src/gui.c:11531 src/gui.c:11754 src/gui.c:12112 src/gui.c:12261
+#: src/gui.c:12369 src/gui.c:12480 src/gui.c:12594 src/nokkari.c:890
+#: src/sslmanager.c:157
+msgid "OK"
+msgstr "Гаразд"
+
+#: src/dnd.c:198 src/gui.c:2183 src/gui.c:2508 src/gui.c:2682 src/gui.c:4263
+#: src/gui.c:4325 src/gui.c:4390 src/gui.c:4487 src/gui.c:5170 src/gui.c:5287
+#: src/gui.c:5377 src/gui.c:5543 src/gui.c:5793 src/gui.c:5918 src/gui.c:11520
+#: src/gui.c:11743 src/gui.c:12469 src/gui.c:12585 src/http-client.c:689
+#: src/http-client.c:691 src/http-client.c:805 src/http-client.c:807
+#: src/main.c:4340 src/main.c:4342 src/sslmanager.c:167
+msgid "Cancel"
+msgstr "Скасувати"
+
+#: src/gui.c:464 src/gui.c:5956 src/gui.c:5973
+#, c-format
+msgid "Saved Resource as ...%%n    \"%s\""
+msgstr "Збережено ресурс як …%%n    «%s»"
+
+#: src/gui.c:476 src/gui.c:524 src/gui.c:5206 src/gui.c:5218 src/gui.c:5609
+#: src/gui.c:5680
+#, c-format
+msgid "Saved Mascot as ...%%n    \"%s\""
+msgstr "Збережено маскот …%%n    «%s»"
+
+#: src/gui.c:489
+#, c-format
+msgid "Set Default Menu as ...%%n    \"%s\""
+msgstr "Зробити типовим меню …%%n    «%s»"
+
+#: src/gui.c:493 src/gui.c:508
+msgid "Remove Default Menu from Resource Setting"
+msgstr "Вилучити типове меню з налаштувань ресурсу"
+
+#: src/gui.c:527
+#, c-format
+msgid "%%aSaved Resource as ...%%n    \"%s\""
+msgstr "%%aЗбережено ресурс як …%%n    «%s»"
+
+#: src/gui.c:531
+#, c-format
+msgid "%%aSaved Menu as ...%%n    \"%s\""
+msgstr "%%aЗбережено меню як …%%n    «%s»"
+
+#: src/gui.c:532
+#, c-format
+msgid "%%aSet Default Menu as ...%%n    \"%s\""
+msgstr "%%aЗробити типовим меню …%%n    «%s»"
+
+#: src/gui.c:536
+#, c-format
+msgid "%%aRemove Default Menu from Resource Setting"
+msgstr "%%aВилучити типове меню з налаштувань ресурсу"
+
+#: src/gui.c:1649 src/gui.c:1749 src/gui.c:1945
+#, c-format
+msgid "Select New Image for No.%02d"
+msgstr "Виберіть новий малюнок з номером %02d"
+
+#: src/gui.c:1670 src/gui.c:1785 src/gui.c:1865 src/gui.c:1971 src/gui.c:2878
+#: src/gui.c:2979 src/gui.c:3361 src/gui.c:3480 src/gui.c:3571 src/gui.c:3659
+#: src/gui.c:3862 src/gui.c:4120 src/gui.c:4189 src/gui.c:4671 src/gui.c:4854
+#: src/gui.c:4969 src/gui.c:5044 src/gui.c:5144 src/gui.c:5259 src/gui.c:5513
+#: src/gui.c:5767 src/gui.c:5892
+msgid "All File"
+msgstr "Всі файли"
+
+#: src/gui.c:1698 src/gui.c:2003
+msgid "Error: File cannot be loaded."
+msgstr "Помилка: Файл неможливо завантажити."
+
+#: src/gui.c:1713 src/gui.c:1805 src/gui.c:1895 src/gui.c:2017 src/gui.c:2905
+#: src/gui.c:3010 src/gui.c:3396 src/gui.c:3507 src/gui.c:3598 src/gui.c:3684
+#: src/gui.c:3807 src/gui.c:3890 src/gui.c:4143 src/gui.c:4218 src/gui.c:4720
+#: src/gui.c:4902 src/gui.c:4995 src/gui.c:5091 src/unlha.c:93 src/untar.c:180
+msgid "Error: File cannot be opened."
+msgstr "Помилка: Файл неможливо відкрити."
+
+#: src/gui.c:1769
+#, c-format
+msgid "Please select the image File for No.%d."
+msgstr "Будь ласка, виберіть файл малюнка з номером %d."
+
+#: src/gui.c:1777
+msgid "The image described in INI cannot be found."
+msgstr "Малюнок, описаний у файлі INI, не знайдено."
+
+#: src/gui.c:1841
+msgid "Select New Image for Biff"
+msgstr "Виберіть новий малюнок для повідомлення про листи"
+
+#: src/gui.c:1937
+msgid "Error: Append Image."
+msgstr "Помилка: Додати малюнок."
+
+#: src/gui.c:1939
+msgid "The number of images maxes out."
+msgstr "Дозволену кількість малюнків перевищено."
+
+#: src/gui.c:2067
+msgid "Warning : Please select an image to delete in the list."
+msgstr ""
+"Попередження: будь ласка, позначте у списку зображення, яке слід вилучити."
+
+#: src/gui.c:2110
+#, c-format
+msgid "Image %02d is used in Pattern %02d / Frame %02d\n"
+msgstr "Малюнок %02d використано у шаблоні %02d / Кадр %02d\n"
+
+#: src/gui.c:2119
+msgid "Error : Delete Image."
+msgstr "Помилка: вилучення зображення."
+
+#: src/gui.c:2123
+msgid "Please Change..."
+msgstr "Будь ласка, змініть…"
+
+#: src/gui.c:2162 src/gui.c:2469
+msgid "Error: Append Pattern."
+msgstr "Помилка: Додати шаблон."
+
+#: src/gui.c:2164 src/gui.c:2471
+msgid "The number of patterns maxes out."
+msgstr "Дозволену кількість шаблонів перевищено."
+
+#: src/gui.c:2176
+msgid "Select Pattern No. to Append"
+msgstr "Виберіть номер шаблона для додавання"
+
+#: src/gui.c:2207
+msgid "Append Pattern No."
+msgstr "Додати шаблон з номером"
+
+#: src/gui.c:2328
+msgid "Error: Delete Pattern."
+msgstr "Помилка: Видалення шаблона."
+
+#: src/gui.c:2330
+msgid "You cannot delete the Base pattern."
+msgstr "Не можна вилучати базовий шаблон."
+
+#: src/gui.c:2337
+#, c-format
+msgid "Do you really delete Pattern <b>%02d</b>?"
+msgstr "Ви справді хочете вилучити шаблон <b>%02d</b>?"
+
+#: src/gui.c:2346 src/gui.c:3077 src/gui.c:3239
+msgid "Warning: Delete Pattern."
+msgstr "Попередження: вилучення шаблона."
+
+#: src/gui.c:2487
+msgid "Error: Copy Pattern."
+msgstr "Помилка: Копіювання шаблона."
+
+#: src/gui.c:2489
+msgid "You cannot copy the Base pattern."
+msgstr "Ви не можете копіювати базовий шаблон."
+
+#: src/gui.c:2501
+msgid "Pattern Copy"
+msgstr "Копія шаблона"
+
+#: src/gui.c:2532
+#, c-format
+msgid "Pattern Copy No. <b>%02d</b> to No. "
+msgstr "Копіюя шаблона № <b>%02d</b> до № "
+
+#: src/gui.c:2655
+msgid "Error: Append Frame."
+msgstr "Помилка: Додавання кадру."
+
+#: src/gui.c:2657
+msgid "The number of frames maxes out."
+msgstr "Дозволену кількість кадрів перевищено."
+
+#: src/gui.c:2675
+msgid "Select Frame No. to Append"
+msgstr "Виберіть номер кадру для додавання"
+
+#: src/gui.c:2705
+msgid "Append Frame No."
+msgstr "Додати кадр з номером"
+
+#: src/gui.c:2788 src/gui.c:2805
+msgid "Error: Delete Frame."
+msgstr "Помилка: Видалення кадра."
+
+#: src/gui.c:2790
+msgid "You cannot delete frames anymore."
+msgstr "Вилучення наступних кадрів неможливе."
+
+#: src/gui.c:2807
+msgid "Please select a frame to delete."
+msgstr "Будь ласка, виберіть кадр для вилучення."
+
+#. Win構築は重いので先にExposeイベント等をすべて処理してから
+#. while (my_main_iteration(FALSE));
+#: src/gui.c:2859 src/gui.c:3455
+msgid "Select Mascot File"
+msgstr "Виберіть файл маскота"
+
+#: src/gui.c:2877 src/gui.c:2978 src/gui.c:3479 src/gui.c:4119 src/gui.c:4670
+#: src/gui.c:5143 src/gui.c:5512 src/gui.c:10269
+msgid "Mascot File"
+msgstr "Файл маскота"
+
+#: src/gui.c:2945
+msgid "Error: Append Mascot."
+msgstr "Помилка: Додавання маскота."
+
+#: src/gui.c:2947
+msgid "The number of mascots maxes out."
+msgstr "Перевищено дозволену кількість маскотів."
+
+#: src/gui.c:2954 src/gui.c:4106
+msgid "Select New Mascot File"
+msgstr "Виберіть новий файл маскота"
+
+#: src/gui.c:3054
+msgid "Error: Delete Mascot."
+msgstr "Помилка: вилучення маскота."
+
+#: src/gui.c:3056
+msgid "You cannot delete mascots anymore."
+msgstr "Вилучення наступних маскотів неможливе."
+
+#: src/gui.c:3068
+#, c-format
+msgid "        <b>%02d</b> : <b>%s</b>"
+msgstr "        <b>%02d</b>: <b>%s</b>"
+
+#: src/gui.c:3079
+msgid "Do you really want to delete the mascot?"
+msgstr "Ви справді хочете вилучити цей маскот?"
+
+#: src/gui.c:3134
+msgid "Error: Append Category."
+msgstr "Помилка: Додавання категорії."
+
+#: src/gui.c:3136 src/gui.c:3329
+msgid "The number of categories maxes out."
+msgstr "Перевищено можливу кількість категорій."
+
+#: src/gui.c:3218
+msgid "Error: Delete Category."
+msgstr "Помилка: Видалення категорії."
+
+#: src/gui.c:3220
+msgid "You can delete no more categories."
+msgstr "Вилучення наступних категорій неможливе."
+
+#: src/gui.c:3228
+#, c-format
+msgid "       Category <b>%02d</b> : <b>%s</b> (%d registered mascots)"
+msgstr "       Категорія <b>%02d</b>: <b>%s</b> (%d зареєстрованих маскоти)"
+
+#: src/gui.c:3241
+msgid "Do you really want to delete the category?"
+msgstr "Ви справді хочете вилучити цю категорію"
+
+#: src/gui.c:3327
+msgid "Error: Merge Menu."
+msgstr "Помилка: об'єднання меню."
+
+#: src/gui.c:3340
+msgid "Select Menu File to Merge"
+msgstr "Виберіть файл меню для об'єднання"
+
+#: src/gui.c:3360 src/gui.c:4852 src/gui.c:5043 src/gui.c:5766 src/gui.c:8413
+msgid "Menu File"
+msgstr "Файл меню"
+
+#: src/gui.c:3401 src/unlha.c:98
+#, c-format
+msgid "Cannot Open %s\n"
+msgstr "Неможливо відкрити %s\n"
+
+#: src/gui.c:3546 src/gui.c:3634
+msgid "Select Sound File"
+msgstr "Виберіть файл звуків"
+
+#: src/gui.c:3725
+msgid "Select the file referred for the mail checking"
+msgstr "Виберіть файл, співвіднесений з перевіркою пошти"
+
+#: src/gui.c:3841
+msgid "Select mailer command"
+msgstr "Виберіть команду поштовика"
+
+#: src/gui.c:4080
+#, c-format
+msgid "Created New Mascot ...%%n    \"%s\""
+msgstr "Створити новий маскот …%%n    «%s»"
+
+#. Win構築は重いので先にExposeイベント等をすべて処理してから
+#. while (my_main_iteration(FALSE));
+#: src/gui.c:4176
+msgid "Select Image for New Mascot"
+msgstr "Виберіть малюнок для нового маскота"
+
+#: src/gui.c:4258 src/gui.c:4320 src/gui.c:4385 src/gui.c:11033
+msgid "Create New Mascot"
+msgstr "Створити новий маскот"
+
+#: src/gui.c:4282 src/gui.c:4345 src/gui.c:4409
+msgid "Creating New Mascot..."
+msgstr "Створення нового маскота…"
+
+#: src/gui.c:4295
+msgid "1. Please select Mascot File Name to be created"
+msgstr "1. Будь ласка, виберіть назву файла маскота, який буде створено"
+
+#: src/gui.c:4358
+msgid "2. Please select an Image File Name to be used in Mascot"
+msgstr "2. Будь ласка, виберіть файл малюнка, який буде використано у маскоті"
+
+#: src/gui.c:4422
+msgid "Mascot File : "
+msgstr "Файл маскота: "
+
+#: src/gui.c:4428
+msgid "Image File : "
+msgstr "Файл картинки: "
+
+#: src/gui.c:4437 src/gui.c:4443
+msgid "At last, Please Input Description for Copyright"
+msgstr "Нарешті введіть опис з правами копіювання"
+
+#: src/gui.c:4482 src/gui.c:4506
+msgid "Please Input POP Password"
+msgstr "Будь ласка, введіть пароль POP"
+
+#: src/gui.c:4517
+#, c-format
+msgid "Server : %s"
+msgstr "Сервер: %s"
+
+#: src/gui.c:4524
+#, c-format
+msgid "User ID : %s"
+msgstr "Обліковий запис: %s"
+
+#: src/gui.c:4539
+msgid "Password : "
+msgstr "Пароль: "
+
+#: src/gui.c:4587 src/gui.c:10919
+msgid "Open Mascot"
+msgstr "Відкрити маскот"
+
+#: src/gui.c:4609
+msgid ""
+"Caution : You're going to install a new mascot into your user's directory.\n"
+msgstr ""
+"Попередження: Ви збираєтеся встановити новий маскот у теку користувача.\n"
+
+#: src/gui.c:4610 src/gui.c:4639 src/gui.c:4787 src/gui.c:4813
+msgid "    If you already have the file with the same filename,"
+msgstr "    Якщо Ви вже маєте файл з тою ж назвою,"
+
+#: src/gui.c:4611 src/gui.c:4640 src/gui.c:4788 src/gui.c:4814
+msgid "    it will be overwritten."
+msgstr "    його буде перезаписано."
+
+#: src/gui.c:4612 src/gui.c:4641
+msgid ""
+"\n"
+"    If you want to install more than one mascot with a launcher menu,"
+msgstr ""
+"\n"
+"    Якщо Ви бажаєте встановити більш ніж один маскот з меню запуску,"
+
+#: src/gui.c:4613 src/gui.c:4642
+msgid "    please install using \"Install Launcher Menu\"."
+msgstr ""
+"    будь ласка, встановіть його за допомогою «Встановити меню запуску»."
+
+#: src/gui.c:4615
+msgid "Install New Mascot to User's Directory"
+msgstr "Встановити новий маскот до теки користувача"
+
+#: src/gui.c:4638
+msgid ""
+"Caution : You're going to install a new mascot into the MaCoPiX common "
+"directory.\n"
+msgstr ""
+"Попередження: Ви збираєтесь встановити новий маскот у типову теку MaCoPiX.\n"
+
+#: src/gui.c:4644
+msgid "Install New Mascot to the Common Directory"
+msgstr "Встановити новий маскот до звичайної теки"
+
+#: src/gui.c:4765
+msgid "Open Launcher Menu"
+msgstr "Відкрити меню запуску"
+
+#: src/gui.c:4786
+msgid ""
+"Caution : You're going to install a new launcher menu with its mascots into "
+"your user's directory.\n"
+msgstr ""
+"Попередження: Ви збираєтесь встановити нове меню запуску з його маскотами до"
+" вашої теки користувача.\n"
+
+#: src/gui.c:4790
+msgid "Install New Launcher Menu to User's Directory"
+msgstr "Встановити нове меню запуску до теки користувача"
+
+#: src/gui.c:4812
+msgid ""
+"Caution : You're going to install a new launcher menu with mascots into the "
+"MaCoPiX common directory.\n"
+msgstr ""
+"Попередження: Ви збираєтесь встановити нове меню запуску з його маскотами у "
+"особливу теку MaCoPiX.\n"
+
+#: src/gui.c:4816
+msgid "Install New Launcher Menu to the Common Directory"
+msgstr "Встановіть нове меню запуску у особливу теку"
+
+#: src/gui.c:4847
+msgid "LZH File"
+msgstr "Файл LZH"
+
+#: src/gui.c:4850
+msgid "TAR+GZ File"
+msgstr "Файл TAR+GZ"
+
+#. Win構築は重いので先にExposeイベント等をすべて処理してから
+#. while (my_main_iteration(FALSE));
+#: src/gui.c:4955 src/gui.c:11182
+msgid "Convert from Nokkari-Chara"
+msgstr "Перетворити з Nokkari-Chara"
+
+#: src/gui.c:4968 src/gui.c:5258
+msgid "Nokkari-Chara File"
+msgstr "Файл Nokkari-Chara"
+
+#: src/gui.c:5028
+msgid "Select New Launcher Menu File to Create"
+msgstr "Виберіть нове меню запуску для створення"
+
+#: src/gui.c:5074
+#, c-format
+msgid "Created Menu File%%n    \"%s\""
+msgstr "Створено файл меню%%n    «%s»"
+
+#: src/gui.c:5124
+msgid "Save Mascot to Other File"
+msgstr "Зберегти маскот до іншого файла"
+
+#: src/gui.c:5165 src/gui.c:5282 src/gui.c:5538
+msgid "File Save : Overwrite Confirmation"
+msgstr "Збереження файла: Підтвердження перезапису"
+
+#: src/gui.c:5189 src/gui.c:5307 src/gui.c:5562
+#, c-format
+msgid "File %s already exists."
+msgstr "Файл %s вже існує."
+
+#: src/gui.c:5194 src/gui.c:5311 src/gui.c:5567 src/gui.c:5817 src/gui.c:5942
+msgid "Overwrite?"
+msgstr "Перезаписати?"
+
+#: src/gui.c:5245
+msgid "Convert Mascot to Nokkari-Chara"
+msgstr "Перетворити маскот у формат Nokkari-Chara"
+
+#: src/gui.c:5372
+msgid "Setup for Release Mascot"
+msgstr "Встановлення для поширення маскота"
+
+#: src/gui.c:5401
+msgid "Please edit the setting for this mascot"
+msgstr "Будь ласка, відредагуйте налаштування для цього маскота"
+
+#: src/gui.c:5411
+msgid "Mascot Name"
+msgstr "Ім’я маскота"
+
+#: src/gui.c:5428
+msgid "Copyright"
+msgstr "Авторське право"
+
+#: src/gui.c:5445 src/gui.c:8430 src/gui.c:9786
+msgid "Character Code"
+msgstr "Кодування"
+
+#: src/gui.c:5456
+msgid "Save Fontset for Clock"
+msgstr "Зберегти сім’ю шрифтів для годинника"
+
+#: src/gui.c:5462
+msgid "Save Colors for Clock"
+msgstr "Зберегти кольори для годинника"
+
+#: src/gui.c:5468
+msgid "Save Fontset for Balloon"
+msgstr "Зберегти сім’ю шрифтів для повідомлень"
+
+#: src/gui.c:5474
+msgid "Save Colors for Baloon"
+msgstr "Зберегти кольори для повідомлення"
+
+#. Win構築は重いので先にExposeイベント等をすべて処理してから
+#. while (my_main_iteration(FALSE));
+#: src/gui.c:5497
+msgid "Save Mascot for Release"
+msgstr "Зберегти маскот для розповсюдження"
+
+#: src/gui.c:5745
+msgid "Save Menu to File"
+msgstr "Зберегти меню до файла"
+
+#: src/gui.c:5788
+msgid "Menu Save : Overwrite Confirmation"
+msgstr "Збереження меню: Підтвердження перезапису"
+
+#: src/gui.c:5812
+#, c-format
+msgid "Menu File %s already exists."
+msgstr "Файл меню %s вже існує."
+
+#: src/gui.c:5830 src/gui.c:5845
+#, c-format
+msgid "Saved Menu as ...%%n    \"%s\""
+msgstr "Збережено меню як …%%n    «%s»"
+
+#: src/gui.c:5871
+msgid "Save Resource to File"
+msgstr "Зберегти ресурс до файла"
+
+#: src/gui.c:5891 src/gui.c:8396
+msgid "Resource File"
+msgstr "Файл ресурсів"
+
+#: src/gui.c:5913
+msgid "Resource Save : Overwrite Confirmation"
+msgstr "Збереження ресурсу: Підтвердження перезапису"
+
+#: src/gui.c:5937
+#, c-format
+msgid "Resource File %s already exists."
+msgstr "Файл ресурса %s вже існує."
+
+#: src/gui.c:6070
+msgid "Config for MaCoPiX"
+msgstr "Налаштування MaCoPiX"
+
+#: src/gui.c:6172 src/gui.c:8538
+msgid "Focus Follow"
+msgstr "Слідкування за фокусом"
+
+#: src/gui.c:6181
+msgid "Offset on the Title Bar"
+msgstr "Відступ на панелі заголовка"
+
+#: src/gui.c:6194
+msgid "Starting Point"
+msgstr "Початкова точка"
+
+#: src/gui.c:6206
+msgid "Left upper corner of the focused window"
+msgstr "Верхній лівий кут фокусованого вікна"
+
+#: src/gui.c:6211
+msgid "Right upper corner of the focused window"
+msgstr "Верхній правий кут фокусованого вікна"
+
+#: src/gui.c:6234
+msgid "Absolute[pix]"
+msgstr "Абсолютний[пікселів]"
+
+#: src/gui.c:6240
+msgid "Relative[%]"
+msgstr "Відносний[%]"
+
+#: src/gui.c:6269
+msgid "Title Bar Size"
+msgstr "Розмір панелі заголовка"
+
+#: src/gui.c:6286
+msgid "Manual Scaling"
+msgstr "Масштабування вручну"
+
+#: src/gui.c:6291
+msgid "Auto Scaling"
+msgstr "Автомасштабування"
+
+#: src/gui.c:6296
+msgid "Auto Scaling (for Compiz)"
+msgstr "Автомасштабування (для Compiz)"
+
+#: src/gui.c:6321
+msgid "Window Manager [start-up]"
+msgstr "Менеджер вікон [запуск]"
+
+#: src/gui.c:6335
+msgid "Bar Size (Manual)"
+msgstr "Розмір панелі (вручну)"
+
+#: src/gui.c:6353
+msgid "Offset for Shaped Bar"
+msgstr "Відступ для фігурної панелі"
+
+#: src/gui.c:6368
+msgid "Home Position"
+msgstr "Домівка"
+
+#: src/gui.c:6382
+msgid "Auto"
+msgstr "Автоматично"
+
+#: src/gui.c:6394
+msgid "  X"
+msgstr "  X"
+
+#: src/gui.c:6408 src/gui.c:9638
+msgid "  Y"
+msgstr "  Y"
+
+#: src/gui.c:6438
+msgid "Vanish when auto-detection failed"
+msgstr "Прибирати за невдачі автовизначення"
+
+#: src/gui.c:6453
+msgid "No Focus"
+msgstr "За відсутності фокуса"
+
+#: src/gui.c:6465 src/gui.c:6511 src/gui.c:6583
+msgid "Do Nothing"
+msgstr "Нічого не робити"
+
+#: src/gui.c:6470 src/gui.c:6516 src/gui.c:6588
+msgid "Vanish"
+msgstr "Щезати"
+
+#: src/gui.c:6476 src/gui.c:6522 src/gui.c:6594
+msgid "Sit on Task Bar"
+msgstr "Сидіти на панелі задач"
+
+#: src/gui.c:6479 src/gui.c:6525 src/gui.c:6597
+msgid "Move to Home Position"
+msgstr "Пересунутись на домашню позицію"
+
+#: src/gui.c:6499
+msgid "Sticked Out"
+msgstr "Позначення"
+
+#: src/gui.c:6545
+msgid "Management for Window w/o  Title Bar"
+msgstr "Керування для вікон без панелі заголовка"
+
+#: src/gui.c:6555
+msgid "Ignore Window w/o Title Bar"
+msgstr "Ігнорувати вікно без панелі заголовка"
+
+#: src/gui.c:6569
+msgid "     Action : "
+msgstr "     Дія: "
+
+#: src/gui.c:6617
+msgid "    * Mascot could fail to follow the focus with older window managers."
+msgstr ""
+"    * Спроба слідувати за фокусом може зазнати невдачі на застарілих "
+"менеджерах вікон."
+
+#: src/gui.c:6624
+msgid "for Windows"
+msgstr "для Windows"
+
+#: src/gui.c:6632
+msgid "Stay on Task Bar"
+msgstr "Залишатися на панелі задач"
+
+#: src/gui.c:6644
+msgid "for macOS"
+msgstr "для macOS"
+
+#: src/gui.c:6652
+msgid "Drawing Layer"
+msgstr "Шар малювання"
+
+#: src/gui.c:6664
+msgid "Floating Window (never go over Menu Bar)"
+msgstr "Рухоме вікно (ніколи не малювати на смужці меню)"
+
+#: src/gui.c:6669
+msgid "Over Menu Bar"
+msgstr "Над смужкою меню"
+
+#: src/gui.c:6694
+msgid "Foreground Mapping"
+msgstr "Прив'язка переднього плану"
+
+#: src/gui.c:6702
+msgid "Force to Raise to the Foreground"
+msgstr "Силоміць пересувати нагору"
+
+#: src/gui.c:6710
+msgid "Raise with Mascot shaping (for translucent KWin)"
+msgstr "Пересувати за шаблоном маскота (для прозорого KWin)"
+
+#: src/gui.c:6722 src/gui.c:8631
+msgid "Move"
+msgstr "Переміщення"
+
+#: src/gui.c:6734 src/gui.c:6815 src/gui.c:10633 src/gui.c:10850
+msgid "Time Signal"
+msgstr "Сигнал годинника"
+
+#: src/gui.c:6741
+msgid "Use Signal"
+msgstr "Використовувати сигнал"
+
+#: src/gui.c:6756
+msgid "Mascot Action"
+msgstr "Дія для маскота"
+
+#: src/gui.c:6768 src/gui.c:6856 src/gui.c:7000
+msgid "None"
+msgstr "Немає"
+
+#: src/gui.c:6773
+msgid "Click Action"
+msgstr "Дія після клацання"
+
+#: src/gui.c:6778 src/trayicon.c:78
+msgid "Mascot Random Change"
+msgstr "Випадкова зміна маскотів"
+
+#: src/gui.c:6797
+msgid "External Command"
+msgstr "Зовнішня команда"
+
+#: src/gui.c:6830
+msgid "Server Information"
+msgstr "Інформація про сервер"
+
+#: src/gui.c:6844
+msgid "Protocol"
+msgstr "Протокол"
+
+#: src/gui.c:6861
+msgid "POP3 (normal)"
+msgstr "POP3 (звичайний)"
+
+#: src/gui.c:6866
+msgid "POP3 (APOP auth)"
+msgstr "POP3 (APOP аутентифікація)"
+
+#: src/gui.c:6872
+msgid "Local mbox"
+msgstr "Місцевий mbox"
+
+#: src/gui.c:6877
+msgid "qmail (Maildir)"
+msgstr "qmail (Поштова тека)"
+
+#: src/gui.c:6882
+msgid "MH + Procmail"
+msgstr "MH + Procmail"
+
+#: src/gui.c:6915
+msgid "Server Address"
+msgstr "Адреса сервера"
+
+#: src/gui.c:6932
+msgid "User ID"
+msgstr "Обліковий запис"
+
+#: src/gui.c:6950
+msgid "   Password"
+msgstr "   Пароль"
+
+#: src/gui.c:6975
+msgid "Save Password"
+msgstr "Зберегти пароль"
+
+#: src/gui.c:7005
+msgid "Use SSL for POP3 Connection"
+msgstr "Використовувати SSL для з’єднань POP3"
+
+#: src/gui.c:7010
+msgid "Use STARTTLS to start SSL session"
+msgstr "Використовувати STARTTLS, щоб розпочати сеанс SSL"
+
+#: src/gui.c:7032
+msgid "Skip to Verify on SSL Certification"
+msgstr "Перехід до перевірки при сертифікації SSL"
+
+#: src/gui.c:7040
+msgid "Non-Blocking SSL"
+msgstr "Неблокуючий SSL"
+
+#: src/gui.c:7055
+msgid "   Port No."
+msgstr "   Номер порту"
+
+#: src/gui.c:7069
+msgid "Local mbox / Maildir / .procmailrc"
+msgstr "Локальна поштова скринька mbox / Maildir / .procmailrc"
+
+#: src/gui.c:7085
+msgid "File / Directory"
+msgstr "Файл / Тека"
+
+#: src/gui.c:7112
+msgid "Operating Information"
+msgstr "Обробка інформації"
+
+#: src/gui.c:7125
+msgid "Interval[sec]"
+msgstr "Інтервал[c]"
+
+#: src/gui.c:7137
+msgid "  Mailer"
+msgstr "  Поштовик"
+
+#: src/gui.c:7171
+msgid "Polling command"
+msgstr "Команда запиту"
+
+#: src/gui.c:7186
+msgid "Max Mails for POP Scan"
+msgstr "Максимальна к-ть листів для POP сканування"
+
+#: src/gui.c:7201
+msgid "Tooltips on biff pix"
+msgstr "Підказки на малюнках повідомлень про листи"
+
+#: src/gui.c:7211
+msgid "SPAM exception"
+msgstr "Виключення спаму"
+
+#: src/gui.c:7219
+msgid "Use exception"
+msgstr "Використовувати виключення"
+
+#: src/gui.c:7235
+msgid "Mark in Header"
+msgstr "Позначка у заголовку"
+
+#: src/gui.c:7279
+msgid "Mail List Window"
+msgstr "Вікно списку листів"
+
+#: src/gui.c:7291
+msgid "Width"
+msgstr "Ширина"
+
+#: src/gui.c:7303
+msgid "Height"
+msgstr "Висота"
+
+#: src/gui.c:7321 src/gui.c:9741
+msgid "Biff"
+msgstr "Повідомлення про пошту"
+
+#: src/gui.c:7336
+msgid "Mascot Magnification"
+msgstr "Збільшення маскота"
+
+#: src/gui.c:7344
+msgid "Magnification[%]"
+msgstr "Збільшення[%]"
+
+#: src/gui.c:7359
+msgid "Interpolation Style"
+msgstr "Стиль інтерполяції"
+
+#: src/gui.c:7372
+msgid "Nearest-Neighbor"
+msgstr "Найближче можливе"
+
+#: src/gui.c:7377
+msgid "Tiles"
+msgstr "Черепиця"
+
+#: src/gui.c:7382
+msgid "Bilinear"
+msgstr "Білінійний"
+
+#: src/gui.c:7387
+msgid "Hyper"
+msgstr "Гіпер"
+
+#: src/gui.c:7408
+msgid ""
+"Graphic lib. for Image Rendering (Cairo enables trancelucency w/composited "
+"desktop)"
+msgstr ""
+"Графічна бібліотека для показу зображень (Cairo вмикає прозорість для "
+"композитної стільниці)"
+
+#: src/gui.c:7417
+msgid "Current Desktop"
+msgstr "Поточна стільниця"
+
+#: src/gui.c:7426
+msgid "Translucency is partly supported by Windows native graphics."
+msgstr "Прозорість частково підтримується у графічній оболонці Windows."
+
+#: src/gui.c:7432
+msgid "Current system does not support translucent windows."
+msgstr "Поточна система не підтримує прозорості вікон."
+
+#: src/gui.c:7437
+msgid "Current system support translucent windows."
+msgstr "Поточна система підтримує прозорість вікон."
+
+#: src/gui.c:7442
+msgid "Translucent support is UNKNOWN.    "
+msgstr "Стан підтримки прозорості НЕВІДОМИЙ.    "
+
+#: src/gui.c:7446
+msgid "Forced translucent rendering"
+msgstr "Примусовий показ з прозорістю"
+
+#: src/gui.c:7458
+msgid ""
+"Use Cairo for Mascot and Biff image rendering (Support anti-aliased outline)."
+msgstr ""
+"Використовувати Cairo для показу зображень маскота і Biff (підтримка "
+"згладжування контурів)."
+
+#: src/gui.c:7471
+msgid "Shadow of Mascot"
+msgstr "Тінь маскота"
+
+#: src/gui.c:7483
+msgid "Drop Shadow of Mascot"
+msgstr "Відкидати тінь"
+
+#: src/gui.c:7492
+msgid "    Offset  X"
+msgstr "    Відступ  X"
+
+#: src/gui.c:7510 src/gui.c:8580 src/gui.c:8617 src/gui.c:8785 src/gui.c:8814
+#: src/gui.c:8873 src/gui.c:9099
+msgid "Y"
+msgstr "Y"
+
+#: src/gui.c:7532
+msgid "Opacity [%]"
+msgstr "Непрозорість[%]"
+
+#: src/gui.c:7555
+msgid "Use Cairo for Panel Clock rendering."
+msgstr "Використовувати Cairo для показу годинника."
+
+#: src/gui.c:7557
+msgid "Support translucent panel clock (by Cairo)."
+msgstr "Підтримка прозорості годинника (з Cairo)."
+
+#: src/gui.c:7568
+msgid "Use Cairo for Balloon rendering."
+msgstr "Використовувати Cairo для показу контекстної панелі."
+
+#: src/gui.c:7570
+msgid "Support translucent balloon (by Cairo)."
+msgstr "Підтримка прозорості контекстної панелі (з Cairo)."
+
+#: src/gui.c:7583
+msgid "Rendering"
+msgstr "Показ"
+
+#: src/gui.c:7597
+msgid "Default for Clock"
+msgstr "Типовий для годинника"
+
+#: src/gui.c:7609 src/gui.c:7717 src/gui.c:8738 src/gui.c:9050
+msgid "Fontset"
+msgstr "Сім’я шрифтів"
+
+#: src/gui.c:7623 src/gui.c:7730 src/gui.c:8903 src/gui.c:9172
+msgid "Text"
+msgstr "Текст"
+
+#: src/gui.c:7644 src/gui.c:7749 src/gui.c:8922 src/gui.c:9191
+msgid "BG"
+msgstr "Тло"
+
+#: src/gui.c:7668 src/gui.c:7772 src/gui.c:8943 src/gui.c:9214
+msgid "Border"
+msgstr "Границя"
+
+#: src/gui.c:7688 src/gui.c:8962
+msgid "Shadow"
+msgstr "Тінь"
+
+#: src/gui.c:7706
+msgid "Default for Balloon"
+msgstr "Типовий для повідомлень"
+
+#: src/gui.c:7790
+msgid "Colors for From/Subject List"
+msgstr "Кольори для списку Відправник/Тема"
+
+#: src/gui.c:7801
+msgid "Text (odd)"
+msgstr "Текст (непарний)"
+
+#: src/gui.c:7820
+msgid "BG (odd)"
+msgstr "Тло (непарний)"
+
+#: src/gui.c:7838
+msgid "Text (even)"
+msgstr "Текст (парний)"
+
+#: src/gui.c:7857
+msgid "BG (even)"
+msgstr "Тло (парний)"
+
+#: src/gui.c:7874
+msgid "Default Opacity"
+msgstr "Типова непрозорість"
+
+#: src/gui.c:7876
+msgid "Default Opacity (Enable ONLY w/Compositing Window Managers)"
+msgstr "Типова непрозорість (вмикайте ЛИШЕ з композитними менеджерами вікон)"
+
+#: src/gui.c:7886
+msgid "Take precedence default opacities over mascot settings"
+msgstr "Віддавати перевагу типовій непрозорості перед налаштуваннями маскота"
+
+#: src/gui.c:7899
+msgid "Mascot [%]"
+msgstr "Маскот [%]"
+
+#: src/gui.c:7904
+msgid "Biff Image [%]"
+msgstr "Малюнок для повідомлення про листи [%]"
+
+#: src/gui.c:7911
+msgid "Balloon [%]"
+msgstr "Повідомлення [%]"
+
+#: src/gui.c:7916
+msgid "Clock [%]"
+msgstr "Годинник [%]"
+
+#: src/gui.c:7982 src/gui.c:7996 src/gui.c:9020 src/gui.c:9273
+msgid "BG only"
+msgstr "Тільки тло"
+
+#: src/gui.c:8010
+msgid "Font/Color"
+msgstr "Шрифт/Колір"
+
+#: src/gui.c:8025 src/gui.c:10256
+msgid "Duet Animation"
+msgstr "Анімація дуету"
+
+#: src/gui.c:8032
+msgid "Synchronize with CLICK animation   "
+msgstr "Синхронізувати з НАТИСКАННЯМ анімації   "
+
+#: src/gui.c:8041
+msgid "Synchronize with RANDOM animation"
+msgstr "Синхронізувати з ВИПАДКОВОЮ анімацією"
+
+#: src/gui.c:8053
+msgid "Socket Message"
+msgstr "Повідомлення сокета"
+
+#: src/gui.c:8065
+msgid "Balloon printing"
+msgstr "Друкування повідомлення"
+
+#: src/gui.c:8077
+msgid "Lump Sum"
+msgstr "Все разом"
+
+#: src/gui.c:8082
+msgid "Stepping"
+msgstr "Покроково"
+
+#: src/gui.c:8105
+msgid "  Stepping interval [frame]"
+msgstr "  Крок [у кадрах]"
+
+#: src/gui.c:8121
+msgid "  Default expiration [ms]"
+msgstr "  Типовий час застарівання [мс]"
+
+#: src/gui.c:8136
+msgid "Auto Install"
+msgstr "Автоматичне встановлення"
+
+#: src/gui.c:8144
+msgid "Auto Mascot Install to User Dir."
+msgstr "Автоматично встановлювати маскот у теку користувача."
+
+#: src/gui.c:8154
+msgid "User &amp; Common Dir Consistency Check"
+msgstr "Перевірка коректності тек користувача та типової"
+
+#: src/gui.c:8166
+msgid "Manual"
+msgstr "Вручну"
+
+#: src/gui.c:8171
+msgid "Auto Overwrite"
+msgstr "Автоперезапис"
+
+#: src/gui.c:8176
+msgid "Ignore"
+msgstr "Ігнорувати"
+
+#: src/gui.c:8199
+msgid "Sound Command"
+msgstr "Команда відтворення звуку"
+
+#: src/gui.c:8215
+#, c-format
+msgid "(\"%s\" will be translated to the sound file.)"
+msgstr "(«%s» буде переведено у файл звуку.)"
+
+#: src/gui.c:8222
+msgid "GNU tar Command [for *.tar.gz Extraction]"
+msgstr "Команда GNU tar [для видобування *.tar.gz]"
+
+#: src/gui.c:8238
+#, c-format
+msgid "(1st \"%s\" : *.tar.gz file, 2nd \"%s\" : temp dir.)"
+msgstr "(перший «%s»: файл *.tar.gz, другий «%s»: тимчасова тека.)"
+
+#: src/gui.c:8245
+msgid "Tray Icon"
+msgstr "Піктограма у лотку"
+
+#: src/gui.c:8253
+msgid "Show Tray Icon in Task Bar"
+msgstr "Показувати піктограму у лотку"
+
+#: src/gui.c:8267
+msgid "Misc."
+msgstr "Різне"
+
+#: src/gui.c:8287
+msgid "About This Program"
+msgstr "Про цю програму"
+
+#: src/gui.c:8440 src/gui.c:9796
+msgid "(Based on the locale environment)"
+msgstr "(Засноване на середовищі локалі)"
+
+#: src/gui.c:8448
+#, c-format
+msgid ""
+"Browser Command <span size=\"smaller\">(\"%s\" will be translated to a "
+"URL.)</span>"
+msgstr ""
+"Команда браузера <span size=\"smaller\">(«%s» буде замінено на адресу.)</"
+"span>"
+
+#: src/gui.c:8470 src/gui.c:9812
+msgid "Info."
+msgstr "Інформація"
+
+#: src/gui.c:8476
+msgid "Resource"
+msgstr "Ресурс"
+
+#: src/gui.c:8521 src/gui.c:8647
+msgid "Mode"
+msgstr "Режим"
+
+#: src/gui.c:8533 src/gui.c:8557
+msgid "Fix Position"
+msgstr "Зафіксувати позицію"
+
+#: src/gui.c:8567 src/gui.c:8604 src/gui.c:8773 src/gui.c:8802 src/gui.c:9087
+msgid "X"
+msgstr "X"
+
+#: src/gui.c:8593
+msgid "Mascot Offset for Focus Follow"
+msgstr "Відступ маскота для слідування за фокусом"
+
+#: src/gui.c:8659
+msgid "No Clock"
+msgstr "Без годинника"
+
+#: src/gui.c:8664
+msgid "Clock on Image"
+msgstr "Годинник на малюнку"
+
+#: src/gui.c:8669
+msgid "Panel Clock"
+msgstr "Панель з годинником"
+
+#: src/gui.c:8692
+msgid "Digit Type"
+msgstr "Формат показу"
+
+#: src/gui.c:8704
+msgid "14:00:00"
+msgstr "14:00:00"
+
+#: src/gui.c:8709
+msgid "14:00"
+msgstr "14:00"
+
+#: src/gui.c:8714
+msgid "PM  2:00:00"
+msgstr "ПП  2:00:00"
+
+#: src/gui.c:8719
+msgid "PM  2:00"
+msgstr "ПО  2:00"
+
+#: src/gui.c:8755 src/gui.c:9068
+msgid "Size/Position"
+msgstr "Розмір/Розташування"
+
+#: src/gui.c:8769
+msgid "Panel Position"
+msgstr "Розташування панелі"
+
+#: src/gui.c:8798 src/gui.c:9082
+msgid "Text Offset"
+msgstr "Відступ тексту"
+
+#: src/gui.c:8827 src/gui.c:9113
+msgid "Border Width"
+msgstr "Ширина границі"
+
+#: src/gui.c:8841
+msgid "Decoration"
+msgstr "Декорація"
+
+#: src/gui.c:8855
+msgid "Drop Shadow"
+msgstr "Відкидати тінь"
+
+#: src/gui.c:8863
+msgid "   Shadow Offset  X"
+msgstr "   Відступ тіні за X"
+
+#: src/gui.c:8887
+msgid "Rounded Corner for Panel Clock"
+msgstr "Округлені кути панелі годинника"
+
+#: src/gui.c:8895 src/gui.c:9164
+msgid "Color"
+msgstr "Колір"
+
+#: src/gui.c:8981 src/gui.c:9233
+msgid "Back to Default"
+msgstr "Повернутися до типового"
+
+#: src/gui.c:8993 src/gui.c:9245 src/gui.c:9372
+msgid "Opacity"
+msgstr "Непрозорість"
+
+#: src/gui.c:9001 src/gui.c:9253 src/gui.c:9383 src/gui.c:9651
+msgid "Opacity Alpha[%]"
+msgstr "Альфа непрозорості[%]"
+
+#: src/gui.c:9038
+msgid "Clock"
+msgstr "Годинник"
+
+#: src/gui.c:9126
+msgid "Default Position"
+msgstr "Типова позиція"
+
+#: src/gui.c:9139 src/gui.c:9593
+msgid "Left side of mascot"
+msgstr "Лівий бік маскота"
+
+#: src/gui.c:9144 src/gui.c:9598
+msgid "Right side of mascot"
+msgstr "Правий бік маскота"
+
+#: src/gui.c:9283
+msgid "Control Characters for Balloon Messages"
+msgstr "Контрольні символи для контекстних повідомлень"
+
+#: src/gui.c:9299
+msgid "([n]+1) frames waiting. (default : n=1)"
+msgstr "чекання ([n]+1) кадрів. (типово: n=1)"
+
+#: src/gui.c:9306
+msgid "([n]+1) frames waiting with a new line. (default : n=10)"
+msgstr "([n]+1) кадрів чекати до нового рядка. (типово: n=10)"
+
+#: src/gui.c:9313
+msgid "New line."
+msgstr "Новий рядок."
+
+#: src/gui.c:9320
+msgid "New page after ([n]+1) frames waiting. (default : n=10)"
+msgstr "Нова сторінка після ([n]+1) кадрового чекання. (типово: n=10)"
+
+#: src/gui.c:9327
+msgid "Number of arrived mails. (only for biff message)"
+msgstr "Кількість отриманої пошти. (тільки для повідомлення про листи)"
+
+#: src/gui.c:9334
+msgid "From: of the latest mail. (only for biff message with POP)"
+msgstr ""
+"Поле \"Від\": останньої пошти. (тільки для повідомлення про лист з POP)"
+
+#: src/gui.c:9341
+msgid "Subject: of the latest mail. (only for biff message with POP)"
+msgstr ""
+"Поле \"Тема\": останньої пошти. (тільки для повідомлення про лист з POP)"
+
+#: src/gui.c:9360
+msgid "Balloon"
+msgstr "Контекстне повідомлення"
+
+#: src/gui.c:9374
+msgid "Opacity (Enable ONLY w/Compositing Window Managers)"
+msgstr "Непрозорість (вмикайте ЛИШЕ з композитними менеджерами вікон)"
+
+#: src/gui.c:9424
+msgid "Append"
+msgstr "Додати"
+
+#: src/gui.c:9436
+msgid "Delete"
+msgstr "Вилучити"
+
+#: src/gui.c:9448
+msgid "Images"
+msgstr "Зображення"
+
+#: src/gui.c:9484
+msgid "Append Pattern"
+msgstr "Додати шаблон"
+
+#: src/gui.c:9495
+msgid "Copy Pattern"
+msgstr "Копіювати шаблон"
+
+#: src/gui.c:9506
+msgid "Delete Pattern"
+msgstr "Вилучити шаблон"
+
+#: src/gui.c:9520
+msgid "Animation"
+msgstr "Анімація"
+
+#: src/gui.c:9536
+msgid "Biff Image"
+msgstr "Малюнок повідомлення про листи"
+
+#: src/gui.c:9546
+msgid "Image File"
+msgstr "Файл картинки"
+
+#: src/gui.c:9580
+msgid "Position"
+msgstr "Позиція"
+
+#: src/gui.c:9621
+msgid "        X"
+msgstr "        X"
+
+#: src/gui.c:9669
+msgid "Biff Action"
+msgstr "Дія після повідомлення про лист"
+
+#: src/gui.c:9679 src/gui.c:10305 src/gui.c:10334
+msgid "Message"
+msgstr "Повідомлення"
+
+#: src/gui.c:9693 src/gui.c:10353
+msgid "Sound File"
+msgstr "Звуковий файл"
+
+#: src/gui.c:9725 src/gui.c:10375
+msgid "Clear"
+msgstr "Очистити"
+
+#: src/gui.c:9731 src/gui.c:10380
+msgid "Test"
+msgstr "Тест"
+
+#: src/gui.c:9754
+msgid "About This Mascot"
+msgstr "Про цей маскот"
+
+#: src/gui.c:9762 src/gui.c:13513
+msgid "Name"
+msgstr "Назва"
+
+#: src/gui.c:9774 src/gui.c:12006 src/main.c:4160
+msgid "File"
+msgstr "Файл"
+
+#: src/gui.c:9818
+msgid "Mascot"
+msgstr "Маскот"
+
+#: src/gui.c:9834
+msgid "Menu"
+msgstr "Меню"
+
+#: src/gui.c:9965
+msgid "Append Category"
+msgstr "Додати категорію"
+
+#: src/gui.c:9975
+msgid "Delete Category"
+msgstr "Вилучити категорію"
+
+#: src/gui.c:9985
+msgid "Merge Menu"
+msgstr "Об'єднати меню"
+
+#: src/gui.c:10018
+msgid "No menu files are loaded currently."
+msgstr "Зараз не завантажено файлів меню."
+
+#: src/gui.c:10022
+msgid "You can find a menu to create new one in the popup,"
+msgstr ""
+"Ви можете знайти пункт меню для створення маскота на контекстній панелі,"
+
+#: src/gui.c:10026
+msgid " and edit it here."
+msgstr " та редагуйте його тут."
+
+#: src/gui.c:10053 src/gui.c:12694 src/gui.c:13490
+msgid "No."
+msgstr "      №"
+
+#: src/gui.c:10059
+msgid "Image File Name"
+msgstr "Назва файла картинки"
+
+#: src/gui.c:10122
+#, c-format
+msgid "Base"
+msgstr "Базова"
+
+#: src/gui.c:10146
+msgid "Append Frame"
+msgstr "Додати кадр"
+
+#: src/gui.c:10157
+msgid "Delete Frame"
+msgstr "Вилучити кадр"
+
+#: src/gui.c:10168
+msgid "Test Anime"
+msgstr "Випробувати аніме"
+
+#: src/gui.c:10179
+msgid "Random"
+msgstr "Випадково"
+
+#: src/gui.c:10191
+msgid " Click"
+msgstr " Клацання"
+
+#: src/gui.c:10208
+msgid "Balloon Offset X[Left]"
+msgstr "Відступ повідомлення X[Ліворуч]"
+
+#: src/gui.c:10220
+msgid " Y[Left]"
+msgstr "  Y[Ліворуч]"
+
+#: src/gui.c:10232
+msgid "  X[Right]"
+msgstr "  X[Праворуч]"
+
+#: src/gui.c:10244
+msgid " Y[Right]"
+msgstr " Y[Праворуч]"
+
+#: src/gui.c:10290
+msgid " Pattern"
+msgstr " Шаблон"
+
+#: src/gui.c:10315
+msgid " Delay"
+msgstr " Затримка"
+
+#: src/gui.c:10434 src/gui.c:12021
+msgid "Category"
+msgstr "Категорія"
+
+#: src/gui.c:10489
+msgid "Append Mascot"
+msgstr "Додати маскот"
+
+#: src/gui.c:10500
+msgid "Delete Mascot"
+msgstr "Вилучити маскот"
+
+#: src/gui.c:10529 src/gui.c:10768 src/gui.c:11904
+msgid "Open"
+msgstr "Відкрити"
+
+#: src/gui.c:10544 src/gui.c:10782 src/gui.c:11122
+msgid "Save"
+msgstr "Зберегти"
+
+#: src/gui.c:10559 src/gui.c:10796
+msgid "New"
+msgstr "Створити"
+
+#: src/gui.c:10575 src/gui.c:10810 src/gui.c:11844
+msgid "Install"
+msgstr "Встановити"
+
+#: src/gui.c:10592
+msgid "Config Dialog"
+msgstr "Вікно налаштовування"
+
+#: src/gui.c:10598 src/gui.c:10823 src/trayicon.c:91
+msgid "Config"
+msgstr "Налаштувати"
+
+#: src/gui.c:10619 src/gui.c:10833
+msgid "Biff Check"
+msgstr "Перевірка повідомлення про листи"
+
+#: src/gui.c:10645
+msgid "Signal"
+msgstr "Сигнал"
+
+#: src/gui.c:10662 src/gui.c:11229 src/gui.c:11263
+msgid "Random Change"
+msgstr "Випадкова зміна"
+
+#: src/gui.c:10668
+msgid "Mascot Change"
+msgstr "Зміна маскотів"
+
+#: src/gui.c:10682 src/gui.c:10876
+msgid "Mascot Launcher"
+msgstr "Запуск маскота"
+
+#: src/gui.c:10894 src/gui.c:11823 src/gui.c:11831 src/trayicon.c:113
+msgid "Exit"
+msgstr "Вийти"
+
+#: src/gui.c:10932 src/gui.c:10991
+msgid "Launcher Menu"
+msgstr "Меню запуску"
+
+#: src/gui.c:10945 src/gui.c:11014
+msgid "For Developer"
+msgstr "Для розробника"
+
+#: src/gui.c:10964 src/trayicon.c:100
+msgid "Save All"
+msgstr "Зберегти все"
+
+#: src/gui.c:10973
+msgid "Save Mascot"
+msgstr "Зберегти маскот"
+
+#: src/gui.c:10978
+msgid "Save Mascot As..."
+msgstr "Зберегти маскот як…"
+
+#: src/gui.c:11001
+msgid "Save Resource"
+msgstr "Зберегти ресурс"
+
+#: src/gui.c:11043
+msgid "Create New Launcher Menu"
+msgstr "Створити нове меню запуску"
+
+#: src/gui.c:11062 src/gui.c:11852
+msgid "Launcher Menu [User]"
+msgstr "Меню запуску [Користувач]"
+
+#: src/gui.c:11069 src/gui.c:11859
+msgid "Launcher Menu [Common]"
+msgstr "Меню запуску [Типове]"
+
+#: src/gui.c:11083 src/gui.c:11871
+msgid "Mascot [User]"
+msgstr "Маскот [Користувач]"
+
+#: src/gui.c:11090 src/gui.c:11878
+msgid "Mascot [Common]"
+msgstr "Маскот [Типовий]"
+
+#: src/gui.c:11104
+msgid "Download Official Mascots"
+msgstr "Отримати офіційні маскоти"
+
+#: src/gui.c:11131
+msgid "Set as Default"
+msgstr "Зробити типовим"
+
+#: src/gui.c:11140
+msgid "Remove from Default"
+msgstr "Вилучити з типових"
+
+#: src/gui.c:11158
+msgid "File Select"
+msgstr "Вибір файла"
+
+#: src/gui.c:11164
+msgid "Launcher"
+msgstr "Запуск"
+
+#: src/gui.c:11200
+msgid "Save for Release"
+msgstr "Зберегти для розповсюдження"
+
+#: src/gui.c:11206
+msgid "Convert to Nokkari-Chara"
+msgstr "Перетворити у Nokkari-Chara"
+
+#: src/gui.c:11432
+msgid "MaCoPiX : Consistency Check for Common & User Dir."
+msgstr "MaCoPiX: Перевірка послідовності особистої та теки користувача."
+
+#: src/gui.c:11449
+msgid "WARNING"
+msgstr "ПОПЕРЕДЖЕННЯ"
+
+#: src/gui.c:11458
+msgid "Menu file : "
+msgstr "Файл меню: "
+
+#: src/gui.c:11461
+msgid "Mascot file : "
+msgstr "Файл маскота: "
+
+#: src/gui.c:11466
+msgid "  File in User Dir is older than the corresponded one in Common Dir."
+msgstr "  Файл у теці користувача старіший за відповідний у особливій теці."
+
+#: src/gui.c:11475
+msgid "     [User Dir]"
+msgstr "     [тека користувача]"
+
+#: src/gui.c:11480 src/gui.c:11493
+#, c-format
+msgid "     %4d/%02d/%02d %02d:%02d:%02d"
+msgstr "     %4d/%02d/%02d %02d:%02d:%02d"
+
+#: src/gui.c:11488
+msgid "      [Common Dir]"
+msgstr "      [Особлива тека]"
+
+#: src/gui.c:11501
+msgid "Do you want to overwrite the newer file to User Dir?"
+msgstr "Бажаєте перезаписати новіший файл у теці користувача?"
+
+#: src/gui.c:11506
+msgid "Don't ask this from the next time."
+msgstr "Не питати про це наступного разу."
+
+#: src/gui.c:11611
+msgid "MaCoPiX : Starting up"
+msgstr "MaCoPiX: Запуск"
+
+#: src/gui.c:11628
+msgid "No Menu Files are installed!!"
+msgstr "Не встановлено файлів меню!"
+
+#: src/gui.c:11633
+msgid "Please install one menu file at least,"
+msgstr "Будь ласка, встановіть хоч один файл меню,"
+
+#: src/gui.c:11638
+msgid "You can appoint a mascot file in option in order to start MaCoPiX,"
+msgstr ""
+"Ви можете вказати файл маскота у параметрі команди, щоб запустити MaCoPiX,"
+
+#: src/gui.c:11643
+msgid "or directly download &amp; install them from MaCoPiX official web."
+msgstr ""
+"або безпосередньо отримати і встановити маскоти з офіційної сторінки MaCoPiX."
+
+#: src/gui.c:11648
+msgid "Download &amp; install MaCoPiX official mascots."
+msgstr "Отримати і встановити офіційні маскоти MaCoPiX."
+
+#: src/gui.c:11663
+msgid "See more details of the mascots in MaCoPiX official web."
+msgstr "Див. подробиці щодо маскотів на офіційному сайті MaCoPiX."
+
+#: src/gui.c:11688
+msgid "Menus and Mascots can be installed by the menu bar of this window."
+msgstr "Меню та маскоти можна встановити за допомогою панелі меню цього вікна."
+
+#: src/gui.c:11692
+msgid "Or, drag &amp; drop a mascot menu archive (*.tar.gz) directly"
+msgstr ""
+"Або перетягніть та скиньте архів з меню маскота (*.tar.gz) безпосередньо"
+
+#: src/gui.c:11696
+msgid "into this window, in order to install it."
+msgstr "у це вікно з метою його встановлення."
+
+#: src/gui.c:11715
+msgid "MaCoPiX : Launcher Menu Selection"
+msgstr "MaCoPiX: Вибір меню запуску"
+
+#: src/gui.c:11719
+msgid "MaCoPiX : Start Menu Selection"
+msgstr "MaCoPiX: Вибір меню початку"
+
+#: src/gui.c:11889
+msgid "Download & Install Official Mascots [User]"
+msgstr "Отримати і встановити офіційні маскоти (для користувача)"
+
+#: src/gui.c:11912
+msgid "Installed Mascot"
+msgstr "Встановлений маскот"
+
+#: src/gui.c:12011
+msgid "Dir."
+msgstr "Тека"
+
+#: src/gui.c:12016
+msgid "Entry"
+msgstr "Елемент"
+
+#: src/gui.c:12043
+msgid "User"
+msgstr "Користувач"
+
+#: src/gui.c:12047
+msgid "Common"
+msgstr "Особливий"
+
+#: src/gui.c:12051
+msgid "Unknown"
+msgstr "Невідомо"
+
+#: src/gui.c:12060
+#, c-format
+msgid "%4d categories"
+msgstr "%4d категорій"
+
+#: src/gui.c:12063
+#, c-format
+msgid "%4d mascots"
+msgstr "%4d маскотів"
+
+#: src/gui.c:12073
+msgid "-- Combined Menu --"
+msgstr "-- Змішане меню --"
+
+#: src/gui.c:12108 src/gui.c:12120 src/gui.c:12196 src/gui.c:12303
+msgid "MaCoPiX : Message"
+msgstr "MaCoPiX: повідомлення"
+
+#: src/gui.c:12419
+msgid "MaCoPiX : Dialog"
+msgstr "MaCoPiX: діалогове вікно"
+
+#: src/gui.c:12553
+msgid "Selected File\n"
+msgstr "Обраний файл\n"
+
+#: src/gui.c:12555
+msgid "cannot be opened as MaCoPiX menu.\n"
+msgstr "не може бути відкритий як меню MaCoPiX.\n"
+
+#: src/gui.c:12579
+msgid "MaCoPiX : Deletion of temporary files"
+msgstr "MaCoPiX: Видалення тимчасових файлів"
+
+#: src/gui.c:12605
+msgid "Install of the new menu file has been completed."
+msgstr "Встановлення нового файла меню завершено."
+
+#: src/gui.c:12611
+msgid "Remove the temporary directory?"
+msgstr "Вилучити тимчасову теку?"
+
+#: src/gui.c:12726
+msgid "Image File <span size=\"smaller\">(Double-Click to change)</span>"
+msgstr ""
+"Файл зображення <span size=\"smaller\">(двічі клацніть, щоб змінити)</span>"
+
+#: src/gui.c:12903
+msgid "Frame No."
+msgstr "№ кадру"
+
+#: src/gui.c:12926
+msgid "Image No."
+msgstr "№ малюнка"
+
+#: src/gui.c:12951
+msgid "Min Stay"
+msgstr "Мін. затримка"
+
+#: src/gui.c:12976
+msgid "Max Stay"
+msgstr "Макс. затримка"
+
+#: src/gui.c:13013
+msgid "<span size=\"smaller\">Block Loop</span> Next Frame"
+msgstr "Наступний кадр <span size=\"smaller\">циклу блоків</span>"
+
+#: src/gui.c:13039
+msgid "Min Loop"
+msgstr "Мін. цикл"
+
+#: src/gui.c:13065
+msgid "Max Loop"
+msgstr "Макс. цикл"
+
+#: src/gui.c:13543
+msgid "Mascot File <span size=\"smaller\">(Double-Click to change)</span>"
+msgstr ""
+"Файл маскота <span size=\"smaller\">(двічі клацніть, щоб змінити)</span>"
+
+#: src/http-client.c:551
+#, c-format
+msgid "%d%% Downloaded (%.2lf / %.2lf MB)"
+msgstr "Отримано %d%% (%.2lf з %.2lf МБ)"
+
+#: src/http-client.c:557
+#, c-format
+msgid "%d%% Downloaded (%ld / %ld kB)"
+msgstr "Отримано %d%% (%ld з %ld кБ)"
+
+#: src/http-client.c:563
+#, c-format
+msgid "%d%% Downloaded (%ld / %ld bytes)"
+msgstr "Отримано %d%% (%ld з %ld байтів)"
+
+#: src/http-client.c:572
+#, c-format
+msgid "Downloaded %.2lf MB"
+msgstr "Отримано %.2lf МБ"
+
+#: src/http-client.c:576
+#, c-format
+msgid "Downloaded %ld kB"
+msgstr "Отримано %ld кБ"
+
+#: src/http-client.c:579
+#, c-format
+msgid "Downloaded %ld bytes"
+msgstr "Отримано %ld байтів"
+
+#: src/http-client.c:582
+msgid "Waiting for HTTP server response ..."
+msgstr "Очікуємо на відповідь сервера HTTP…"
+
+#: src/http-client.c:639 src/main.c:4115
+msgid "MaCoPiX : Downloading Official Mascot List"
+msgstr "MaCoPiX: отримуємо список офіційних маскотів"
+
+#: src/http-client.c:642
+msgid "Downloading the latest version of the official mascot list ..."
+msgstr "Отримуємо найсвіжішу версію списку офіційних маскотів…"
+
+#: src/http-client.c:678
+msgid "Checking the latest version of the official mascot list ..."
+msgstr "Перевіряємо найсвіжішу версію списку офіційних маскотів…"
+
+#: src/http-client.c:738 src/main.c:4403
+msgid "Error : Failed to download the mascot archive file (tar.gz)."
+msgstr "Помилка: не вдалося отримати файл архіву маскотів (tar.gz)."
+
+#: src/http-client.c:760
+msgid "MaCoPiX : Downloading Official Mascot tar.gz file"
+msgstr "MaCoPiX: отримуємо файл tar.gz офіційних маскотів"
+
+#: src/http-client.c:763
+msgid "Downloading an official mascot ..."
+msgstr "Отримуємо офіційний маскот…"
+
+#: src/http-client.c:794
+msgid "Downloading ..."
+msgstr "Отримуємо…"
+
+#: src/mail.c:98
+msgid "Initializing Biff..."
+msgstr "Запуск повідомлення про листи…"
+
+#: src/mail.c:283
+#, c-format
+msgid ""
+"You have %d mails (%d SPAMs).\n"
+" [Latest Mail]\n"
+"  From: %s\n"
+"  Subject: %s"
+msgstr ""
+"Вам надійшло %d листів (%d небажаних).\n"
+" [Остання пошта]\n"
+"  Від: %s\n"
+"  Тема: %s"
+
+#: src/mail.c:289
+#, c-format
+msgid ""
+"You have %d mails.\n"
+" [Latest Mail]\n"
+"  From: %s\n"
+"  Subject: %s"
+msgstr ""
+"Вам надійшло %d листів.\n"
+" [Остання пошта]\n"
+"  Від: %s\n"
+"  Тема: %s"
+
+#: src/mail.c:300
+#, c-format
+msgid "You have %d mails."
+msgstr "Вам надійшло %d листів."
+
+#: src/mail.c:308
+msgid "You have no mails."
+msgstr "Ви не отримали нової пошти."
+
+#: src/mail.c:689 src/mail.c:698
+msgid "(Decode Error)"
+msgstr "(Помилка розкодування)"
+
+#: src/mail.c:722
+#, c-format
+msgid ""
+" \n"
+"     ***** %d mails are skipped *****\n"
+" \n"
+msgstr ""
+" \n"
+"     ***** %d листів відкинуто *****\n"
+" \n"
+
+#: src/mail.c:935 src/mail.c:1080 src/mail.c:1247 src/mail.c:1425
+msgid "From: (no From: in original)\n"
+msgstr "Від: (немає Від: в оригіналі)\n"
+
+#: src/mail.c:944 src/mail.c:1089 src/mail.c:1256 src/mail.c:1450
+msgid " Subject: (no Subject: in original)\n"
+msgstr " Тема: (немає поля Тема: в оригіналі)\n"
+
+#: src/mail.c:1481
+#, c-format
+msgid "Displaying the newest %d mails out of %ds. [%d SPAMs are excluded.]"
+msgstr "Показ найсвіжіших %d листів з %d. [%d небажаних виключено.]"
+
+#: src/mail.c:1487
+#, c-format
+msgid "Displaying the newest %d mails out of %ds."
+msgstr "Показ найсвіжіших %d листів з %d."
+
+#: src/mail.c:1494
+#, c-format
+msgid "You have %d new mails.  [%d SPAMs are excluded.]"
+msgstr "Вам надійшло %d нових листів.  [%d небажаної реклами відсіяно.]"
+
+#: src/mail.c:1498
+#, c-format
+msgid "You have %d new mails."
+msgstr "Вам надійшло %d нових листів."
+
+#: src/mail.c:1539 src/mail.c:1543
+msgid "MaCoPiX : Arrived mail list"
+msgstr "MaCoPiX: Список листів, що надійшли"
+
+#: src/mail.c:1629
+msgid "   === Failed to get From/Subject list of arrived mails. ==="
+msgstr "   === Помилка отримання списку Від/Тема отриманих листів. ==="
+
+#: src/mail.c:1642
+msgid "Subject: "
+msgstr "Тема: "
+
+#: src/mail.c:1662
+msgid "From: "
+msgstr "Від: "
+
+#: src/mail.c:1674
+msgid "(invalid/no from in original)"
+msgstr "(некоректний відправник у оригіналі)"
+
+#: src/mail.c:1696
+msgid "Start Mailer"
+msgstr "Запустити поштовик"
+
+#: src/mail.c:1709
+msgid "Close"
+msgstr "Закрити"
+
+#: src/main.c:517
+msgid "Cannot Find Menu File."
+msgstr "Неможливо знайти файл меню."
+
+#: src/main.c:632 src/main.c:679
+msgid " Cannot read the Menu File correctly!!"
+msgstr " Неможливо коректно прочитати файл меню!!"
+
+#: src/main.c:663 src/main.c:910 src/main.c:979 src/main.c:2238 src/main.c:2536
+#: src/main.c:2655 src/main.c:2684 src/main.c:3553 src/sockmsg.c:409
+#: src/sockmsg.c:421
+msgid "(Invalid Character Code)"
+msgstr "(Некоректний код символу)"
+
+#: src/main.c:700
+#, c-format
+msgid "Installed Mascot [%2d/%2d] \"%s\"\n"
+msgstr "Встановлено маскот [%2d/%2d] «%s»\n"
+
+#: src/main.c:728
+msgid "Mascot installation has been completed."
+msgstr "Встановлення маскота завершено."
+
+#: src/main.c:772
+msgid " ================== Installed Menus ================== \n"
+msgstr " ================= Встановлені Меню ================= \n"
+
+#: src/main.c:789
+#, c-format
+msgid "   !!! Common Directory - %s - does not exist.\n"
+msgstr "   !!! Типова тека - %s - не існує.\n"
+
+#: src/main.c:794
+msgid "  [Common Directory]\n"
+msgstr "  [Типова тека]\n"
+
+#: src/main.c:808 src/main.c:858
+#, c-format
+msgid "  %20s *  %2d categories  -- Combined Menu --\n"
+msgstr "  %20s *  %2d категорій  -- Змішане меню --\n"
+
+#: src/main.c:812 src/main.c:862
+#, c-format
+msgid "  %20s :  %2d mascots    [%s]\n"
+msgstr "  %20s:  %2d маскотів    [%s]\n"
+
+#: src/main.c:839
+#, c-format
+msgid "  !!! User Directory - %s - does not exist.\n"
+msgstr "  !!! Тека користувача - %s - не існує.\n"
+
+#: src/main.c:844
+msgid "  [User Directory]\n"
+msgstr "  [Тека користувача]\n"
+
+#: src/main.c:1080
+#, c-format
+msgid "Creating User-Dir %s .\n"
+msgstr "Створення теки користувача %s .\n"
+
+#: src/main.c:1103
+#, c-format
+msgid "Creating User-PixmapDir %s .\n"
+msgstr "Створюється тека карт малюнків користувача %s .\n"
+
+#: src/main.c:1127
+#, c-format
+msgid "Creating User-SoundDir %s .\n"
+msgstr "Створюється тека звукових файлів користувача %s .\n"
+
+#: src/main.c:2131 src/main.c:2889 src/main.c:3114
+msgid "Cannot Find Mascot File."
+msgstr "Неможливо знайти файл маскота."
+
+#: src/main.c:3008 src/main.c:3296
+msgid "Cannot Find Image."
+msgstr "Неможливо знайти зображення."
+
+#: src/main.c:3452
+msgid "Cannot Find Sound File."
+msgstr "Неможливо знайти звуковий файл."
+
+#: src/main.c:3514
+#, c-format
+msgid "Cannot find resource file %s.\n"
+msgstr "Неможливо знайти файл ресурсу %s.\n"
+
+#: src/main.c:3515
+msgid "Loading default resource file...\n"
+msgstr "Завантажується типовий файл ресурсу…\n"
+
+#: src/main.c:4113
+msgid "MaCoPiX : Download & Install Mascot"
+msgstr "MaCoPiX: отримання і встановлення маскота"
+
+#: src/main.c:4118
+msgid ""
+"Select a mascot file to download &amp; install into your <i>User directory</"
+"i>."
+msgstr ""
+"Виберіть файл для отримання і встановіть його до вашого <i>каталогу "
+"користувача</i>."
+
+#: src/main.c:4134
+msgid ""
+"<span color=\"#FF0000\"><b>Please note that all existing files will be "
+"overwritten.</b></span>"
+msgstr ""
+"<span color=\"#FF0000\"><b>Будь ласка, зауважте, що усі наявні файли буде "
+"перезаписано.</b></span>"
+
+#: src/main.c:4170
+msgid "Name (E)"
+msgstr "Назва"
+
+#: src/main.c:4180
+#, c-format
+msgid "Name (%s)"
+msgstr "Назва (%s)"
+
+#: src/main.c:4192
+msgid "Registered"
+msgstr "Зареєстровано"
+
+#: src/main.c:4202
+msgid "Ver."
+msgstr "Версія"
+
+#: src/main.c:4212
+msgid "Date"
+msgstr "Дата"
+
+#: src/main.c:4222
+msgid "Code"
+msgstr "Код"
+
+#: src/main.c:4246 src/main.c:4249
+msgid "(<i>Invalid Character Code</i>)"
+msgstr "(<i>Некоректний код символу</i>)"
+
+#: src/main.c:4288
+#, c-format
+msgid "%d mascot"
+msgstr "%d маскотів"
+
+#: src/main.c:4291
+msgid "<i>unknown</i>"
+msgstr "<i>невідомий</i>"
+
+#: src/main.c:4333 src/main.c:4335
+msgid "Download / Install"
+msgstr "Отримання/Встановлення"
+
+#: src/main.c:4426
+msgid "Error : Cannot read the downloaded mascot list."
+msgstr "Помилка: не вдалося прочитати отриманий список маскотів."
+
+#: src/main.c:4687 src/main.c:4720 src/main.c:4827
+#, c-format
+msgid "Option \"%s\" is not found. Ignoring...\n"
+msgstr "Параметр «%s» не знайдено. Знехтувано…\n"
+
+#: src/main.c:4879
+#, c-format
+msgid "macopix COMMON DIR:%s\n"
+msgstr "ТИПОВА ТЕКА macopix:%s\n"
+
+#: src/main.c:4890
+msgid " macopix : Mascot Constructive Pilot for X   Ver"
+msgstr ""
+" macopix: Інструмент конструювання маскотів для віконних менеджерів Вер."
+
+#: src/main.c:4891
+#, c-format
+msgid "  [usage] %% macopix [options] (mascot file)\n"
+msgstr "  [використання] %% macopix [параметри] (файл маскота)\n"
+
+#: src/main.c:4892
+msgid "     -h, --help               : Print this message\n"
+msgstr "     -h, --help              : Надрукувати це повідомлення\n"
+
+#: src/main.c:4894
+msgid "     -c, --common-dir         : Print COMMON Directory\n"
+msgstr "     -c, --common-dir        : Надрукувати ТИПОВУ теку\n"
+
+#: src/main.c:4897
+msgid "     -b, --biff               : Turn on the biff function\n"
+msgstr ""
+"     -b, --biff              : Увімкнути функцію повідомлення про листи\n"
+
+#: src/main.c:4899
+msgid "     -s, --signal             : Turn on the time signal\n"
+msgstr "     -s, --signal            : Увімкнути сигнал годинника\n"
+
+#: src/main.c:4900
+#, c-format
+msgid "     -o, --offset offset[%%]   : Set offset-value for Focus Following\n"
+msgstr ""
+"     -o, --offset offset[%%]  : Встановити відступ для відслідковування "
+"фокусу\n"
+
+#: src/main.c:4901
+msgid "     -r, --rcfile rc-file     : Set the resource file\n"
+msgstr "     -r, --rcfile rc-file    : Встановити файл ресурсу\n"
+
+#: src/main.c:4902
+msgid "     -m, --menu   menu-file   : Set the file for quick menu\n"
+msgstr "     -m, --menu   menu-file  : Встановити файл для швидкого меню\n"
+
+#: src/main.c:4903
+msgid ""
+"     -mg --mag    magnify     : Set magnification percentage of mascot\n"
+msgstr ""
+"     -mg --mag    magnify    : Встановити процент збільшення для маскота\n"
+
+#: src/main.c:4904
+msgid ""
+"     -i, --ip-style (0|1|2|3) : Set interpolation style for magnification\n"
+msgstr ""
+"     -i, --ip-style (0|1|2|3): Встановити тип інтерполяції для збільшення\n"
+
+#: src/main.c:4905
+msgid "## For Installation\n"
+msgstr "## Для встановлення\n"
+
+#: src/main.c:4906
+msgid "     -a, --auto-install       : Set mascot auto install ON\n"
+msgstr "     -a, --auto-install      : Увімкнути автовстановлення маскотів\n"
+
+#: src/main.c:4907
+msgid "     -na --no-auto-install    : Set mascot auto install OFF\n"
+msgstr "     -na --no-auto-install   : Вимкнути автовстановлення маскотів\n"
+
+#: src/main.c:4908
+msgid "     -O, --over-write         : Permit to overwrite files in user dir\n"
+msgstr ""
+"     -O, --over-write        : Дозволити перезапис файлів у теці "
+"користувачів\n"
+
+#: src/main.c:4909
+msgid ""
+"     --install-user-mascot (mascot)  : Mascot Installation to User Dir.\n"
+msgstr ""
+"     --install-user-mascot (mascot) : Встановлення маскота у теку "
+"користувача.\n"
+
+#: src/main.c:4910
+msgid "     --install-user-menu (menu)      : Menu Installation to User Dir.\n"
+msgstr ""
+"     --install-user-menu (menu)     : Встановлення меню у теку "
+"користувача.\n"
+
+#: src/main.c:4912
+msgid ""
+"     --install-common-mascot (mascot): Mascot Installation to Common Dir.\n"
+msgstr ""
+"     --install-common-mascot (mascot): Встановлення маскота у типову теку.\n"
+
+#: src/main.c:4913
+msgid ""
+"     --install-common-menu (menu)    : Menu Installation to Common Dir.\n"
+msgstr ""
+"     --install-common-menu (menu)   : Встановлення меню у типову теку.\n"
+
+#: src/main.c:4916
+msgid "## For Socket Message\n"
+msgstr "## Для повідомлень сокетів\n"
+
+#: src/main.c:4917
+msgid ""
+"     --sockmsg                : Start MaCoPiX as Socket Message Receiver\n"
+msgstr ""
+"     --sockmsg               : Запустити MaCoPiX як отримувач повідомлень "
+"сокетів\n"
+
+#: src/main.c:4918
+msgid ""
+"     --message (text)         : Send Message to Socket Message Receiver\n"
+msgstr ""
+"     --message (text)        : Надіслати повідомлення до отримувача "
+"повідомлень сокета\n"
+
+#: src/main.c:4919
+msgid "     --message-expire (time)  : Socket Message Expire Time[ms]\n"
+msgstr ""
+"     --message-expire (time) : Час застарівання повідомлення сокета[мс]\n"
+
+#: src/main.c:4920
+msgid "     --message-type-lump      : Force to Set Lump Sum Balloon\n"
+msgstr ""
+"     --message-type-lump     : Силоміць встановити показу сукупного "
+"повідомлення\n"
+
+#: src/main.c:4921
+msgid "     --message-type-step      : Force to Set Stepping Balloon\n"
+msgstr ""
+"     --message-type-step     : Силоміць встановити покроковий показ "
+"повідомлень\n"
+
+#: src/main.c:4922
+msgid "     --message-step (frame)   : Stepping Interval Frame for SockeMsg\n"
+msgstr ""
+"     --message-step (кадри)  : Величина кроку у кадрах для повідомлень "
+"сокета\n"
+
+#: src/main.c:4923
+msgid "     -nc, --no-duet-click     : Duet Animation [Click] OFF\n"
+msgstr "     -nc, --no-duet-click    : Вимкнути анімацію дуета [Клацання]\n"
+
+#: src/main.c:4924
+msgid "     -nr, --no-duet-random    : Duet Animation [Random] OFF\n"
+msgstr "     -nr, --no-duet-random   : Вимкнути анімацію дуету [Випадкові]\n"
+
+#: src/main.c:5017
+#, c-format
+msgid "%8d%2d%4dMacopix already running in SockMsg Mode"
+msgstr "%8d%2d%4dMacopix вже запущено у режимі отримання повідомлень сокета"
+
+#: src/main.c:5029
+msgid "Macopix not running in SockMsg Mode\n"
+msgstr "Macopix не запущено у режимі отримувача повідомлень сокета\n"
+
+#: src/nokkari.c:99 src/pixmap.c:516
+#, c-format
+msgid "Cannot Load Image %s\n"
+msgstr "Неможливо завантажити малюнок %s\n"
+
+#: src/nokkari.c:110
+#, c-format
+msgid "Warning : Too much BMP files for Nokkari-Chara! [File%d]\n"
+msgstr "Попередження: Забагато файлів BMP для Nokkari-Chara! [Файл%d]\n"
+
+#: src/nokkari.c:161
+msgid "Cannot Save Ini File!"
+msgstr "Неможливо зберегти файл Ini!"
+
+#: src/nokkari.c:255 src/nokkari.c:292
+#, c-format
+msgid "Warning : Too much Frames!! [%s=%d]\n"
+msgstr "Попередження: Забагато кадрів! [%s=%d]\n"
+
+#: src/nokkari.c:359
+#, c-format
+msgid "Warning : Too much Line numbers for the Balloon message! [Pat%d]\n"
+msgstr "Попередження: забагато рядків для контекстного повідомлення! [Шаб%d]\n"
+
+#: src/nokkari.c:441
+#, c-format
+msgid "Cannot Find Mascot File %s\n"
+msgstr "Неможливо знайти файл маскота %s\n"
+
+#: src/nokkari.c:604
+#, c-format
+msgid "Warning : Too much Frames for MaCoPiX! [Pattern%d]\n"
+msgstr "Попередження: Забагато кадрів для MaCoPiX! [Шаблон%d]\n"
+
+#: src/nokkari.c:629
+#, c-format
+msgid "Error : Cannot find Frame setting! [Pat%d_%d]\n"
+msgstr "Помилка: Неможливо знайти налаштування кадра! [Шаб%d_%d]\n"
+
+#: src/nokkari.c:745 src/nokkari.c:797 src/utils.c:58
+#, c-format
+msgid "Cannot open copy source file %s"
+msgstr "Неможливо відкрити копію файла джерела %s"
+
+#: src/nokkari.c:750 src/nokkari.c:802 src/utils.c:63
+#, c-format
+msgid "Cannot open copy destination file %s"
+msgstr "Неможливо відкрити копію файла призначення %s"
+
+#: src/nokkari.c:853
+msgid "MaCoPiX <--> Nokkari-Chara Convert Log"
+msgstr "Журнал конвертування MaCoPiX <--> Nokkari-Chara"
+
+#: src/nokkari.c:879
+msgid ""
+"\n"
+"\n"
+"  The above warnings/errors are found in conversion...\n"
+"\n"
+"  Please modify and use this mascot on Nokkari-Chara ver1.40 or later.\n"
+msgstr ""
+"\n"
+"\n"
+"  Помилки зазначені вище знайдено під час перетворення…\n"
+"\n"
+"  Будь ласка, зробіть відповідні зміни та використовуйте цей маскот з "
+"Nokkari-Chara версії старшої за 1.40.\n"
+
+#: src/nokkari.c:883
+msgid ""
+"\n"
+" Congratulations!!\n"
+"===================\n"
+"\n"
+"  You've succeeded to convert with no errors.\n"
+"\n"
+"  Please use this mascot on Nokkari-Chara ver1.40 or later.\n"
+msgstr ""
+"\n"
+" Вітаємо!\n"
+"===================\n"
+"\n"
+"  Вам вдалося виконати перетворення без помилок.\n"
+"\n"
+"  Будь ласка, використовуйте цей маскот з Nokkari-Chara версії, яка є новішою"
+" за 1.40.\n"
+
+#: src/sslmanager.c:74 src/sslmanager.c:81
+msgid "(unknown)"
+msgstr "(невідомий)"
+
+#: src/sslmanager.c:105
+#, c-format
+msgid ""
+"The SSL certificate of host \"%s\" cannot verified by the following reason:\n"
+"  %s\n"
+"\n"
+"Server certificate:\n"
+"  Subject: %s\n"
+"  Issuer: %s\n"
+"\n"
+"Do you accept this certificate?"
+msgstr ""
+"Сертифікат SSL сервера «%s» не може бути перевіреним з такої причини:\n"
+"  %s\n"
+"\n"
+"Сертифікаи сервера:\n"
+"  Суб’єкт: %s\n"
+"  Видавець: %s\n"
+"\n"
+"Чи приймаєте Ви цей сертифікат?"
+
+#: src/sslmanager.c:128
+msgid "SSL certificate verify failed"
+msgstr "Перевірка сертифіката SSL зазнала невдачі"
+
+#: src/sslmanager.c:142
+msgid "Skip this verification after this."
+msgstr "Пропускати цю перевірку після цього."
+
+#: src/unlha.c:105 src/untar.c:195
+msgid "Error: A Menu File is not found in"
+msgstr "Помилка: не знайдено файла меню у"
+
+#: src/unlha.c:110
+#, c-format
+msgid "A Menu Files is not found in %s\n"
+msgstr "У %s не знайдено файлів меню\n"
+
+#: src/utils.c:88
+#, c-format
+msgid "Cannot read status of directory %s .\n"
+msgstr "Неможливо прочитати статус теки %s.\n"
+
+#: src/utils.c:92
+#, c-format
+msgid "%s is not directory.\n"
+msgstr "%s не є каталогом.\n"
+
+#: src/utils.c:97
+#, c-format
+msgid "Creating the common directory \"%s\"\n"
+msgstr "Створення загального каталогу «%s»\n"
