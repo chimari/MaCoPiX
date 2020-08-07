@@ -35,6 +35,48 @@
 // *** GLOBAL ARGUMENT ***
 
 gboolean FlagInstalledMenu;
+enum MENU_EXT_t MENU_EXT;
+enum MaCoPiXFolder_t MaCoPiXFolder;
+enum ClockMode_t ClockMode;
+enum HomePos_t HomePos;
+enum MoveMode_t MoveMode;
+#ifdef USE_OSX
+enum MAC_LAYER_MODE_t MAC_LAYER_MODE;
+#endif
+enum FFPos_t FFPos;
+enum AutoBar_t AutoBar;
+enum PosBalloon_t PosBalloon;
+enum TypBalloon_t TypBalloon;
+enum DuetAnimeMode_t DuetAnimeMode;
+enum TypInterpolate_t TypInterpolate;
+enum ClockType_t ClockType;
+enum MenuSelect_t MenuSelect;
+enum GuiFontConf_t GuiFontConf;
+enum GuiColorConf_t GuiColorConf;
+enum SetReleaseData_t SetReleaseData;
+enum MailStatus0_t MailStatus0;
+enum MailPixPos_t MailPixPos;
+enum MailStatus_t MailStatus;
+enum SignalAction_t SignalAction;
+enum ConsMode_t ConsMode;
+enum ScanMenuDir_t ScanMenuDir;
+enum CompositeFlag_t CompositeFlag;
+#ifdef USE_GTK3
+GdkPixbuf *pixbuf_main, *pixbuf_clk, *pixbuf_bal;
+#ifdef USE_WIN32
+GdkPixbuf *pixbuf_sdw;
+#endif
+#else  // USE_GTK3
+GdkPixmap *pixmap_main, *pixmap_clk, *pixmap_bal;
+#ifdef USE_WIN32
+GdkPixmap *pixmap_sdw;
+#endif
+#endif // USE_GTK3
+gint window_x, window_y;
+gboolean supports_alpha;
+gboolean flag_balloon;
+
+pid_t http_pid;
 
 // Prototype of functions in this file
 #ifdef USE_GTK3
