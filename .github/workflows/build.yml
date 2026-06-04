@@ -18,19 +18,36 @@ jobs:
       run: |
         brew update
         brew install automake autoconf libtool pkg-config
-        brew install gtk+3 gtk-mac-integration pango cairo harfbuzz dylibbundler create-dmg
+        brew install gtk+3 gtk-mac-integration pango cairo harfbuzz
+        brew install dylibbundler create-dmg
 
     - name: Build Binary
       run: |
         chmod +x makeosx.sh
         ./makeosx.sh
 
-    - name: Package App Bundle
+    - name: Package App Bundle & Wrapper Script
       run: |
-        mkdir -p MaCoPiX.app/Contents/MacOS
-        mkdir -p MaCoPiX.app/Contents/Resources
-        cp src/macopix MaCoPiX.app/Contents/MacOS/
-        cat <<EOF > MaCoPiX.app/Contents/Info.plist
+        APP_DIR="MaCoPiX.app"
+        mkdir -p "$APP_DIR/Contents/MacOS"
+        mkdir -p "$APP_DIR/Contents/Resources/share/glib-2.0/schemas"
+        mkdir -p "$APP_DIR/Contents/Resources/lib/gdk-pixbuf-2.0/2.10.0/loaders"
+        cp src/macopix "$APP_DIR/Contents/MacOS/macopix-bin"
+        cp /opt/homebrew/share/glib-2.0/schemas/gschemas.compiled "$APP_DIR/Contents/Resources/share/glib-2.0/schemas/"
+        
+        
+        cp /opt/homebrew/lib/gdk-pixbuf-2.0/2.10.0/loaders/*.so "$APP_DIR/Contents/Resources/lib/gdk-pixbuf-2.0/2.10.0/loaders/"
+        cat << 'EOF' > "$APP_DIR/Contents/MacOS/macopix"
+        #!/bin/bash
+        DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+        export GSETTINGS_SCHEMA_DIR="$DIR/../Resources/share/glib-2.0/schemas"
+        export XDG_DATA_DIRS="$DIR/../Resources/share"
+        export GDK_PIXBUF_MODULEDIR="$DIR/../Resources/lib/gdk-pixbuf-2.0/2.10.0/loaders"
+        exec "$DIR/macopix-bin" "$@"
+        EOF
+        
+        chmod +x "$APP_DIR/Contents/MacOS/macopix"
+        cat << 'EOF' > "$APP_DIR/Contents/Info.plist"
         <?xml version="1.0" encoding="UTF-8"?>
         <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
         <plist version="1.0">
@@ -39,13 +56,18 @@ jobs:
             <key>CFBundleIdentifier</key><string>com.github.macopix</string>
             <key>CFBundleName</key><string>MaCoPiX</string>
             <key>CFBundlePackageType</key><string>APPL</string>
+            <key>LSMinimumSystemVersion</key><string>10.15</string>
         </dict>
         </plist>
         EOF
 
-    - name: Bundle Dylibs
+    - name: Bundle ALL Dynamic Libraries
       run: |
-        dylibbundler -od -b -x MaCoPiX.app/Contents/MacOS/macopix -d MaCoPiX.app/Contents/libs/ -s /opt/homebrew/lib
+        APP_DIR="MaCoPiX.app"
+        dylibbundler -od -b -x "$APP_DIR/Contents/MacOS/macopix-bin" -d "$APP_DIR/Contents/libs/" -s /opt/homebrew/lib
+        for loader in "$APP_DIR/Contents/Resources/lib/gdk-pixbuf-2.0/2.10.0/loaders/"*.so; do
+          dylibbundler -od -b -x "$loader" -d "$APP_DIR/Contents/libs/" -s /opt/homebrew/lib
+        done
 
     - name: Create DMG
       run: |
